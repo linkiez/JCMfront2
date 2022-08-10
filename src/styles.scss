@@ -3,3 +3,25 @@
 /* Importing Bootstrap SCSS file. */
 @import '~bootstrap/scss/bootstrap';
 
+body{
+  background-color: #30303a;
+  height: 100%;
+}
+html {
+  height: 100%;
+}
+body {
+  min-height: 100%;
+}
+
+.container {
+  margin: auto;
+  width: auto;
+  padding: 50px;
+
+  border-width: 1px;
+  border-style: solid;
+  border-color: #747678;
+  background-color: #3c3c3c;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+}

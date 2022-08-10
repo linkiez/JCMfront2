@@ -1,1 +1,23 @@
-<p>login works!</p>
+<div class="caixa">
+  <form (ngSubmit)="login()">
+    <label for="email"
+      ><input
+        type="email"
+        id="email"
+        name="email"
+        placeholder="Email"
+        [(ngModel)]="email"
+        required
+    /></label>
+    <label for="senha"
+      ><input
+        type="password"
+        id="senha"
+        name="senha"
+        placeholder="Password"
+        [(ngModel)]="senha"
+        required
+    /></label>
+    <input type="submit" id="submit" name="submit" />
+  </form>
+</div>
