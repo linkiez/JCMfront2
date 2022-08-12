@@ -8,7 +8,7 @@ import { ButtonModule } from 'primeng/button';
 import { SharedModule } from 'primeng/api';
 import { HomeComponent } from './home.component';
 import { CaixaUsuarioComponent } from './components/caixa-usuario/caixa-usuario.component';
-import {DashboardComponent } from './dashboard/dashboard.component'
+import {DashboardComponent } from './dashboard/dashboard.component';
 
 
 @NgModule({

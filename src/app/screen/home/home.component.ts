@@ -10,7 +10,8 @@ export class HomeComponent implements OnInit {
 
   public menuItems: MenuItem[] = [
     {
-      icon: 'favicon-icon'
+      icon: 'favicon-icon',
+      routerLink: 'dashboard'
     },
     {
       label: 'Cadastro',
@@ -38,6 +39,7 @@ export class HomeComponent implements OnInit {
         },
         {
           label: 'Produtos',
+          routerLink: 'produtos'
         },
         {
           label: 'Registro de Inspeção e Recebimento',

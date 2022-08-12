@@ -1,0 +1,22 @@
+<p-table [value]="produtos" responsiveLayout="scroll">
+  <ng-template pTemplate="header">
+    
+      <tr>
+          <th>Código</th>
+          <th class="col-8">Nome</th>
+          <th>Categoria</th>
+          <th>Valor Maior</th>
+          <th>Valor Médio</th>
+          <th>Valor Menor
+          </th>
+      </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-product>
+      <tr>
+          <td>{{product.code}}</td>
+          <td>{{product.name}}</td>
+          <td>{{product.category}}</td>
+          <td>{{product.quantity}}</td>
+      </tr>
+  </ng-template>
+</p-table>

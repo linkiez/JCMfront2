@@ -15,6 +15,14 @@ const routes: Routes = [
       {
         path: '',
         component: DashboardComponent
+      },
+      {
+        path: 'dashboard',
+        component: DashboardComponent
+      },
+      {
+        path: 'produtos',
+        loadChildren: () => import('./cadastro-produtos/cadastro-produtos.module').then((module) => module.CadastroProdutosModule)
       }
     ]
 

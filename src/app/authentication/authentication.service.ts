@@ -18,7 +18,7 @@ export class AuthenticationService {
 
   login(email: string, senha: string) {
     return this.httpClient.post(
-      `${API}/login`,
+      `${API}login`,
       { email: email, senha: senha },
       { observe: 'response' }
     );
