@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 
+const KEY = 'accessToken'
+
 @Injectable({
   providedIn: 'root'
 })
@@ -8,15 +10,15 @@ export class AccessTokenService {
   constructor() { }
 
   salvaToken(token: string) {
-    localStorage.setItem('token', token);
+    localStorage.setItem(KEY, token);
   }
 
   excluiToken() {
-    localStorage.removeItem('token');
+    localStorage.removeItem(KEY);
   }
 
   retornaToken(){
-    return localStorage.getItem('token') ?? '';
+    return localStorage.getItem(KEY) ?? '';
   }
 
   possuiToken(){

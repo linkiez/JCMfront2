@@ -1,9 +1,14 @@
-<div class="container">
-  <h1>home works!</h1>
-  <h1>home works!</h1>
-  <h1>home works!</h1>
-  <h1>home works!</h1>
-  <h1>home works!</h1>
-  <h1>home works!</h1>
+<div class='container'>
+  <div class="row">
+    <div class="caixa caixa-maior col-10">
+      <div class="menu">
+        <p-menubar [model]="menuItems"><app-caixa-usuario></app-caixa-usuario></p-menubar>
+      </div>
+      <router-outlet></router-outlet>
+
+
+    </div>
+  </div>
 </div>
+
 

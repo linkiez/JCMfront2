@@ -16,13 +16,15 @@ export class AuthenticationService {
     private accessTokenService: AccessTokenService
   ) {}
 
-  autenticar(email: string, senha: string) {
-    console.log('autenticar email')
-    return this.httpClient
-      .post(
-        `${API}/login`,
-        { email: email, senha: senha },
-        { observe: 'response' }
-      );
+  login(email: string, senha: string) {
+    return this.httpClient.post(
+      `${API}/login`,
+      { email: email, senha: senha },
+      { observe: 'response' }
+    );
+  }
+
+  logout() {
+    return this.httpClient.get(`${API}/login`, { observe: 'response' });
   }
 }

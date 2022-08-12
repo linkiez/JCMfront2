@@ -2,7 +2,8 @@ import { AccessTokenService } from 'src/app/authentication/accessToken.service';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthenticationService } from 'src/app/authentication/authentication.service';
-import { Login } from './login'
+import { Login } from './login';
+import { UsuarioService } from 'src/app/authentication/usuario.service';
 
 @Component({
   selector: 'app-login',
@@ -16,23 +17,24 @@ export class LoginComponent implements OnInit {
   constructor(
     private router: Router,
     private authenticationService: AuthenticationService,
-    private accessTokenService: AccessTokenService
+    private accessTokenService: AccessTokenService,
+    private usuarioService: UsuarioService
   ) {}
 
   ngOnInit(): void {}
 
   login() {
-    this.authenticationService.autenticar(this.email, this.senha).subscribe(
-      (response)=> {
-        let body= response.body as Login
+    this.authenticationService.login(this.email, this.senha).subscribe(
+      (response) => {
+        let body = response.body as Login;
 
-        this.accessTokenService.salvaToken(body!.accessToken)
+        this.usuarioService.salvaToken(body!.accessToken, body!.refreshToken);
         this.router.navigate(['home']);
       },
       (error) => {
-        alert('Usuario ou senha invalido')
+        alert('Usuario ou senha invalido');
         console.log(error);
       }
-    )
+    );
   }
 }

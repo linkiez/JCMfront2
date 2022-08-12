@@ -10,6 +10,9 @@ export class HomeComponent implements OnInit {
 
   public menuItems: MenuItem[] = [
     {
+      icon: 'favicon-icon'
+    },
+    {
       label: 'Cadastro',
       items: [
         {

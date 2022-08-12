@@ -22,7 +22,9 @@ import { LoginComponent } from './screen/login/login.component';
     AppRoutingModule,
     NgbModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    MenubarModule,
+    MenuModule
   ],
   providers: [],
   bootstrap: [AppComponent],

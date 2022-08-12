@@ -1,0 +1,18 @@
+.caixa-maior
+ {
+  min-width: 768px;
+  margin-top: 50px;
+ }
+
+p-menubar img{
+  height: 48px;
+ }
+
+ :host ::ng-deep {
+  .favicon-icon {
+      width: 32px;
+      height: 32px;
+      background-image: url("../../../favicon.ico");
+      background-size: 32px 32px;
+  }
+}
