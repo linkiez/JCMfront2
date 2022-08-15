@@ -4,7 +4,7 @@
 @import '~bootstrap/scss/bootstrap';
 
 body{
-  background-color: #30303a;
+  background-color: #20262e;
   height: 100%;
 }
 html {
@@ -20,8 +20,7 @@ body {
   padding: 50px;
 
   border-width: 1px;
-  border-style: solid;
-  border-color: #747678;
-  background-color: #3c3c3c;
+  border-radius: 3px;
+  background-color: #2a323d;
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
 }

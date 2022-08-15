@@ -1,22 +1,44 @@
-<p-table [value]="produtos" responsiveLayout="scroll">
+<p-table
+  #dt
+  [value]="produtos"
+  [paginator]="true"
+  [rows]="25"
+  [showCurrentPageReport]="true"
+  currentPageReportTemplate="Mostrando {first} até {last} de {totalRecords} produtos"
+  [rowsPerPageOptions]="[10, 25, 50]"
+  [globalFilterFields]="['nome']"
+  [selection]="true"
+  responsiveLayout="scroll"
+>
+  <ng-template pTemplate="caption">
+    <div class="flex">
+      <span class="p-input-icon-left ml-auto">
+        <i class="pi pi-search"></i>
+        <input
+          pInputText
+          type="text"
+          (input)="applyFilterGlobal($event, 'contains')"
+          placeholder="Search keyword"
+        />
+      </span>
+    </div>
+  </ng-template>
+
   <ng-template pTemplate="header">
-    
-      <tr>
-          <th>Código</th>
-          <th class="col-8">Nome</th>
-          <th>Categoria</th>
-          <th>Valor Maior</th>
-          <th>Valor Médio</th>
-          <th>Valor Menor
-          </th>
-      </tr>
+    <tr>
+      <th>Código</th>
+      <th class="col-8">Nome</th>
+
+      <th>Valor Maior</th>
+      <th>Valor Médio</th>
+      <th>Valor Menor</th>
+      <th>Atualização</th>
+    </tr>
   </ng-template>
   <ng-template pTemplate="body" let-product>
-      <tr>
-          <td>{{product.code}}</td>
-          <td>{{product.name}}</td>
-          <td>{{product.category}}</td>
-          <td>{{product.quantity}}</td>
-      </tr>
+    <tr>
+      <td>{{ product.id }}</td>
+      <td>{{ product.nome }}</td>
+    </tr>
   </ng-template>
 </p-table>
