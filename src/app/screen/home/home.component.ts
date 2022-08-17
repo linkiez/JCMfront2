@@ -54,7 +54,8 @@ export class HomeComponent implements OnInit {
       label: 'Configurações',
       items: [
         {
-          label: 'Listas Genericas'
+          label: 'Listas Genericas',
+          routerLink: 'listagenerica'
         },
         {
           label: 'Arquivos',
