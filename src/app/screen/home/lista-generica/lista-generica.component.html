@@ -13,23 +13,26 @@
     responsiveLayout="scroll"
   >
     <ng-template pTemplate="caption">
-      <div class="flex">
-        <label for="novalista">Nova Lista:&nbsp;</label
+      <div class="d-flex justify-content-between">
+        <label for="novalista">Nova Lista:</label
         ><input
+          pInputText
+          class="p-inputtext"
           name="novalista"
           type="text"
           [(ngModel)]="novaLista"
           pInputText
         />&nbsp;<button pButton (click)="createListaGenerica()" class="button">
           <i class="pi pi-plus"></i></button
-        >&nbsp; <i class="pi pi-search"></i>&nbsp;
+        >&nbsp;
         <span class="p-input-icon-left ml-auto">
+          <i class="pi pi-search"></i>
           <input
             pInputText
+            class="p-inputtext"
             type="text"
             (input)="applyFilterGlobal($event, 'contains')"
             placeholder="Search keyword"
-            pInputText 
           />
         </span>
       </div>
@@ -59,18 +62,23 @@
     [globalFilterFields]="['valor']"
   >
     <ng-template pTemplate="caption">
-      <div class="flex">
+      <div class="d-flex justify-content-between">
         <label for="novalista">Novo Item:&nbsp;</label
         ><input
+          pInputText
+          class="p-inputtext"
           name="novoItem"
           type="text"
           [(ngModel)]="novoItem"
         />&nbsp;<button pButton (click)="addItem()" class="button">
+
           <i class="pi pi-plus"></i></button
-        >&nbsp; <i class="pi pi-search"></i>&nbsp;
+        >&nbsp; &nbsp;
         <span class="p-input-icon-left ml-auto">
+          <i class="pi pi-search"></i>
           <input
             pInputText
+            class="p-inputtext"
             type="text"
             (input)="applyFilterGlobal2($event, 'contains')"
             placeholder="Search keyword"
@@ -90,7 +98,9 @@
       <tr>
         <td>{{ listaItem.id }}</td>
         <td>{{ listaItem.valor }}</td>
-        <td><i class="pi pi-trash trash" (click)="removeItem(listaItem)"></i></td>
+        <td>
+          <i class="pi pi-trash trash" (click)="removeItem(listaItem)"></i>
+        </td>
       </tr>
     </ng-template>
 

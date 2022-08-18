@@ -25,6 +25,7 @@
     "json-deep-equal": "^0.0.2",
     "jwt-decode": "^3.1.2",
     "lodash": "^4.17.21",
+    "moment": "^2.29.4",
     "primeicons": "^5.0.0",
     "primeng": "^14.0.0",
     "rxjs": "~7.4.0",
