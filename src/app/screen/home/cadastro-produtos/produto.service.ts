@@ -19,7 +19,7 @@ export class ProdutoService {
 
   getProduto(id: number): Observable<Produto> {
     return this.http.get<Produto>(
-      environment.backendURL + 'produto/id/' + id,
+      environment.backendURL + 'produto/' + id,
       { responseType: 'json' }
     );
   }
@@ -32,7 +32,7 @@ export class ProdutoService {
 
   updateProduto(produto: Produto): Observable<Object> {
     return this.http.put(
-      environment.backendURL + 'produto/id/' + produto.id,
+      environment.backendURL + 'produto/' + produto.id,
       produto,
       { responseType: 'json' }
     );
@@ -40,7 +40,7 @@ export class ProdutoService {
 
   deleteProduto(produto: Produto): Observable<Object> {
     return this.http.delete(
-      environment.backendURL + 'produto/id/' + produto.id,
+      environment.backendURL + 'produto/' + produto.id,
       { responseType: 'json' }
     );
   }

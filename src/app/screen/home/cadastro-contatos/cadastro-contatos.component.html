@@ -1,0 +1,28 @@
+<p-table 
+  #dt 
+  [value]="contatos"
+  [paginator]="true"
+  [rows]="25"
+  [showCurrentPageReport]="true"
+  currentPageReportTemplate="Mostrando {first} até {last} de {totalRecords} contatos"
+  [rowsPerPageOptions]="[10, 25, 50]"
+  [globalFilterFields]="['nome']"
+  [selection]="true"
+  responsiveLayout="scroll">
+    <ng-template pTemplate="header">
+        <tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>Tipo</th>
+            <th>Valor</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-contact>
+        <tr>
+            <td>{{contact.id}}</td>
+            <td>{{contact.nome}}</td>
+            <td>{{contact.tipo}}</td>
+            <td>{{contact.valor}}</td>
+        </tr>
+    </ng-template>
+</p-table>

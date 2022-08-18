@@ -25,7 +25,12 @@ const routes: Routes = [
           import('./cadastro-produtos/cadastro-produtos.module').then(
             (module) => module.CadastroProdutosModule
           ),
-        canLoad: [LoginGuard],
+        canLoad: [LoginGuard]
+      },
+      {
+        path: 'contatos',
+        loadChildren: () => import('./cadastro-contatos/cadastro-contatos.module').then((module) => module.CadastroContatosModule),
+        canLoad: [LoginGuard]
       },
       {
         path: 'listagenerica',
