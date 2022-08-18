@@ -4,8 +4,7 @@ import { HomeComponent } from './home.component';
 import { MenubarModule } from 'primeng/menubar';
 import { MenuModule } from 'primeng/menu';
 import { DashboardComponent } from './dashboard/dashboard.component';
-
-
+import { LoginGuard } from 'src/app/authentication/login.guard';
 
 const routes: Routes = [
   {
@@ -14,28 +13,34 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        component: DashboardComponent
+        component: DashboardComponent,
       },
       {
         path: 'dashboard',
-        component: DashboardComponent
+        component: DashboardComponent,
       },
       {
         path: 'produtos',
-        loadChildren: () => import('./cadastro-produtos/cadastro-produtos.module').then((module) => module.CadastroProdutosModule)
-      }
-      ,
+        loadChildren: () =>
+          import('./cadastro-produtos/cadastro-produtos.module').then(
+            (module) => module.CadastroProdutosModule
+          ),
+        canLoad: [LoginGuard],
+      },
       {
         path: 'listagenerica',
-        loadChildren: () => import('./lista-generica/lista-generica.module').then((module) => module.ListaGenericaModule)
-      }
-    ]
-
-  }
+        loadChildren: () =>
+          import('./lista-generica/lista-generica.module').then(
+            (module) => module.ListaGenericaModule
+          ),
+        canLoad: [LoginGuard],
+      },
+    ],
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes), MenubarModule, MenuModule],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class HomeRoutingModule { }
+export class HomeRoutingModule {}

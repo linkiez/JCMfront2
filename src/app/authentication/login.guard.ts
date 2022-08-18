@@ -26,7 +26,6 @@ export class LoginGuard implements CanLoad {
     | Promise<boolean | UrlTree>
     | boolean
     | UrlTree {
-      console.log(this.accessTokenService.possuiToken())
     if (this.accessTokenService.possuiToken()) {
       return true;
     } else {
