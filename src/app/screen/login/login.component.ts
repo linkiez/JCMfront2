@@ -4,11 +4,14 @@ import { Router } from '@angular/router';
 import { AuthenticationService } from 'src/app/authentication/authentication.service';
 import { Login } from './login';
 import { UsuarioService } from 'src/app/authentication/usuario.service';
+import {Message,MessageService} from 'primeng/api';
+
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
+  providers: [MessageService]
 })
 export class LoginComponent implements OnInit {
   email: string = '';
@@ -17,8 +20,8 @@ export class LoginComponent implements OnInit {
   constructor(
     private router: Router,
     private authenticationService: AuthenticationService,
-    private accessTokenService: AccessTokenService,
-    private usuarioService: UsuarioService
+    private usuarioService: UsuarioService,
+    private messageService: MessageService
   ) {}
 
   ngOnInit(): void {}
@@ -34,7 +37,7 @@ export class LoginComponent implements OnInit {
 
         },
         error:(error) => {
-          alert('Usuario ou senha invalido');
+          this.messageService.add({severity:'error', summary:'Erro', detail:error.message})
           console.log(error);
         },
         complete: () => this.router.navigate(['home'])

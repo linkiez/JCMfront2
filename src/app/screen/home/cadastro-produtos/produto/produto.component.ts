@@ -27,7 +27,6 @@ export class ProdutoComponent implements OnInit {
     if(id != 0){
       this.produtoService.getProduto(id).subscribe(
         (produto) => {this.produto = produto
-        console.log(produto)
       },
         (error) => console.log(error)
       )
