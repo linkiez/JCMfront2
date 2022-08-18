@@ -1,28 +1,75 @@
-<div class="caixa">
-   <form action="">
-       <label for="id">ID:</label>
-       <input name="id" type="text" placeholder="id" [(ngModel)] = 'produto.id'/>
-       <br>
-       <label for="nome">Nome:</label>
-       <input name="nome" type="text" placeholder="nome" [(ngModel)] = 'produto.nome'/>
-       <br>
-       <label for="categoria">Categoria:</label>
-       <input name="categoria" type="text" placeholder="categoria" [(ngModel)] = 'produto.categoria'/>
-       <br>
-       <label for="espessura">Espessura:</label>
-       <input name="espessura" type="text" placeholder="espessura" [(ngModel)] = 'produto.espessura'/>
-       <br>
-       <label for="peso">Peso:</label>
-       <input name="peso" type="text" placeholder="peso" [(ngModel)] = 'produto.peso'/>
-       <br>
-       <label for="updateAt">Data de atualização:</label>
-       <input name="updateAt" type="text" [(ngModel)] = 'produto.updateAt'/>
-       <br>
-       <label for="createAt">Data de criação:</label>
-       <input name="createAt" type="text" value="{{produto.createAt | date: 'dd/MM/yyyy HH:mm:ss'}}"/>
-       <br><br>
-   </form>
-   <button class="p-button-success" (click)="updateProduto()">Salvar</button>
-   <button (click)="getBackProdutos()">Voltar</button>
-   <button (click)="deleteProduto()">Excluir</button>
+<div class="">
+  <form action="">
+    <label for="id">ID:</label>
+    <input
+      pInputText
+      class="p-inputtext"
+      name="id"
+      type="text"
+      placeholder="id"
+      [(ngModel)]="produto.id"
+    />
+    <br />
+    <label for="nome">Nome:</label>
+    <input
+      pInputText
+      class="p-inputtext"
+      name="nome"
+      type="text"
+      placeholder="nome"
+      [(ngModel)]="produto.nome"
+    />
+    <br />
+    <label for="categoria">Categoria:</label>
+    <input
+      pInputText
+      class="p-inputtext"
+      name="categoria"
+      type="text"
+      placeholder="categoria"
+      [(ngModel)]="produto.categoria"
+    />
+    <br />
+    <label for="espessura">Espessura:</label>
+    <input
+      pInputText
+      class="p-inputtext"
+      name="espessura"
+      type="text"
+      placeholder="espessura"
+      [(ngModel)]="produto.espessura"
+    />
+    <br />
+    <label for="peso">Peso:</label>
+    <input
+      pInputText
+      class="p-inputtext"
+      name="peso"
+      type="text"
+      placeholder="peso"
+      [(ngModel)]="produto.peso"
+    />
+    <br />
+    <label for="updateAt">Data de atualização:</label>
+    <input
+      pInputText
+      class="p-inputtext"
+      name="updateAt"
+      type="text"
+      [(ngModel)]="produto.updateAt"
+    />
+    <br />
+    <label for="createAt">Data de criação:</label>
+    <input
+      pInputText
+      class="p-inputtext"
+      name="createAt"
+      type="text"
+      value="{{ produto.createAt | date: 'dd/MM/yyyy HH:mm:ss' }}"
+    />
+    <br /><br />
+  </form>
+  <button pButton class="p-button" (click)="updateProduto()">Salvar</button>
+  <button pButton class="p-button" (click)="getBackProdutos()">Voltar</button>
+  <button pButton class="p-button" (click)="deleteProduto()">Excluir</button>
 </div>
