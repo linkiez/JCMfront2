@@ -3,10 +3,11 @@ import { RouterModule, Routes } from '@angular/router';
 import { CadastroProdutosComponent } from './cadastro-produtos.component';
 import { ProdutoComponent } from './produto/produto.component';
 
+
 const routes: Routes = [
   {
     path: '',
-    component: CadastroProdutosComponent
+    component: CadastroProdutosComponent,
   },
 
   {

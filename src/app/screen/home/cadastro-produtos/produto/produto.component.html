@@ -1,5 +1,6 @@
 <div class="">
   <form action="">
+    <h2>Produto</h2>
     <label for="id">ID:</label>
     <input
       pInputText
@@ -65,11 +66,12 @@
       class="p-inputtext"
       name="createAt"
       type="text"
-      value="{{ produto.createAt | date: 'dd/MM/yyyy HH:mm:ss' }}"
+      value="{{ produto.createAt }}"
     />
     <br /><br />
   </form>
-  <button pButton class="p-button" (click)="updateProduto()">Salvar</button>
+  <button pButton class="p-button p-button-danger" (click)="confirm()">Excluir</button>
+  <button pButton class="p-button p-button-success" (click)="updateProduto()">Salvar</button>
   <button pButton class="p-button" (click)="getBackProdutos()">Voltar</button>
-  <button pButton class="p-button" (click)="deleteProduto()">Excluir</button>
 </div>
+<p-confirmDialog header="Confirmação" acceptLabel="Sim" rejectLabel="Não" icon="pi pi-exclamation-triangle"></p-confirmDialog>

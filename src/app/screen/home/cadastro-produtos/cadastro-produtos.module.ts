@@ -8,6 +8,8 @@ import { MessageModule } from 'primeng/message';
 import { CadastroProdutosComponent } from './cadastro-produtos.component';
 import { ProdutoComponent } from './produto/produto.component';
 import { FormsModule } from '@angular/forms';
+import {ConfirmDialogModule} from 'primeng/confirmdialog';
+
 
 @NgModule({
   declarations: [CadastroProdutosComponent, ProdutoComponent],
@@ -17,7 +19,8 @@ import { FormsModule } from '@angular/forms';
     TableModule,
     MessagesModule,
     MessageModule,
-    FormsModule
+    FormsModule,
+    ConfirmDialogModule
   ]
 })
 export class CadastroProdutosModule { }

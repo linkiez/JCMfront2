@@ -3,11 +3,14 @@ import { MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { Produto } from './produto';
 import { ProdutoService } from './produto.service';
+import {ConfirmationService} from 'primeng/api';
+
 
 @Component({
   selector: 'app-cadastro-produtos',
   templateUrl: './cadastro-produtos.component.html',
-  styleUrls: ['./cadastro-produtos.component.scss']
+  styleUrls: ['./cadastro-produtos.component.scss'],
+  providers: [ConfirmationService]
 })
 export class CadastroProdutosComponent implements OnInit {
 
@@ -19,7 +22,7 @@ export class CadastroProdutosComponent implements OnInit {
 
   rows = 10;
 
-  constructor(private produtoService: ProdutoService) { }
+  constructor(private produtoService: ProdutoService, private confirmationService: ConfirmationService) { }
 
   ngOnInit(): void {
     this.getProdutos();

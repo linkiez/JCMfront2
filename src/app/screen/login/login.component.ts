@@ -31,7 +31,6 @@ export class LoginComponent implements OnInit {
       {
         next:(response) => {
           let body = response.body as Login;
-          console.log(body)
           this.usuarioService.salvaToken(body!.accessToken, body!.refreshToken);
 
 
