@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from 'src/environments/environment.prod';
-import { HttpClient } from '@angular/common/http';
 import { Produto } from '../produto';
 import { ProdutoService } from '../produto.service';
-import {ConfirmationService} from 'primeng/api';
-
+import { ConfirmationService } from 'primeng/api';
+import { MessageService } from 'primeng/api';
 
 const API = environment.backendURL;
 
@@ -13,14 +12,15 @@ const API = environment.backendURL;
   selector: 'app-produto',
   templateUrl: './produto.component.html',
   styleUrls: ['./produto.component.scss'],
-  providers: [ConfirmationService]
+  providers: [ConfirmationService],
 })
 export class ProdutoComponent implements OnInit {
   constructor(
     private produtoService: ProdutoService,
     private route: ActivatedRoute,
     private router: Router,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private messageService: MessageService
   ) {}
 
   produto: Produto = {};
@@ -42,8 +42,15 @@ export class ProdutoComponent implements OnInit {
   }
 
   updateProduto() {
-    this.produtoService.updateProduto(this.produto).subscribe();
-    this.router.navigate(['/home/produtos']);
+    this.produtoService.updateProduto(this.produto).subscribe({
+      complete: () =>
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Sucesso',
+          detail: 'O produto foi atualizado.',
+        }),
+    });
+    //this.router.navigate(['/home/produtos']);
   }
 
   deleteProduto() {
@@ -53,12 +60,12 @@ export class ProdutoComponent implements OnInit {
 
   confirm() {
     this.confirmationService.confirm({
-        message: 'Tem certeza que deseja excluir este produto?',
-        accept: () => {
-            this.deleteProduto();
-        }
+      message: 'Tem certeza que deseja excluir este produto?',
+      accept: () => {
+        this.deleteProduto();
+      },
     });
-}
+  }
 
   getBackProdutos() {
     this.router.navigate(['/home/produtos']);

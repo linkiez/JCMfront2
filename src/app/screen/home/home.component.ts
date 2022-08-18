@@ -1,27 +1,28 @@
 import { Component, OnInit } from '@angular/core';
 import { MenuItem } from 'primeng/api/menuitem';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  styleUrls: ['./home.component.scss'],
+  providers: [MessageService],
 })
 export class HomeComponent implements OnInit {
-
   public menuItems: MenuItem[] = [
     {
       icon: 'favicon-icon',
-      routerLink: 'dashboard'
+      routerLink: 'dashboard',
     },
     {
       label: 'Cadastro',
       items: [
         {
           label: 'Contatos',
-          routerLink: 'contatos'
+          routerLink: 'contatos',
         },
         {
-          label: 'Fornecedores'
+          label: 'Fornecedores',
         },
         {
           label: 'Operadores',
@@ -40,15 +41,14 @@ export class HomeComponent implements OnInit {
         },
         {
           label: 'Produtos',
-          routerLink: 'produtos'
+          routerLink: 'produtos',
         },
         {
           label: 'Registro de Inspeção e Recebimento',
         },
         {
           label: 'Vendedores',
-        }
-
+        },
       ],
     },
     {
@@ -56,21 +56,19 @@ export class HomeComponent implements OnInit {
       items: [
         {
           label: 'Listas Genericas',
-          routerLink: 'listagenerica'
+          routerLink: 'listagenerica',
         },
         {
           label: 'Arquivos',
         },
         {
           label: 'Usuarios',
-        }
-      ]
-    }
+        },
+      ],
+    },
   ];
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit(): void {
-  }
-
+  ngOnInit(): void {}
 }
