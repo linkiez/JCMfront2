@@ -4,7 +4,10 @@
 
 export const environment = {
   production: false,
-  backendURL: 'http://linkiez.ddns.net:3000/'
+  backendURL: 'http://linkiez.ddns.net:3000/',
+  accessTokenExpirein: 5 /*in minutes*/,
+  refreshTokenExpireIn: 5 /*in days*/
+
 };
 
 /*
