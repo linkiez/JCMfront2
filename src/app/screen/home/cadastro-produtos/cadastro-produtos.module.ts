@@ -6,15 +6,18 @@ import { TableModule } from 'primeng/table';
 import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
 import { CadastroProdutosComponent } from './cadastro-produtos.component';
+import { ProdutoComponent } from './produto/produto.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [CadastroProdutosComponent],
+  declarations: [CadastroProdutosComponent, ProdutoComponent],
   imports: [
     CommonModule,
     CadastroProdutosRoutingModule,
     TableModule,
     MessagesModule,
-    MessageModule
+    MessageModule,
+    FormsModule
   ]
 })
 export class CadastroProdutosModule { }

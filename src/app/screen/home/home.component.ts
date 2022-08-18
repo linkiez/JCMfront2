@@ -18,6 +18,7 @@ export class HomeComponent implements OnInit {
       items: [
         {
           label: 'Contatos',
+          routerLink: 'contatos'
         },
         {
           label: 'Fornecedores'

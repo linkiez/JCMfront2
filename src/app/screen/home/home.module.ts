@@ -9,6 +9,7 @@ import { SharedModule } from 'primeng/api';
 import { HomeComponent } from './home.component';
 import { CaixaUsuarioComponent } from './components/caixa-usuario/caixa-usuario.component';
 import {DashboardComponent } from './dashboard/dashboard.component';
+import { CadastroContatosComponent } from './cadastro-contatos/cadastro-contatos.component';
 
 
 @NgModule({

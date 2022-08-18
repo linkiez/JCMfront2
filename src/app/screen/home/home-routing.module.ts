@@ -23,6 +23,10 @@ const routes: Routes = [
       {
         path: 'produtos',
         loadChildren: () => import('./cadastro-produtos/cadastro-produtos.module').then((module) => module.CadastroProdutosModule)
+      },
+      {
+        path: 'contatos',
+        loadChildren: () => import('./cadastro-contatos/cadastro-contatos.module').then((module) => module.CadastroContatosModule)
       }
     ]
 
