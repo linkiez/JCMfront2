@@ -2,21 +2,22 @@ import { Injectable } from '@angular/core';
 import * as moment from 'moment';
 import { environment } from 'src/environments/environment';
 
-
-const KEY = 'refreshToken'
+const KEY = 'refreshToken';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class RefreshTokenService {
-
-  constructor() { }
+  constructor() {}
 
   salvaToken(token: string) {
     localStorage.setItem(KEY, token);
     localStorage.setItem(
       'refreshTokenExpireIn',
-      (moment.now()+(environment.accessTokenExpirein*24*60*60*1000)).toString()
+      (
+        moment.now() +
+        environment.accessTokenExpirein * 24 * 60 * 60 * 1000
+      ).toString()
     );
   }
 
@@ -24,11 +25,11 @@ export class RefreshTokenService {
     localStorage.removeItem(KEY);
   }
 
-  retornaToken(){
+  retornaToken() {
     return localStorage.getItem(KEY) ?? '';
   }
 
-  possuiToken(){
+  possuiToken() {
     let now = moment.now();
     let refreshTokenExpireIn = Number(
       localStorage.getItem('refreshTokenExpireIn')

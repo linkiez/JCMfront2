@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from 'src/environments/environment.prod';
 import { Produto } from '../produto';
 import { ProdutoService } from '../produto.service';
 import { ConfirmationService } from 'primeng/api';
 import { MessageService } from 'primeng/api';
+import { Subscription } from 'rxjs';
 
 const API = environment.backendURL;
 
@@ -14,7 +15,7 @@ const API = environment.backendURL;
   styleUrls: ['./produto.component.scss'],
   providers: [ConfirmationService],
 })
-export class ProdutoComponent implements OnInit {
+export class ProdutoComponent implements OnInit, OnDestroy {
   constructor(
     private produtoService: ProdutoService,
     private route: ActivatedRoute,
@@ -25,18 +26,31 @@ export class ProdutoComponent implements OnInit {
 
   produto: Produto = {};
 
+  private subscription: Subscription = new Subscription;
+
   ngOnInit(): void {
     this.getProduto();
+  }
+
+  ngOnDestroy(): void {
+      this.subscription.unsubscribe();
   }
 
   getProduto() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     if (id != 0) {
-      this.produtoService.getProduto(id).subscribe({
+      this.subscription = this.produtoService.getProduto(id).subscribe({
         next: (produto) => {
           this.produto = produto;
         },
-        error: (error) => console.log(error),
+        error: (error) => {
+          console.log(error)
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: error.message,
+          })
+        },
       });
     }
   }

@@ -1,37 +1,55 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { Produto } from './produto';
 import { ProdutoService } from './produto.service';
-import {ConfirmationService} from 'primeng/api';
-
+import { ConfirmationService } from 'primeng/api';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-cadastro-produtos',
   templateUrl: './cadastro-produtos.component.html',
   styleUrls: ['./cadastro-produtos.component.scss'],
-  providers: [ConfirmationService]
+  providers: [ConfirmationService],
 })
-export class CadastroProdutosComponent implements OnInit {
-
+export class CadastroProdutosComponent implements OnInit, OnDestroy {
   @ViewChild('dt') dt: Table | undefined;
 
-  produtos: Array<Produto> = []
+  produtos: Array<Produto> = [];
 
   first = 0;
 
   rows = 10;
 
-  constructor(private produtoService: ProdutoService, private confirmationService: ConfirmationService) { }
+  private subscription: Subscription = new Subscription;
+
+  constructor(
+    private produtoService: ProdutoService,
+    private messageService: MessageService
+  ) {}
 
   ngOnInit(): void {
     this.getProdutos();
   }
 
+  ngOnDestroy(): void{
+    this.subscription.unsubscribe()
+  }
+
   getProdutos(): void {
-    this.produtoService
+    this.subscription = this.produtoService
       .getProdutos()
-      .subscribe((produtos) => (this.produtos = produtos), (error) => console.log(error));
+      .subscribe({
+        next: (produtos) => (this.produtos = produtos),
+        error: (error) => {
+          console.log(error)
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: error.message,
+          })
+        },
+      });
   }
 
   next() {
@@ -62,5 +80,5 @@ export class CadastroProdutosComponent implements OnInit {
 
   clear(table: Table) {
     table.clear();
-}
+  }
 }

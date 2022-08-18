@@ -41,8 +41,9 @@ export class LoginGuard implements CanLoad, CanActivate  {
             return true;
           },
           error: (error) => {
-            alert('refresh token invalido');
+            alert(error.message);
             console.log(error);
+            this.router.navigate(['login']);
           },
         });
       } else {
@@ -68,8 +69,9 @@ export class LoginGuard implements CanLoad, CanActivate  {
             return true;
           },
           error: (error) => {
-            alert('refresh token invalido');
+            alert(error.message);
             console.log(error);
+            this.router.navigate(['login']);
           },
         });
       } else {
