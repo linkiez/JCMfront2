@@ -1,9 +1,8 @@
 import { AccessTokenService } from './accessToken.service';
 import { environment } from '../../environments/environment.prod';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
+import { RefreshTokenService } from './refreshToken.service';
 
 const API = environment.backendURL;
 
@@ -13,7 +12,7 @@ const API = environment.backendURL;
 export class AuthenticationService {
   constructor(
     private httpClient: HttpClient,
-    private accessTokenService: AccessTokenService
+    private refreshTokenService: RefreshTokenService
   ) {}
 
   login(email: string, senha: string) {
@@ -26,5 +25,11 @@ export class AuthenticationService {
 
   logout() {
     return this.httpClient.get(`${API}/login`, { observe: 'response' });
+  }
+
+  refresh() {
+    return this.httpClient.get(`${API}refresh`, {
+      headers: {'x-refresh-token': this.refreshTokenService.retornaToken()},
+      observe: 'response' })
   }
 }

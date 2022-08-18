@@ -28,6 +28,11 @@ const routes: Routes = [
         path: 'contatos',
         loadChildren: () => import('./cadastro-contatos/cadastro-contatos.module').then((module) => module.CadastroContatosModule)
       }
+      ,
+      {
+        path: 'listagenerica',
+        loadChildren: () => import('./lista-generica/lista-generica.module').then((module) => module.ListaGenericaModule)
+      }
     ]
 
   }

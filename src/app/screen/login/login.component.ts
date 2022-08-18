@@ -25,16 +25,22 @@ export class LoginComponent implements OnInit {
 
   login() {
     this.authenticationService.login(this.email, this.senha).subscribe(
-      (response) => {
-        let body = response.body as Login;
+      {
+        next:(response) => {
+          let body = response.body as Login;
+          console.log(body)
+          this.usuarioService.salvaToken(body!.accessToken, body!.refreshToken);
 
-        this.usuarioService.salvaToken(body!.accessToken, body!.refreshToken);
-        this.router.navigate(['home']);
-      },
-      (error) => {
-        alert('Usuario ou senha invalido');
-        console.log(error);
+
+        },
+        error:(error) => {
+          alert('Usuario ou senha invalido');
+          console.log(error);
+        },
+        complete: () => this.router.navigate(['home'])
       }
+
+
     );
   }
 }

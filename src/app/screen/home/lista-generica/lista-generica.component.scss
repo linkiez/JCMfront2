@@ -1,0 +1,25 @@
+h2 {
+  color: white
+}
+div {
+  color: #aeb2b8
+}
+
+.listas tr:hover:nth-child(n + 1) {
+  color: white;
+  background-color: rgba(255, 255, 255, 0.04);
+  cursor: pointer;
+}
+
+.selected {
+  color: white;
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.button {
+  width: 40px;
+}
+
+.trash{
+  cursor: pointer;
+}
