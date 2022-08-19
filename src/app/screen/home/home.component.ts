@@ -60,6 +60,7 @@ export class HomeComponent implements OnInit {
         },
         {
           label: 'Arquivos',
+          routerLink: 'arquivos',
         },
         {
           label: 'Usuarios',

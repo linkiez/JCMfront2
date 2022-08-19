@@ -40,6 +40,14 @@ const routes: Routes = [
           ),
         canLoad: [LoginGuard],
       },
+      {
+        path: 'arquivos',
+        loadChildren: () =>
+          import('./arquivos/arquivos.module').then(
+            (module) => module.ArquivosModule
+          ),
+        canLoad: [LoginGuard],
+      },
     ],
   },
 ];

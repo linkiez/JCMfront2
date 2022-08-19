@@ -45,7 +45,6 @@ export class ProdutoComponent implements OnInit, OnDestroy {
     if (id != 0) {
       this.subscription = this.produtoService.getProduto(id).subscribe({
         next: (produto) => {
-          console.log(produto)
           this.produto = produto;
         },
         error: (error) => {

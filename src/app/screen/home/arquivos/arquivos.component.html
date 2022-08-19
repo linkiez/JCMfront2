@@ -1,6 +1,6 @@
 <p-table
   #dt
-  [value]="produtos"
+  [value]="arquivos"
   [paginator]="true"
   [rows]="10"
   [showCurrentPageReport]="true"
@@ -22,27 +22,26 @@
           placeholder="Search keyword"
         />
       </span>
-      <button pButton class="button" (click)="new()">
-        <i class="pi pi-plus"></i>
-      </button>
     </div>
   </ng-template>
 
   <ng-template pTemplate="header">
     <tr>
       <th>Código</th>
-      <th class="col-8">Nome</th>
-
-      <th>Valor Maior</th>
-      <th>Valor Médio</th>
-      <th>Valor Menor</th>
-      <th>Atualização</th>
+      <th>Nome</th>
+      <th>Criado</th>
+      <th></th>
     </tr>
   </ng-template>
-  <ng-template pTemplate="body" let-product>
-    <tr [routerLink]="product.id">
-      <td>{{ product.id }}</td>
-      <td>{{ product.nome }}</td>
+  <ng-template pTemplate="body" let-arquivo>
+    <tr>
+      <td>{{ arquivo.id }}</td>
+      <td><span class="link" (click)="goToUrl(arquivo.id)">{{ arquivo.originalFilename }}</span></td>
+      <td>{{ arquivo.createdAt | date: 'dd/MM/yyyy HH:mm:ss' }}</td>
+      <td>
+        <i class="pi pi-trash trash" (click)="confirm($event, arquivo.id)"></i>
+      </td>
     </tr>
   </ng-template>
 </p-table>
+<p-confirmPopup></p-confirmPopup>
