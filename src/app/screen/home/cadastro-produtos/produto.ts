@@ -4,7 +4,7 @@ export interface Produto {
   categoria?: string;
   espessura?: number;
   peso?: number;
-  updateAt?: string;
-  createAt?: string;
-  deletedAt?: string;
+  updatedAt?: Date;
+  createdAt?: Date;
+  deletedAt?: Date;
 }

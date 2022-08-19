@@ -9,6 +9,7 @@ import { CadastroProdutosComponent } from './cadastro-produtos.component';
 import { ProdutoComponent } from './produto/produto.component';
 import { FormsModule } from '@angular/forms';
 import {ConfirmDialogModule} from 'primeng/confirmdialog';
+import {DropdownModule} from 'primeng/dropdown';
 
 
 @NgModule({
@@ -20,7 +21,8 @@ import {ConfirmDialogModule} from 'primeng/confirmdialog';
     MessagesModule,
     MessageModule,
     FormsModule,
-    ConfirmDialogModule
+    ConfirmDialogModule,
+    DropdownModule
   ]
 })
 export class CadastroProdutosModule { }

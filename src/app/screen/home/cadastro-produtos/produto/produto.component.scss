@@ -1,5 +1,5 @@
 label {
-    width: 125px;
+    width: 150px;
     color: #fff;
     margin-top: 15px;
 }
@@ -12,4 +12,6 @@ button {
     margin-right: 10px;
 }
 
-
+input, :host ::ng-deep .p-dropdown {
+  width: 300px
+}

@@ -5,6 +5,7 @@ import { Produto } from './produto';
 import { ProdutoService } from './produto.service';
 import { ConfirmationService } from 'primeng/api';
 import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-cadastro-produtos',
@@ -25,7 +26,8 @@ export class CadastroProdutosComponent implements OnInit, OnDestroy {
 
   constructor(
     private produtoService: ProdutoService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -50,6 +52,10 @@ export class CadastroProdutosComponent implements OnInit, OnDestroy {
           })
         },
       });
+  }
+
+  new(){
+    this.router.navigate(['/home/produtos/0'])
   }
 
   next() {

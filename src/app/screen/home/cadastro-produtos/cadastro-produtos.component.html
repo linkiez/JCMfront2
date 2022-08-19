@@ -11,18 +11,20 @@
   responsiveLayout="scroll"
 >
   <ng-template pTemplate="caption">
-    <div class="flex">
-
-      <i class="pi pi-search"></i>
+    <div class="d-flex justify-content-between">
       <span class="p-input-icon-left ml-auto">
-
+        <i class="pi pi-search"></i>
         <input
           pInputText
+          class="p-inputtext"
           type="text"
           (input)="applyFilterGlobal($event, 'contains')"
           placeholder="Search keyword"
         />
       </span>
+      <button pButton class="button" (click)="new()">
+        <i class="pi pi-plus"></i>
+      </button>
     </div>
   </ng-template>
 
@@ -38,7 +40,7 @@
     </tr>
   </ng-template>
   <ng-template pTemplate="body" let-product>
-    <tr [routerLink]=product.id>
+    <tr [routerLink]="product.id">
       <td>{{ product.id }}</td>
       <td>{{ product.nome }}</td>
     </tr>

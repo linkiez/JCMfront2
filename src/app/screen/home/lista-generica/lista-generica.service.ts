@@ -23,6 +23,13 @@ export class ListaGenericaService {
     );
   }
 
+  getByNameListaGenerica(nome: string): Observable<ListaGenerica> {
+    return this.http.get<ListaGenerica>(
+      environment.backendURL + 'listagenerica/nome/' + nome,
+      { responseType: 'json' }
+    );
+  }
+
   addListaGenerica(listaGenerica: ListaGenerica): Observable<Object> {
     return this.http.post(environment.backendURL + 'listagenerica', listaGenerica, {
       responseType: 'json',

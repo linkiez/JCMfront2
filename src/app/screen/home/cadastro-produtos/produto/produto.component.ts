@@ -5,7 +5,8 @@ import { Produto } from '../produto';
 import { ProdutoService } from '../produto.service';
 import { ConfirmationService } from 'primeng/api';
 import { MessageService } from 'primeng/api';
-import { Subscription } from 'rxjs';
+import { map, Subscription, tap } from 'rxjs';
+import { ListaGenericaService } from '../../lista-generica/lista-generica.service';
 
 const API = environment.backendURL;
 
@@ -21,10 +22,13 @@ export class ProdutoComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private confirmationService: ConfirmationService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private listaGenericaService: ListaGenericaService
   ) {}
 
   produto: Produto = {};
+
+  categorias$ = this.listaGenericaService.getByNameListaGenerica('categoriaProduto').pipe(map((listaGenerica: any)=> listaGenerica.lista_generica_items))
 
   private subscription: Subscription = new Subscription;
 
@@ -41,6 +45,7 @@ export class ProdutoComponent implements OnInit, OnDestroy {
     if (id != 0) {
       this.subscription = this.produtoService.getProduto(id).subscribe({
         next: (produto) => {
+          console.log(produto)
           this.produto = produto;
         },
         error: (error) => {
@@ -57,6 +62,14 @@ export class ProdutoComponent implements OnInit, OnDestroy {
 
   updateProduto() {
     this.produtoService.updateProduto(this.produto).subscribe({
+      error: (error) => {
+        console.log(error)
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: error.message,
+        })
+      },
       complete: () =>
         this.messageService.add({
           severity: 'success',
@@ -65,6 +78,34 @@ export class ProdutoComponent implements OnInit, OnDestroy {
         }),
     });
     //this.router.navigate(['/home/produtos']);
+  }
+
+  createProduto(){
+    this.produtoService.addProduto(this.produto).subscribe({
+      next: (produto) => this.produto=produto,
+      error: (error) => {
+        console.log(error)
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: error.message,
+        })
+      },
+      complete: () =>
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Sucesso',
+          detail: 'O produto foi criado.',
+        }),
+    });
+  }
+
+  createOrUpdate(){
+    if(this.produto.id == undefined){
+      this.createProduto()
+    }else{
+      this.updateProduto()
+    }
   }
 
   deleteProduto() {

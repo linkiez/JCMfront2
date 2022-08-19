@@ -1,5 +1,5 @@
 <div class="">
-  <form action="">
+  <form name="produtoForm">
     <h2>Produto</h2>
     <label for="id">ID:</label>
     <input
@@ -9,6 +9,7 @@
       type="text"
       placeholder="id"
       [(ngModel)]="produto.id"
+      disabled
     />
     <br />
     <label for="nome">Nome:</label>
@@ -19,17 +20,11 @@
       type="text"
       placeholder="nome"
       [(ngModel)]="produto.nome"
+      required
     />
     <br />
     <label for="categoria">Categoria:</label>
-    <input
-      pInputText
-      class="p-inputtext"
-      name="categoria"
-      type="text"
-      placeholder="categoria"
-      [(ngModel)]="produto.categoria"
-    />
+    <p-dropdown name="categoria" [options]="categorias$ | async" [editable]="true" [(ngModel)]="produto.categoria" optionLabel="valor"></p-dropdown>
     <br />
     <label for="espessura">Espessura:</label>
     <input
@@ -57,7 +52,9 @@
       class="p-inputtext"
       name="updateAt"
       type="text"
-      [(ngModel)]="produto.updateAt"
+      value="{{ produto.updatedAt | date: 'dd/MM/yyyy HH:mm:ss' }}"
+      [(ngModel)]="produto.updatedAt"
+      disabled
     />
     <br />
     <label for="createAt">Data de criação:</label>
@@ -66,12 +63,22 @@
       class="p-inputtext"
       name="createAt"
       type="text"
-      value="{{ produto.createAt }}"
+      value="{{ produto.createdAt | date: 'dd/MM/yyyy HH:mm:ss' }}"
+      disabled
     />
     <br /><br />
   </form>
-  <button pButton class="p-button p-button-danger" (click)="confirm()">Excluir</button>
-  <button pButton class="p-button p-button-success" (click)="updateProduto()">Salvar</button>
+  <button pButton class="p-button p-button-danger" (click)="confirm()">
+    Excluir
+  </button>
+  <button pButton class="p-button p-button-success" (click)="createOrUpdate()">
+    Salvar
+  </button>
   <button pButton class="p-button" (click)="getBackProdutos()">Voltar</button>
 </div>
-<p-confirmDialog header="Confirmação" acceptLabel="Sim" rejectLabel="Não" icon="pi pi-exclamation-triangle"></p-confirmDialog>
+<p-confirmDialog
+  header="Confirmação"
+  acceptLabel="Sim"
+  rejectLabel="Não"
+  icon="pi pi-exclamation-triangle"
+></p-confirmDialog>
