@@ -22,7 +22,7 @@ const routes: Routes = [
       {
         path: 'produtos',
         loadChildren: () =>
-          import('./cadastro-produtos/cadastro-produtos.module').then(
+          import('./produtos/produtos.module').then(
             (module) => module.CadastroProdutosModule
           ),
         canLoad: [LoginGuard]

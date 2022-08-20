@@ -8,12 +8,12 @@ import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-cadastro-produtos',
-  templateUrl: './cadastro-produtos.component.html',
-  styleUrls: ['./cadastro-produtos.component.scss'],
+  selector: 'app-produtos',
+  templateUrl: './produtos.component.html',
+  styleUrls: ['./produtos.component.scss'],
   providers: [ConfirmationService],
 })
-export class CadastroProdutosComponent implements OnInit, OnDestroy {
+export class ProdutosComponent implements OnInit, OnDestroy {
   @ViewChild('dt') dt: Table | undefined;
 
   produtos: Array<Produto> = [];
