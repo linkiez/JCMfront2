@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
-import { Produto } from './produto';
-import { ProdutoService } from './produto.service';
+import { Produto } from '../../../models/produto';
+import { ProdutoService } from '../../../services/produto.service';
 import { ConfirmationService } from 'primeng/api';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';

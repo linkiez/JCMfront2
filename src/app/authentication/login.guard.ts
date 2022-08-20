@@ -5,7 +5,7 @@ import { AccessTokenService } from './accessToken.service';
 import { AuthenticationService } from './authentication.service';
 import { RefreshTokenService } from './refreshToken.service';
 import { UsuarioService } from 'src/app/authentication/usuario.service';
-import { Login } from '../screen/login/login';
+import { Login } from '../models/login';
 
 @Injectable({
   providedIn: 'root',

@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Contato } from './contato';
-import { ContatoService } from './contato.service';
+import { Contato } from '../../../models/contato';
+import { ContatoService } from '../../../services/contato.service';
 import { Table } from 'primeng/table';
 
 @Component({
@@ -11,7 +11,7 @@ import { Table } from 'primeng/table';
 export class CadastroContatosComponent implements OnInit {
 
   @ViewChild('dt') dt: Table | undefined;
-  
+
   contatos: Array<Contato> = []
 
   first = 0;

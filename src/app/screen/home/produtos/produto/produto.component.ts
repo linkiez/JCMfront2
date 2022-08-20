@@ -1,12 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from 'src/environments/environment.prod';
-import { Produto } from '../produto';
-import { ProdutoService } from '../produto.service';
+import { Produto } from '../../../../models/produto';
+import { ProdutoService } from '../../../../services/produto.service';
 import { ConfirmationService } from 'primeng/api';
 import { MessageService } from 'primeng/api';
 import { map, Subscription, tap } from 'rxjs';
-import { ListaGenericaService } from '../../lista-generica/lista-generica.service';
+import { ListaGenericaService } from '../../../../services/lista-generica.service';
 
 const API = environment.backendURL;
 

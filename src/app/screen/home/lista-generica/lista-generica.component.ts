@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Table } from 'primeng/table';
-import { ListaGenerica, ListaGenericaItem } from './lista-generica';
-import { ListaGenericaService } from './lista-generica.service';
+import { ListaGenerica, ListaGenericaItem } from '../../../models/lista-generica';
+import { ListaGenericaService } from '../../../services/lista-generica.service';
 import { isEqual } from 'lodash';
 
 @Component({

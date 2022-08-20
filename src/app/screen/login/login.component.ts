@@ -2,7 +2,7 @@ import { AccessTokenService } from 'src/app/authentication/accessToken.service';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthenticationService } from 'src/app/authentication/authentication.service';
-import { Login } from './login';
+import { Login } from '../../models/login';
 import { UsuarioService } from 'src/app/authentication/usuario.service';
 import {Message,MessageService} from 'primeng/api';
 

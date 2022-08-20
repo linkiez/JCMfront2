@@ -3,8 +3,8 @@ import { Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { map, Subscription } from 'rxjs';
-import { Arquivo } from './arquivo';
-import { ArquivoService } from './arquivo.service';
+import { Arquivo } from '../../../models/arquivo';
+import { ArquivoService } from '../../../services/arquivo.service';
 import { DOCUMENT } from '@angular/common';
 
 @Component({
