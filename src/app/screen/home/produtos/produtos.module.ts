@@ -25,4 +25,4 @@ import {DropdownModule} from 'primeng/dropdown';
     DropdownModule
   ]
 })
-export class CadastroProdutosModule { }
+export class ProdutosModule { }

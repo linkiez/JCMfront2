@@ -14,6 +14,20 @@ body {
   min-height: 100%;
 }
 
+@page {
+  size: A4;
+  margin: 0;
+}
+
+
+.page {
+  padding: 2cm;
+  margin: 1cm auto;
+  border-radius: 5px;
+  background: #2a323d;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
 .caixa {
   margin: auto;
   width: auto;
@@ -34,3 +48,21 @@ body {
   cursor: pointer;
 }
 
+@media print {
+  .page {
+    margin: 0;
+    padding: 1cm;
+    border: initial;
+    border-radius: initial;
+    width: initial;
+    min-height: initial;
+    box-shadow: initial;
+    background: initial;
+    page-break-after: always;
+  }
+
+  .row {
+    margin: 0;
+    padding: 0
+  }
+}

@@ -24,7 +24,7 @@ export class AuthenticationService {
   }
 
   logout() {
-    return this.httpClient.get(`${API}/login`, { observe: 'response' });
+    return this.httpClient.get(`${API}logout`, { observe: 'response' });
   }
 
   refresh() {

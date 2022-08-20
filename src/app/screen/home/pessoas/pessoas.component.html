@@ -1,1 +1,54 @@
-<p>pessoas works!</p>
+<p-table
+  #dt
+  [columns]="selectedColumns"
+  [value]="pessoas"
+  [paginator]="true"
+  [rows]="10"
+  [showCurrentPageReport]="true"
+  currentPageReportTemplate="Mostrando {first} até {last} de {totalRecords} pessoas"
+  [rowsPerPageOptions]="[10, 25, 50]"
+  [globalFilterFields]="['nome']"
+  [selection]="true"
+  responsiveLayout="scroll"
+>
+  <ng-template pTemplate="caption">
+    <div class="d-flex justify-content-between">
+      <span class="p-input-icon-left ml-auto">
+        <i class="pi pi-search"></i>
+        <input
+          pInputText
+          class="p-inputtext"
+          type="text"
+          (input)="applyFilterGlobal($event, 'contains')"
+          placeholder="Search keyword"
+        />
+      </span>
+      <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header"
+            selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" placeholder="Choose Columns"></p-multiSelect>
+      <button pButton class="button" (click)="new()">
+        <i class="pi pi-plus"></i>
+      </button>
+    </div>
+  </ng-template>
+
+  <ng-template pTemplate="header" let-columns>
+    <tr>
+      <th *ngFor="let col of columns">
+        {{col.header}}
+    </th>
+
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-pessoa let-columns="columns">
+    <tr>
+
+      <td *ngFor="let col of columns">
+        <span *ngIf="col.field!='cnpj_cpf'&&col.field!='updatedAt'&&col.field!='telefone'&&col.field!='createdAt'">{{pessoa[col.field]}}</span>
+        <span *ngIf="col.field=='cnpj_cpf'">{{pessoa[col.field] | cpfCnpj}}</span>
+        <span *ngIf="col.field=='updatedAt'">{{pessoa[col.field] | date: 'dd/MM/yyyy HH:mm:ss' }}</span>
+        <span *ngIf="col.field=='createdAt'">{{pessoa[col.field] | date: 'dd/MM/yyyy HH:mm:ss' }}</span>
+        <span *ngIf="col.field=='telefone'">{{pessoa[col.field] | telefone }}</span>
+    </td>
+    </tr>
+  </ng-template>
+</p-table>
