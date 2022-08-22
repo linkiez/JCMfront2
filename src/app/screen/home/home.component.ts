@@ -22,12 +22,6 @@ export class HomeComponent implements OnInit {
           routerLink: 'contatos',
         },
         {
-          label: 'Fornecedores',
-        },
-        {
-          label: 'Operadores',
-        },
-        {
           label: 'Orcamentos',
         },
         {
@@ -46,9 +40,6 @@ export class HomeComponent implements OnInit {
         },
         {
           label: 'Registro de Inspeção e Recebimento',
-        },
-        {
-          label: 'Vendedores',
         },
       ],
     },

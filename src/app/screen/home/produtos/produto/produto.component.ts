@@ -108,8 +108,27 @@ export class ProdutoComponent implements OnInit, OnDestroy {
   }
 
   deleteProduto() {
-    this.produtoService.deleteProduto(this.produto).subscribe();
-    this.router.navigate(['/home/produtos']);
+    this.produtoService.deleteProduto(this.produto).subscribe(
+      {
+        error: (error) => {
+          console.log(error)
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: error.message,
+          })
+        },
+        complete: () =>
+          {this.messageService.add({
+            severity: 'success',
+            summary: 'Sucesso',
+            detail: 'O produto foi excluido.',
+          })
+          this.router.navigate(['/home/produtos']);
+        },
+      }
+    );
+
   }
 
   confirm() {

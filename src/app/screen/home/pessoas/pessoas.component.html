@@ -40,7 +40,7 @@
     </tr>
   </ng-template>
   <ng-template pTemplate="body" let-pessoa let-columns="columns">
-    <tr>
+    <tr [routerLink]="pessoa.id">
 
       <td *ngFor="let col of columns">
         <span *ngIf="col.field!='cnpj_cpf'&&col.field!='updatedAt'&&col.field!='telefone'&&col.field!='createdAt'">{{pessoa[col.field]}}</span>

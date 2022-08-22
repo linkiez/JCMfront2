@@ -16,7 +16,6 @@ export class CaixaUsuarioComponent implements OnInit {
 
   ngOnInit(): void {
     this.usuario = this.usuarioService.getUsuario()
-    console.log(this.usuario)
   }
 
   logout() {
