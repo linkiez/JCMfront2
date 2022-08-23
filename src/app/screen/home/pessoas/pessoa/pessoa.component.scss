@@ -10,8 +10,18 @@ input, p-calendar, textarea {
   width: 100%
 }
 
-
-.input {
-  margin-left: 20px;
+p-calendar{
+  max-width: none;
 }
 
+p-checkbox{
+  margin-top: 25px;
+}
+
+
+
+
+button {
+  margin-top: 10px;
+  margin-right: 10px;
+}

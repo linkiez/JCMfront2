@@ -1,184 +1,237 @@
 <div>
   <p-accordion [multiple]="true">
     <p-accordionTab header="Pessoa" [selected]="true">
-      <form action="" class="d-flex flex-wrap">
-        <div class="input">
-          <label for="InpIdPessoa">Id</label>
-          <input
-            name="InpIdPessoa"
-            class="p-inputtext col-1"
-            type="text"
-            pInputText
-            disabled
-            [(ngModel)]="pessoa.id"
-          />
-        </div>
-        <div class="input">
-          <label for="InpNome">Nome</label>
-          <input
-            name="InpNome"
-            class="p-inputtext"
-            type="text"
-            pInputText
-            [(ngModel)]="pessoa.nome"
-          />
-        </div>
+      <form action="" class="container">
+        <div class="row">
+          <div class="input col-2">
+            <label for="InpIdPessoa">Id</label>
+            <input
+              name="InpIdPessoa"
+              class="p-inputtext"
+              type="text"
+              pInputText
+              disabled
+              [(ngModel)]="pessoa.id"
+            />
+          </div>
+          <div class="input col-10">
+            <label for="InpNome">Nome</label>
+            <input
+              name="InpNome"
+              class="p-inputtext"
+              type="text"
+              pInputText
+              [(ngModel)]="pessoa.nome"
+            />
+          </div>
+          <div class="input col-2">
+            <p-checkbox
+              name="ChkPessoaJuridica"
+              [(ngModel)]="pessoa.pessoa_juridica"
+              label="Pessoa Juridica"
+              [binary]="true"
+            ></p-checkbox>
+          </div>
 
-        <div class="input">
-          <p-checkbox
-            name="ChkPessoaJuridica"
-            [(ngModel)]="pessoa.pessoa_juridica"
-            label="Pessoa Juridica"
-            [binary]="true"
-          ></p-checkbox>
-        </div>
+          <div class="input col-10" *ngIf="pessoa.pessoa_juridica">
+            <label for="InpRazaoSocial">Razão Social</label>
+            <input
+              name="InpRazaoSocial"
+              class="p-inputtext"
+              type="text"
+              pInputText
+              [(ngModel)]="pessoa.razao_social"
+            />
+          </div>
+          <div class="input col-4">
+            <label for="InpCnpjCpf">CNPJ / CPF</label>
+            <input
+              name="InpCnpjCpf"
+              class="p-inputtext"
+              type="text"
+              pInputText
+              [ngModel]="pessoa.cnpj_cpf | cpfCnpj"
+              (ngModelChange)="pessoa.cnpj_cpf = $event"
+              maxlength="18"
+            />
+          </div>
+          <div class="input col-4">
+            <label for="InpIeRg">Incrição Estadual / RG</label>
+            <input
+              name="InpIeRg"
+              class="p-inputtext"
+              type="text"
+              pInputText
+              [ngModel]="pessoa.ie_rg | ieRg"
+              (ngModelChange)="pessoa.ie_rg = $event"
+              maxlength="15"
+            />
+          </div>
+          <div class="input col-4">
+            <label for="InpTelefone">Telefone</label>
+            <input
+              name="InpTelefone"
+              class="p-inputtext"
+              type="text"
+              pInputText
+              [ngModel]="pessoa.telefone | telefone"
+              (ngModelChange)="pessoa.telefone = $event"
+            />
+          </div>
+          <div class="input col-6">
+            <label for="InpEmail">Email</label>
+            <input
+              name="InpEmail"
+              class="p-inputtext"
+              type="text"
+              pInputText
+              [(ngModel)]="pessoa.email"
+            />
+          </div>
+          <div class="input col-6">
+            <label for="InpEmailNFe">Email NFe</label>
+            <input
+              name="InpEmailNFe"
+              class="p-inputtext"
+              type="text"
+              pInputText
+              [(ngModel)]="pessoa.email_nfe"
+            />
+          </div>
+          <div class="input col-3">
+            <label for="InpCEP">CEP</label>
+            <input
+              name="InpCEP"
+              class="p-inputtext"
+              type="text"
+              pInputText
+              [(ngModel)]="pessoa.cep"
+            />
+          </div>
+          <div class="input col-9">
+            <label for="InpEndereco">Endereço</label>
+            <input
+              name="InpEndereco"
+              class="p-inputtext"
+              type="text"
+              pInputText
+              [(ngModel)]="pessoa.endereco"
+            />
+          </div>
+          <div class="input col-4">
+            <label for="InpMunicipio">Cidade</label>
+            <input
+              name="InpMunicipio"
+              class="p-inputtext"
+              type="text"
+              pInputText
+              [(ngModel)]="pessoa.municipio"
+            />
+          </div>
+          <div class="input col-2">
+            <label for="InpUF">UF</label>
+            <input
+              name="InpUF"
+              class="p-inputtext"
+              type="text"
+              pInputText
+              [ngModel]="pessoa.uf | uppercase"
+              (ngModelChange)="pessoa.uf = $event"
+              maxlength="2"
+            />
+          </div>
 
-        <div class="input" *ngIf="pessoa.pessoa_juridica">
-          <label for="InpRazaoSocial">Razão Social</label>
-          <input
-            name="InpRazaoSocial"
-            class="p-inputtext"
-            type="text"
-            pInputText
-            [(ngModel)]="pessoa.razao_social"
-          />
-        </div>
+          <div class="input col-6">
+            <label for="InpDataNasc">Data de fundação / nascimento</label>
+            <p-calendar
+              name="InpDataNasc"
+              [(ngModel)]="pessoa.data_nasc"
+              dateFormat="dd.mm.yy"
+            ></p-calendar>
+          </div>
+          <div class="input">
+            <label for="descricaoPessoa">Descrição</label>
+            <textarea
+              name="descricaoPessoa"
+              [rows]="5"
+              [cols]="30"
+              pInputTextarea
+              class="p-inputtextarea"
+              [(ngModel)]="pessoa.descricao"
+            ></textarea>
+          </div>
+          <div class="input col-6">
+            <label for="InpCreatedAt">Criado em</label>
+            <input
+              name="InpCreatedAt"
+              class="p-inputtext"
+              type="text"
+              pInputText
+              value="{{ pessoa.createdAt | date: 'dd/MM/yyyy HH:mm:ss' }}"
+            />
+          </div>
+          <div class="input col-6">
+            <label for="InpUpdatedAt">Atualizado em</label>
+            <input
+              name="InpUpdatedAt"
+              class="p-inputtext"
+              type="text"
+              pInputText
+              value="{{ pessoa.updatedAt | date: 'dd/MM/yyyy HH:mm:ss' }}"
+            />
+          </div>
+          <div>
+            <p-table
+              *ngIf="pessoa.contatos"
+              [value]="pessoa.contatos"
+              responsiveLayout="scroll"
+            >
+              <ng-template pTemplate="caption">
+                <div class="d-flex justify-content-between">
+                  <h3>Contatos</h3>
 
-        <div class="input">
-          <label for="InpTelefone">Telefone</label>
-          <input
-            name="InpTelefone"
-            class="p-inputtext"
-            type="text"
-            pInputText
-            [ngModel]="pessoa.telefone | telefone"
-            (ngModelChange)="pessoa.telefone = $event"
-          />
-        </div>
-        <div class="input">
-          <label for="InpEmail">Email</label>
-          <input
-            name="InpEmail"
-            class="p-inputtext"
-            type="text"
-            pInputText
-            [(ngModel)]="pessoa.email"
-          />
-        </div>
-        <div class="input">
-          <label for="InpEmailNFe">Email NFe</label>
-          <input
-            name="InpEmailNFe"
-            class="p-inputtext"
-            type="text"
-            pInputText
-            [(ngModel)]="pessoa.email_nfe"
-          />
-        </div>
-        <div class="input">
-          <label for="InpCEP">CEP</label>
-          <input
-            name="InpCEP"
-            class="p-inputtext"
-            type="text"
-            pInputText
-            [(ngModel)]="pessoa.cep"
-          />
-        </div>
-        <div class="input">
-          <label for="InpEndereco">Endereço</label>
-          <input
-            name="InpEndereco"
-            class="p-inputtext"
-            type="text"
-            pInputText
-            [(ngModel)]="pessoa.endereco"
-          />
-        </div>
-        <div class="input">
-          <label for="InpMunicipio">Cidade</label>
-          <input
-            name="InpMunicipio"
-            class="p-inputtext"
-            type="text"
-            pInputText
-            [(ngModel)]="pessoa.municipio"
-          />
-        </div>
-        <div class="input">
-          <label for="InpUF">UF</label>
-          <input
-            name="InpUF"
-            class="p-inputtext"
-            type="text"
-            pInputText
-            [ngModel]="pessoa.uf | uppercase"
-            (ngModelChange)="pessoa.uf = $event"
-            maxlength="2"
-          />
-        </div>
-        <div class="input">
-          <label for="InpCnpjCpf">CNPJ / CPF</label>
-          <input
-            name="InpCnpjCpf"
-            class="p-inputtext"
-            type="text"
-            pInputText
-            [ngModel]="pessoa.cnpj_cpf | cpfCnpj"
-            (ngModelChange)="pessoa.cnpj_cpf = $event"
-            maxlength="18"
-          />
-        </div>
-        <div class="input">
-          <label for="InpIeRg">Incrição Estadual / RG</label>
-          <input
-            name="InpIeRg"
-            class="p-inputtext"
-            type="text"
-            pInputText
-            [ngModel]="pessoa.ie_rg | ieRg"
-            (ngModelChange)="pessoa.ie_rg = $event"
-            maxlength="15"
-          />
-        </div>
-        <div class="input">
-          <label for="InpDataNasc">Data de fundação / nascimento</label>
-          <p-calendar
-            name="InpDataNasc"
-            [(ngModel)]="pessoa.data_nasc"
-            dateFormat="dd.mm.yy"
-          ></p-calendar>
-        </div>
-        <div class="input">
-          <label for="descricaoPessoa">Descrição</label>
-          <textarea
-            name="descricaoPessoa"
-            [rows]="5"
-            [cols]="30"
-            pInputTextarea
-            class="p-inputtextarea"
-            [(ngModel)]="pessoa.descricao"
-          ></textarea>
-        </div>
-        <div class="input">
-          <label for="InpCreatedAt">Criado em</label>
-          <input
-            name="InpCreatedAt"
-            class="p-inputtext"
-            type="text"
-            pInputText
-            value="{{ pessoa.createdAt | date: 'dd/MM/yyyy HH:mm:ss' }}"
-          />
-        </div>
-        <div class="input">
-          <label for="InpUpdatedAt">Atualizado em</label>
-          <input
-            name="InpUpdatedAt"
-            class="p-inputtext"
-            type="text"
-            pInputText
-            value="{{ pessoa.updatedAt | date: 'dd/MM/yyyy HH:mm:ss' }}"
-          />
+                  &nbsp;<button pButton class="p-button" (click)="newContato()">
+                    <i class="pi pi-plus"></i>
+                  </button>
+                </div>
+
+
+              </ng-template>
+
+              <ng-template pTemplate="header">
+                <tr>
+                  <th>Nome</th>
+                  <th>Tipo</th>
+                  <th></th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-contato let-i="rowIndex">
+                <tr>
+                  <td><input
+                    [name]="'InpContatoNome'+i"
+                    type="text"
+                    class="p-inputtext"
+                    pInputText
+                    [(ngModel)]="contato.nome"
+                  /></td>
+                  <td><input
+                    [name]="'InpContatoTipo'+i"
+                    type="text"
+                    class="p-inputtext"
+                    pInputText
+                    [(ngModel)]="contato.tipo"
+                  /></td>
+                  <td><input
+                    [name]="'InpContatoValor'+i"
+                    type="text"
+                    class="p-inputtext"
+                    pInputText
+                    [(ngModel)]="contato.valor"
+                  /></td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </div>
         </div>
       </form>
     </p-accordionTab>
@@ -192,68 +245,71 @@
         >
           <i class="pi pi-plus"></i></button
       ></ng-template>
-      <ng-template pTemplate="content"
-        ><form action="d-flex flex-wrap" *ngIf="pessoa.fornecedor">
-          <div class="input">
-            <label for="InpIdFornecedor">Id</label>
-            <input
-              name="InpIdFornecedor"
-              class="p-inputtext"
-              type="text"
-              pInputText
-              [(ngModel)]="pessoa.fornecedor.id"
-            />
-          </div>
-          <div class="input">
-            <label for="InpDataAprovacao">Data Aprovação</label>
-            <p-calendar
-              name="InpDataAprovacao"
-              [(ngModel)]="pessoa.fornecedor.data_aprov"
-              dateFormat="dd.mm.yy"
-            ></p-calendar>
-          </div>
-          <div class="input">
-            <label for="InpDataVencimento">Data Vencimento</label>
-            <p-calendar
-              name="InpDataVencimento"
-              [(ngModel)]="pessoa.fornecedor.data_venc"
-              dateFormat="dd.mm.yy"
-            ></p-calendar>
-          </div>
-          <div class="input">
-            <label for="descricaoFornecedor">Observações</label>
-            <textarea
-              name="descricaoFornecedor"
-              [rows]="5"
-              [cols]="30"
-              pInputTextarea
-              class="p-inputtextarea"
-              [(ngModel)]="pessoa.fornecedor.observacao"
-            ></textarea>
-          </div>
-          <div class="input">
-            <label for="InpCreatedAtFornecedor">Criado em</label>
-            <input
-              name="InpCreatedAtFornecedor"
-              class="p-inputtext"
-              type="text"
-              pInputText
-              value="{{
-                pessoa.fornecedor.createdAt | date: 'dd/MM/yyyy HH:mm:ss'
-              }}"
-            />
-          </div>
-          <div class="input">
-            <label for="InpUpdatedAtFornecedor">Atualizado em</label>
-            <input
-              name="InpUpdatedAtFornecedor"
-              class="p-inputtext"
-              type="text"
-              pInputText
-              value="{{
-                pessoa.fornecedor.updatedAt | date: 'dd/MM/yyyy HH:mm:ss'
-              }}"
-            />
+      <ng-template pTemplate="content">
+        <form action="d-flex flex-wrap" *ngIf="pessoa.fornecedor">
+          <div class="row">
+            <div class="input col-2">
+              <label for="InpIdFornecedor">Id</label>
+              <input
+                name="InpIdFornecedor"
+                class="p-inputtext"
+                type="text"
+                pInputText
+                [(ngModel)]="pessoa.fornecedor.id"
+                disabled
+              />
+            </div>
+            <div class="input col-5">
+              <label for="InpDataAprovacao">Data Aprovação</label>
+              <p-calendar
+                name="InpDataAprovacao"
+                [(ngModel)]="pessoa.fornecedor.data_aprov"
+                dateFormat="dd.mm.yy"
+              ></p-calendar>
+            </div>
+            <div class="input col-5">
+              <label for="InpDataVencimento">Data Vencimento</label>
+              <p-calendar
+                name="InpDataVencimento"
+                [(ngModel)]="pessoa.fornecedor.data_venc"
+                dateFormat="dd.mm.yy"
+              ></p-calendar>
+            </div>
+            <div class="input">
+              <label for="descricaoFornecedor">Observações</label>
+              <textarea
+                name="descricaoFornecedor"
+                [rows]="5"
+                [cols]="30"
+                pInputTextarea
+                class="p-inputtextarea"
+                [(ngModel)]="pessoa.fornecedor.observacao"
+              ></textarea>
+            </div>
+            <div class="input col-6">
+              <label for="InpCreatedAtFornecedor">Criado em</label>
+              <input
+                name="InpCreatedAtFornecedor"
+                class="p-inputtext"
+                type="text"
+                pInputText
+                value="{{
+                  pessoa.fornecedor.createdAt | date: 'dd/MM/yyyy HH:mm:ss'
+                }}"
+              />
+            </div>
+            <div class="input col-6">
+              <label for="InpUpdatedAtFornecedor">Atualizado em</label>
+              <input
+                name="InpUpdatedAtFornecedor"
+                class="p-inputtext"
+                type="text"
+                pInputText
+                value="{{
+                  pessoa.fornecedor.updatedAt | date: 'dd/MM/yyyy HH:mm:ss'
+                }}"
+              />
+            </div>
           </div></form
       ></ng-template>
     </p-accordionTab>
@@ -269,32 +325,42 @@
       ></ng-template>
       <ng-template pTemplate="content"
         ><form action="" class="d-flex flex-wrap" *ngIf="pessoa.operador">
-          <div class="input">
-            <label for="InpIdOperador">Id</label>
-            <input
-              name="InpIdOperador"
-              class="p-inputtext"
-              type="text"
-              pInputText
-            />
-          </div>
-          <div class="input">
-            <label for="InpCreatedAtOperador">Criado em</label>
-            <input
-              name="InpCreatedAtOperador"
-              class="p-inputtext"
-              type="text"
-              pInputText
-            />
-          </div>
-          <div class="input">
-            <label for="InpUpdatedAtOperador">Atualizado em</label>
-            <input
-              name="InpUpdatedAtOperador"
-              class="p-inputtext"
-              type="text"
-              pInputText
-            />
+          <div class="row">
+            <div class="input col-4">
+              <label for="InpIdOperador">Id</label>
+              <input
+                name="InpIdOperador"
+                class="p-inputtext"
+                type="text"
+                pInputText
+                disabled
+                [(ngModel)]="pessoa.operador.id"
+              />
+            </div>
+            <div class="input col-4">
+              <label for="InpCreatedAtOperador">Criado em</label>
+              <input
+                name="InpCreatedAtOperador"
+                class="p-inputtext"
+                type="text"
+                pInputText
+                value="{{
+                  pessoa.operador.createdAt | date: 'dd/MM/yyyy HH:mm:ss'
+                }}"
+              />
+            </div>
+            <div class="input col-4">
+              <label for="InpUpdatedAtOperador">Atualizado em</label>
+              <input
+                name="InpUpdatedAtOperador"
+                class="p-inputtext"
+                type="text"
+                pInputText
+                value="{{
+                  pessoa.operador.updatedAt | date: 'dd/MM/yyyy HH:mm:ss'
+                }}"
+              />
+            </div>
           </div></form
       ></ng-template>
     </p-accordionTab>
@@ -311,32 +377,42 @@
       ></ng-template>
       <ng-template pTemplate="content"
         ><form action="" class="d-flex flex-wrap" *ngIf="pessoa.vendedor">
-          <div class="input">
-            <label for="InpIdVendedor">Id</label>
-            <input
-              name="InpIdVendedor"
-              class="p-inputtext"
-              type="text"
-              pInputText
-            />
-          </div>
-          <div class="input">
-            <label for="InpCreatedAtVendedor">Criado em</label>
-            <input
-              name="InpCreatedAtVendedor"
-              class="p-inputtext"
-              type="text"
-              pInputText
-            />
-          </div>
-          <div class="input">
-            <label for="InpUpdatedAtVendedor">Atualizado em</label>
-            <input
-              name="InpUpdatedAtVendedor"
-              class="p-inputtext"
-              type="text"
-              pInputText
-            />
+          <div class="row">
+            <div class="input col-4">
+              <label for="InpIdVendedor">Id</label>
+              <input
+                name="InpIdVendedor"
+                class="p-inputtext"
+                type="text"
+                pInputText
+                disabled
+                [(ngModel)]="pessoa.vendedor.id"
+              />
+            </div>
+            <div class="input col-4">
+              <label for="InpCreatedAtVendedor">Criado em</label>
+              <input
+                name="InpCreatedAtVendedor"
+                class="p-inputtext"
+                type="text"
+                pInputText
+                value="{{
+                  pessoa.vendedor.createdAt | date: 'dd/MM/yyyy HH:mm:ss'
+                }}"
+              />
+            </div>
+            <div class="input col-4">
+              <label for="InpUpdatedAtVendedor">Atualizado em</label>
+              <input
+                name="InpUpdatedAtVendedor"
+                class="p-inputtext"
+                type="text"
+                pInputText
+                value="{{
+                  pessoa.vendedor.updatedAt | date: 'dd/MM/yyyy HH:mm:ss'
+                }}"
+              />
+            </div>
           </div></form
       ></ng-template>
     </p-accordionTab>

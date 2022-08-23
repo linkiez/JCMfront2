@@ -5,12 +5,13 @@ import { Subscription } from 'rxjs';
 import { Pessoa } from 'src/app/models/pessoa';
 import { Fornecedor } from 'src/app/models/fornecedor';
 import { PessoaService } from 'src/app/services/pessoa.service';
+import { Contato } from 'src/app/models/contato';
 
 @Component({
   selector: 'app-pessoa',
   templateUrl: './pessoa.component.html',
   styleUrls: ['./pessoa.component.scss'],
-  providers: [ConfirmationService]
+  providers: [ConfirmationService],
 })
 export class PessoaComponent implements OnInit {
   pessoa: Pessoa = {};
@@ -42,7 +43,7 @@ export class PessoaComponent implements OnInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: error.message,
+            detail: `${error.status} - ${error.statusText} - ${error.error}`,
           });
         },
       });
@@ -50,11 +51,20 @@ export class PessoaComponent implements OnInit {
   }
 
   createPessoa() {
-    let pessoaClean = this.pessoa
+    let pessoaClean = this.pessoa;
 
-    pessoaClean.telefone = Number(pessoaClean.telefone||''.replace(/\D/g, ''));
-    pessoaClean.cnpj_cpf = Number(pessoaClean.cnpj_cpf||''.replace(/\D/g, ''));
-    pessoaClean.ie_rg = Number(pessoaClean.ie_rg||''.replace(/\D/g, ''));
+    if (pessoaClean.telefone)
+      pessoaClean.telefone = Number(
+        pessoaClean.telefone.toString().replace(/\D/g, '')
+      );
+    if (pessoaClean.cnpj_cpf)
+      pessoaClean.cnpj_cpf = Number(
+        pessoaClean.cnpj_cpf.toString().replace(/\D/g, '')
+      );
+    if (pessoaClean.ie_rg)
+      pessoaClean.ie_rg = Number(
+        pessoaClean.ie_rg.toString().replace(/\D/g, '')
+      );
 
     this.pessoaService.addPessoa(pessoaClean).subscribe({
       next: (pessoa) => (this.pessoa = pessoa),
@@ -63,7 +73,7 @@ export class PessoaComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: error.message,
+          detail: `${error.status} - ${error.statusText} - ${error.error}`,
         });
       },
       complete: () =>
@@ -76,12 +86,20 @@ export class PessoaComponent implements OnInit {
   }
 
   updatePessoa() {
+    let pessoaClean = this.pessoa;
 
-    let pessoaClean = this.pessoa
-
-    pessoaClean.telefone = Number(pessoaClean.telefone||''.replace(/\D/g, ''));
-    pessoaClean.cnpj_cpf = Number(pessoaClean.cnpj_cpf||''.replace(/\D/g, ''));
-    pessoaClean.ie_rg = Number(pessoaClean.ie_rg||''.replace(/\D/g, ''));
+    if (pessoaClean.telefone)
+      pessoaClean.telefone = Number(
+        pessoaClean.telefone.toString().replace(/\D/g, '')
+      );
+    if (pessoaClean.cnpj_cpf)
+      pessoaClean.cnpj_cpf = Number(
+        pessoaClean.cnpj_cpf.toString().replace(/\D/g, '')
+      );
+    if (pessoaClean.ie_rg)
+      pessoaClean.ie_rg = Number(
+        pessoaClean.ie_rg.toString().replace(/\D/g, '')
+      );
 
     this.pessoaService.updatePessoa(pessoaClean).subscribe({
       next: (pessoa) => (this.pessoa = pessoa),
@@ -90,14 +108,14 @@ export class PessoaComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: error.message,
+          detail: `${error.status} - ${error.statusText} - ${error.error}`,
         });
       },
       complete: () =>
         this.messageService.add({
           severity: 'success',
           summary: 'Sucesso',
-          detail: 'A pessoa foi criada.',
+          detail: 'A pessoa foi atualizada.',
         }),
     });
   }
@@ -121,16 +139,15 @@ export class PessoaComponent implements OnInit {
           detail: error.message,
         });
       },
-      complete: () =>
-        {this.messageService.add({
+      complete: () => {
+        this.messageService.add({
           severity: 'success',
           summary: 'Sucesso',
           detail: 'A pessoa foi exluida.',
-        })
+        });
         this.router.navigate(['/home/pessoas']);
       },
     });
-
   }
 
   newFornecedor() {
@@ -143,6 +160,13 @@ export class PessoaComponent implements OnInit {
 
   newVendedor() {
     this.pessoa.vendedor = {};
+  }
+
+  newContato(){
+    let contatos: Contato[] = []
+    if(!this.pessoa.contatos) this.pessoa.contatos = contatos
+    this.pessoa.contatos.push({})
+    console.log(this.pessoa.contatos)
   }
 
   getBackPessoas() {

@@ -8,10 +8,11 @@ h2 {
   color: #fff;
 }
 
-button {
-    margin-right: 10px;
-}
-
 input, :host ::ng-deep .p-dropdown {
   width: 300px
+}
+
+
+button {
+  margin-right: 10px;
 }
