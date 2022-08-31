@@ -16,6 +16,7 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { CalendarModule } from 'primeng/calendar';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { IeRgPipe } from 'src/app/utils/ieRg.pipe';
+import {FileUploadModule} from 'primeng/fileupload';
 
 @NgModule({
   declarations: [PessoasComponent, CpfCnpjPipe, TelefonePipe, PessoaComponent, IeRgPipe],
@@ -30,6 +31,7 @@ import { IeRgPipe } from 'src/app/utils/ieRg.pipe';
     InputTextareaModule,
     CalendarModule,
     ConfirmDialogModule,
+    FileUploadModule
   ],
 })
 export class PessoasModule {}

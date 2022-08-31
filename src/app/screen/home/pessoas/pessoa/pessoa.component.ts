@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
@@ -6,6 +6,9 @@ import { Pessoa } from 'src/app/models/pessoa';
 import { Fornecedor } from 'src/app/models/fornecedor';
 import { PessoaService } from 'src/app/services/pessoa.service';
 import { Contato } from 'src/app/models/contato';
+import { DOCUMENT } from '@angular/common';
+import { ArquivoService } from 'src/app/services/arquivo.service';
+import { Arquivo } from 'src/app/models/arquivo';
 
 @Component({
   selector: 'app-pessoa',
@@ -23,7 +26,9 @@ export class PessoaComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private messageService: MessageService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    @Inject(DOCUMENT) private document: Document,
+    private arquivoService: ArquivoService
   ) {}
 
   ngOnInit(): void {
@@ -36,7 +41,6 @@ export class PessoaComponent implements OnInit {
       this.subscription = this.pessoaService.getPessoa(id).subscribe({
         next: (pessoa) => {
           this.pessoa = pessoa;
-          console.log(pessoa);
         },
         error: (error) => {
           console.log(error);
@@ -136,7 +140,7 @@ export class PessoaComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: error.message,
+          detail: `${error.status} - ${error.statusText} - ${error.error}`,
         });
       },
       complete: () => {
@@ -162,11 +166,58 @@ export class PessoaComponent implements OnInit {
     this.pessoa.vendedor = {};
   }
 
-  newContato(){
-    let contatos: Contato[] = []
-    if(!this.pessoa.contatos) this.pessoa.contatos = contatos
-    this.pessoa.contatos.push({})
-    console.log(this.pessoa.contatos)
+  newContato() {
+    let contatos: Contato[] = [];
+    if (!this.pessoa.contatos) this.pessoa.contatos = contatos;
+    this.pessoa.contatos.push({});
+    console.log(this.pessoa.contatos);
+  }
+
+  removeContato(rowIndex: number) {
+    this.pessoa.contatos = this.pessoa.contatos!.splice(rowIndex - 1, 1);
+  }
+
+  removeArquivo(rowIndex: number) {
+    this.arquivoService
+      .deleteArquivo(this.pessoa.files![rowIndex].id!)
+      .subscribe({
+        error: (error) => {
+          console.log(error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: `${error.status} - ${error.statusText} - ${error.error}`,
+          });
+        },
+        complete: () => {
+
+        }
+      });
+      this.pessoa.files = this.pessoa.files!.splice(rowIndex - 1, 1);
+  }
+
+  onFileSelected(event: Event) {
+    const file: File = (event.target as HTMLInputElement).files![0];
+
+    if (file) {
+      this.arquivoService.uploadArquivo(file).subscribe({
+        next: (arquivo: Arquivo) => {
+          console.log(arquivo);
+          this.pessoa.files?.push(arquivo);
+        },
+        error: (error) => {
+          console.log(error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: `${error.status} - ${error.statusText} - ${error.error}`,
+          });
+        },
+        complete: () => {
+          this.createOrUpdate();
+        },
+      });
+    }
   }
 
   getBackPessoas() {
@@ -178,6 +229,15 @@ export class PessoaComponent implements OnInit {
       message: 'Tem certeza que deseja excluir este produto?',
       accept: () => {
         this.deletePessoa();
+      },
+    });
+  }
+
+  goToUrl(id: number): void {
+    this.arquivoService.getUrlArquivo(id).subscribe({
+      next: (url: any) => {
+        console.log(url);
+        this.document.location.href = url.url;
       },
     });
   }

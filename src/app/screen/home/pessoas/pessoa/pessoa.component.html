@@ -194,8 +194,6 @@
                     <i class="pi pi-plus"></i>
                   </button>
                 </div>
-
-
               </ng-template>
 
               <ng-template pTemplate="header">
@@ -203,31 +201,89 @@
                   <th>Nome</th>
                   <th>Tipo</th>
                   <th></th>
+                  <th></th>
                 </tr>
               </ng-template>
               <ng-template pTemplate="body" let-contato let-i="rowIndex">
                 <tr>
-                  <td><input
-                    [name]="'InpContatoNome'+i"
-                    type="text"
-                    class="p-inputtext"
-                    pInputText
-                    [(ngModel)]="contato.nome"
-                  /></td>
-                  <td><input
-                    [name]="'InpContatoTipo'+i"
-                    type="text"
-                    class="p-inputtext"
-                    pInputText
-                    [(ngModel)]="contato.tipo"
-                  /></td>
-                  <td><input
-                    [name]="'InpContatoValor'+i"
-                    type="text"
-                    class="p-inputtext"
-                    pInputText
-                    [(ngModel)]="contato.valor"
-                  /></td>
+                  <td>
+                    <input
+                      [name]="'InpContatoNome' + i"
+                      type="text"
+                      class="p-inputtext"
+                      pInputText
+                      [(ngModel)]="contato.nome"
+                    />
+                  </td>
+                  <td>
+                    <input
+                      [name]="'InpContatoTipo' + i"
+                      type="text"
+                      class="p-inputtext"
+                      pInputText
+                      [(ngModel)]="contato.tipo"
+                    />
+                  </td>
+                  <td>
+                    <input
+                      [name]="'InpContatoValor' + i"
+                      type="text"
+                      class="p-inputtext"
+                      pInputText
+                      [(ngModel)]="contato.valor"
+                    />
+                  </td>
+                  <td>
+                    <i class="pi pi-trash trash" (click)="removeContato(i)"></i>
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </div>
+          <div>
+            <p-table
+              *ngIf="pessoa.files"
+              [value]="pessoa.files"
+              responsiveLayout="scroll"
+            >
+              <ng-template pTemplate="caption">
+                <div class="d-flex justify-content-between">
+                  <h3>Arquivos</h3>
+
+                  <div>
+                    <input
+                      type="file"
+                      class="file-input"
+                      (change)="onFileSelected($event)"
+                      #fileUpload
+                    />
+                    <button pButton class="p-button" (click)="fileUpload.click()">
+                      <i class="pi pi-paperclip"></i>
+                    </button>
+                  </div>
+                </div>
+              </ng-template>
+
+              <ng-template pTemplate="header">
+                <tr>
+                  <th>Código</th>
+                  <th>Nome</th>
+                  <th>Criado</th>
+                  <th></th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-arquivo let-i="rowIndex">
+                <tr>
+                  <td>{{ arquivo.id }}</td>
+                  <td>
+                    <span class="link" (click)="goToUrl(arquivo.id)">{{
+                      arquivo.originalFilename
+                    }}</span>
+                  </td>
+                  <td>{{ arquivo.createdAt | date: "dd/MM/yyyy HH:mm:ss" }}</td>
+                  <td>
+                    <i class="pi pi-trash trash" (click)="removeArquivo(i)"></i>
+                  </td>
                 </tr>
               </ng-template>
             </p-table>

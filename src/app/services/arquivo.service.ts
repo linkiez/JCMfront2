@@ -30,6 +30,16 @@ export class ArquivoService {
     });
   }
 
+  uploadArquivo(file: File): Observable<Arquivo> {
+    const formData = new FormData()
+
+    formData.append('filetoupload', file)
+
+    return this.http.post(environment.backendURL + 'file', formData, {
+      responseType: 'json',
+    });
+  }
+
   deleteArquivo(id: number): Observable<Object> {
     return this.http.delete(
       environment.backendURL + 'file/' + id,
