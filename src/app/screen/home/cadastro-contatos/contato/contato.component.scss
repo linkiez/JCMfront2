@@ -1,0 +1,17 @@
+label {
+    width: 150px;
+    color: #fff;
+    margin-top: 15px;
+}
+
+h2 {
+  color: #fff;
+}
+
+button {
+    margin-right: 10px;
+}
+
+input, :host ::ng-deep {
+  width: 300px
+}

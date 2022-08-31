@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Contato } from '../../../models/contato';
 import { ContatoService } from '../../../services/contato.service';
 import { Table } from 'primeng/table';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-cadastro-contatos',
@@ -18,7 +19,7 @@ export class CadastroContatosComponent implements OnInit {
 
   rows = 10;
 
-  constructor(private contatoService: ContatoService) { }
+  constructor(private contatoService: ContatoService, private router: Router) { }
 
   ngOnInit(): void {
     this.getProdutos();
@@ -28,6 +29,10 @@ export class CadastroContatosComponent implements OnInit {
     this.contatoService
       .getProdutos()
       .subscribe((contatos) => (this.contatos = contatos), (error) => console.log(error));
+  }
+
+  new(){
+    this.router.navigate(['/home/contatos/0'])
   }
 
   next() {
