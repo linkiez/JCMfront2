@@ -56,6 +56,14 @@ const routes: Routes = [
           ),
         canLoad: [LoginGuard],
       },
+      {
+        path: 'fornecedores',
+        loadChildren: () =>
+          import('./fornecedores/fornecedores.module').then(
+            (module) => module.FornecedoresModule
+          ),
+        canLoad: [LoginGuard],
+      },
     ],
   },
 ];
