@@ -30,6 +30,7 @@
               [(ngModel)]="pessoa.pessoa_juridica"
               label="Pessoa Juridica"
               [binary]="true"
+              (ngModelChange)="validaCpfCnpj()"
             ></p-checkbox>
           </div>
 
@@ -44,16 +45,22 @@
             />
           </div>
           <div class="input col-4">
-            <label for="InpCnpjCpf">CNPJ / CPF</label>
+            <label for="InpCnpjCpf">
+              <span *ngIf="pessoa.pessoa_juridica">CNPJ</span
+              ><span *ngIf="!pessoa.pessoa_juridica">CPF</span></label
+            >
             <input
               name="InpCnpjCpf"
               class="p-inputtext"
               type="text"
               pInputText
               [ngModel]="pessoa.cnpj_cpf | cpfCnpj"
+              [ngClass]="{'ng-erro': cnpj_cpfInvalido.length}"
               (ngModelChange)="pessoa.cnpj_cpf = $event"
+              (change)="validaCpfCnpj()"
               maxlength="18"
             />
+            <small class="p-error block" *ngFor="let validacao of cnpj_cpfInvalido">{{validacao.menssagem}}</small>
           </div>
           <div class="input col-4">
             <label for="InpIeRg">Incrição Estadual / RG</label>
@@ -167,6 +174,7 @@
               class="p-inputtext"
               type="text"
               pInputText
+              disabled
               value="{{ pessoa.createdAt | date: 'dd/MM/yyyy HH:mm:ss' }}"
             />
           </div>
@@ -177,6 +185,7 @@
               class="p-inputtext"
               type="text"
               pInputText
+              disabled
               value="{{ pessoa.updatedAt | date: 'dd/MM/yyyy HH:mm:ss' }}"
             />
           </div>
@@ -257,7 +266,11 @@
                       (change)="onFileSelected($event)"
                       #fileUpload
                     />
-                    <button pButton class="p-button" (click)="fileUpload.click()">
+                    <button
+                      pButton
+                      class="p-button"
+                      (click)="fileUpload.click()"
+                    >
                       <i class="pi pi-paperclip"></i>
                     </button>
                   </div>
