@@ -56,6 +56,10 @@ const routes: Routes = [
           ),
         canLoad: [LoginGuard],
       },
+      {
+        path: 'pedidoscompras',
+        loadChildren: () => import('./pedidoscompras/pedidoscompras.module').then((module) => module.PedidosComprasModule)
+      }
     ],
   },
 ];

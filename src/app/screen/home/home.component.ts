@@ -29,6 +29,7 @@ export class HomeComponent implements OnInit {
         },
         {
           label: 'Pedidos de Compra',
+          routerLink: 'pedidoscompras'
         },
         {
           label: 'Pessoas',
