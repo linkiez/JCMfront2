@@ -1,0 +1,82 @@
+<div class="contatoForm">
+    <form>
+      <h2>Contato</h2>
+      <label for="id">ID:</label>
+      <input
+        pInputText
+        class="p-inputtext"
+        name="id"
+        type="text"
+        placeholder="id"
+        [(ngModel)]="contato.id"
+        disabled
+      />
+      <br />
+      <label for="nome">Nome:</label>
+      <input
+        pInputText
+        class="p-inputtext"
+        name="nome"
+        type="text"
+        placeholder="nome"
+        [(ngModel)]="contato.nome"
+        required
+      />
+      <br />
+      <label for="tipo">Tipo:</label>
+      <input
+        pInputText
+        class="p-inputtext"
+        name="tipo"
+        type="text"
+        placeholder="tipo"
+        [(ngModel)]="contato.tipo"
+      />
+      <br />
+      <label for="valor">Valor:</label>
+      <input
+        pInputText
+        class="p-inputtext"
+        name="valor"
+        type="text"
+        placeholder="valor"
+        [(ngModel)]="contato.valor"
+      />
+      <br />
+      <label for="updateAt">Data de atualização:</label>
+      <input
+        pInputText
+        class="p-inputtext"
+        name="updateAt"
+        type="text"
+        value="{{ contato.updateAt | date: 'dd/MM/yyyy HH:mm:ss' }}"
+        [(ngModel)]="contato.updateAt"
+        disabled
+      />
+      <br />
+      <label for="createAt">Data de criação:</label>
+      <input
+        pInputText
+        class="p-inputtext"
+        name="createAt"
+        type="text"
+        value="{{ contato.createAt | date: 'dd/MM/yyyy HH:mm:ss' }}"
+        disabled
+      />
+      <br /><br />
+    </form>
+    <button pButton class="p-button p-button-danger" (click)="confirm()">
+      Excluir
+    </button>
+    <button pButton class="p-button p-button-success" (click)="createOrUpdate()">
+      Salvar
+    </button>
+    <button pButton class="p-button" (click)="getBackProdutos()">Voltar</button>
+  </div>
+  <p-confirmDialog
+    header="Confirmação"
+    acceptLabel="Sim"
+    rejectLabel="Não"
+    icon="pi pi-exclamation-triangle"
+  ></p-confirmDialog>
+  

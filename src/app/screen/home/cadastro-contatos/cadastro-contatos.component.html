@@ -9,6 +9,25 @@
   [globalFilterFields]="['nome']"
   [selection]="true"
   responsiveLayout="scroll">
+
+  <ng-template pTemplate="caption">
+    <div class="d-flex justify-content-between">
+      <span class="p-input-icon-left ml-auto">
+        <i class="pi pi-search"></i>
+        <input
+          pInputText
+          class="p-inputtext"
+          type="text"
+          (input)="applyFilterGlobal($event, 'contains')"
+          placeholder="Search keyword"
+        />
+      </span>
+      <button pButton class="button" (click)="new()">
+        <i class="pi pi-plus"></i>
+      </button>
+    </div>
+  </ng-template>
+  
     <ng-template pTemplate="header">
         <tr>
             <th>ID</th>
@@ -18,7 +37,7 @@
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-contact>
-        <tr>
+        <tr [routerLink]="contact.id">
             <td>{{contact.id}}</td>
             <td>{{contact.nome}}</td>
             <td>{{contact.tipo}}</td>

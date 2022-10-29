@@ -25,7 +25,7 @@ const routes: Routes = [
           import('./produtos/produtos.module').then(
             (module) => module.ProdutosModule
           ),
-        canLoad: [LoginGuard]
+        canLoad: [LoginGuard],
       },
       {
         path: 'pessoas',
@@ -33,12 +33,15 @@ const routes: Routes = [
           import('./pessoas/pessoas.module').then(
             (module) => module.PessoasModule
           ),
-        canLoad: [LoginGuard]
+        canLoad: [LoginGuard],
       },
       {
         path: 'contatos',
-        loadChildren: () => import('./cadastro-contatos/cadastro-contatos.module').then((module) => module.CadastroContatosModule),
-        canLoad: [LoginGuard]
+        loadChildren: () =>
+          import('./cadastro-contatos/cadastro-contatos.module').then(
+            (module) => module.CadastroContatosModule
+          ),
+        canLoad: [LoginGuard],
       },
       {
         path: 'listagenerica',
@@ -58,8 +61,19 @@ const routes: Routes = [
       },
       {
         path: 'pedidoscompras',
-        loadChildren: () => import('./pedidoscompras/pedidoscompras.module').then((module) => module.PedidosComprasModule)
-      }
+        loadChildren: () =>
+          import('./pedidoscompras/pedidoscompras.module').then(
+            (module) => module.PedidosComprasModule
+          ),
+      },
+      {
+        path: 'fornecedores',
+        loadChildren: () =>
+          import('./fornecedores/fornecedores.module').then(
+            (module) => module.FornecedoresModule
+          ),
+        canLoad: [LoginGuard],
+      },
     ],
   },
 ];
