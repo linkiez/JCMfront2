@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -24,13 +24,13 @@ export class PessoaService {
     );
   }
 
-  addPessoa(pessoa: Pessoa): Observable<Object> {
+  addPessoa(pessoa: Pessoa): Observable<Pessoa> {
     return this.http.post(environment.backendURL + 'pessoa', pessoa, {
       responseType: 'json',
     });
   }
 
-  updatePessoa(pessoa: Pessoa): Observable<Object> {
+  updatePessoa(pessoa: Pessoa): Observable<Pessoa> {
     return this.http.put(
       environment.backendURL + 'pessoa/' + pessoa.id,
       pessoa,
@@ -47,5 +47,11 @@ export class PessoaService {
 
   existeCnpjCpfPessoa(pessoa: Pessoa): Observable<any>{
     return this.http.post(environment.backendURL + 'pessoa/cnpj_cpf/existe', pessoa);
+  }
+
+  consultaCep(cep: string): Observable<any> {
+    return this.http.get(`http://viacep.com.br/ws/${cep}/json/`, {
+      responseType: 'json',
+    })
   }
 }

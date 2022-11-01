@@ -1,3 +1,4 @@
+import { CepPipe } from './../../../utils/cep.pipe';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -17,9 +18,10 @@ import { CalendarModule } from 'primeng/calendar';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { IeRgPipe } from 'src/app/utils/ieRg.pipe';
 import {FileUploadModule} from 'primeng/fileupload';
+import { DropdownModule } from 'primeng/dropdown';
 
 @NgModule({
-  declarations: [PessoasComponent, CpfCnpjPipe, TelefonePipe, PessoaComponent, IeRgPipe],
+  declarations: [PessoasComponent, CpfCnpjPipe, TelefonePipe, PessoaComponent, IeRgPipe, CepPipe],
   imports: [
     CommonModule,
     PessoasRoutingModule,
@@ -31,7 +33,8 @@ import {FileUploadModule} from 'primeng/fileupload';
     InputTextareaModule,
     CalendarModule,
     ConfirmDialogModule,
-    FileUploadModule
+    FileUploadModule,
+    DropdownModule
   ],
 })
 export class PessoasModule {}

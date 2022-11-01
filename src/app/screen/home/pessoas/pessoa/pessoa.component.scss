@@ -6,12 +6,12 @@
   margin-left: 10px
 }
 
-input, p-calendar, textarea {
-  width: 100%
+input, .p-calendar, textarea {
+  width: 100% !important
 }
 
-p-calendar{
-  max-width: none;
+.w-100{
+  width: 100% !important
 }
 
 p-checkbox{
@@ -37,4 +37,8 @@ button {
 
 small {
   font-size: 10px;
+}
+
+td{
+  vertical-align: middle !important;
 }

@@ -112,7 +112,7 @@ export class ArquivosComponent implements OnInit {
 
   confirm(event: Event, id: number) {
     this.confirmationService.confirm({
-      target: event.target,
+      target: event.target || undefined,
       message: "Tem certeza que deseja apagar o arquivo?",
       icon: "pi pi-exclamation-triangle",
       accept: () => {

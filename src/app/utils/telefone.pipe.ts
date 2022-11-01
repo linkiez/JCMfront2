@@ -26,6 +26,7 @@ export class TelefonePipe implements PipeTransform {
             7
           )}-${value.substring(7, 11)}`;
           break;
+        
       }
     }
 

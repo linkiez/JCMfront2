@@ -112,7 +112,9 @@
               class="p-inputtext"
               type="text"
               pInputText
-              [(ngModel)]="pessoa.cep"
+              [ngModel]="pessoa.cep | cep"
+              (ngModelChange)="pessoa.cep = $event"
+              (change)="consultaCep()"
             />
           </div>
           <div class="input col-9">
@@ -149,11 +151,15 @@
           </div>
 
           <div class="input col-6">
-            <label for="InpDataNasc">Data de fundação / nascimento</label>
+            <label for="InpDataNasc">
+              <span *ngIf="pessoa.pessoa_juridica">Data de fundação</span>
+              <span *ngIf="!pessoa.pessoa_juridica">Data de nascimento</span>
+            </label>
             <p-calendar
               name="InpDataNasc"
               [(ngModel)]="pessoa.data_nasc"
-              dateFormat="dd.mm.yy"
+              dateFormat="dd/mm/yy"
+              styleClass="w-100"
             ></p-calendar>
           </div>
           <div class="input">
@@ -225,13 +231,8 @@
                     />
                   </td>
                   <td>
-                    <input
-                      [name]="'InpContatoTipo' + i"
-                      type="text"
-                      class="p-inputtext"
-                      pInputText
-                      [(ngModel)]="contato.tipo"
-                    />
+                    <p-dropdown name="InpContatoTipo' + i" [options]="categorias$ | async" [editable]="false" [(ngModel)]="contato.tipo" optionLabel="valor" styleClass="w-100" appendTo="body" optionValue="valor"
+                    ></p-dropdown>
                   </td>
                   <td>
                     <input
@@ -333,7 +334,8 @@
               <p-calendar
                 name="InpDataAprovacao"
                 [(ngModel)]="pessoa.fornecedor.data_aprov"
-                dateFormat="dd.mm.yy"
+                dateFormat="dd/mm/yy"
+                styleClass="w-100"
               ></p-calendar>
             </div>
             <div class="input col-5">
@@ -341,7 +343,8 @@
               <p-calendar
                 name="InpDataVencimento"
                 [(ngModel)]="pessoa.fornecedor.data_venc"
-                dateFormat="dd.mm.yy"
+                dateFormat="dd/mm/yy"
+                styleClass="w-100"
               ></p-calendar>
             </div>
             <div class="input">
@@ -365,6 +368,7 @@
                 value="{{
                   pessoa.fornecedor.createdAt | date: 'dd/MM/yyyy HH:mm:ss'
                 }}"
+                disabled
               />
             </div>
             <div class="input col-6">
@@ -377,6 +381,7 @@
                 value="{{
                   pessoa.fornecedor.updatedAt | date: 'dd/MM/yyyy HH:mm:ss'
                 }}"
+                disabled
               />
             </div>
           </div></form
@@ -416,6 +421,7 @@
                 value="{{
                   pessoa.operador.createdAt | date: 'dd/MM/yyyy HH:mm:ss'
                 }}"
+                disabled
               />
             </div>
             <div class="input col-4">
@@ -428,6 +434,7 @@
                 value="{{
                   pessoa.operador.updatedAt | date: 'dd/MM/yyyy HH:mm:ss'
                 }}"
+                disabled
               />
             </div>
           </div></form
@@ -468,6 +475,7 @@
                 value="{{
                   pessoa.vendedor.createdAt | date: 'dd/MM/yyyy HH:mm:ss'
                 }}"
+                disabled
               />
             </div>
             <div class="input col-4">
@@ -480,6 +488,7 @@
                 value="{{
                   pessoa.vendedor.updatedAt | date: 'dd/MM/yyyy HH:mm:ss'
                 }}"
+                disabled
               />
             </div>
           </div></form
