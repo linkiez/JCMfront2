@@ -54,4 +54,10 @@ export class PessoaService {
       responseType: 'json',
     })
   }
+
+  consultaCNPJ(cnpj: number){
+    return this.http.get(`https://publica.cnpj.ws/cnpj/${cnpj}`, {
+      responseType: 'json',
+    });
+  }
 }

@@ -24,7 +24,7 @@
     />
     <br />
     <label for="categoria">Categoria:</label>
-    <p-dropdown name="categoria" [options]="categorias$ | async" [editable]="true" [(ngModel)]="produto.categoria" optionLabel="valor"></p-dropdown>
+    <p-dropdown name="categoria" [options]="categorias$ | async" [editable]="true" [(ngModel)]="produto.categoria" optionLabel="valor" optionValue="valor"></p-dropdown>
     <br />
     <label for="espessura">Espessura:</label>
     <input
@@ -33,17 +33,34 @@
       name="espessura"
       type="text"
       placeholder="espessura"
-      [(ngModel)]="produto.espessura"
+      [ngModel]="produto.espessura | number"
+      (ngModelChange)="produto.espessura = toNumber($event)"
     />
     <br />
-    <label for="peso">Peso:</label>
+    <label for="peso">Peso
+      <span *ngIf="produto.categoria === 'Chapa'">M²</span>
+      <span *ngIf="produto.categoria === 'Barra'">Linear</span>
+      <span *ngIf="produto.categoria === 'Peça'">Peça</span>
+      :</label>
     <input
       pInputText
       class="p-inputtext"
       name="peso"
       type="text"
       placeholder="peso"
-      [(ngModel)]="produto.peso"
+      [ngModel]="produto.peso | number"
+      (ngModelChange)="produto.peso = toNumber($event)"
+    />
+    <br />
+
+    <label for="createAt">Data de criação:</label>
+    <input
+      pInputText
+      class="p-inputtext"
+      name="createAt"
+      type="text"
+      value="{{ produto.createdAt | date: 'dd/MM/yyyy HH:mm:ss' }}"
+      disabled
     />
     <br />
     <label for="updateAt">Data de atualização:</label>
@@ -53,17 +70,6 @@
       name="updateAt"
       type="text"
       value="{{ produto.updatedAt | date: 'dd/MM/yyyy HH:mm:ss' }}"
-      [(ngModel)]="produto.updatedAt"
-      disabled
-    />
-    <br />
-    <label for="createAt">Data de criação:</label>
-    <input
-      pInputText
-      class="p-inputtext"
-      name="createAt"
-      type="text"
-      value="{{ produto.createdAt | date: 'dd/MM/yyyy HH:mm:ss' }}"
       disabled
     />
     <br /><br />

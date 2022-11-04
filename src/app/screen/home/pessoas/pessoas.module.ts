@@ -19,6 +19,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { IeRgPipe } from 'src/app/utils/ieRg.pipe';
 import {FileUploadModule} from 'primeng/fileupload';
 import { DropdownModule } from 'primeng/dropdown';
+import {ProgressSpinnerModule} from 'primeng/progressspinner';
 
 @NgModule({
   declarations: [PessoasComponent, CpfCnpjPipe, TelefonePipe, PessoaComponent, IeRgPipe, CepPipe],
@@ -34,7 +35,8 @@ import { DropdownModule } from 'primeng/dropdown';
     CalendarModule,
     ConfirmDialogModule,
     FileUploadModule,
-    DropdownModule
+    DropdownModule,
+    ProgressSpinnerModule
   ],
 })
 export class PessoasModule {}

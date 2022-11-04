@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import {LOCALE_ID, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { HomeRoutingModule } from './home-routing.module';
@@ -26,6 +26,9 @@ import { CaixaUsuarioComponent } from 'src/app/components/caixa-usuario/caixa-us
     ButtonModule,
     MessagesModule,
     MessageModule
+  ],
+  providers: [
+    {provide: LOCALE_ID, useValue: 'pt' }
   ],
 })
 export class HomeModule {}

@@ -191,13 +191,25 @@ export class PessoaComponent implements OnInit {
       },
       menssagem: `O CNPJ/CPF já esta cadastrado.`,
     },
+    {
+      campo: 'email',
+      nome: 'Email Valido',
+      funcao: (email: string)=>{
+        return email.match(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/)
+      },
+      menssagem: 'Email não é valido.'
+    }
   ];
 
   cnpj_cpfInvalido: Validação[] = [];
 
+  emailInvalido: Validação[] = [];
+
   private subscription: Subscription = new Subscription();
 
   categorias$ = this.listaGenericaService.getByNameListaGenerica('categoriaContato').pipe(map((listaGenerica: any)=> listaGenerica.lista_generica_items))
+
+  cnpjLoading: boolean = false;
 
   ngOnInit(): void {
     this.getPessoa();
@@ -208,7 +220,7 @@ export class PessoaComponent implements OnInit {
     if (id != 0) {
       this.subscription = this.pessoaService.getPessoa(id).subscribe({
         next: (pessoa) => {
-          pessoa.data_nasc = new Date(pessoa.data_nasc!.toString())
+          if(pessoa.data_nasc)pessoa.data_nasc = new Date(pessoa.data_nasc!.toString())
           if (pessoa.fornecedor?.data_aprov)
           pessoa.fornecedor.data_aprov = new Date(pessoa.fornecedor.data_aprov.toString())
           if (pessoa.fornecedor?.data_venc)
@@ -293,8 +305,6 @@ export class PessoaComponent implements OnInit {
     if (typeof pessoa.cnpj_cpf === 'string') delete pessoa.cnpj_cpf;
     if (pessoa.ie_rg)
       pessoa.ie_rg = Number(pessoa.ie_rg.toString().replace(/\D/g, ''));
-    console.log(typeof pessoa.cnpj_cpf);
-    console.log(pessoa);
     return pessoa;
   }
 
@@ -432,7 +442,26 @@ export class PessoaComponent implements OnInit {
         (validacao) => validacao.resultado === false
       );
       this.cnpj_cpfInvalido = cnpj_cpfInvalido;
+
+      if(cnpj_cpfInvalido.length==0&&this.pessoa.pessoa_juridica&&this.pessoa.cnpj_cpf){
+        this.cnpjLoading = true
+
+        this.pessoaService.consultaCNPJ(this.pessoa.cnpj_cpf).subscribe({next: (consultaPJ: any) =>{
+          console.log(consultaPJ);
+          this.pessoa.razao_social = consultaPJ.razao_social;
+          this.pessoa.nome = consultaPJ.estabelecimento.nome_fantasia?consultaPJ.estabelecimento.nome_fantasia:consultaPJ.razao_social
+          this.pessoa.data_nasc = new Date(consultaPJ.estabelecimento.data_inicio_atividade)
+          this.pessoa.endereco = `${consultaPJ.estabelecimento.tipo_logradouro} ${consultaPJ.estabelecimento.logradouro}, ${consultaPJ.estabelecimento.numero}, ${consultaPJ.estabelecimento.complemento || ''}, ${consultaPJ.estabelecimento.bairro}`;
+          this.pessoa.cep = Number(consultaPJ.estabelecimento.cep);
+          this.pessoa.telefone = Number(consultaPJ.estabelecimento.ddd1+consultaPJ.estabelecimento.telefone1);
+          this.pessoa.email = consultaPJ.estabelecimento.email;
+          this.pessoa.municipio = consultaPJ.estabelecimento.cidade.nome;
+          this.pessoa.uf = consultaPJ.estabelecimento.estado.sigla;
+          this.pessoa.ie_rg = Number(consultaPJ.estabelecimento.inscricoes_estaduais[0].inscricao_estadual);
+        }, complete: ()=>{this.cnpjLoading = false}})
+      }
     })
+
   }
 
   consultaCep(){

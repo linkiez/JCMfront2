@@ -52,7 +52,7 @@ export class ProdutoComponent implements OnInit, OnDestroy {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: error.message,
+            detail: `${error.status} - ${error.statusText} - ${error.error}`,
           })
         },
       });
@@ -142,5 +142,9 @@ export class ProdutoComponent implements OnInit, OnDestroy {
 
   getBackProdutos() {
     this.router.navigate(['/home/produtos']);
+  }
+
+  toNumber(event: any): number {
+    return Number(event.replace(',', '.'));
   }
 }

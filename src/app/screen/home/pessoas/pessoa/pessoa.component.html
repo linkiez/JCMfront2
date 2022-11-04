@@ -58,12 +58,17 @@
               [ngClass]="{'ng-erro': cnpj_cpfInvalido.length}"
               (ngModelChange)="pessoa.cnpj_cpf = $event"
               (change)="validaCpfCnpj()"
+              [ngClass]="{'cnpjLoading': cnpjLoading}"
               maxlength="18"
             />
+            <p-progressSpinner *ngIf="cnpjLoading" [style]="{width: '27px', height: '27px', margin: 'auto'}" styleClass="custom-spinner" strokeWidth="8" fill="var(--surface-ground)" animationDuration="1s"></p-progressSpinner>
             <small class="p-error block" *ngFor="let validacao of cnpj_cpfInvalido">{{validacao.menssagem}}</small>
           </div>
           <div class="input col-4">
-            <label for="InpIeRg">Incrição Estadual / RG</label>
+            <label for="InpIeRg">
+              <span *ngIf="pessoa.pessoa_juridica">Incrição Estadual</span>
+              <span *ngIf="!pessoa.pessoa_juridica">RG</span>
+            </label>
             <input
               name="InpIeRg"
               class="p-inputtext"
