@@ -22,10 +22,6 @@ export class HomeComponent implements OnInit {
           routerLink: 'contatos',
         },
         {
-          label: 'Fornecedores',
-          routerLink: 'fornecedores',
-        },
-        {
           label: 'Orcamentos',
         },
         {

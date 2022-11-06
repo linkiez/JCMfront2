@@ -66,14 +66,6 @@ const routes: Routes = [
             (module) => module.PedidosComprasModule
           ),
       },
-      {
-        path: 'fornecedores',
-        loadChildren: () =>
-          import('./fornecedores/fornecedores.module').then(
-            (module) => module.FornecedoresModule
-          ),
-        canLoad: [LoginGuard],
-      },
     ],
   },
 ];

@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Pessoa } from '../models/pessoa';
+import { Query } from '../models/query';
 
 @Injectable({
   providedIn: 'root'
@@ -11,8 +12,17 @@ export class PessoaService {
 
   constructor(private http: HttpClient) { }
 
-  getPessoas(): Observable<any> {
-    return this.http.get(environment.backendURL + 'pessoa', {
+  getPessoas(query: Query): Observable<any> {
+    let chaves = Object.keys(query)
+    let valores = Object.values(query);
+    let queryString = '?';
+
+    for(let i=0;i<chaves.length;i++){
+      if(i>0) queryString += '&'
+      queryString += chaves[i]+'='+valores[i]
+    }
+
+    return this.http.get(environment.backendURL + 'pessoa'+ queryString, {
       responseType: 'json',
     });
   }

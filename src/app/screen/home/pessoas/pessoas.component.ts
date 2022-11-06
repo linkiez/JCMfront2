@@ -2,8 +2,9 @@ import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
-import { Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, Subscription } from 'rxjs';
 import { Pessoa } from 'src/app/models/pessoa';
+import { Query } from 'src/app/models/query';
 import { PessoaService } from 'src/app/services/pessoa.service';
 
 @Component({
@@ -16,9 +17,16 @@ export class PessoasComponent implements OnInit, OnDestroy {
 
   pessoas: Array<Pessoa> = [];
 
-  first = 0;
+  totalRecords: number = 0;
 
-  rows = 10;
+  query: Query = {
+    page: 0,
+    pageCount: 10,
+    searchValue: '',
+    fornecedor: false,
+    operador: false,
+    vendedor: false
+  };
 
   private subscription: Subscription = new Subscription();
 
@@ -33,7 +41,7 @@ export class PessoasComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.getPessoas()
+    this.getPessoas();
 
     this.cols = [
       { field: 'id', header: 'Id' },
@@ -44,80 +52,70 @@ export class PessoasComponent implements OnInit, OnDestroy {
       { field: 'email', header: 'Email' },
       { field: 'municipio', header: 'Cidade' },
       { field: 'createdAt', header: 'Criado em' },
-      { field: 'updatedAt', header: 'Atualizado em' }
-  ];
+      { field: 'updatedAt', header: 'Atualizado em' },
+    ];
 
-  this._selectedColumns = [
-    { field: 'id', header: 'Id' },
+    this._selectedColumns = [
+      { field: 'id', header: 'Id' },
       { field: 'nome', header: 'Nome' },
       { field: 'cnpj_cpf', header: 'CNPJ / CPF' },
       { field: 'email', header: 'Email' },
       { field: 'telefone', header: 'Telefone' },
-      { field: 'updatedAt', header: 'Atualizado em' }
-  ];
-
+      { field: 'updatedAt', header: 'Atualizado em' },
+    ];
   }
 
-  ngOnDestroy(): void{
-    this.subscription.unsubscribe()
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
   getPessoas(): void {
     this.subscription = this.pessoaService
-      .getPessoas()
+      .getPessoas(this.query)
+      .pipe(
+        debounceTime(1000), // espera um tempo antes de começar
+        distinctUntilChanged() // recorda a ultima pesquisa
+      )
       .subscribe({
-        next: (pessoas) => this.pessoas = pessoas.pessoas,
+        next: (consulta) => {
+          this.pessoas = consulta.pessoas;
+          this.totalRecords = consulta.totalRecords;
+        },
         error: (error) => {
-          console.log(error)
+          console.log(error);
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
             detail: error.message,
-          })
+          });
         },
       });
   }
 
-  new(){
-    this.router.navigate(['/home/pessoas/0'])
+  search(){
+    if(this.query.searchValue?.length! > 3 || this.query.searchValue?.length! === 0) this.getPessoas()
   }
 
-  next() {
-    this.first = this.first + this.rows;
-  }
-
-  prev() {
-    this.first = this.first - this.rows;
-  }
-
-  reset() {
-    this.first = 0;
-  }
-
-  isLastPage(): boolean {
-    return this.pessoas
-      ? this.first === this.pessoas.length - this.rows
-      : true;
-  }
-
-  isFirstPage(): boolean {
-    return this.pessoas ? this.first === 0 : true;
+  new() {
+    this.router.navigate(['/home/pessoas/0']);
   }
 
   applyFilterGlobal($event: any, stringVal: any) {
     this.dt!.filterGlobal(($event.target as HTMLInputElement).value, stringVal);
   }
 
-  clear(table: Table) {
-    table.clear();
-  }
-
   @Input() get selectedColumns(): any[] {
     return this._selectedColumns;
-}
+  }
 
-set selectedColumns(val: any[]) {
+  set selectedColumns(val: any[]) {
     //restore original order
-    this._selectedColumns = this.cols.filter(col => val.includes(col));
-}
+    this._selectedColumns = this.cols.filter((col) => val.includes(col));
+  }
+
+  pageChange(event: any) {
+    this.query.page = event.page;
+    this.query.pageCount = event.rows;
+    this.getPessoas();
+  }
 }

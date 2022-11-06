@@ -20,6 +20,8 @@ import { IeRgPipe } from 'src/app/utils/ieRg.pipe';
 import {FileUploadModule} from 'primeng/fileupload';
 import { DropdownModule } from 'primeng/dropdown';
 import {ProgressSpinnerModule} from 'primeng/progressspinner';
+import {PaginatorModule} from 'primeng/paginator';
+
 
 @NgModule({
   declarations: [PessoasComponent, CpfCnpjPipe, TelefonePipe, PessoaComponent, IeRgPipe, CepPipe],
@@ -36,7 +38,8 @@ import {ProgressSpinnerModule} from 'primeng/progressspinner';
     ConfirmDialogModule,
     FileUploadModule,
     DropdownModule,
-    ProgressSpinnerModule
+    ProgressSpinnerModule,
+    PaginatorModule
   ],
 })
 export class PessoasModule {}
