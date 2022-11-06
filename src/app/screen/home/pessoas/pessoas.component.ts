@@ -66,7 +66,7 @@ export class PessoasComponent implements OnInit, OnDestroy {
     this.subscription = this.pessoaService
       .getPessoas()
       .subscribe({
-        next: (pessoas) => (this.pessoas = pessoas),
+        next: (pessoas) => this.pessoas = pessoas.pessoas,
         error: (error) => {
           console.log(error)
           this.messageService.add({

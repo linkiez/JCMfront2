@@ -11,8 +11,8 @@ export class PessoaService {
 
   constructor(private http: HttpClient) { }
 
-  getPessoas(): Observable<Pessoa[]> {
-    return this.http.get<Pessoa[]>(environment.backendURL + 'pessoa', {
+  getPessoas(): Observable<any> {
+    return this.http.get(environment.backendURL + 'pessoa', {
       responseType: 'json',
     });
   }
@@ -55,8 +55,8 @@ export class PessoaService {
     })
   }
 
-  consultaCNPJ(cnpj: number){
-    return this.http.get(`https://publica.cnpj.ws/cnpj/${cnpj}`, {
+  consultaCNPJ(cnpj: string){
+    return this.http.get(`https://publica.cnpj.ws/cnpj/${cnpj.replace(/\D/g, '')}`, {
       responseType: 'json',
     });
   }

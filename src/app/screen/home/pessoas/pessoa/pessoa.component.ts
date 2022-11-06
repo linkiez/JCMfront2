@@ -28,10 +28,12 @@ export class PessoaComponent implements OnInit {
     private arquivoService: ArquivoService,
     private listaGenericaService: ListaGenericaService
   ) {}
-  pessoa: Pessoa = {pessoa_juridica: false};
+  pessoa: Pessoa = { pessoa_juridica: false };
+  pessoaOld: Pessoa = {};
 
   validador: Validação[] = [
-    {campo: 'cnpj_cpf',
+    {
+      campo: 'cnpj_cpf',
       nome: 'CPF tem 11 numeros',
       funcao: (pessoa: Pessoa) => {
         let cpfQuantosNumeros = pessoa.cnpj_cpf
@@ -61,9 +63,7 @@ export class PessoaComponent implements OnInit {
         ) {
           let Soma;
           let Resto;
-          let strCPF = (pessoa.cnpj_cpf || '')
-            .toString()
-            .replace(/\D/g, '');
+          let strCPF = (pessoa.cnpj_cpf || '').toString().replace(/\D/g, '');
           Soma = 0;
           if (
             strCPF == '00000000000' ||
@@ -174,19 +174,17 @@ export class PessoaComponent implements OnInit {
     {
       campo: 'cnpj_cpf',
       nome: 'CNPJ/CPF Já cadastrado',
-      funcao: async(pessoa: Pessoa) => {
-        pessoa.cnpj_cpf = Number(
-          pessoa.cnpj_cpf?.toString().replace(/\D/g, '')
-        );
+      funcao: async (pessoa: Pessoa) => {
+        pessoa.cnpj_cpf = pessoa.cnpj_cpf?.toString().replace(/\D/g, '');
 
         let QuantosNumeros = pessoa.cnpj_cpf
           ?.toString()
           .replace(/\D/g, '')
           .split('').length;
         if (QuantosNumeros === 14 || QuantosNumeros === 11 ? true : false) {
-          let check = this.pessoaService.existeCnpjCpfPessoa(pessoa)
+          let check = this.pessoaService.existeCnpjCpfPessoa(pessoa);
           let resultado = await firstValueFrom(check);
-          return resultado
+          return resultado;
         }
       },
       menssagem: `O CNPJ/CPF já esta cadastrado.`,
@@ -194,25 +192,39 @@ export class PessoaComponent implements OnInit {
     {
       campo: 'email',
       nome: 'Email Valido',
-      funcao: (email: string)=>{
-        return email.match(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/)
+      funcao: (email: string) => {
+        if (!email) return true;
+        return email.match(
+          /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+        );
       },
-      menssagem: 'Email não é valido.'
-    }
+      menssagem: 'Email não é valido.',
+    },
   ];
 
   cnpj_cpfInvalido: Validação[] = [];
 
-  emailInvalido: Validação[] = [];
+  emailInvalido: any = {};
 
   private subscription: Subscription = new Subscription();
 
-  categorias$ = this.listaGenericaService.getByNameListaGenerica('categoriaContato').pipe(map((listaGenerica: any)=> listaGenerica.lista_generica_items))
+  categorias: any = []
 
   cnpjLoading: boolean = false;
 
+  fileLoading: boolean = false;
+
   ngOnInit(): void {
+    this.getCategoria();
     this.getPessoa();
+  }
+
+  getCategoria(){
+    this.listaGenericaService
+    .getByNameListaGenerica('categoriaContato')
+    .pipe(map((listaGenerica: any) => listaGenerica.lista_generica_items)).subscribe({next:(categorias)=>{
+      this.categorias = categorias
+    }});
   }
 
   getPessoa() {
@@ -220,11 +232,16 @@ export class PessoaComponent implements OnInit {
     if (id != 0) {
       this.subscription = this.pessoaService.getPessoa(id).subscribe({
         next: (pessoa) => {
-          if(pessoa.data_nasc)pessoa.data_nasc = new Date(pessoa.data_nasc!.toString())
+          if (pessoa.data_nasc)
+            pessoa.data_nasc = new Date(pessoa.data_nasc!.toString());
           if (pessoa.fornecedor?.data_aprov)
-          pessoa.fornecedor.data_aprov = new Date(pessoa.fornecedor.data_aprov.toString())
+            pessoa.fornecedor.data_aprov = new Date(
+              pessoa.fornecedor.data_aprov.toString()
+            );
           if (pessoa.fornecedor?.data_venc)
-          pessoa.fornecedor.data_venc = new Date(pessoa.fornecedor.data_venc.toString())
+            pessoa.fornecedor.data_venc = new Date(
+              pessoa.fornecedor.data_venc.toString()
+            );
           this.pessoa = pessoa;
         },
         error: (error) => {
@@ -244,12 +261,16 @@ export class PessoaComponent implements OnInit {
 
     this.pessoaService.addPessoa(pessoaClean).subscribe({
       next: (pessoa) => {
-        pessoa.data_nasc = new Date(pessoa.data_nasc!.toString())
-          if (pessoa.fornecedor?.data_aprov)
-          pessoa.fornecedor.data_aprov = new Date(pessoa.fornecedor.data_aprov.toString())
-          if (pessoa.fornecedor?.data_venc)
-          pessoa.fornecedor.data_venc = new Date(pessoa.fornecedor.data_venc.toString())
-        this.pessoa = pessoa
+        pessoa.data_nasc = new Date(pessoa.data_nasc!.toString());
+        if (pessoa.fornecedor?.data_aprov)
+          pessoa.fornecedor.data_aprov = new Date(
+            pessoa.fornecedor.data_aprov.toString()
+          );
+        if (pessoa.fornecedor?.data_venc)
+          pessoa.fornecedor.data_venc = new Date(
+            pessoa.fornecedor.data_venc.toString()
+          );
+        this.pessoa = pessoa;
       },
       error: (error) => {
         console.log(error);
@@ -273,12 +294,16 @@ export class PessoaComponent implements OnInit {
 
     this.pessoaService.updatePessoa(pessoaClean).subscribe({
       next: (pessoa) => {
-        pessoa.data_nasc = new Date(pessoa.data_nasc!.toString())
-          if (pessoa.fornecedor?.data_aprov)
-          pessoa.fornecedor.data_aprov = new Date(pessoa.fornecedor.data_aprov.toString())
-          if (pessoa.fornecedor?.data_venc)
-          pessoa.fornecedor.data_venc = new Date(pessoa.fornecedor.data_venc.toString())
-        this.pessoa = pessoa
+        pessoa.data_nasc = new Date(pessoa.data_nasc!.toString());
+        if (pessoa.fornecedor?.data_aprov)
+          pessoa.fornecedor.data_aprov = new Date(
+            pessoa.fornecedor.data_aprov.toString()
+          );
+        if (pessoa.fornecedor?.data_venc)
+          pessoa.fornecedor.data_venc = new Date(
+            pessoa.fornecedor.data_venc.toString()
+          );
+        this.pessoa = pessoa;
       },
       error: (error) => {
         console.log(error);
@@ -301,28 +326,31 @@ export class PessoaComponent implements OnInit {
     if (pessoa.telefone)
       pessoa.telefone = Number(pessoa.telefone.toString().replace(/\D/g, ''));
     if (pessoa.cnpj_cpf)
-      pessoa.cnpj_cpf = Number(pessoa.cnpj_cpf.toString().replace(/\D/g, ''));
-    if (typeof pessoa.cnpj_cpf === 'string') delete pessoa.cnpj_cpf;
-    if (pessoa.ie_rg)
-      pessoa.ie_rg = Number(pessoa.ie_rg.toString().replace(/\D/g, ''));
+      pessoa.cnpj_cpf = pessoa.cnpj_cpf.toString().replace(/\D/g, '');
+    if (pessoa.ie_rg) pessoa.ie_rg = pessoa.ie_rg.toString().replace(/\D/g, '');
     return pessoa;
   }
 
   createOrUpdate() {
-    if (this.cnpj_cpfInvalido.length === 0){
+    let emailInvalido = Object.values(this.emailInvalido).filter(
+      (valor) => valor === null
+    );
+
+    console.log(emailInvalido);
+
+    if (this.cnpj_cpfInvalido.length === 0 && emailInvalido.length === 0) {
       if (this.pessoa.id == undefined) {
         this.createPessoa();
       } else {
         this.updatePessoa();
       }
-    }else{
+    } else {
       this.messageService.add({
         severity: 'error',
         summary: 'Erro',
         detail: 'Não foi possível salvar, erro de validação.',
       });
     }
-
   }
 
   deletePessoa() {
@@ -366,7 +394,7 @@ export class PessoaComponent implements OnInit {
   }
 
   removeContato(rowIndex: number) {
-    this.pessoa.contatos = this.pessoa.contatos!.splice(rowIndex - 1, 1);
+    this.pessoa.contatos!.splice(rowIndex, 1);
   }
 
   removeArquivo(rowIndex: number) {
@@ -389,12 +417,14 @@ export class PessoaComponent implements OnInit {
   onFileSelected(event: Event) {
     const file: File = (event.target as HTMLInputElement).files![0];
     if (file) {
+      this.fileLoading = true
       this.arquivoService.uploadArquivo(file).subscribe({
         next: (arquivo: Arquivo) => {
           console.log(arquivo);
           this.pessoa.files?.push(arquivo);
         },
         error: (error) => {
+          this.fileLoading = false;
           console.log(error);
           this.messageService.add({
             severity: 'error',
@@ -403,6 +433,7 @@ export class PessoaComponent implements OnInit {
           });
         },
         complete: () => {
+          this.fileLoading = false;
           this.createOrUpdate();
         },
       });
@@ -431,57 +462,88 @@ export class PessoaComponent implements OnInit {
   }
 
   validaCpfCnpj() {
-    let cnpj_cpfValidador = this.validador.filter((validacao)=>validacao.campo === 'cnpj_cpf')
+    let cnpj_cpfValidador = this.validador.filter(
+      (validacao) => validacao.campo === 'cnpj_cpf'
+    );
 
-    let cnpj_cpfValidado = cnpj_cpfValidador.map(async(validacao) => {
+    let cnpj_cpfValidado = cnpj_cpfValidador.map(async (validacao) => {
       validacao.resultado = await validacao.funcao(this.pessoa);
-      return validacao
-    })
+      return validacao;
+    });
     Promise.all(cnpj_cpfValidado).then((validado) => {
       let cnpj_cpfInvalido = validado.filter(
         (validacao) => validacao.resultado === false
       );
       this.cnpj_cpfInvalido = cnpj_cpfInvalido;
 
-      if(cnpj_cpfInvalido.length==0&&this.pessoa.pessoa_juridica&&this.pessoa.cnpj_cpf){
-        this.cnpjLoading = true
+      if (
+        cnpj_cpfInvalido.length == 0 &&
+        this.pessoa.pessoa_juridica &&
+        this.pessoa.cnpj_cpf
+      ) {
+        this.cnpjLoading = true;
 
-        this.pessoaService.consultaCNPJ(this.pessoa.cnpj_cpf).subscribe({next: (consultaPJ: any) =>{
-          console.log(consultaPJ);
-          this.pessoa.razao_social = consultaPJ.razao_social;
-          this.pessoa.nome = consultaPJ.estabelecimento.nome_fantasia?consultaPJ.estabelecimento.nome_fantasia:consultaPJ.razao_social
-          this.pessoa.data_nasc = new Date(consultaPJ.estabelecimento.data_inicio_atividade)
-          this.pessoa.endereco = `${consultaPJ.estabelecimento.tipo_logradouro} ${consultaPJ.estabelecimento.logradouro}, ${consultaPJ.estabelecimento.numero}, ${consultaPJ.estabelecimento.complemento || ''}, ${consultaPJ.estabelecimento.bairro}`;
-          this.pessoa.cep = Number(consultaPJ.estabelecimento.cep);
-          this.pessoa.telefone = Number(consultaPJ.estabelecimento.ddd1+consultaPJ.estabelecimento.telefone1);
-          this.pessoa.email = consultaPJ.estabelecimento.email;
-          this.pessoa.municipio = consultaPJ.estabelecimento.cidade.nome;
-          this.pessoa.uf = consultaPJ.estabelecimento.estado.sigla;
-          this.pessoa.ie_rg = Number(consultaPJ.estabelecimento.inscricoes_estaduais[0].inscricao_estadual);
-        }, complete: ()=>{this.cnpjLoading = false}})
+        this.pessoaService.consultaCNPJ(this.pessoa.cnpj_cpf).subscribe({
+          next: (consultaPJ: any) => {
+            this.pessoaOld = { ...this.pessoa };
+            this.pessoa.razao_social = consultaPJ.razao_social;
+            this.pessoa.nome = consultaPJ.estabelecimento.nome_fantasia
+              ? consultaPJ.estabelecimento.nome_fantasia
+              : consultaPJ.razao_social;
+            this.pessoa.data_nasc = new Date(
+              consultaPJ.estabelecimento.data_inicio_atividade
+            );
+            this.pessoa.endereco = `${
+              consultaPJ.estabelecimento.tipo_logradouro
+            } ${consultaPJ.estabelecimento.logradouro}, ${
+              consultaPJ.estabelecimento.numero
+            }, ${consultaPJ.estabelecimento.complemento || ''}, ${
+              consultaPJ.estabelecimento.bairro
+            }`;
+            this.pessoa.cep = Number(consultaPJ.estabelecimento.cep);
+            this.pessoa.telefone = Number(
+              consultaPJ.estabelecimento.ddd1 +
+                consultaPJ.estabelecimento.telefone1
+            );
+            this.pessoa.email = consultaPJ.estabelecimento.email;
+            this.pessoa.municipio = consultaPJ.estabelecimento.cidade.nome;
+            this.pessoa.uf = consultaPJ.estabelecimento.estado.sigla;
+            this.pessoa.ie_rg =
+              consultaPJ.estabelecimento.inscricoes_estaduais[0].inscricao_estadual;
+          },
+          complete: () => {
+            this.cnpjLoading = false;
+          },
+        });
       }
-    })
-
+    });
   }
 
-  consultaCep(){
-    let cep = this.pessoa.cep?.toString()
-    .replace(/\D/g, '')
+  validaEmail(email: string, campo: string) {
+    let emailValidador = this.validador.filter(
+      (validacao) => validacao.campo === 'email'
+    )[0];
+
+    this.emailInvalido[campo] = emailValidador.funcao(email);
+  }
+
+  consultaCep() {
+    let cep = this.pessoa.cep?.toString().replace(/\D/g, '');
 
     let cepQuantosNumeros = cep?.split('').length;
 
-    if (cepQuantosNumeros == 8 && cep){
-      this.pessoaService.consultaCep(cep).subscribe(
-        {next: (cep: any)=>{
+    if (cepQuantosNumeros == 8 && cep) {
+      this.pessoaService.consultaCep(cep).subscribe({
+        next: (cep: any) => {
           console.log(cep);
-          this.pessoa.endereco = `${cep.logradouro}, ${cep.complemento}, ${cep.bairro}`
+          this.pessoa.endereco = `${cep.logradouro}, ${cep.complemento}, ${cep.bairro}`;
           this.pessoa.municipio = cep.localidade;
           this.pessoa.uf = cep.uf;
         },
-        error: (error: Error) => {console.log(error);}}
-      )
+        error: (error: Error) => {
+          console.log(error);
+        },
+      });
     }
   }
-
-
 }

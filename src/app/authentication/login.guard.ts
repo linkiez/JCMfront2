@@ -38,7 +38,6 @@ export class LoginGuard implements CanLoad, CanActivate  {
               body!.accessToken,
               body!.refreshToken
             );
-            this.router.navigate(['home'])
             return true;
           },
           error: (error) => {

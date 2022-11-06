@@ -17,8 +17,8 @@ export interface Pessoa {
   municipio?: string;
   uf?: string;
   cep?: number;
-  ie_rg?: number;
-  cnpj_cpf?: number;
+  ie_rg?: string;
+  cnpj_cpf?: string;
   data_nasc?: Date;
   descricao?: Text;
   deletedAt?: Date;

@@ -23,6 +23,7 @@
               pInputText
               [(ngModel)]="pessoa.nome"
             />
+            <small *ngIf="pessoaOld.nome">"{{ pessoaOld.nome }}"</small>
           </div>
           <div class="input col-2">
             <p-checkbox
@@ -43,6 +44,9 @@
               pInputText
               [(ngModel)]="pessoa.razao_social"
             />
+            <small *ngIf="pessoaOld.razao_social"
+              >"{{ pessoaOld.razao_social }}"</small
+            >
           </div>
           <div class="input col-4">
             <label for="InpCnpjCpf">
@@ -55,14 +59,25 @@
               type="text"
               pInputText
               [ngModel]="pessoa.cnpj_cpf | cpfCnpj"
-              [ngClass]="{'ng-erro': cnpj_cpfInvalido.length}"
+              [ngClass]="{ 'ng-erro': cnpj_cpfInvalido.length }"
               (ngModelChange)="pessoa.cnpj_cpf = $event"
               (change)="validaCpfCnpj()"
-              [ngClass]="{'cnpjLoading': cnpjLoading}"
+              [ngClass]="{ cnpjLoading: cnpjLoading }"
               maxlength="18"
             />
-            <p-progressSpinner *ngIf="cnpjLoading" [style]="{width: '27px', height: '27px', margin: 'auto'}" styleClass="custom-spinner" strokeWidth="8" fill="var(--surface-ground)" animationDuration="1s"></p-progressSpinner>
-            <small class="p-error block" *ngFor="let validacao of cnpj_cpfInvalido">{{validacao.menssagem}}</small>
+            <p-progressSpinner
+              *ngIf="cnpjLoading"
+              [style]="{ width: '27px', height: '27px', margin: 'auto' }"
+              styleClass="custom-spinner"
+              strokeWidth="8"
+              fill="var(--surface-ground)"
+              animationDuration="1s"
+            ></p-progressSpinner>
+            <small
+              class="p-error block"
+              *ngFor="let validacao of cnpj_cpfInvalido"
+              >{{ validacao.menssagem }}</small
+            >
           </div>
           <div class="input col-4">
             <label for="InpIeRg">
@@ -89,6 +104,9 @@
               [ngModel]="pessoa.telefone | telefone"
               (ngModelChange)="pessoa.telefone = $event"
             />
+            <small *ngIf="pessoaOld.telefone"
+              >"{{ pessoaOld.telefone | telefone }}"</small
+            >
           </div>
           <div class="input col-6">
             <label for="InpEmail">Email</label>
@@ -98,7 +116,14 @@
               type="text"
               pInputText
               [(ngModel)]="pessoa.email"
+              (ngModelChange)="validaEmail($event, 'email')"
             />
+            <small *ngIf="pessoaOld.email">"{{ pessoaOld.email }}"</small>
+            <small
+              *ngIf="!emailInvalido.email && emailInvalido.email !== undefined"
+              class="p-error block"
+              >Email invalido.</small
+            >
           </div>
           <div class="input col-6">
             <label for="InpEmailNFe">Email NFe</label>
@@ -108,7 +133,16 @@
               type="text"
               pInputText
               [(ngModel)]="pessoa.email_nfe"
+              (ngModelChange)="validaEmail($event, 'email_nfe')"
             />
+            <small
+              *ngIf="
+                !emailInvalido.email_nfe &&
+                emailInvalido.email_nfe !== undefined
+              "
+              class="p-error block"
+              >Email invalido.</small
+            >
           </div>
           <div class="input col-3">
             <label for="InpCEP">CEP</label>
@@ -121,6 +155,7 @@
               (ngModelChange)="pessoa.cep = $event"
               (change)="consultaCep()"
             />
+            <small *ngIf="pessoaOld.cep">"{{ pessoaOld.cep }}"</small>
           </div>
           <div class="input col-9">
             <label for="InpEndereco">Endereço</label>
@@ -131,6 +166,7 @@
               pInputText
               [(ngModel)]="pessoa.endereco"
             />
+            <small *ngIf="pessoaOld.endereco">"{{ pessoaOld.endereco }}"</small>
           </div>
           <div class="input col-4">
             <label for="InpMunicipio">Cidade</label>
@@ -141,6 +177,9 @@
               pInputText
               [(ngModel)]="pessoa.municipio"
             />
+            <small *ngIf="pessoaOld.municipio"
+              >"{{ pessoaOld.municipio }}"</small
+            >
           </div>
           <div class="input col-2">
             <label for="InpUF">UF</label>
@@ -153,6 +192,7 @@
               (ngModelChange)="pessoa.uf = $event"
               maxlength="2"
             />
+            <small *ngIf="pessoaOld.uf">"{{ pessoaOld.uf }}"</small>
           </div>
 
           <div class="input col-6">
@@ -166,6 +206,9 @@
               dateFormat="dd/mm/yy"
               styleClass="w-100"
             ></p-calendar>
+            <small *ngIf="pessoaOld.data_nasc"
+              >"{{ pessoaOld.data_nasc | date: "dd/MM/yyyy HH:mm:ss" }}"</small
+            >
           </div>
           <div class="input">
             <label for="descricaoPessoa">Descrição</label>
@@ -236,11 +279,52 @@
                     />
                   </td>
                   <td>
-                    <p-dropdown name="InpContatoTipo' + i" [options]="categorias$ | async" [editable]="false" [(ngModel)]="contato.tipo" optionLabel="valor" styleClass="w-100" appendTo="body" optionValue="valor"
+                    <p-dropdown
+                      [name]="'InpContatoTipo' + i"
+                      [options]="categorias"
+                      [(ngModel)]="contato.tipo"
+                      styleClass="w-100"
+                      appendTo="body"
+                      optionLabel="valor"
+                      optionValue="valor"
                     ></p-dropdown>
                   </td>
                   <td>
                     <input
+                      *ngIf="
+                        contato.tipo === 'Telefone' ||
+                        contato.tipo === 'WhatsApp'
+                      "
+                      [name]="'InpContatoValor' + i"
+                      type="text"
+                      class="p-inputtext"
+                      pInputText
+                      [ngModel]="contato.valor | telefone"
+                      (ngModelChange)="contato.valor = $event"
+                    />
+                    <input
+                      *ngIf="contato.tipo === 'Email'"
+                      [name]="'InpContatoValor' + i"
+                      type="text"
+                      class="p-inputtext"
+                      pInputText
+                      [(ngModel)]="contato.valor"
+                      (ngModelChange)="validaEmail($event, 'contato' + i)"
+                    />
+                    <small
+                      *ngIf="
+                        !emailInvalido['contato' + i] &&
+                        emailInvalido['contato' + i] !== undefined
+                      "
+                      class="p-error block"
+                      >Email invalido.</small
+                    >
+                    <input
+                      *ngIf="
+                        contato.tipo !== 'Email' &&
+                        contato.tipo !== 'Telefone' &&
+                        contato.tipo !== 'WhatsApp'
+                      "
                       [name]="'InpContatoValor' + i"
                       type="text"
                       class="p-inputtext"
@@ -277,7 +361,19 @@
                       class="p-button"
                       (click)="fileUpload.click()"
                     >
-                      <i class="pi pi-paperclip"></i>
+                      <i *ngIf="!fileLoading" class="pi pi-paperclip"></i>
+                      <p-progressSpinner
+                        *ngIf="fileLoading"
+                        [style]="{
+                          width: '27px',
+                          height: '27px',
+                          margin: 'auto'
+                        }"
+                        styleClass="custom-spinner"
+                        strokeWidth="8"
+                        fill="var(--surface-ground)"
+                        animationDuration="1s"
+                      ></p-progressSpinner>
                     </button>
                   </div>
                 </div>
