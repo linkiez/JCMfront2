@@ -12,11 +12,7 @@ import { Login } from '../models/login';
 })
 export class LoginGuard implements CanLoad, CanActivate  {
   constructor(
-    private router: Router,
-    private accessTokenService: AccessTokenService,
-    private refreshTokenService: RefreshTokenService,
     private authenticationService: AuthenticationService,
-    private usuarioService: UsuarioService
   ) {}
   canLoad(
     route: Route,
@@ -26,58 +22,11 @@ export class LoginGuard implements CanLoad, CanActivate  {
     | Promise<boolean | UrlTree>
     | boolean
     | UrlTree {
-    if (this.accessTokenService.possuiToken()) {
-      return true;
-    } else {
-      if (this.refreshTokenService.possuiToken()) {
-        this.authenticationService.refresh().subscribe({
-          next: (response) => {
-            let body = response.body as Login;
 
-            this.usuarioService.salvaToken(
-              body!.accessToken,
-              body!.refreshToken
-            );
-            return true;
-          },
-          error: (error) => {
-            alert(error.message);
-            console.log(error);
-            this.router.navigate(['login']);
-          },
-        });
-      } else {
-        this.router.navigate(['login']);
-      }
-    }
-    return false;
+      return this.authenticationService.verificaTokens()
   }
 
   canActivate(): boolean{
-    if (this.accessTokenService.possuiToken()) {
-      return true;
-    } else {
-      if (this.refreshTokenService.possuiToken()) {
-        this.authenticationService.refresh().subscribe({
-          next: (response) => {
-            let body = response.body as Login;
-
-            this.usuarioService.salvaToken(
-              body!.accessToken,
-              body!.refreshToken
-            );
-            return true;
-          },
-          error: (error) => {
-            alert(error.message);
-            console.log(error);
-            this.router.navigate(['login']);
-          },
-        });
-      } else {
-        this.router.navigate(['login']);
-      }
-    }
-    return false;
+    return this.authenticationService.verificaTokens()
   }
 }

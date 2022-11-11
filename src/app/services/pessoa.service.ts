@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { AuthenticationService } from '../authentication/authentication.service';
 import { Pessoa } from '../models/pessoa';
 import { Query } from '../models/query';
 
@@ -13,18 +14,18 @@ export class PessoaService {
   constructor(private http: HttpClient) { }
 
   getPessoas(query: Query): Observable<any> {
-    let chaves = Object.keys(query)
-    let valores = Object.values(query);
-    let queryString = '?';
+      let chaves = Object.keys(query)
+      let valores = Object.values(query);
+      let queryString = '?';
 
-    for(let i=0;i<chaves.length;i++){
-      if(i>0) queryString += '&'
-      queryString += chaves[i]+'='+valores[i]
-    }
+      for(let i=0;i<chaves.length;i++){
+        if(i>0) queryString += '&'
+        queryString += chaves[i]+'='+valores[i]
+      }
 
-    return this.http.get(environment.backendURL + 'pessoa'+ queryString, {
-      responseType: 'json',
-    });
+      return this.http.get(environment.backendURL + 'pessoa'+ queryString, {
+        responseType: 'json',
+      });
   }
 
   getPessoa(id: number): Observable<Pessoa> {
@@ -63,7 +64,7 @@ export class PessoaService {
   }
 
   existeCnpjCpfPessoa(pessoa: Pessoa): Observable<any>{
-    return this.http.post(environment.backendURL + 'pessoa/cnpj_cpf/existe', pessoa);
+   return this.http.post(environment.backendURL + 'pessoa/cnpj_cpf/existe', pessoa);
   }
 
   consultaCep(cep: string): Observable<any> {

@@ -12,7 +12,7 @@ import { Usuario } from '../models/usuario';
 export class UsuarioService {
   private usuario: Usuario = {}
 
-  constructor(private accessTokenService: AccessTokenService, private refreshTokenService: RefreshTokenService, private authenticationSevice: AuthenticationService) {
+  constructor(private accessTokenService: AccessTokenService, private refreshTokenService: RefreshTokenService) {
     if(this.accessTokenService.possuiToken()){
       this.decodificaJWT();
     }
@@ -38,7 +38,6 @@ export class UsuarioService {
   }
 
   logout(){
-    this.authenticationSevice.logout().subscribe();
     this.accessTokenService.excluiToken();
     this.refreshTokenService.excluiToken();
     this.usuario = {}
