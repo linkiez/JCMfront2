@@ -10,6 +10,9 @@ import { ProdutoComponent } from './produto/produto.component';
 import { FormsModule } from '@angular/forms';
 import {ConfirmDialogModule} from 'primeng/confirmdialog';
 import {DropdownModule} from 'primeng/dropdown';
+import {PaginatorModule} from 'primeng/paginator';
+import { CheckboxModule } from 'primeng/checkbox';
+
 
 
 @NgModule({
@@ -22,7 +25,9 @@ import {DropdownModule} from 'primeng/dropdown';
     MessageModule,
     FormsModule,
     ConfirmDialogModule,
-    DropdownModule
+    DropdownModule,
+    PaginatorModule,
+    CheckboxModule
   ],
   providers: [
     {provide: LOCALE_ID, useValue: 'pt' }

@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { debounceTime, distinctUntilChanged, filter, Subscription } from 'rxjs';
 import { Pessoa } from 'src/app/models/pessoa';
@@ -11,9 +11,9 @@ import { PessoaService } from 'src/app/services/pessoa.service';
   selector: 'app-pessoas',
   templateUrl: './pessoas.component.html',
   styleUrls: ['./pessoas.component.scss'],
+  providers: [ConfirmationService],
 })
 export class PessoasComponent implements OnInit, OnDestroy {
-  @ViewChild('dt') dt: Table | undefined;
 
   pessoas: Array<Pessoa> = [];
 
@@ -25,7 +25,8 @@ export class PessoasComponent implements OnInit, OnDestroy {
     searchValue: '',
     fornecedor: false,
     operador: false,
-    vendedor: false
+    vendedor: false,
+    deleted: false,
   };
 
   private subscription: Subscription = new Subscription();
@@ -37,7 +38,8 @@ export class PessoasComponent implements OnInit, OnDestroy {
   constructor(
     private pessoaService: PessoaService,
     private messageService: MessageService,
-    private router: Router
+    private router: Router,
+    private confirmationService: ConfirmationService
   ) {}
 
   ngOnInit(): void {
@@ -88,20 +90,20 @@ export class PessoasComponent implements OnInit, OnDestroy {
             summary: 'Erro',
             detail: error.message,
           });
-        },
+        }
       });
   }
 
-  search(){
-    if(this.query.searchValue?.length! > 3 || this.query.searchValue?.length! === 0) this.getPessoas()
+  search() {
+    if (
+      this.query.searchValue?.length! > 3 ||
+      this.query.searchValue?.length! === 0
+    )
+      this.getPessoas();
   }
 
   new() {
     this.router.navigate(['/home/pessoas/0']);
-  }
-
-  applyFilterGlobal($event: any, stringVal: any) {
-    this.dt!.filterGlobal(($event.target as HTMLInputElement).value, stringVal);
   }
 
   @Input() get selectedColumns(): any[] {
@@ -118,4 +120,43 @@ export class PessoasComponent implements OnInit, OnDestroy {
     this.query.pageCount = event.rows;
     this.getPessoas();
   }
+
+  clickDeleted(id: number) {
+    if (!this.query.deleted) {
+      this.router.navigate([`home/pessoas/${id}`]);
+    }else{
+      this.confirm(id)
+    }
+  }
+
+  confirm(id: number) {
+    this.confirmationService.confirm({
+        message: 'Deseja restaurar essa pessoa?',
+        accept: () => {
+            this.pessoaService.restorePessoa(id).subscribe(
+              {next: (pessoa) => {
+
+              },
+            error: (error) => {
+              console.log(error);
+              this.messageService.add({
+                severity: 'error',
+                summary: 'Erro',
+                detail: error.message,
+              });
+            },
+            complete: () => {
+              this.messageService.add({
+                severity: 'success',
+                summary: 'Sucesso',
+                detail: 'A pessoa foi restaurada.',
+              });
+              this.getPessoas();
+            }
+        }
+    )}
+    });
+  }
+
 }
+

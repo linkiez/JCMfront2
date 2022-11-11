@@ -1,12 +1,8 @@
 <p-table
   #dt
   [value]="produtos"
-  [paginator]="true"
-  [rows]="10"
-  [showCurrentPageReport]="true"
-  currentPageReportTemplate="Mostrando {first} até {last} de {totalRecords} produtos"
-  [rowsPerPageOptions]="[10, 25, 50]"
-  [globalFilterFields]="['nome']"
+  [paginator]="false"
+  [rows]="query.pageCount"
   [selection]="true"
   responsiveLayout="scroll"
 >
@@ -18,10 +14,12 @@
           pInputText
           class="p-inputtext"
           type="text"
-          (input)="applyFilterGlobal($event, 'contains')"
           placeholder="Search keyword"
+          [(ngModel)]="query.searchValue"
+          (ngModelChange)="search()"
         />
       </span>
+      <p-checkbox name="chkDeleted" label="Deletados" [(ngModel)]="query.deleted" [binary]="true" (ngModelChange)="getProdutos()" ></p-checkbox>
       <button pButton class="button" (click)="new()">
         <i class="pi pi-plus"></i>
       </button>
@@ -40,9 +38,13 @@
     </tr>
   </ng-template>
   <ng-template pTemplate="body" let-product>
-    <tr [routerLink]="product.id">
+    <tr (click)="clickDeleted(product.id)">
       <td>{{ product.id }}</td>
       <td>{{ product.nome }}</td>
     </tr>
   </ng-template>
 </p-table>
+<div class="">
+  <p-paginator [rows]="query.pageCount" [totalRecords]="totalRecords"[rowsPerPageOptions]="[10,25,50]" (onPageChange)="pageChange($event)" [showCurrentPageReport]=true [currentPageReportTemplate]="totalRecords+' resultados'"></p-paginator>
+</div>
+<p-confirmDialog header="Confirmação" icon="pi pi-exclamation-triangle"></p-confirmDialog>

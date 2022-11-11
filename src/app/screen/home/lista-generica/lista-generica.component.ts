@@ -34,7 +34,9 @@ export class ListaGenericaComponent implements OnInit {
 
   getListas() {
     this.listaGenericaService.getListaGenericas().subscribe({
-      next: (listas) => (this.listas = listas),
+      next: (listas) => {
+        console.log(listas)
+        this.listas = listas},
       error: (error) => console.log(error),
     });
   }
@@ -70,6 +72,7 @@ export class ListaGenericaComponent implements OnInit {
       .subscribe({
         next: (updatedLista: any) => {
           this.selectedLista = updatedLista;
+          this.getListas()
         },
       });
   }

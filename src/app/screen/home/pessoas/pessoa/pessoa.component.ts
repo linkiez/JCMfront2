@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { firstValueFrom, map, Subscription } from 'rxjs';
+import { debounceTime, firstValueFrom, map, Subscription } from 'rxjs';
 import { Pessoa } from 'src/app/models/pessoa';
 import { PessoaService } from 'src/app/services/pessoa.service';
 import { Contato } from 'src/app/models/contato';
@@ -208,7 +208,7 @@ export class PessoaComponent implements OnInit {
 
   private subscription: Subscription = new Subscription();
 
-  categorias: any = []
+  categorias: any = [];
 
   cnpjLoading: boolean = false;
 
@@ -219,21 +219,58 @@ export class PessoaComponent implements OnInit {
     this.getPessoa();
   }
 
-  getCategoria(){
+  getCategoria() {
     this.listaGenericaService
-    .getByNameListaGenerica('categoriaContato')
-    .pipe(map((listaGenerica: any) => listaGenerica.lista_generica_items)).subscribe({next:(categorias)=>{
-      this.categorias = categorias
-    }});
+      .getByNameListaGenerica('categoriaContato')
+      .pipe(map((listaGenerica: any) => listaGenerica.lista_generica_items))
+      .subscribe({
+        next: (categorias) => {
+          this.categorias = categorias;
+        },
+      });
   }
 
   getPessoa() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     if (id != 0) {
-      this.subscription = this.pessoaService.getPessoa(id).subscribe({
+      this.subscription = this.pessoaService
+        .getPessoa(id)
+        .pipe(debounceTime(1000))
+        .subscribe({
+          next: (pessoa) => {
+            if (pessoa.data_nasc)
+              pessoa.data_nasc = new Date(pessoa.data_nasc!.toString());
+            if (pessoa.fornecedor?.data_aprov)
+              pessoa.fornecedor.data_aprov = new Date(
+                pessoa.fornecedor.data_aprov.toString()
+              );
+            if (pessoa.fornecedor?.data_venc)
+              pessoa.fornecedor.data_venc = new Date(
+                pessoa.fornecedor.data_venc.toString()
+              );
+            this.pessoa = pessoa;
+          },
+          error: (error) => {
+            console.log(error);
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Erro',
+              detail: `${error.status} - ${error.statusText} - ${error.error}`,
+            });
+          },
+        });
+    }
+  }
+
+  createPessoa() {
+    let pessoaClean = this.cleanPessoa(this.pessoa);
+
+    this.pessoaService
+      .addPessoa(pessoaClean)
+      .pipe(debounceTime(1000))
+      .subscribe({
         next: (pessoa) => {
-          if (pessoa.data_nasc)
-            pessoa.data_nasc = new Date(pessoa.data_nasc!.toString());
+          pessoa.data_nasc = new Date(pessoa.data_nasc!.toString());
           if (pessoa.fornecedor?.data_aprov)
             pessoa.fornecedor.data_aprov = new Date(
               pessoa.fornecedor.data_aprov.toString()
@@ -252,81 +289,55 @@ export class PessoaComponent implements OnInit {
             detail: `${error.status} - ${error.statusText} - ${error.error}`,
           });
         },
+        complete: () =>
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Sucesso',
+            detail: 'A pessoa foi criada.',
+          }),
       });
-    }
-  }
-
-  createPessoa() {
-    let pessoaClean = this.cleanPessoa(this.pessoa);
-
-    this.pessoaService.addPessoa(pessoaClean).subscribe({
-      next: (pessoa) => {
-        pessoa.data_nasc = new Date(pessoa.data_nasc!.toString());
-        if (pessoa.fornecedor?.data_aprov)
-          pessoa.fornecedor.data_aprov = new Date(
-            pessoa.fornecedor.data_aprov.toString()
-          );
-        if (pessoa.fornecedor?.data_venc)
-          pessoa.fornecedor.data_venc = new Date(
-            pessoa.fornecedor.data_venc.toString()
-          );
-        this.pessoa = pessoa;
-      },
-      error: (error) => {
-        console.log(error);
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Erro',
-          detail: `${error.status} - ${error.statusText} - ${error.error}`,
-        });
-      },
-      complete: () =>
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Sucesso',
-          detail: 'A pessoa foi criada.',
-        }),
-    });
   }
 
   updatePessoa() {
     let pessoaClean = this.cleanPessoa(this.pessoa);
-
-    this.pessoaService.updatePessoa(pessoaClean).subscribe({
-      next: (pessoa) => {
-        pessoa.data_nasc = new Date(pessoa.data_nasc!.toString());
-        if (pessoa.fornecedor?.data_aprov)
-          pessoa.fornecedor.data_aprov = new Date(
-            pessoa.fornecedor.data_aprov.toString()
-          );
-        if (pessoa.fornecedor?.data_venc)
-          pessoa.fornecedor.data_venc = new Date(
-            pessoa.fornecedor.data_venc.toString()
-          );
-        this.pessoa = pessoa;
-      },
-      error: (error) => {
-        console.log(error);
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Erro',
-          detail: `${error.status} - ${error.statusText} - ${error.error}`,
-        });
-      },
-      complete: () =>
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Sucesso',
-          detail: 'A pessoa foi atualizada.',
-        }),
-    });
+    this.pessoaService
+      .updatePessoa(pessoaClean)
+      .pipe(debounceTime(1000))
+      .subscribe({
+        next: (pessoa) => {
+          pessoa.data_nasc = new Date(pessoa.data_nasc!.toString());
+          if (pessoa.fornecedor?.data_aprov)
+            pessoa.fornecedor.data_aprov = new Date(
+              pessoa.fornecedor.data_aprov.toString()
+            );
+          if (pessoa.fornecedor?.data_venc)
+            pessoa.fornecedor.data_venc = new Date(
+              pessoa.fornecedor.data_venc.toString()
+            );
+          this.pessoa = pessoa;
+        },
+        error: (error) => {
+          console.log(error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: `${error.status} - ${error.statusText} - ${error.error}`,
+          });
+        },
+        complete: () =>
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Sucesso',
+            detail: 'A pessoa foi atualizada.',
+          }),
+      });
   }
 
   cleanPessoa(pessoa: Pessoa) {
     if (pessoa.telefone)
       pessoa.telefone = Number(pessoa.telefone.toString().replace(/\D/g, ''));
     if (pessoa.cnpj_cpf)
-      pessoa.cnpj_cpf = pessoa.cnpj_cpf.toString().replace(/\D/g, '');
+        pessoa.cnpj_cpf = pessoa.cnpj_cpf.toString().replace(/\D/g, '');
     if (pessoa.ie_rg) pessoa.ie_rg = pessoa.ie_rg.toString().replace(/\D/g, '');
     return pessoa;
   }
@@ -335,8 +346,6 @@ export class PessoaComponent implements OnInit {
     let emailInvalido = Object.values(this.emailInvalido).filter(
       (valor) => valor === null
     );
-
-    console.log(emailInvalido);
 
     if (this.cnpj_cpfInvalido.length === 0 && emailInvalido.length === 0) {
       if (this.pessoa.id == undefined) {
@@ -354,25 +363,27 @@ export class PessoaComponent implements OnInit {
   }
 
   deletePessoa() {
-    this.pessoaService.deletePessoa(this.pessoa).subscribe({
-      next: (pessoa) => (this.pessoa = pessoa),
-      error: (error) => {
-        console.log(error);
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Erro',
-          detail: `${error.status} - ${error.statusText} - ${error.error}`,
-        });
-      },
-      complete: () => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Sucesso',
-          detail: 'A pessoa foi exluida.',
-        });
-        this.router.navigate(['/home/pessoas']);
-      },
-    });
+    this.pessoaService
+      .deletePessoa(this.pessoa)
+      .pipe(debounceTime(1000))
+      .subscribe({
+        error: (error) => {
+          console.log(error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: `${error.status} - ${error.statusText} - ${error.error}`,
+          });
+        },
+        complete: () => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Sucesso',
+            detail: 'A pessoa foi exluida.',
+          });
+          this.router.navigate(['/home/pessoas']);
+        },
+      });
   }
 
   newFornecedor() {
@@ -400,6 +411,7 @@ export class PessoaComponent implements OnInit {
   removeArquivo(rowIndex: number) {
     this.arquivoService
       .deleteArquivo(this.pessoa.files![rowIndex].id!)
+      .pipe(debounceTime(1000))
       .subscribe({
         error: (error) => {
           console.log(error);
@@ -417,26 +429,29 @@ export class PessoaComponent implements OnInit {
   onFileSelected(event: Event) {
     const file: File = (event.target as HTMLInputElement).files![0];
     if (file) {
-      this.fileLoading = true
-      this.arquivoService.uploadArquivo(file).subscribe({
-        next: (arquivo: Arquivo) => {
-          console.log(arquivo);
-          this.pessoa.files?.push(arquivo);
-        },
-        error: (error) => {
-          this.fileLoading = false;
-          console.log(error);
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Erro',
-            detail: `${error.status} - ${error.statusText} - ${error.error}`,
-          });
-        },
-        complete: () => {
-          this.fileLoading = false;
-          this.createOrUpdate();
-        },
-      });
+      this.fileLoading = true;
+      this.arquivoService
+        .uploadArquivo(file)
+        .pipe(debounceTime(1000))
+        .subscribe({
+          next: (arquivo: Arquivo) => {
+            console.log(arquivo);
+            this.pessoa.files?.push(arquivo);
+          },
+          error: (error) => {
+            this.fileLoading = false;
+            console.log(error);
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Erro',
+              detail: `${error.status} - ${error.statusText} - ${error.error}`,
+            });
+          },
+          complete: () => {
+            this.fileLoading = false;
+            this.createOrUpdate();
+          },
+        });
     }
   }
 
@@ -454,11 +469,14 @@ export class PessoaComponent implements OnInit {
   }
 
   goToUrl(id: number): void {
-    this.arquivoService.getUrlArquivo(id).subscribe({
-      next: (url: any) => {
-        this.document.location.href = url.url;
-      },
-    });
+    this.arquivoService
+      .getUrlArquivo(id)
+      .pipe(debounceTime(1000))
+      .subscribe({
+        next: (url: any) => {
+          this.document.location.href = url.url;
+        },
+      });
   }
 
   validaCpfCnpj() {
@@ -483,38 +501,43 @@ export class PessoaComponent implements OnInit {
       ) {
         this.cnpjLoading = true;
 
-        this.pessoaService.consultaCNPJ(this.pessoa.cnpj_cpf).subscribe({
-          next: (consultaPJ: any) => {
-            this.pessoaOld = { ...this.pessoa };
-            this.pessoa.razao_social = consultaPJ.razao_social;
-            this.pessoa.nome = consultaPJ.estabelecimento.nome_fantasia
-              ? consultaPJ.estabelecimento.nome_fantasia
-              : consultaPJ.razao_social;
-            this.pessoa.data_nasc = new Date(
-              consultaPJ.estabelecimento.data_inicio_atividade
-            );
-            this.pessoa.endereco = `${
-              consultaPJ.estabelecimento.tipo_logradouro
-            } ${consultaPJ.estabelecimento.logradouro}, ${
-              consultaPJ.estabelecimento.numero
-            }, ${consultaPJ.estabelecimento.complemento || ''}, ${
-              consultaPJ.estabelecimento.bairro
-            }`;
-            this.pessoa.cep = Number(consultaPJ.estabelecimento.cep);
-            this.pessoa.telefone = Number(
-              consultaPJ.estabelecimento.ddd1 +
-                consultaPJ.estabelecimento.telefone1
-            );
-            this.pessoa.email = consultaPJ.estabelecimento.email;
-            this.pessoa.municipio = consultaPJ.estabelecimento.cidade.nome;
-            this.pessoa.uf = consultaPJ.estabelecimento.estado.sigla;
-            this.pessoa.ie_rg =
-              consultaPJ.estabelecimento.inscricoes_estaduais[0].inscricao_estadual;
-          },
-          complete: () => {
-            this.cnpjLoading = false;
-          },
-        });
+        this.pessoaService
+          .consultaCNPJ(this.pessoa.cnpj_cpf)
+          .pipe(debounceTime(1000))
+          .subscribe({
+            next: (consultaPJ: any) => {
+              this.pessoaOld = { ...this.pessoa };
+              this.pessoa.razao_social = consultaPJ.razao_social;
+              this.pessoa.nome = consultaPJ.estabelecimento.nome_fantasia
+                ? consultaPJ.estabelecimento.nome_fantasia
+                : consultaPJ.razao_social;
+              this.pessoa.data_nasc = new Date(
+                consultaPJ.estabelecimento.data_inicio_atividade
+              );
+              this.pessoa.endereco = `${
+                consultaPJ.estabelecimento.tipo_logradouro
+              } ${consultaPJ.estabelecimento.logradouro}, ${
+                consultaPJ.estabelecimento.numero
+              }, ${consultaPJ.estabelecimento.complemento || ''}, ${
+                consultaPJ.estabelecimento.bairro
+              }`;
+              this.pessoa.cep = Number(consultaPJ.estabelecimento.cep);
+              this.pessoa.telefone = Number(
+                consultaPJ.estabelecimento.ddd1 +
+                  consultaPJ.estabelecimento.telefone1
+              );
+              this.pessoa.email = consultaPJ.estabelecimento.email;
+              this.pessoa.municipio = consultaPJ.estabelecimento.cidade.nome;
+              this.pessoa.uf = consultaPJ.estabelecimento.estado.sigla;
+              this.pessoa.ie_rg =
+                consultaPJ.estabelecimento.inscricoes_estaduais[0].inscricao_estadual;
+
+              this.pessoa.descricao += `Situação Cadastral: ${consultaPJ.estabelecimento.situacao_cadastral}`
+            },
+            complete: () => {
+              this.cnpjLoading = false;
+            },
+          });
       }
     });
   }
@@ -533,17 +556,20 @@ export class PessoaComponent implements OnInit {
     let cepQuantosNumeros = cep?.split('').length;
 
     if (cepQuantosNumeros == 8 && cep) {
-      this.pessoaService.consultaCep(cep).subscribe({
-        next: (cep: any) => {
-          console.log(cep);
-          this.pessoa.endereco = `${cep.logradouro}, ${cep.complemento}, ${cep.bairro}`;
-          this.pessoa.municipio = cep.localidade;
-          this.pessoa.uf = cep.uf;
-        },
-        error: (error: Error) => {
-          console.log(error);
-        },
-      });
+      this.pessoaService
+        .consultaCep(cep)
+        .pipe(debounceTime(1000))
+        .subscribe({
+          next: (cep: any) => {
+            console.log(cep);
+            this.pessoa.endereco = `${cep.logradouro}, ${cep.complemento}, ${cep.bairro}`;
+            this.pessoa.municipio = cep.localidade;
+            this.pessoa.uf = cep.uf;
+          },
+          error: (error: Error) => {
+            console.log(error);
+          },
+        });
     }
   }
 }

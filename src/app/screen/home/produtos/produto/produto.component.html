@@ -24,7 +24,7 @@
     />
     <br />
     <label for="categoria">Categoria:</label>
-    <p-dropdown name="categoria" [options]="categorias$ | async" [editable]="true" [(ngModel)]="produto.categoria" optionLabel="valor" optionValue="valor"></p-dropdown>
+    <p-dropdown name="categoria" [options]="categorias$ | async" [editable]="false" [(ngModel)]="produto.categoria" optionLabel="valor" optionValue="valor"></p-dropdown>
     <br />
     <label for="espessura">Espessura:</label>
     <input

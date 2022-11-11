@@ -28,6 +28,7 @@
       <p-checkbox name="chkFornecedor" label="Fornecedor" [(ngModel)]="query.fornecedor" [binary]="true" (ngModelChange)="getPessoas()" ></p-checkbox>
       <p-checkbox name="chkOperador" label="Operador" [(ngModel)]="query.operador" [binary]="true" (ngModelChange)="getPessoas()" ></p-checkbox>
       <p-checkbox name="chkVendedor" label="Vendedor" [(ngModel)]="query.vendedor" [binary]="true" (ngModelChange)="getPessoas()" ></p-checkbox>
+      <p-checkbox name="chkDeleted" label="Deletados" [(ngModel)]="query.deleted" [binary]="true" (ngModelChange)="getPessoas()" ></p-checkbox>
     </div>
   </ng-template>
 
@@ -40,7 +41,7 @@
     </tr>
   </ng-template>
   <ng-template pTemplate="body" let-pessoa let-columns="columns">
-    <tr [routerLink]="pessoa.id">
+    <tr (click)="clickDeleted(pessoa.id)">
 
       <td *ngFor="let col of columns">
         <span *ngIf="col.field!='cnpj_cpf'&&col.field!='updatedAt'&&col.field!='telefone'&&col.field!='createdAt'">{{pessoa[col.field]}}</span>
@@ -56,3 +57,4 @@
 <div class="">
   <p-paginator [rows]="query.pageCount" [totalRecords]="totalRecords"[rowsPerPageOptions]="[10,25,50]" (onPageChange)="pageChange($event)" [showCurrentPageReport]=true [currentPageReportTemplate]="totalRecords+' resultados'"></p-paginator>
 </div>
+<p-confirmDialog header="Confirmação" icon="pi pi-exclamation-triangle"></p-confirmDialog>

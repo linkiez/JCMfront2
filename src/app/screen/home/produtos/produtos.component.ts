@@ -4,8 +4,9 @@ import { Table } from 'primeng/table';
 import { Produto } from '../../../models/produto';
 import { ProdutoService } from '../../../services/produto.service';
 import { ConfirmationService } from 'primeng/api';
-import { Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, Subscription } from 'rxjs';
 import { Router } from '@angular/router';
+import { Query } from 'src/app/models/query';
 
 @Component({
   selector: 'app-produtos',
@@ -18,73 +19,105 @@ export class ProdutosComponent implements OnInit, OnDestroy {
 
   produtos: Array<Produto> = [];
 
-  first = 0;
+  totalRecords: number = 0;
 
-  rows = 10;
+  query: Query = {
+    page: 0,
+    pageCount: 10,
+    searchValue: '',
+    deleted: false,
+  };
 
-  private subscription: Subscription = new Subscription;
+  private subscription: Subscription = new Subscription();
 
   constructor(
     private produtoService: ProdutoService,
     private messageService: MessageService,
     private router: Router,
+    private confirmationService: ConfirmationService
   ) {}
 
   ngOnInit(): void {
     this.getProdutos();
   }
 
-  ngOnDestroy(): void{
-    this.subscription.unsubscribe()
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
   getProdutos(): void {
     this.subscription = this.produtoService
-      .getProdutos()
+      .getProdutos(this.query)
+      .pipe(
+        debounceTime(1000), // espera um tempo antes de começar
+        distinctUntilChanged() // recorda a ultima pesquisa
+      )
       .subscribe({
-        next: (produtos) => (this.produtos = produtos),
+        next: (consulta) => {
+          this.produtos = consulta.produtos
+          this.totalRecords = consulta.totalRecords;
+        },
         error: (error) => {
-          console.log(error)
+          console.log(error);
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
             detail: error.message,
-          })
+          });
         },
       });
   }
 
-  new(){
-    this.router.navigate(['/home/produtos/0'])
+  new() {
+    this.router.navigate(['/home/produtos/0']);
   }
 
-  next() {
-    this.first = this.first + this.rows;
+  pageChange(event: any) {
+    this.query.page = event.page;
+    this.query.pageCount = event.rows;
+    this.getProdutos();
   }
 
-  prev() {
-    this.first = this.first - this.rows;
+  clickDeleted(id: number) {
+    if (!this.query.deleted) {
+      this.router.navigate([`home/produtos/${id}`]);
+    }else{
+      this.confirm(id)
+    }
   }
 
-  reset() {
-    this.first = 0;
+  confirm(id: number) {
+    this.confirmationService.confirm({
+        message: 'Deseja restaurar esse produto?',
+        accept: () => {
+            this.produtoService.restoreProduto(id).subscribe(
+              {
+            error: (error: any) => {
+              console.log(error);
+              this.messageService.add({
+                severity: 'error',
+                summary: 'Erro',
+                detail: error.message,
+              });
+            },
+            complete: () => {
+              this.messageService.add({
+                severity: 'success',
+                summary: 'Sucesso',
+                detail: 'O produto foi restaurado.',
+              });
+              this.getProdutos();
+            }
+        }
+    )}
+    });
   }
 
-  isLastPage(): boolean {
-    return this.produtos
-      ? this.first === this.produtos.length - this.rows
-      : true;
-  }
-
-  isFirstPage(): boolean {
-    return this.produtos ? this.first === 0 : true;
-  }
-
-  applyFilterGlobal($event: any, stringVal: any) {
-    this.dt!.filterGlobal(($event.target as HTMLInputElement).value, stringVal);
-  }
-
-  clear(table: Table) {
-    table.clear();
+  search() {
+    if (
+      this.query.searchValue?.length! > 2 ||
+      this.query.searchValue?.length! === 0
+    )
+      this.getProdutos();
   }
 }

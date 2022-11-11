@@ -20,7 +20,7 @@ export interface Pessoa {
   ie_rg?: string;
   cnpj_cpf?: string;
   data_nasc?: Date;
-  descricao?: Text;
+  descricao?: string;
   deletedAt?: Date;
   updatedAt?: Date;
   createdAt?: Date;

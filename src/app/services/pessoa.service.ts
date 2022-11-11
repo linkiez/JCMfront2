@@ -55,6 +55,13 @@ export class PessoaService {
     );
   }
 
+  restorePessoa(id: number): Observable<Object>{
+    return this.http.post(
+      environment.backendURL + 'pessoa/restore/' + id,
+      { responseType: 'json' }
+    );
+  }
+
   existeCnpjCpfPessoa(pessoa: Pessoa): Observable<any>{
     return this.http.post(environment.backendURL + 'pessoa/cnpj_cpf/existe', pessoa);
   }
