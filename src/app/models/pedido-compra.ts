@@ -15,6 +15,7 @@ export interface PedidoCompra {
   id_fornecedor?: number;
   Fornecedor?: Fornecedor;
   total?: number;
+  status?: string;
 }
 
 export interface PedidoCompraItem {

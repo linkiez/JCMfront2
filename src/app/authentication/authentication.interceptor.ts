@@ -24,13 +24,23 @@ export class AuthenticationInterceptor implements HttpInterceptor {
     request: HttpRequest<unknown>,
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
-    if (this.authenticationService.verificaTokens() && request.url.includes(environment.backendURL) && !request.url.includes('login')) {
+    if (
+      !this.accessTokenService.possuiToken() &&
+      !request.url.includes('refresh') &&
+      !request.url.includes('login')
+    ) {
+      this.authenticationService.verificaTokens();
+    }
+    if (
+      this.accessTokenService.possuiToken() &&
+      request.url.includes(environment.backendURL) &&
+      !request.url.includes('login')
+    ) {
       const accessToken = this.accessTokenService.retornaToken();
       const refreshToken = this.refreshTokenService.retornaToken();
       const headers = new HttpHeaders()
         .append('x-access-token', accessToken)
         .append('x-refresh-token', refreshToken);
-
       request = request.clone({ headers });
     }
     return next.handle(request);
