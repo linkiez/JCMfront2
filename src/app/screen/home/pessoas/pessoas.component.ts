@@ -1,6 +1,7 @@
 import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { Paginator } from 'primeng/paginator';
 import { Table } from 'primeng/table';
 import { debounceTime, distinctUntilChanged, filter, Subscription } from 'rxjs';
 import { Pessoa } from 'src/app/models/pessoa';
@@ -14,6 +15,7 @@ import { PessoaService } from 'src/app/services/pessoa.service';
   providers: [ConfirmationService],
 })
 export class PessoasComponent implements OnInit, OnDestroy {
+  @ViewChild('paginator') paginator!: Paginator;
 
   pessoas: Array<Pessoa> = [];
 
@@ -71,7 +73,9 @@ export class PessoasComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
-  getPessoas(): void {
+  getPessoas(pageChange?: boolean): void {
+    this.query.page = pageChange ? this.query.page : 0
+
     this.subscription = this.pessoaService
       .getPessoas(this.query)
       .pipe(
@@ -82,6 +86,7 @@ export class PessoasComponent implements OnInit, OnDestroy {
         next: (consulta) => {
           this.pessoas = consulta.pessoas;
           this.totalRecords = consulta.totalRecords;
+          this.paginator.changePage(this.query.page)
         },
         error: (error) => {
           console.log(error);
@@ -118,7 +123,7 @@ export class PessoasComponent implements OnInit, OnDestroy {
   pageChange(event: any) {
     this.query.page = event.page;
     this.query.pageCount = event.rows;
-    this.getPessoas();
+    this.getPessoas(true);
   }
 
   clickDeleted(id: number) {

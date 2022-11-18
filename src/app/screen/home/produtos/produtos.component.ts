@@ -7,6 +7,7 @@ import { ConfirmationService } from 'primeng/api';
 import { debounceTime, distinctUntilChanged, Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { Query } from 'src/app/models/query';
+import { Paginator } from 'primeng/paginator';
 
 @Component({
   selector: 'app-produtos',
@@ -15,7 +16,7 @@ import { Query } from 'src/app/models/query';
   providers: [ConfirmationService],
 })
 export class ProdutosComponent implements OnInit, OnDestroy {
-  @ViewChild('dt') dt: Table | undefined;
+  @ViewChild('paginator') paginator!: Paginator;
 
   produtos: Array<Produto> = [];
 
@@ -29,6 +30,7 @@ export class ProdutosComponent implements OnInit, OnDestroy {
   };
 
   private subscription: Subscription = new Subscription();
+
 
   constructor(
     private produtoService: ProdutoService,
@@ -45,7 +47,9 @@ export class ProdutosComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
-  getProdutos(): void {
+  getProdutos(pageChange?: boolean): void {
+    this.query.page = pageChange ? this.query.page : 0
+
     this.subscription = this.produtoService
       .getProdutos(this.query)
       .pipe(
@@ -56,6 +60,7 @@ export class ProdutosComponent implements OnInit, OnDestroy {
         next: (consulta) => {
           this.produtos = consulta.produtos
           this.totalRecords = consulta.totalRecords;
+          this.paginator.changePage(this.query.page)
         },
         error: (error) => {
           console.log(error);
@@ -75,7 +80,7 @@ export class ProdutosComponent implements OnInit, OnDestroy {
   pageChange(event: any) {
     this.query.page = event.page;
     this.query.pageCount = event.rows;
-    this.getProdutos();
+    this.getProdutos(true);
   }
 
   clickDeleted(id: number) {

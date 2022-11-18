@@ -45,6 +45,6 @@
   </ng-template>
 </p-table>
 <div class="">
-  <p-paginator [rows]="query.pageCount" [totalRecords]="totalRecords"[rowsPerPageOptions]="[10,25,50]" (onPageChange)="pageChange($event)" [showCurrentPageReport]=true [currentPageReportTemplate]="totalRecords+' resultados'"></p-paginator>
+  <p-paginator #paginator [rows]="query.pageCount" [totalRecords]="totalRecords"[rowsPerPageOptions]="[10,25,50]" (onPageChange)="pageChange($event)" [showCurrentPageReport]=true [currentPageReportTemplate]="totalRecords+' resultados'"></p-paginator>
 </div>
 <p-confirmDialog header="Confirmação" icon="pi pi-exclamation-triangle"></p-confirmDialog>
