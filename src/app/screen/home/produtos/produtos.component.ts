@@ -60,7 +60,7 @@ export class ProdutosComponent implements OnInit, OnDestroy {
         next: (consulta) => {
           this.produtos = consulta.produtos
           this.totalRecords = consulta.totalRecords;
-          this.paginator.changePage(this.query.page)
+          if(!pageChange)this.paginator.changePageToFirst(null)
         },
         error: (error) => {
           console.log(error);

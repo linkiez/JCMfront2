@@ -86,7 +86,7 @@ export class PessoasComponent implements OnInit, OnDestroy {
         next: (consulta) => {
           this.pessoas = consulta.pessoas;
           this.totalRecords = consulta.totalRecords;
-          this.paginator.changePage(this.query.page)
+          if(!pageChange)this.paginator.changePageToFirst(null)
         },
         error: (error) => {
           console.log(error);

@@ -8,8 +8,8 @@ import { MessageModule } from 'primeng/message';
 import { ProdutosComponent } from './produtos.component';
 import { ProdutoComponent } from './produto/produto.component';
 import { FormsModule } from '@angular/forms';
-import {ConfirmDialogModule} from 'primeng/confirmdialog';
 import {DropdownModule} from 'primeng/dropdown';
+import {ConfirmDialogModule} from 'primeng/confirmdialog';
 import {PaginatorModule} from 'primeng/paginator';
 import { CheckboxModule } from 'primeng/checkbox';
 

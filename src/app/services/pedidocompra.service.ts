@@ -1,3 +1,4 @@
+import { Query } from './../models/query';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -11,8 +12,18 @@ export class PedidoCompraService {
 
   constructor(private http: HttpClient) { }
 
-  getPedidoCompras(): Observable<PedidoCompra[]> {
-    return this.http.get<PedidoCompra[]>(environment.backendURL + 'pedidocompra', {
+  getPedidoCompras(query: Query): Observable<any> {
+    let chaves = Object.keys(query)
+      let valores = Object.values(query);
+      let queryString = '?';
+
+      for(let i=0;i<chaves.length;i++){
+        if(i>0) queryString += '&'
+        queryString += chaves[i]+'='+valores[i]
+      }
+
+
+    return this.http.get<PedidoCompra[]>(environment.backendURL + 'pedidocompra' + queryString, {
       responseType: 'json',
     });
   }
@@ -41,6 +52,13 @@ export class PedidoCompraService {
   deletePedidoCompra(pedidoCompra: PedidoCompra): Observable<Object> {
     return this.http.delete(
       environment.backendURL + 'pedidocompra/' + pedidoCompra.id,
+      { responseType: 'json' }
+    );
+  }
+
+  restorePedidoCompra(id: number): Observable<Object>{
+    return this.http.post(
+      environment.backendURL + 'pedidocompra/restore/' + id,
       { responseType: 'json' }
     );
   }
