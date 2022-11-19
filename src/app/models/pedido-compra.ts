@@ -11,9 +11,9 @@ export interface PedidoCompra {
   deletedAt?: Date;
   updatedAt?: Date;
   createdAt?: Date;
-  PedidoCompraItem?: Array<PedidoCompraItem>;
+  pedido_compra_items: Array<PedidoCompraItem>;
   id_fornecedor?: number;
-  Fornecedor?: Fornecedor;
+  fornecedor?: Fornecedor;
   total?: number;
   status?: string;
 }
@@ -31,5 +31,5 @@ export interface PedidoCompraItem {
   createdAt?: Date;
   id_pedido?: number;
   id_produto?: number;
-  Produto?: Produto;
+  produto?: Produto;
 }

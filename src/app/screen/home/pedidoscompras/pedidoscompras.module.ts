@@ -8,8 +8,9 @@ import {ConfirmDialogModule} from 'primeng/confirmdialog';
 import {PaginatorModule} from 'primeng/paginator';
 import { TableModule } from 'primeng/table';
 import { CheckboxModule } from 'primeng/checkbox';
-
-
+import { SharedModule } from 'src/app/shared/shared.module';
+import {AutoCompleteModule} from 'primeng/autocomplete';
+import {DropdownModule} from 'primeng/dropdown';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,10 @@ import { CheckboxModule } from 'primeng/checkbox';
     ConfirmDialogModule,
     PaginatorModule,
     TableModule,
-    CheckboxModule
+    CheckboxModule,
+    SharedModule,
+    AutoCompleteModule,
+    DropdownModule
   ]
 })
 export class PedidosComprasModule { }

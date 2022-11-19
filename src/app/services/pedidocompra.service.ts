@@ -35,13 +35,13 @@ export class PedidoCompraService {
     );
   }
 
-  addPedidoCompra(pedidoCompra: PedidoCompra): Observable<PedidoCompra> {
+  addPedidoCompra(pedidoCompra: PedidoCompra): Observable<any> {
     return this.http.post(environment.backendURL + 'pedidocompra', pedidoCompra, {
       responseType: 'json',
     });
   }
 
-  updatePedidoCompra(pedidoCompra: PedidoCompra): Observable<PedidoCompra> {
+  updatePedidoCompra(pedidoCompra: PedidoCompra): Observable<any> {
     return this.http.put(
       environment.backendURL + 'pedidocompra/' + pedidoCompra.id,
       pedidoCompra,
@@ -49,7 +49,7 @@ export class PedidoCompraService {
     );
   }
 
-  deletePedidoCompra(pedidoCompra: PedidoCompra): Observable<Object> {
+  deletePedidoCompra(pedidoCompra: PedidoCompra): Observable<any> {
     return this.http.delete(
       environment.backendURL + 'pedidocompra/' + pedidoCompra.id,
       { responseType: 'json' }

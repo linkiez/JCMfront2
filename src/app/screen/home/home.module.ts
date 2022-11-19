@@ -15,6 +15,7 @@ import {MessageModule} from 'primeng/message';
 import { CaixaUsuarioComponent } from 'src/app/components/caixa-usuario/caixa-usuario.component';
 
 
+
 @NgModule({
   declarations: [HomeComponent, CaixaUsuarioComponent, DashboardComponent],
   imports: [

@@ -52,38 +52,39 @@ export class PedidosComprasComponent implements OnInit, OnDestroy {
       .pipe(
         debounceTime(1000), // espera um tempo antes de começar
         distinctUntilChanged() // recorda a ultima pesquisa
-      ).subscribe(
-        {
-          next: (consulta) => {
-            this.pedidosCompra = consulta.pedidosCompra;
-            this.totalRecords = consulta.totalRecords;
-            if(!pageChange)this.paginator.changePageToFirst(null)
-          },
-          error: (error) => {
-            console.log(error);
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Erro',
-              detail: error.message,
-            });
-          }
-        }
-      );
+      )
+      .subscribe({
+        next: (consulta) => {
+          this.pedidosCompra = consulta.pedidosCompra;
+          this.totalRecords = consulta.totalRecords;
+          if (!pageChange) this.paginator.changePageToFirst(null);
+        },
+        error: (error) => {
+          console.log(error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: error.message,
+          });
+        },
+      });
   }
 
   new() {
-    this.router.navigate(['/home/pedidocompra/0']);
+    this.router.navigate(['/home/pedidoscompras/0']);
   }
 
   pageChange(event: any) {
-    this.query.page = event.page;
-    this.query.pageCount = event.rows;
-    this.getPedidosCompra(true);
+    if (event) {
+      this.query.page = event.page;
+      this.query.pageCount = event.rows;
+      this.getPedidosCompra(true);
+    }
   }
 
   clickDeleted(id: number) {
     if (!this.query.deleted) {
-      this.router.navigate([`home/pedidocompra/${id}`]);
+      this.router.navigate([`home/pedidoscompras/${id}`]);
     } else {
       this.confirm(id);
     }
@@ -96,7 +97,7 @@ export class PedidosComprasComponent implements OnInit, OnDestroy {
         this.pedidoCompraService.restorePedidoCompra(id).subscribe({
           error: (error: any) => {
             console.log(error);
-            this.messageService.clear
+            this.messageService.clear;
             this.messageService.add({
               severity: 'error',
               summary: 'Erro',

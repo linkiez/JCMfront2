@@ -1,1 +1,166 @@
-<p>pedidocompra works!</p>
+<h2>Pedido de Compra</h2>
+<form class="container">
+  <div class="row">
+    <div class="input col-2">
+      <label for="inpId">Id: </label
+      ><input
+        pInputText
+        class="p-inputtext"
+        disabled
+        name="inpId"
+        type="text"
+        [(ngModel)]="pedidoCompra.id"
+      />
+    </div>
+    <div class="input col-2">
+      <label for="inpPedido">Pedido: </label
+      ><input
+        pInputText
+        class="p-inputtext"
+        name="inpPedido"
+        type="text"
+        [(ngModel)]="pedidoCompra.pedido"
+      />
+    </div>
+    <div class="input col-4">
+      <label for="inpDataEmissao">Data: </label
+      ><input
+        pInputText
+        class="p-inputtext"
+        name="inpDataEmissao"
+        type="text"
+        disabled
+        value="{{ pedidoCompra.data_emissao | date: 'dd/MM/yyyy' }}"
+      />
+    </div>
+  </div>
+  <div class="row">
+    <div class="input col-8">
+      <label for="inpFornecedor">Fornecedor: </label
+      ><p-autoComplete
+        pInputText
+        class="p-autocomplete w-100"
+        name="inpFornecedor"
+        type="text"
+        [(ngModel)]="pedidoCompra.fornecedor!.pessoa!"
+        field="nome"
+        [suggestions]="fornecedores"
+        (completeMethod)="searchFornecedor($event)"
+        [dropdown]="true"
+        [style]="{ width: '100%' }"
+        [inputStyle]="{ width: '100%' }"
+      ></p-autoComplete>
+    </div>
+    <div class="input col-4">
+      <label>Contato:</label>
+      <p class="inputtext">{{ "-" }}</p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="input col-8">
+      <label>Endereço:</label>
+      <p>{{ pedidoCompra.fornecedor?.pessoa?.endereco || "-" }}</p>
+    </div>
+    <div class="Input col-4">
+      <label>Telefone</label>
+      <p>{{ pedidoCompra.fornecedor?.pessoa?.telefone || "-" | telefone }}</p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="input col-4">
+      <label for="">Cidade:</label>
+      <p>{{ pedidoCompra.fornecedor?.pessoa?.municipio || "-" }}</p>
+    </div>
+    <div class="input col-4">
+      <label for="">UF:</label>
+      <p>{{ pedidoCompra.fornecedor?.pessoa?.uf || "-" }}</p>
+    </div>
+    <div class="input col-4">
+      <label for="">CEP:</label>
+      <p>{{ pedidoCompra.fornecedor?.pessoa?.cep || "-" | cep }}</p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="input col-8">
+      <label>CNPJ:</label>
+      <p>{{ pedidoCompra.fornecedor?.pessoa?.cnpj_cpf || "-" | cpfCnpj }}</p>
+    </div>
+    <div class="Input col-4">
+      <label>I.E</label>
+      <p>{{ pedidoCompra.fornecedor?.pessoa?.ie_rg || "-" | ieRg }}</p>
+    </div>
+  </div>
+  <p-table [value]="pedidoCompra.pedido_compra_items">
+    <ng-template pTemplate="caption"></ng-template>
+    <ng-template pTemplate="header">
+      <th>Item</th>
+      <th>Produto</th>
+      <th>Dimensão</th>
+      <th>Qtde</th>
+      <th>Peso(Kg)</th>
+      <th>Preço Unit.</th>
+      <th>Ipi</th>
+      <th>Total</th>
+      <th>Entrega</th>
+    </ng-template>
+    <ng-template pTemplate="body" let-item let-index="rowIndex">
+      <tr>
+        <td>{{ index + 1 }}.</td>
+        <td pEditableColumn>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <p-autoComplete
+                pInputText
+                class="p-autocomplete w-100"
+                name="inpFornecedor"
+                type="text"
+                [(ngModel)]="pedidoCompra.pedido_compra_items[index].produto"
+                field="nome"
+                [suggestions]="produtos"
+                (completeMethod)="searchProduto($event)"
+                [dropdown]="true"
+                [style]="{ width: '100%' }"
+                [inputStyle]="{ width: '100%' }"
+              ></p-autoComplete>
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{ item.produto.nome }}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+        <td pEditableColumn>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <p-dropdown
+                [options]="dimensoes$ | async"
+                [(ngModel)]="pedidoCompra.pedido_compra_items[index].dimensao"
+                optionLabel="valor"
+                [editable]=true
+              ></p-dropdown>
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{ item.dimensao }}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+        <td>
+          {{ item.quantidade }}
+        </td>
+        <td>
+          {{ item.peso }}
+        </td>
+        <td>
+          {{ item.preco }}
+        </td>
+        <td>
+          {{ item.ipi }}
+        </td>
+        <td>
+          {{ item.total }}
+        </td>
+        <td>{{ item.prazo | date: "dd/MM/yyyy" }}</td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="footer"></ng-template>
+  </p-table>
+</form>
