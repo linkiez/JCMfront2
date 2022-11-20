@@ -11,6 +11,8 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { SharedModule } from 'src/app/shared/shared.module';
 import {AutoCompleteModule} from 'primeng/autocomplete';
 import {DropdownModule} from 'primeng/dropdown';
+import { CalendarModule } from 'primeng/calendar';
+
 
 @NgModule({
   declarations: [
@@ -26,7 +28,8 @@ import {DropdownModule} from 'primeng/dropdown';
     CheckboxModule,
     SharedModule,
     AutoCompleteModule,
-    DropdownModule
+    DropdownModule,
+    CalendarModule
   ]
 })
 export class PedidosComprasModule { }

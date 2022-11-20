@@ -66,3 +66,9 @@ body {
     padding: 0
   }
 }
+
+@media print {
+  .noprint{
+    display: none;
+  }
+}

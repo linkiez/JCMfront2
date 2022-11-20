@@ -49,7 +49,7 @@
       <td>{{ pedido.pedido }}</td>
       <td>{{ pedido.data_emissao | date: "dd/MM/yyyy" }}</td>
       <td>{{ pedido.fornecedor.pessoa.nome }}</td>
-      <td>{{ pedido.total }}</td>
+      <td>{{ pedido.total | currency : 'BRL'  }}</td>
     </tr>
   </ng-template>
 </p-table>

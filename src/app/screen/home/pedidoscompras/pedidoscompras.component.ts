@@ -57,7 +57,7 @@ export class PedidosComprasComponent implements OnInit, OnDestroy {
         next: (consulta) => {
           this.pedidosCompra = consulta.pedidosCompra;
           this.totalRecords = consulta.totalRecords;
-          if (!pageChange) this.paginator.changePageToFirst(null);
+          if (!pageChange) this.paginator.changePageToFirst(new Event(""));
         },
         error: (error) => {
           console.log(error);

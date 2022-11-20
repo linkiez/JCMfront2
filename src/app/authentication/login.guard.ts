@@ -26,7 +26,7 @@ export class LoginGuard implements CanLoad, CanActivate  {
       return this.authenticationService.verificaTokens()
   }
 
-  canActivate(): boolean{
+  canActivate(): Promise<boolean>{
     return this.authenticationService.verificaTokens()
   }
 }

@@ -1,11 +1,12 @@
 import { AccessTokenService } from './accessToken.service';
 import { environment } from '../../environments/environment.prod';
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { RefreshTokenService } from './refreshToken.service';
 import { UsuarioService } from './usuario.service';
 import { Login } from '../models/login';
 import { Router } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
 
 const API = environment.backendURL;
 
@@ -18,7 +19,7 @@ export class AuthenticationService {
     private refreshTokenService: RefreshTokenService,
     private accessTokenService: AccessTokenService,
     private usuarioService: UsuarioService,
-    private router: Router,
+    private router: Router
   ) {}
 
   login(email: string, senha: string) {
@@ -35,36 +36,29 @@ export class AuthenticationService {
 
   refresh() {
     return this.httpClient.get(`${API}refresh`, {
-      headers: {'x-refresh-token': this.refreshTokenService.retornaToken()},
-      observe: 'response' })
+      headers: { 'x-refresh-token': this.refreshTokenService.retornaToken() },
+      observe: 'response',
+    });
   }
 
-  verificaTokens(){
-    if (this.accessTokenService.possuiToken()) {
+  async verificaTokens() {
+    let accessToken = this.accessTokenService.possuiToken();
+    let refreshToken = this.refreshTokenService.possuiToken();
+    if (accessToken) {
       return true;
-    } else {
-      if (this.refreshTokenService.possuiToken()) {
-        this.refresh().subscribe({
-          next: (response) => {
-            let body = response.body as Login;
-
-            this.usuarioService.salvaToken(
-              body!.accessToken,
-              body!.refreshToken
-            );
-            return true;
-          },
-          error: (error) => {
-            alert(error.message);
-            console.log(error);
-            this.router.navigate(['login']);
-          },
-        });
-      } else {
-        this.router.navigate(['login']);
-      }
     }
-    this.router.navigate(['login']);
-    return false;
+    if (refreshToken) {
+      let response = await firstValueFrom(this.refresh())
+      let body = response.body as Login;
+      if(body){
+        this.usuarioService.salvaToken(body!.accessToken, body!.refreshToken);
+        return true;
+      }
+      this.router.navigate(['login']);
+      return false
+    } else {
+      this.router.navigate(['login']);
+      return false;
+    }
   }
 }

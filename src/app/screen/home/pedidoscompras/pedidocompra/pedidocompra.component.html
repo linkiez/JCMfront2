@@ -112,9 +112,9 @@
               <p-autoComplete
                 pInputText
                 class="p-autocomplete w-100"
-                name="inpFornecedor"
+                name="inpProdutos"
                 type="text"
-                [(ngModel)]="pedidoCompra.pedido_compra_items[index].produto"
+                [(ngModel)]="item.produto"
                 field="nome"
                 [suggestions]="produtos"
                 (completeMethod)="searchProduto($event)"
@@ -132,10 +132,13 @@
           <p-cellEditor>
             <ng-template pTemplate="input">
               <p-dropdown
+                name="inpDimensao"
                 [options]="dimensoes$ | async"
-                [(ngModel)]="pedidoCompra.pedido_compra_items[index].dimensao"
+                [(ngModel)]="item.dimensao"
                 optionLabel="valor"
-                [editable]=true
+                optionValue="valor"
+                [editable]="true"
+                (ngModelChange)="calculaPeso(item)"
               ></p-dropdown>
             </ng-template>
             <ng-template pTemplate="output">
@@ -143,22 +146,94 @@
             </ng-template>
           </p-cellEditor>
         </td>
-        <td>
-          {{ item.quantidade }}
+        <td pEditableColumn>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <input
+                pInputText
+                class="p-inputtext"
+                name="inpItemQuantidade"
+                type="text"
+                [(ngModel)]="item.quantidade"
+                (input)="calculaPeso(item)"
+              />
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{ item.quantidade }}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+        <td pEditableColumn>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <input
+                pInputText
+                class="p-inputtext"
+                name="inpItemPeso"
+                type="text"
+                [(ngModel)]="item.peso"
+                (input)="calculaTotal()"
+              />
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{ item.peso }}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+        <td pEditableColumn>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <input
+                pInputText
+                class="p-inputtext"
+                name="inpItemPreco"
+                type="text"
+                [ngModel]="item.preco | currency : 'BRL' "
+                (ngModelChange)="itemPreco($event, item)"
+                (input)="calculaTotal()"
+              />
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{ item.preco | currency : 'BRL' }}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+        <td pEditableColumn>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <input
+                pInputText
+                class="p-inputtext"
+                name="inpItemIpi"
+                type="text"
+                [ngModel]="item.ipi | percent : '1.2-2' : 'PT-BR'"
+                (ngModelChange)="itemIpi($event, item)"
+                (input)="calculaTotal()"
+              />
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{ item.ipi  | percent : '1.2-2' : 'PT-BR'}}
+            </ng-template>
+          </p-cellEditor>
         </td>
         <td>
-          {{ item.peso }}
+          {{ item.total | currency : 'BRL' }}
         </td>
-        <td>
-          {{ item.preco }}
+        <td pEditableColumn>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <p-calendar
+              name="InpItemPrazo"
+              [(ngModel)]="item.prazo"
+              dateFormat="dd/mm/yy"
+              styleClass="w-100"
+            ></p-calendar>
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{ item.prazo | date: "dd/MM/yyyy" }}
+            </ng-template>
+          </p-cellEditor>
         </td>
-        <td>
-          {{ item.ipi }}
-        </td>
-        <td>
-          {{ item.total }}
-        </td>
-        <td>{{ item.prazo | date: "dd/MM/yyyy" }}</td>
       </tr>
     </ng-template>
     <ng-template pTemplate="footer"></ng-template>

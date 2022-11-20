@@ -25,6 +25,7 @@ export interface PedidoCompraItem {
   peso?: number;
   preco?: number;
   ipi?: number;
+  total?: number
   prazo?: Date;
   deletedAt?: Date;
   updatedAt?: Date;
