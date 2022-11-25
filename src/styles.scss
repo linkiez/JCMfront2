@@ -36,7 +36,13 @@ html {
   }
 
   .page{
-    width: 100%;
+    padding: 0.5cm;
+    margin: 0.5cm;
+
+    padding-right: 0;
+    margin-right: 0;
+
+    box-shadow: none
   }
 
   .row {

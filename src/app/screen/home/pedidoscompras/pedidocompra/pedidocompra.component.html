@@ -42,13 +42,14 @@
         class="p-autocomplete w-100"
         name="inpFornecedor"
         type="text"
-        [(ngModel)]="pedidoCompra.fornecedor!.pessoa!"
-        field="nome"
+        [(ngModel)]="pedidoCompra.fornecedor"
+        field="pessoa.nome"
         [suggestions]="fornecedores"
         (completeMethod)="searchFornecedor($event)"
         [dropdown]="true"
         [style]="{ width: '100%' }"
         [inputStyle]="{ width: '100%' }"
+        appendTo="body"
       ></p-autoComplete>
     </div>
     <div class="input col-4">
@@ -131,6 +132,7 @@
                 [dropdown]="true"
                 [style]="{ width: '100%' }"
                 [inputStyle]="{ width: '100%' }"
+                appendTo="body"
               ></p-autoComplete>
             </ng-template>
             <ng-template pTemplate="output">
@@ -149,6 +151,7 @@
                 optionValue="valor"
                 [editable]="true"
                 (ngModelChange)="calculaPeso(item)"
+                appendTo="body"
               ></p-dropdown>
             </ng-template>
             <ng-template pTemplate="output">
@@ -245,11 +248,19 @@
             </ng-template>
           </p-cellEditor>
         </td>
+        <td class="noprint">
+          <i class="pi pi-trash trash" (click)="removeItem(index)"></i>
+        </td>
       </tr>
     </ng-template>
     <ng-template pTemplate="footer">
       <tr>
-        <td colspan="2">Condição de Pagamento</td>
+        <td>
+          <button pButton class="button" (click)="newItem()" class="noprint">
+            <i class="pi pi-plus"></i>
+          </button>
+        </td>
+        <td colspan="1">Condição de Pagamento</td>
         <td colspan="2" pEditableColumn>
           <p-cellEditor>
             <ng-template pTemplate="input">
@@ -260,6 +271,7 @@
                 optionLabel="valor"
                 optionValue="valor"
                 [editable]="true"
+                appendTo="body"
               ></p-dropdown>
             </ng-template>
             <ng-template pTemplate="output">
@@ -286,42 +298,68 @@
             </ng-template>
           </p-cellEditor>
         </td>
-        <td>Total + Frete</td>
+        <td>Total</td>
         <td>{{ pedidoCompra.total | currency: "BRL" }}</td>
+        <td></td>
       </tr>
-      <tr></tr>
     </ng-template>
   </p-table>
   <div>
     <h4>Observações</h4>
-    <textarea pInputTextarea [(ngModel)]="pedidoCompra.observacao"></textarea>
+    <textarea pInputTextarea name="txtObs" [(ngModel)]="pedidoCompra.observacao"></textarea>
     <h4>Normas de fornecimento do pedido</h4>
     <p>
-      1. Horário de Recebimento: de Segunda à Quinta das 7:00h às 11:00h e das 12:30h às 16:30h Sexta-feira até às 15:30.
+      1. Horário de Recebimento: de Segunda à Quinta das 7:00h às 11:00h e das
+      12:30h às 16:30h Sexta-feira até às 15:30.
+    </p>
+    <p>2. Pedido de Compra elaborado com peso teórico.</p>
+    <p>
+      3. Toda e qualquer despesa com embalagem ou frete, estará a cargo do
+      fornecedor a não ser quando mencionado no pedido.
     </p>
     <p>
-      2. Pedido de Compra elaborado com peso teórico.
+      4. As mercadorias deverão vir acompanhadas da Nota Fiscal (descriminando
+      nº pedido de compra) e Duplicatas de cobrança.
     </p>
     <p>
-      3. Toda e qualquer despesa com embalagem ou frete, estará a cargo do fornecedor a não ser quando mencionado no pedido.
+      5. As respectivas faturas e duplicatas deverão ser entregues em nosso
+      escritório.
     </p>
     <p>
-      4. As mercadorias deverão vir acompanhadas da Nota Fiscal (descriminando nº pedido de compra) e Duplicatas de cobrança.
+      6. A JCM Metais reverva-se o direito de devolver mercadorias a qualquer
+      tempo por defeito ou desacordo com as especificações, não seja entregue no
+      prazo previsto ou não esteja de acordo com as condições estabelecidas
+      neste pedido.
     </p>
     <p>
-      5. As respectivas faturas e duplicatas deverão ser entregues em nosso escritório.
+      7. Todos os itens da Nota Fiscal deverá estar com o código de
+      classificação fiscal.
     </p>
     <p>
-      6. A JCM Metais reverva-se o direito de devolver mercadorias a qualquer tempo por defeito ou desacordo com as especificações, não seja entregue no prazo previsto ou não esteja de acordo com as condições estabelecidas neste pedido.
+      8. Enviar o certificado de qualidade do material junto com a Matéria
+      Prima.
     </p>
     <p>
-      7. Todos os itens da Nota Fiscal deverá estar com o código de classificação fiscal.
-    </p>
-    <p>
-      8. Enviar o certificado de qualidade do material junto com a Matéria Prima.
-    </p>
-    <p>
-      9. A JCM Metais  monitora o desempenho dos seus provedores externos (fornecedores), atraves da avaliação nas entregas dos produtos/serviços com    pontuação na (Prazo de entrega e Qualidade), quando os resultados ficarem abaixo dos objetivos, ações corretivas serão solicitadas para os provedores externos (fornecedores).
+      9. A JCM Metais monitora o desempenho dos seus provedores externos
+      (fornecedores), atraves da avaliação nas entregas dos produtos/serviços
+      com pontuação na (Prazo de entrega e Qualidade), quando os resultados
+      ficarem abaixo dos objetivos, ações corretivas serão solicitadas para os
+      provedores externos (fornecedores).
     </p>
   </div>
 </form>
+<div class="noprint">
+  <button pButton class="p-button p-button-danger" (click)="confirm()">
+    Excluir
+  </button>
+  <button pButton class="p-button p-button-success" (click)="createOrUpdate()">
+    Salvar
+  </button>
+  <button pButton class="p-button" (click)="getBackPedidos()">Voltar</button>
+  <p-confirmDialog
+    header="Confirmação"
+    acceptLabel="Sim"
+    rejectLabel="Não"
+    icon="pi pi-exclamation-triangle"
+  ></p-confirmDialog>
+</div>

@@ -10,9 +10,9 @@ import { Produto } from 'src/app/models/produto';
 import { Query } from 'src/app/models/query';
 import { ListaGenericaService } from 'src/app/services/lista-generica.service';
 import { PedidoCompraService } from 'src/app/services/pedidocompra.service';
-import { PessoaService } from 'src/app/services/pessoa.service';
 import { ProdutoService } from 'src/app/services/produto.service';
 import * as lodash from 'lodash';
+import { FornecedorService } from 'src/app/services/fornecedor.service';
 
 @Component({
   selector: 'app-pedidocompra',
@@ -23,7 +23,7 @@ import * as lodash from 'lodash';
 export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
   constructor(
     private pedidoCompraService: PedidoCompraService,
-    private pessoaService: PessoaService,
+    private fornecedorService: FornecedorService,
     private produtoService: ProdutoService,
     private listaGenericaService: ListaGenericaService,
     private router: Router,
@@ -32,7 +32,7 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
     private confirmationService: ConfirmationService
   ) {}
 
-  pedidoCompra: PedidoCompra = { fornecedor: {}, pedido_compra_items: [] };
+  pedidoCompra: PedidoCompra = { fornecedor: {}, pedido_compra_items: [], cond_pagamento: '', frete: 0 };
 
   fornecedores: Pessoa[] = [];
 
@@ -61,6 +61,7 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
   ngOnChanges() {}
 
   getPedidoCompra() {
+
     const id = Number(this.route.snapshot.paramMap.get('id'));
     if (id != 0) {
       this.subscription = this.pedidoCompraService
@@ -96,19 +97,18 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
       page: 0,
       pageCount: 10,
       searchValue: event.query,
-      fornecedor: true,
-      deleted: false,
+      deleted: false
     };
 
-    this.subscription = this.pessoaService
-      .getPessoas(query)
+    this.subscription = this.fornecedorService
+      .getFornecedores(query)
       .pipe(
         distinctUntilChanged(), // recorda a ultima pesquisa
         debounceTime(1000) // espera um tempo antes de começar
       )
       .subscribe({
         next: (fornecedores) => {
-          this.fornecedores = fornecedores.pessoas;
+          this.fornecedores = fornecedores.fornecedores;
         },
         error: (error) => {
           console.log(error);
@@ -201,5 +201,109 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
         (dimensao[0] || 1) * (item.produto?.peso || 0) * (item.quantidade || 0);
     }
     this.calculaTotal();
+  }
+
+  getBackPedidos() {
+    this.router.navigate(['/home/pedidoscompras']);
+  }
+
+  confirm() {
+    this.confirmationService.confirm({
+      message: 'Tem certeza que deseja excluir este pedido de compra?',
+      accept: () => {
+        this.deletePedido();
+      },
+    });
+  }
+
+  deletePedido() {
+    this.pedidoCompraService
+      .deletePedidoCompra(this.pedidoCompra)
+      .pipe(debounceTime(1000))
+      .subscribe({
+        error: (error) => {
+          console.log(error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: `${error.status} - ${error.statusText} - ${error.error}`,
+          });
+        },
+        complete: () => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Sucesso',
+            detail: 'O pedido de compra foi exluido.',
+          });
+          this.router.navigate(['/home/pedidoscompras']);
+        },
+      });
+  }
+
+  createOrUpdate() {
+    if (this.pedidoCompra.id == undefined) {
+      this.createPedido();
+    } else {
+      this.updatePedido();
+    }
+  }
+  createPedido() {
+    this.pedidoCompraService
+      .addPedidoCompra(this.pedidoCompra)
+      .pipe(debounceTime(1000))
+      .subscribe({
+        next: (response) => {
+          this.pedidoCompra = response;
+        },
+        error: (error) => {
+          console.log(error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: `${error.status} - ${error.statusText} - ${error.error}`,
+          });
+        },
+        complete: () => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Sucesso',
+            detail: 'O pedido foi criado.',
+          });
+          this.router.navigate([
+            `/home/pedidoscompras/${this.pedidoCompra.id}`,
+          ]);
+        },
+      });
+  }
+  updatePedido() {
+    console.log(this.pedidoCompra)
+    this.pedidoCompraService.updatePedidoCompra(this.pedidoCompra).pipe(debounceTime(1000)).subscribe({
+      next: (response) => {
+        this.pedidoCompra = response;
+      },
+      error: (error) => {
+        console.log(error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: `${error.status} - ${error.statusText} - ${error.error}`,
+        });
+      },
+      complete: () => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Sucesso',
+          detail: 'O pedido foi atualizado.',
+        });
+      },
+    })
+  }
+
+  newItem(){
+    this.pedidoCompra.pedido_compra_items.push({produto: {}})
+  }
+
+  removeItem(index: number) {
+    this.pedidoCompra.pedido_compra_items.splice(index, 1);
   }
 }
