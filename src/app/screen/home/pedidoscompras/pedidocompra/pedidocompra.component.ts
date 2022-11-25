@@ -1,3 +1,4 @@
+import { ListaGenericaItem } from './../../../../models/lista-generica';
 import { Component, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -41,6 +42,12 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
     .getByNameListaGenerica('produtoDimensoes')
     .pipe(map((listaGenerica: any) => listaGenerica.lista_generica_items));
 
+  condicaoPagamento$ = this.listaGenericaService
+    .getByNameListaGenerica('condicaoPagamento')
+    .pipe(map((listaGenerica: any) => listaGenerica.lista_generica_items));
+
+  observacoes: ListaGenericaItem[] = [];
+
   private subscription: Subscription = new Subscription();
 
   ngOnInit(): void {
@@ -68,7 +75,6 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
               }
             );
             this.pedidoCompra = pedido;
-            this.calculaTotal();
           },
           error: (error) => {
             console.log(error);
@@ -77,6 +83,9 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
               summary: 'Erro',
               detail: `${error.status} - ${error.statusText} - ${error.error}`,
             });
+          },
+          complete: () => {
+            this.calculaTotal();
           },
         });
     }
@@ -147,13 +156,22 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
     item.ipi = event.replace(/[^\d]/g, '') / 10000;
   }
 
+  frete(event: any) {
+    this.pedidoCompra.frete = event.replace(/[^\d]/g, '') / 100;
+  }
+
   calculaTotal() {
+    let total = 0;
     this.pedidoCompra.pedido_compra_items =
       this.pedidoCompra.pedido_compra_items.map((item: PedidoCompraItem) => {
         item.total =
-          (item.peso || 0) * (item.preco || 0) * ((item.ipi || 0) + 1);
+          (item.peso || 0) * (item.preco || 0) * ((Number(item.ipi) || 0) + 1);
+        total = total + item.total;
         return item;
       });
+
+    total = total + (Number(this.pedidoCompra.frete) || 0);
+    this.pedidoCompra.total = total;
   }
 
   calculaPeso(item: PedidoCompraItem) {

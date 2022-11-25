@@ -1,24 +1,16 @@
 /* You can add global styles to this file, and also import other style files */
 
 /* Importing Bootstrap SCSS file. */
-@import '~bootstrap/scss/bootstrap';
+@import "~bootstrap/scss/bootstrap";
 
-body{
+body {
   background-color: #20262e;
   height: 100%;
+  min-height: 100%;
 }
 html {
   height: 100%;
 }
-body {
-  min-height: 100%;
-}
-
-@page {
-  size: A4;
-  margin: 0;
-}
-
 
 .page {
   padding: 2cm;
@@ -28,47 +20,30 @@ body {
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
-.caixa {
-  margin: auto;
-  width: auto;
-  padding: 50px;
-
-  border-width: 1px;
-  border-radius: 3px;
-  background-color: #2a323d;
-  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-}
-
 .link {
   text-decoration: underline;
   cursor: pointer;
 }
 
-.trash{
+.trash {
   cursor: pointer;
 }
 
 @media print {
-  .page {
+  .container {
+    padding: 0;
     margin: 0;
-    padding: 1cm;
-    border: initial;
-    border-radius: initial;
-    width: initial;
-    min-height: initial;
-    box-shadow: initial;
-    background: initial;
-    page-break-after: always;
+  }
+
+  .page{
+    width: 100%;
   }
 
   .row {
-    margin: 0;
-    padding: 0
+    width: 100%;
   }
-}
 
-@media print {
-  .noprint{
+  .noprint {
     display: none;
   }
 }

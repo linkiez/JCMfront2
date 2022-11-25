@@ -4,7 +4,7 @@ label {
   margin-top: 15px;
 }
 
-h2, p, th {
+h2, p, th, h3, h4 {
 color: #fff;
 }
 
@@ -12,6 +12,10 @@ button {
 margin-right: 10px;
 }
 
-input, p {
+input, p, textarea {
   width: 100%
+}
+
+h4 {
+  margin-top: 25px;
 }

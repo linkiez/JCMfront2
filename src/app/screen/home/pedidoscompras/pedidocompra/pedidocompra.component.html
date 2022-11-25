@@ -2,7 +2,7 @@
 <form class="container">
   <div class="row">
     <div class="input col-2">
-      <label for="inpId">Id: </label
+      <label name="lblId" for="inpId">Id: </label
       ><input
         pInputText
         class="p-inputtext"
@@ -13,7 +13,7 @@
       />
     </div>
     <div class="input col-2">
-      <label for="inpPedido">Pedido: </label
+      <label name="lblPedido" for="inpPedido">Pedido: </label
       ><input
         pInputText
         class="p-inputtext"
@@ -23,7 +23,7 @@
       />
     </div>
     <div class="input col-4">
-      <label for="inpDataEmissao">Data: </label
+      <label name="lblDataEmissao" for="inpDataEmissao">Data: </label
       ><input
         pInputText
         class="p-inputtext"
@@ -36,7 +36,7 @@
   </div>
   <div class="row">
     <div class="input col-8">
-      <label for="inpFornecedor">Fornecedor: </label
+      <label name="lblFornecedor" for="inpFornecedor">Fornecedor: </label
       ><p-autoComplete
         pInputText
         class="p-autocomplete w-100"
@@ -52,42 +52,52 @@
       ></p-autoComplete>
     </div>
     <div class="input col-4">
-      <label>Contato:</label>
-      <p class="inputtext">{{ "-" }}</p>
+      <label name="lblContato" for="pContato">Contato:</label>
+      <p name="pContato" class="inputtext">{{ "-" }}</p>
     </div>
   </div>
   <div class="row">
     <div class="input col-8">
-      <label>Endereço:</label>
-      <p>{{ pedidoCompra.fornecedor?.pessoa?.endereco || "-" }}</p>
+      <label name="lblEndereco" for="pEndereco">Endereço:</label>
+      <p name="pEndereco">
+        {{ pedidoCompra.fornecedor?.pessoa?.endereco || "-" }}
+      </p>
     </div>
     <div class="Input col-4">
-      <label>Telefone</label>
-      <p>{{ pedidoCompra.fornecedor?.pessoa?.telefone || "-" | telefone }}</p>
+      <label name="lblTelefone" for="pTelefone">Telefone</label>
+      <p name="pTelefone">
+        {{ pedidoCompra.fornecedor?.pessoa?.telefone || "-" | telefone }}
+      </p>
     </div>
   </div>
   <div class="row">
     <div class="input col-4">
-      <label for="">Cidade:</label>
-      <p>{{ pedidoCompra.fornecedor?.pessoa?.municipio || "-" }}</p>
+      <label name="lblCidade" for="pCidade">Cidade:</label>
+      <p name="pCidade">
+        {{ pedidoCompra.fornecedor?.pessoa?.municipio || "-" }}
+      </p>
     </div>
     <div class="input col-4">
-      <label for="">UF:</label>
-      <p>{{ pedidoCompra.fornecedor?.pessoa?.uf || "-" }}</p>
+      <label name="lblUF" for="pUF">UF:</label>
+      <p name="pUF">{{ pedidoCompra.fornecedor?.pessoa?.uf || "-" }}</p>
     </div>
     <div class="input col-4">
-      <label for="">CEP:</label>
-      <p>{{ pedidoCompra.fornecedor?.pessoa?.cep || "-" | cep }}</p>
+      <label name="lblCEP" for="pCEP">CEP:</label>
+      <p name="pCEP">{{ pedidoCompra.fornecedor?.pessoa?.cep || "-" | cep }}</p>
     </div>
   </div>
   <div class="row">
     <div class="input col-8">
-      <label>CNPJ:</label>
-      <p>{{ pedidoCompra.fornecedor?.pessoa?.cnpj_cpf || "-" | cpfCnpj }}</p>
+      <label name="lblCnpj" for="pCnpj">CNPJ:</label>
+      <p name="pCnpj">
+        {{ pedidoCompra.fornecedor?.pessoa?.cnpj_cpf || "-" | cpfCnpj }}
+      </p>
     </div>
     <div class="Input col-4">
-      <label>I.E</label>
-      <p>{{ pedidoCompra.fornecedor?.pessoa?.ie_rg || "-" | ieRg }}</p>
+      <label name="lblIe" for="pIe">I.E</label>
+      <p name="pIe">
+        {{ pedidoCompra.fornecedor?.pessoa?.ie_rg || "-" | ieRg }}
+      </p>
     </div>
   </div>
   <p-table [value]="pedidoCompra.pedido_compra_items">
@@ -188,13 +198,13 @@
                 class="p-inputtext"
                 name="inpItemPreco"
                 type="text"
-                [ngModel]="item.preco | currency : 'BRL' "
+                [ngModel]="item.preco | currency: 'BRL'"
                 (ngModelChange)="itemPreco($event, item)"
                 (input)="calculaTotal()"
               />
             </ng-template>
             <ng-template pTemplate="output">
-              {{ item.preco | currency : 'BRL' }}
+              {{ item.preco | currency: "BRL" }}
             </ng-template>
           </p-cellEditor>
         </td>
@@ -206,28 +216,29 @@
                 class="p-inputtext"
                 name="inpItemIpi"
                 type="text"
-                [ngModel]="item.ipi | percent : '1.2-2' : 'PT-BR'"
+                [ngModel]="item.ipi | percent: '1.2-2':'PT-BR'"
                 (ngModelChange)="itemIpi($event, item)"
                 (input)="calculaTotal()"
               />
             </ng-template>
             <ng-template pTemplate="output">
-              {{ item.ipi  | percent : '1.2-2' : 'PT-BR'}}
+              {{ item.ipi | percent: "1.2-2":"PT-BR" }}
             </ng-template>
           </p-cellEditor>
         </td>
         <td>
-          {{ item.total | currency : 'BRL' }}
+          {{ item.total | currency: "BRL" }}
         </td>
         <td pEditableColumn>
           <p-cellEditor>
             <ng-template pTemplate="input">
               <p-calendar
-              name="InpItemPrazo"
-              [(ngModel)]="item.prazo"
-              dateFormat="dd/mm/yy"
-              styleClass="w-100"
-            ></p-calendar>
+                name="InpItemPrazo"
+                [(ngModel)]="item.prazo"
+                dateFormat="dd/mm/yy"
+                styleClass="w-100"
+                appendTo="body"
+              ></p-calendar>
             </ng-template>
             <ng-template pTemplate="output">
               {{ item.prazo | date: "dd/MM/yyyy" }}
@@ -236,6 +247,81 @@
         </td>
       </tr>
     </ng-template>
-    <ng-template pTemplate="footer"></ng-template>
+    <ng-template pTemplate="footer">
+      <tr>
+        <td colspan="2">Condição de Pagamento</td>
+        <td colspan="2" pEditableColumn>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <p-dropdown
+                name="inpCondPagamento"
+                [options]="condicaoPagamento$ | async"
+                [(ngModel)]="pedidoCompra.cond_pagamento"
+                optionLabel="valor"
+                optionValue="valor"
+                [editable]="true"
+              ></p-dropdown>
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{ pedidoCompra.cond_pagamento }}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+        <td>Frete</td>
+        <td pEditableColumn>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <input
+                pInputText
+                class="p-inputtext"
+                name="inpItemIpi"
+                type="text"
+                [ngModel]="pedidoCompra.frete | currency: 'BRL'"
+                (ngModelChange)="frete($event)"
+                (input)="calculaTotal()"
+              />
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{ pedidoCompra.frete | currency: "BRL" }}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+        <td>Total + Frete</td>
+        <td>{{ pedidoCompra.total | currency: "BRL" }}</td>
+      </tr>
+      <tr></tr>
+    </ng-template>
   </p-table>
+  <div>
+    <h4>Observações</h4>
+    <textarea pInputTextarea [(ngModel)]="pedidoCompra.observacao"></textarea>
+    <h4>Normas de fornecimento do pedido</h4>
+    <p>
+      1. Horário de Recebimento: de Segunda à Quinta das 7:00h às 11:00h e das 12:30h às 16:30h Sexta-feira até às 15:30.
+    </p>
+    <p>
+      2. Pedido de Compra elaborado com peso teórico.
+    </p>
+    <p>
+      3. Toda e qualquer despesa com embalagem ou frete, estará a cargo do fornecedor a não ser quando mencionado no pedido.
+    </p>
+    <p>
+      4. As mercadorias deverão vir acompanhadas da Nota Fiscal (descriminando nº pedido de compra) e Duplicatas de cobrança.
+    </p>
+    <p>
+      5. As respectivas faturas e duplicatas deverão ser entregues em nosso escritório.
+    </p>
+    <p>
+      6. A JCM Metais reverva-se o direito de devolver mercadorias a qualquer tempo por defeito ou desacordo com as especificações, não seja entregue no prazo previsto ou não esteja de acordo com as condições estabelecidas neste pedido.
+    </p>
+    <p>
+      7. Todos os itens da Nota Fiscal deverá estar com o código de classificação fiscal.
+    </p>
+    <p>
+      8. Enviar o certificado de qualidade do material junto com a Matéria Prima.
+    </p>
+    <p>
+      9. A JCM Metais  monitora o desempenho dos seus provedores externos (fornecedores), atraves da avaliação nas entregas dos produtos/serviços com    pontuação na (Prazo de entrega e Qualidade), quando os resultados ficarem abaixo dos objetivos, ações corretivas serão solicitadas para os provedores externos (fornecedores).
+    </p>
+  </div>
 </form>

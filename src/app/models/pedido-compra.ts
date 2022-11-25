@@ -16,6 +16,7 @@ export interface PedidoCompra {
   fornecedor?: Fornecedor;
   total?: number;
   status?: string;
+  observacao?: string;
 }
 
 export interface PedidoCompraItem {

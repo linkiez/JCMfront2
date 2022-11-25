@@ -12,7 +12,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import {AutoCompleteModule} from 'primeng/autocomplete';
 import {DropdownModule} from 'primeng/dropdown';
 import { CalendarModule } from 'primeng/calendar';
-
+import {InputTextareaModule} from 'primeng/inputtextarea';
 
 @NgModule({
   declarations: [
@@ -29,7 +29,8 @@ import { CalendarModule } from 'primeng/calendar';
     SharedModule,
     AutoCompleteModule,
     DropdownModule,
-    CalendarModule
+    CalendarModule,
+    InputTextareaModule
   ]
 })
 export class PedidosComprasModule { }
