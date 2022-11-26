@@ -32,7 +32,13 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
     private confirmationService: ConfirmationService
   ) {}
 
-  pedidoCompra: PedidoCompra = { fornecedor: {}, pedido_compra_items: [], cond_pagamento: '', frete: 0 };
+  pedidoCompra: PedidoCompra = {
+    fornecedor: {},
+    pedido_compra_items: [],
+    cond_pagamento: 'AVISTA',
+    frete: 0,
+    status: 'Orçamento'
+  };
 
   fornecedores: Pessoa[] = [];
 
@@ -46,12 +52,15 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
     .getByNameListaGenerica('condicaoPagamento')
     .pipe(map((listaGenerica: any) => listaGenerica.lista_generica_items));
 
+  status: string[] = [];
+
   observacoes: ListaGenericaItem[] = [];
 
   private subscription: Subscription = new Subscription();
 
   ngOnInit(): void {
     this.getPedidoCompra();
+    this.getStatus()
   }
 
   ngOnDestroy(): void {
@@ -61,7 +70,6 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
   ngOnChanges() {}
 
   getPedidoCompra() {
-
     const id = Number(this.route.snapshot.paramMap.get('id'));
     if (id != 0) {
       this.subscription = this.pedidoCompraService
@@ -92,12 +100,20 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
     }
   }
 
+  getStatus() {
+    this.listaGenericaService.getByNameListaGenerica('statusPedidoCompra').pipe(
+      map((listaGenerica: any) => listaGenerica.lista_generica_items)
+    ).subscribe({next: (response)=> {
+      console.log(response)
+      this.status=response}});
+  }
+
   searchFornecedor(event: any) {
     let query: Query = {
       page: 0,
       pageCount: 10,
       searchValue: event.query,
-      deleted: false
+      deleted: false,
     };
 
     this.subscription = this.fornecedorService
@@ -276,31 +292,33 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
       });
   }
   updatePedido() {
-    console.log(this.pedidoCompra)
-    this.pedidoCompraService.updatePedidoCompra(this.pedidoCompra).pipe(debounceTime(1000)).subscribe({
-      next: (response) => {
-        this.pedidoCompra = response;
-      },
-      error: (error) => {
-        console.log(error);
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Erro',
-          detail: `${error.status} - ${error.statusText} - ${error.error}`,
-        });
-      },
-      complete: () => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Sucesso',
-          detail: 'O pedido foi atualizado.',
-        });
-      },
-    })
+    this.pedidoCompraService
+      .updatePedidoCompra(this.pedidoCompra)
+      .pipe(debounceTime(1000))
+      .subscribe({
+        next: (response) => {
+          // this.pedidoCompra = response;
+        },
+        error: (error) => {
+          console.log(error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: `${error.status} - ${error.statusText} - ${error.error}`,
+          });
+        },
+        complete: () => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Sucesso',
+            detail: 'O pedido foi atualizado.',
+          });
+        },
+      });
   }
 
-  newItem(){
-    this.pedidoCompra.pedido_compra_items.push({produto: {}})
+  newItem() {
+    this.pedidoCompra.pedido_compra_items.push({ produto: {} });
   }
 
   removeItem(index: number) {

@@ -1,4 +1,10 @@
-<h2>Pedido de Compra</h2>
+<h2>Pedido de Compra </h2>
+<caixaDeStatus
+[status]="pedidoCompra.status"
+[options]="status"
+[editable]=true
+(statusChange)="pedidoCompra.status=$event"
+></caixaDeStatus>
 <form class="container">
   <div class="row">
     <div class="input col-2">
@@ -12,7 +18,7 @@
         [(ngModel)]="pedidoCompra.id"
       />
     </div>
-    <div class="input col-2">
+    <div class="input col-4">
       <label name="lblPedido" for="inpPedido">Pedido: </label
       ><input
         pInputText
@@ -184,12 +190,13 @@
                 class="p-inputtext"
                 name="inpItemPeso"
                 type="text"
-                [(ngModel)]="item.peso"
+                [ngModel]="item.peso | number: '1.0-2'"
+                (ngModelChange)="item.peso=$event"
                 (input)="calculaTotal()"
               />
             </ng-template>
             <ng-template pTemplate="output">
-              {{ item.peso }}
+              {{ item.peso | number: '1.0-2' }}
             </ng-template>
           </p-cellEditor>
         </td>

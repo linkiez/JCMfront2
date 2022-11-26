@@ -44,7 +44,7 @@
   </ng-template>
   <ng-template pTemplate="body" let-pedido>
     <tr (click)="clickDeleted(pedido.id)">
-      <td>{{ pedido.status }}</td>
+      <td><caixaDeStatus [status]="pedido.status"></caixaDeStatus></td>
       <td>{{ pedido.id }}</td>
       <td>{{ pedido.pedido }}</td>
       <td>{{ pedido.data_emissao | date: "dd/MM/yyyy" }}</td>

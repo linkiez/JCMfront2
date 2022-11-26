@@ -1,0 +1,71 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+.caixa, .select {
+  width: 150px;
+  border-style: none none none solid;
+  border-width: 5px;
+  border-radius: 0px 5px 5px 0px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  vertical-align: middle;
+  position: relative;
+}
+
+.caixa p {
+  margin: auto;
+}
+
+.statusGreen {
+  color: #155724 !important;
+  background-color: #d4edda !important;
+}
+
+.statusBlue{
+  color: #004095;
+  background-color: #cce5ff;
+}
+
+.statusYellow{
+  color: #856404;
+  background-color: #fff3cd;
+}
+
+.statusRed{
+  color: #9d1c24;
+  background-color: #f8d7da;
+}
+
+.statusPurple{
+  color: #2c1e30;
+  background-color: #e1cfe7;
+}
+
+select {
+  appearance: none;
+  background-color: transparent;
+  border: none;
+  padding: 0 1em 0 0;
+  margin: 0;
+  width: 100%;
+  font-family: inherit;
+  font-size: inherit;
+  cursor: inherit;
+  line-height: inherit;
+  outline: none;
+  display:inline;
+
+}
+
+select::-ms-expand {
+  display: none;
+}
+
+.pi-angle-down {
+  position: absolute;
+  right: 5px;
+  top: 3px
+}

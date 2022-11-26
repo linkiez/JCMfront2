@@ -1,0 +1,33 @@
+<div *ngIf="editable == false && status">
+  <div
+    class="caixa"
+    [ngClass]="{
+      statusGreen: status == 'Aprovado',
+      statusYellow: status == 'Orçamento',
+      statusRed: status == 'Cancelado',
+      statusBlue: status == 'Entregue',
+      statusPurple: status == 'Entregue Parcial'
+    }"
+  >
+    <p>{{ status }}</p>
+  </div>
+</div>
+<div *ngIf="editable === true">
+  <div
+    class="caixa"
+    [ngClass]="{
+      statusGreen: status == 'Aprovado',
+      statusYellow: status == 'Orçamento',
+      statusRed: status == 'Cancelado',
+      statusBlue: status == 'Entregue',
+      statusPurple: status == 'Entregue Parcial'
+    }"
+  >
+    <select name="standard-select" id="standard-select" [ngModel]="status" (ngModelChange)="onChangeStatus($event)">
+      <option *ngFor="let option of options" [ngValue]="option.valor">
+        {{ option.valor }}
+      </option>
+    </select>
+    <i class="pi pi-angle-down"></i>
+  </div>
+</div>

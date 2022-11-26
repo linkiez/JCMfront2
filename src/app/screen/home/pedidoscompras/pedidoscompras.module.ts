@@ -13,11 +13,13 @@ import {AutoCompleteModule} from 'primeng/autocomplete';
 import {DropdownModule} from 'primeng/dropdown';
 import { CalendarModule } from 'primeng/calendar';
 import {InputTextareaModule} from 'primeng/inputtextarea';
+import { CaixaDeStatusComponent } from 'src/app/components/caixaDeStatus/caixaDeStatus.component';
 
 @NgModule({
   declarations: [
     PedidosComprasComponent,
-    PedidoCompraComponent
+    PedidoCompraComponent,
+    CaixaDeStatusComponent
   ],
   imports: [
     CommonModule,
