@@ -31,7 +31,6 @@ export class ProdutosComponent implements OnInit, OnDestroy {
 
   private subscription: Subscription = new Subscription();
 
-
   constructor(
     private produtoService: ProdutoService,
     private messageService: MessageService,
@@ -48,7 +47,7 @@ export class ProdutosComponent implements OnInit, OnDestroy {
   }
 
   getProdutos(pageChange?: boolean): void {
-    this.query.page = pageChange ? this.query.page : 0
+    this.query.page = pageChange ? this.query.page : 0;
 
     this.subscription = this.produtoService
       .getProdutos(this.query)
@@ -58,9 +57,19 @@ export class ProdutosComponent implements OnInit, OnDestroy {
       )
       .subscribe({
         next: (consulta) => {
-          this.produtos = consulta.produtos
+          this.produtos = consulta.produtos.map((produto: any) => {
+            if (produto.pedido_compra_items[0]) {
+              produto.preco = produto.pedido_compra_items[0].precoComIpi;
+              produto.atualizacao = produto.pedido_compra_items[0].updatedAt
+            } else {
+              produto.preco = 0;
+              produto.atualizacao = '-'
+            }
+            return produto;
+          });
+
           this.totalRecords = consulta.totalRecords;
-          if (!pageChange) this.paginator.changePageToFirst(new Event(""));
+          if (!pageChange) this.paginator.changePageToFirst(new Event(''));
         },
         error: (error) => {
           console.log(error);
@@ -86,35 +95,34 @@ export class ProdutosComponent implements OnInit, OnDestroy {
   clickDeleted(id: number) {
     if (!this.query.deleted) {
       this.router.navigate([`home/produtos/${id}`]);
-    }else{
-      this.confirm(id)
+    } else {
+      this.confirm(id);
     }
   }
 
   confirm(id: number) {
     this.confirmationService.confirm({
-        message: 'Deseja restaurar esse produto?',
-        accept: () => {
-            this.produtoService.restoreProduto(id).subscribe(
-              {
-            error: (error: any) => {
-              console.log(error);
-              this.messageService.add({
-                severity: 'error',
-                summary: 'Erro',
-                detail: error.message,
-              });
-            },
-            complete: () => {
-              this.messageService.add({
-                severity: 'success',
-                summary: 'Sucesso',
-                detail: 'O produto foi restaurado.',
-              });
-              this.getProdutos();
-            }
-        }
-    )}
+      message: 'Deseja restaurar esse produto?',
+      accept: () => {
+        this.produtoService.restoreProduto(id).subscribe({
+          error: (error: any) => {
+            console.log(error);
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Erro',
+              detail: error.message,
+            });
+          },
+          complete: () => {
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Sucesso',
+              detail: 'O produto foi restaurado.',
+            });
+            this.getProdutos();
+          },
+        });
+      },
     });
   }
 

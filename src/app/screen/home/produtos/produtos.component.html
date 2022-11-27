@@ -41,6 +41,10 @@
     <tr (click)="clickDeleted(product.id)">
       <td>{{ product.id }}</td>
       <td>{{ product.nome }}</td>
+      <td>{{ product.preco!=0?(product.preco * 2| currency: "BRL"):'-'}}</td>
+      <td>{{ product.preco!=0?(product.preco * 1.8| currency: "BRL"):'-'}}</td>
+      <td>{{ product.preco!=0?(product.preco * 1.6| currency: "BRL"):'-'}}</td>
+      <td>{{ product.atualizacao!='-'?(product.atualizacao | date: 'dd/MM/yyyy'):'-'}}</td>
     </tr>
   </ng-template>
 </p-table>
