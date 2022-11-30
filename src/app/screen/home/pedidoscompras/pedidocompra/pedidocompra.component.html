@@ -190,13 +190,13 @@
                 class="p-inputtext"
                 name="inpItemPeso"
                 type="text"
-                [ngModel]="item.peso | number: '1.0-2'"
-                (ngModelChange)="item.peso=$event"
+                [ngModel]="item.peso | number: '1.0-2':'pt-BR'"
+                (ngModelChange)="itemPeso($event, item)"
                 (input)="calculaTotal()"
               />
             </ng-template>
             <ng-template pTemplate="output">
-              {{ item.peso | number: '1.0-2' }}
+              {{ item.peso | number: '1.0-2':'pt-BR' }}
             </ng-template>
           </p-cellEditor>
         </td>

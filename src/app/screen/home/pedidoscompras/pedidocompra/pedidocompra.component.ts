@@ -168,6 +168,10 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
     item.preco = event.replace(/[^\d]/g, '') / 100;
   }
 
+  itemPeso(event: any, item: PedidoCompraItem) {
+    item.peso = event.replace(',','.');
+  }
+
   itemIpi(event: any, item: PedidoCompraItem) {
     item.ipi = event.replace(/[^\d]/g, '') / 10000;
   }
