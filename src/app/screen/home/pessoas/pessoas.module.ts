@@ -13,31 +13,33 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { CalendarModule } from 'primeng/calendar';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import {FileUploadModule} from 'primeng/fileupload';
+import { FileUploadModule } from 'primeng/fileupload';
 import { DropdownModule } from 'primeng/dropdown';
-import {ProgressSpinnerModule} from 'primeng/progressspinner';
-import {PaginatorModule} from 'primeng/paginator';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { PaginatorModule } from 'primeng/paginator';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { ListaFilesModule } from 'src/app/components/listaFiles/listaFiles.module';
 
 
 @NgModule({
-  declarations: [PessoasComponent, PessoaComponent],
-  imports: [
-    CommonModule,
-    PessoasRoutingModule,
-    TableModule,
-    MultiSelectModule,
-    FormsModule,
-    AccordionModule,
-    CheckboxModule,
-    InputTextareaModule,
-    CalendarModule,
-    ConfirmDialogModule,
-    FileUploadModule,
-    DropdownModule,
-    ProgressSpinnerModule,
-    PaginatorModule,
-    SharedModule
-  ],
+    declarations: [PessoasComponent, PessoaComponent],
+    imports: [
+        CommonModule,
+        PessoasRoutingModule,
+        TableModule,
+        MultiSelectModule,
+        FormsModule,
+        AccordionModule,
+        CheckboxModule,
+        InputTextareaModule,
+        CalendarModule,
+        ConfirmDialogModule,
+        FileUploadModule,
+        DropdownModule,
+        ProgressSpinnerModule,
+        PaginatorModule,
+        SharedModule,
+        ListaFilesModule,
+    ]
 })
 export class PessoasModule {}

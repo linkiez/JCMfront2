@@ -119,6 +119,7 @@
       <th>Ipi</th>
       <th>Total</th>
       <th>Entrega</th>
+      <th class="noprint">Ação</th>
     </ng-template>
     <ng-template pTemplate="body" let-item let-index="rowIndex">
       <tr>
@@ -354,6 +355,7 @@
       provedores externos (fornecedores).
     </p>
   </div>
+  <listaFiles class="noprint" [files]="pedidoCompra.files!" (onChangeFiles)="pedidoCompra.files = $event"></listaFiles>
 </form>
 <div class="noprint">
   <button pButton class="p-button p-button-danger" (click)="confirm()">

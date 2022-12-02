@@ -15,8 +15,8 @@ import { registerLocaleData } from '@angular/common';
 registerLocaleData(ptBr);
 import { AuthenticationInterceptor } from './authentication/authentication.interceptor';
 
-import {MessagesModule} from 'primeng/messages';
-import {MessageModule} from 'primeng/message';
+import { MessagesModule } from 'primeng/messages';
+import { MessageModule } from 'primeng/message';
 
 @NgModule({
   declarations: [AppComponent, LoginComponent],
@@ -28,7 +28,7 @@ import {MessageModule} from 'primeng/message';
     HttpClientModule,
     BrowserAnimationsModule,
     MessageModule,
-    MessagesModule
+    MessagesModule,
   ],
   providers: [
     { provide: LOCALE_ID, useValue: 'pt-BR' },

@@ -1,0 +1,60 @@
+<div>
+  <p-table
+  [value]="files"
+  responsiveLayout="scroll"
+>
+  <ng-template pTemplate="caption">
+    <div class="d-flex justify-content-between">
+      <h3>Arquivos</h3>
+
+      <div>
+        <input
+          type="file"
+          class="file-input"
+          (change)="onFileSelected($event)"
+          #fileUpload
+        />
+        <button pButton class="p-button" (click)="fileUpload.click()">
+          <i *ngIf="!fileLoading" class="pi pi-paperclip"></i>
+          <p-progressSpinner
+            *ngIf="fileLoading"
+            [style]="{
+              width: '27px',
+              height: '27px',
+              margin: 'auto'
+            }"
+            styleClass="custom-spinner"
+            strokeWidth="8"
+            fill="var(--surface-ground)"
+            animationDuration="1s"
+          ></p-progressSpinner>
+        </button>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template pTemplate="header">
+    <tr>
+      <th>Código</th>
+      <th>Nome</th>
+      <th>Criado</th>
+      <th></th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-arquivo let-i="rowIndex">
+    <tr>
+      <td>{{ arquivo.id }}</td>
+      <td>
+        <span class="link" (click)="goToUrl(arquivo.id)">{{
+          arquivo.originalFilename
+        }}</span>
+      </td>
+      <td>{{ arquivo.createdAt | date: "dd/MM/yyyy HH:mm:ss" }}</td>
+      <td>
+        <i class="pi pi-trash trash" (click)="removeArquivo(i)"></i>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
+</div>
+

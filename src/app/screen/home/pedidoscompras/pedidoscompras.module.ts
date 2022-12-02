@@ -13,13 +13,16 @@ import {AutoCompleteModule} from 'primeng/autocomplete';
 import {DropdownModule} from 'primeng/dropdown';
 import { CalendarModule } from 'primeng/calendar';
 import {InputTextareaModule} from 'primeng/inputtextarea';
-import { CaixaDeStatusComponent } from 'src/app/components/caixaDeStatus/caixaDeStatus.component';
+import { ListaFilesModule } from 'src/app/components/listaFiles/listaFiles.module';
+import { CaixaDeStatusModule } from 'src/app/components/caixaDeStatus/caixaDeStatus.module';
+
+
+
 
 @NgModule({
   declarations: [
     PedidosComprasComponent,
     PedidoCompraComponent,
-    CaixaDeStatusComponent
   ],
   imports: [
     CommonModule,
@@ -32,7 +35,9 @@ import { CaixaDeStatusComponent } from 'src/app/components/caixaDeStatus/caixaDe
     AutoCompleteModule,
     DropdownModule,
     CalendarModule,
-    InputTextareaModule
+    InputTextareaModule,
+    ListaFilesModule,
+    CaixaDeStatusModule
   ]
 })
 export class PedidosComprasModule { }

@@ -7,7 +7,6 @@ import { PessoaService } from 'src/app/services/pessoa.service';
 import { Contato } from 'src/app/models/contato';
 import { DOCUMENT } from '@angular/common';
 import { ArquivoService } from 'src/app/services/arquivo.service';
-import { Arquivo } from 'src/app/models/arquivo';
 import { Validação } from 'src/app/models/validacao';
 import { ListaGenericaService } from 'src/app/services/lista-generica.service';
 
@@ -23,9 +22,9 @@ export class PessoaComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private messageService: MessageService,
+    private arquivoService: ArquivoService,
     private confirmationService: ConfirmationService,
     @Inject(DOCUMENT) private document: Document,
-    private arquivoService: ArquivoService,
     private listaGenericaService: ListaGenericaService
   ) {}
   pessoa: Pessoa = { pessoa_juridica: false };
@@ -212,7 +211,7 @@ export class PessoaComponent implements OnInit {
 
   cnpjLoading: boolean = false;
 
-  fileLoading: boolean = false;
+
 
   ngOnInit(): void {
     this.getCategoria();
@@ -408,52 +407,7 @@ export class PessoaComponent implements OnInit {
     this.pessoa.contatos!.splice(rowIndex, 1);
   }
 
-  removeArquivo(rowIndex: number) {
-    this.arquivoService
-      .deleteArquivo(this.pessoa.files![rowIndex].id!)
-      .pipe(debounceTime(1000))
-      .subscribe({
-        error: (error) => {
-          console.log(error);
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Erro',
-            detail: `${error.status} - ${error.statusText} - ${error.error}`,
-          });
-        },
-        complete: () => {},
-      });
-    this.pessoa.files = this.pessoa.files!.splice(rowIndex - 1, 1);
-  }
 
-  onFileSelected(event: Event) {
-    const file: File = (event.target as HTMLInputElement).files![0];
-    if (file) {
-      this.fileLoading = true;
-      this.arquivoService
-        .uploadArquivo(file)
-        .pipe(debounceTime(1000))
-        .subscribe({
-          next: (arquivo: Arquivo) => {
-            console.log(arquivo);
-            this.pessoa.files?.push(arquivo);
-          },
-          error: (error) => {
-            this.fileLoading = false;
-            console.log(error);
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Erro',
-              detail: `${error.status} - ${error.statusText} - ${error.error}`,
-            });
-          },
-          complete: () => {
-            this.fileLoading = false;
-            this.createOrUpdate();
-          },
-        });
-    }
-  }
 
   getBackPessoas() {
     this.router.navigate(['/home/pessoas']);
@@ -466,17 +420,6 @@ export class PessoaComponent implements OnInit {
         this.deletePessoa();
       },
     });
-  }
-
-  goToUrl(id: number): void {
-    this.arquivoService
-      .getUrlArquivo(id)
-      .pipe(debounceTime(1000))
-      .subscribe({
-        next: (url: any) => {
-          this.document.location.href = url.url;
-        },
-      });
   }
 
   validaCpfCnpj() {

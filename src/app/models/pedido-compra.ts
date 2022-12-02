@@ -1,3 +1,4 @@
+import { Arquivo } from "./arquivo";
 import { Fornecedor } from "./fornecedor";
 import { Produto } from "./produto";
 
@@ -14,6 +15,7 @@ export interface PedidoCompra {
   pedido_compra_items: Array<PedidoCompraItem>;
   id_fornecedor?: number;
   fornecedor?: Fornecedor;
+  files?: Array<Arquivo>;
   total?: number;
   status?: string;
   observacao?: string;

@@ -104,7 +104,6 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
     this.listaGenericaService.getByNameListaGenerica('statusPedidoCompra').pipe(
       map((listaGenerica: any) => listaGenerica.lista_generica_items)
     ).subscribe({next: (response)=> {
-      console.log(response)
       this.status=response}});
   }
 

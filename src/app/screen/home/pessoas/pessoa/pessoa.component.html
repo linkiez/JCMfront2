@@ -1,411 +1,345 @@
 <div>
+  <h2>Pessoa</h2>
+  <form action="" class="container">
+    <div class="row">
+      <div class="input col-2">
+        <label for="InpIdPessoa">Id</label>
+        <input
+          name="InpIdPessoa"
+          class="p-inputtext"
+          type="text"
+          pInputText
+          disabled
+          [(ngModel)]="pessoa.id"
+        />
+      </div>
+      <div class="input col-10">
+        <label for="InpNome">Nome</label>
+        <input
+          name="InpNome"
+          class="p-inputtext"
+          type="text"
+          pInputText
+          [(ngModel)]="pessoa.nome"
+        />
+        <small *ngIf="pessoaOld.nome">"{{ pessoaOld.nome }}"</small>
+      </div>
+      <div class="input col-2">
+        <p-checkbox
+          name="ChkPessoaJuridica"
+          [(ngModel)]="pessoa.pessoa_juridica"
+          label="Pessoa Juridica"
+          [binary]="true"
+          (ngModelChange)="validaCpfCnpj()"
+        ></p-checkbox>
+      </div>
+
+      <div class="input col-10" *ngIf="pessoa.pessoa_juridica">
+        <label for="InpRazaoSocial">Razão Social</label>
+        <input
+          name="InpRazaoSocial"
+          class="p-inputtext"
+          type="text"
+          pInputText
+          [(ngModel)]="pessoa.razao_social"
+        />
+        <small *ngIf="pessoaOld.razao_social"
+          >"{{ pessoaOld.razao_social }}"</small
+        >
+      </div>
+      <div class="input col-4">
+        <label for="InpCnpjCpf">
+          <span *ngIf="pessoa.pessoa_juridica">CNPJ</span
+          ><span *ngIf="!pessoa.pessoa_juridica">CPF</span></label
+        >
+        <input
+          name="InpCnpjCpf"
+          class="p-inputtext"
+          type="text"
+          pInputText
+          [ngModel]="pessoa.cnpj_cpf | cpfCnpj"
+          [ngClass]="{ 'ng-erro': cnpj_cpfInvalido.length }"
+          (ngModelChange)="pessoa.cnpj_cpf = $event"
+          (change)="validaCpfCnpj()"
+          [ngClass]="{ cnpjLoading: cnpjLoading }"
+          maxlength="18"
+        />
+        <p-progressSpinner
+          *ngIf="cnpjLoading"
+          [style]="{ width: '27px', height: '27px', margin: 'auto' }"
+          styleClass="custom-spinner"
+          strokeWidth="8"
+          fill="var(--surface-ground)"
+          animationDuration="1s"
+        ></p-progressSpinner>
+        <small
+          class="p-error block"
+          *ngFor="let validacao of cnpj_cpfInvalido"
+          >{{ validacao.menssagem }}</small
+        >
+      </div>
+      <div class="input col-4">
+        <label for="InpIeRg">
+          <span *ngIf="pessoa.pessoa_juridica">Incrição Estadual</span>
+          <span *ngIf="!pessoa.pessoa_juridica">RG</span>
+        </label>
+        <input
+          name="InpIeRg"
+          class="p-inputtext"
+          type="text"
+          pInputText
+          [ngModel]="pessoa.ie_rg | ieRg"
+          (ngModelChange)="pessoa.ie_rg = $event"
+          maxlength="15"
+        />
+      </div>
+      <div class="input col-4">
+        <label for="InpTelefone">Telefone</label>
+        <input
+          name="InpTelefone"
+          class="p-inputtext"
+          type="text"
+          pInputText
+          [ngModel]="pessoa.telefone | telefone"
+          (ngModelChange)="pessoa.telefone = $event"
+        />
+        <small *ngIf="pessoaOld.telefone"
+          >"{{ pessoaOld.telefone | telefone }}"</small
+        >
+      </div>
+      <div class="input col-6">
+        <label for="InpEmail">Email</label>
+        <input
+          name="InpEmail"
+          class="p-inputtext"
+          type="text"
+          pInputText
+          [(ngModel)]="pessoa.email"
+          (ngModelChange)="validaEmail($event, 'email')"
+        />
+        <small *ngIf="pessoaOld.email">"{{ pessoaOld.email }}"</small>
+        <small
+          *ngIf="!emailInvalido.email && emailInvalido.email !== undefined"
+          class="p-error block"
+          >Email invalido.</small
+        >
+      </div>
+      <div class="input col-6">
+        <label for="InpEmailNFe">Email NFe</label>
+        <input
+          name="InpEmailNFe"
+          class="p-inputtext"
+          type="text"
+          pInputText
+          [(ngModel)]="pessoa.email_nfe"
+          (ngModelChange)="validaEmail($event, 'email_nfe')"
+        />
+        <small
+          *ngIf="
+            !emailInvalido.email_nfe && emailInvalido.email_nfe !== undefined
+          "
+          class="p-error block"
+          >Email invalido.</small
+        >
+      </div>
+      <div class="input col-3">
+        <label for="InpCEP">CEP</label>
+        <input
+          name="InpCEP"
+          class="p-inputtext"
+          type="text"
+          pInputText
+          [ngModel]="pessoa.cep | cep"
+          (ngModelChange)="pessoa.cep = $event"
+          (change)="consultaCep()"
+        />
+        <small *ngIf="pessoaOld.cep">"{{ pessoaOld.cep }}"</small>
+      </div>
+      <div class="input col-9">
+        <label for="InpEndereco">Endereço</label>
+        <input
+          name="InpEndereco"
+          class="p-inputtext"
+          type="text"
+          pInputText
+          [(ngModel)]="pessoa.endereco"
+        />
+        <small *ngIf="pessoaOld.endereco">"{{ pessoaOld.endereco }}"</small>
+      </div>
+      <div class="input col-4">
+        <label for="InpMunicipio">Cidade</label>
+        <input
+          name="InpMunicipio"
+          class="p-inputtext"
+          type="text"
+          pInputText
+          [(ngModel)]="pessoa.municipio"
+        />
+        <small *ngIf="pessoaOld.municipio">"{{ pessoaOld.municipio }}"</small>
+      </div>
+      <div class="input col-2">
+        <label for="InpUF">UF</label>
+        <input
+          name="InpUF"
+          class="p-inputtext"
+          type="text"
+          pInputText
+          [ngModel]="pessoa.uf | uppercase"
+          (ngModelChange)="pessoa.uf = $event"
+          maxlength="2"
+        />
+        <small *ngIf="pessoaOld.uf">"{{ pessoaOld.uf }}"</small>
+      </div>
+
+      <div class="input col-6">
+        <label for="InpDataNasc">
+          <span *ngIf="pessoa.pessoa_juridica">Data de fundação</span>
+          <span *ngIf="!pessoa.pessoa_juridica">Data de nascimento</span>
+        </label>
+        <p-calendar
+          name="InpDataNasc"
+          [(ngModel)]="pessoa.data_nasc"
+          dateFormat="dd/mm/yy"
+          styleClass="w-100"
+        ></p-calendar>
+        <small *ngIf="pessoaOld.data_nasc"
+          >"{{ pessoaOld.data_nasc | date: "dd/MM/yyyy HH:mm:ss" }}"</small
+        >
+      </div>
+      <div class="input">
+        <label for="descricaoPessoa">Descrição</label>
+        <textarea
+          name="descricaoPessoa"
+          [rows]="5"
+          [cols]="30"
+          pInputTextarea
+          class="p-inputtextarea"
+          [(ngModel)]="pessoa.descricao"
+        ></textarea>
+      </div>
+      <div class="input col-6">
+        <label for="InpCreatedAt">Criado em</label>
+        <input
+          name="InpCreatedAt"
+          class="p-inputtext"
+          type="text"
+          pInputText
+          disabled
+          value="{{ pessoa.createdAt | date: 'dd/MM/yyyy HH:mm:ss' }}"
+        />
+      </div>
+      <div class="input col-6">
+        <label for="InpUpdatedAt">Atualizado em</label>
+        <input
+          name="InpUpdatedAt"
+          class="p-inputtext"
+          type="text"
+          pInputText
+          disabled
+          value="{{ pessoa.updatedAt | date: 'dd/MM/yyyy HH:mm:ss' }}"
+        />
+      </div>
+      <div>
+        <p-table
+          *ngIf="pessoa.contatos"
+          [value]="pessoa.contatos"
+          responsiveLayout="scroll"
+        >
+          <ng-template pTemplate="caption">
+            <div class="d-flex justify-content-between">
+              <h3>Contatos</h3>
+
+              &nbsp;<button pButton class="p-button" (click)="newContato()">
+                <i class="pi pi-plus"></i>
+              </button>
+            </div>
+          </ng-template>
+
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Nome</th>
+              <th>Tipo</th>
+              <th></th>
+              <th></th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-contato let-i="rowIndex">
+            <tr>
+              <td>
+                <input
+                  [name]="'InpContatoNome' + i"
+                  type="text"
+                  class="p-inputtext"
+                  pInputText
+                  [(ngModel)]="contato.nome"
+                />
+              </td>
+              <td>
+                <p-dropdown
+                  [name]="'InpContatoTipo' + i"
+                  [options]="categorias"
+                  [(ngModel)]="contato.tipo"
+                  styleClass="w-100"
+                  appendTo="body"
+                  optionLabel="valor"
+                  optionValue="valor"
+                ></p-dropdown>
+              </td>
+              <td>
+                <input
+                  *ngIf="
+                    contato.tipo === 'Telefone' || contato.tipo === 'WhatsApp'
+                  "
+                  [name]="'InpContatoValor' + i"
+                  type="text"
+                  class="p-inputtext"
+                  pInputText
+                  [ngModel]="contato.valor | telefone"
+                  (ngModelChange)="contato.valor = $event"
+                />
+                <input
+                  *ngIf="contato.tipo === 'Email'"
+                  [name]="'InpContatoValor' + i"
+                  type="text"
+                  class="p-inputtext"
+                  pInputText
+                  [(ngModel)]="contato.valor"
+                  (ngModelChange)="validaEmail($event, 'contato' + i)"
+                />
+                <small
+                  *ngIf="
+                    !emailInvalido['contato' + i] &&
+                    emailInvalido['contato' + i] !== undefined
+                  "
+                  class="p-error block"
+                  >Email invalido.</small
+                >
+                <input
+                  *ngIf="
+                    contato.tipo !== 'Email' &&
+                    contato.tipo !== 'Telefone' &&
+                    contato.tipo !== 'WhatsApp'
+                  "
+                  [name]="'InpContatoValor' + i"
+                  type="text"
+                  class="p-inputtext"
+                  pInputText
+                  [(ngModel)]="contato.valor"
+                />
+              </td>
+              <td>
+                <i class="pi pi-trash trash" (click)="removeContato(i)"></i>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+      <div>
+        <listaFiles [files]="pessoa.files!" (onChangeFiles)="pessoa.files = $event"></listaFiles>
+      </div>
+    </div>
+  </form>
   <p-accordion [multiple]="true">
-    <p-accordionTab header="Pessoa" [selected]="true">
-      <form action="" class="container">
-        <div class="row">
-          <div class="input col-2">
-            <label for="InpIdPessoa">Id</label>
-            <input
-              name="InpIdPessoa"
-              class="p-inputtext"
-              type="text"
-              pInputText
-              disabled
-              [(ngModel)]="pessoa.id"
-            />
-          </div>
-          <div class="input col-10">
-            <label for="InpNome">Nome</label>
-            <input
-              name="InpNome"
-              class="p-inputtext"
-              type="text"
-              pInputText
-              [(ngModel)]="pessoa.nome"
-            />
-            <small *ngIf="pessoaOld.nome">"{{ pessoaOld.nome }}"</small>
-          </div>
-          <div class="input col-2">
-            <p-checkbox
-              name="ChkPessoaJuridica"
-              [(ngModel)]="pessoa.pessoa_juridica"
-              label="Pessoa Juridica"
-              [binary]="true"
-              (ngModelChange)="validaCpfCnpj()"
-            ></p-checkbox>
-          </div>
-
-          <div class="input col-10" *ngIf="pessoa.pessoa_juridica">
-            <label for="InpRazaoSocial">Razão Social</label>
-            <input
-              name="InpRazaoSocial"
-              class="p-inputtext"
-              type="text"
-              pInputText
-              [(ngModel)]="pessoa.razao_social"
-            />
-            <small *ngIf="pessoaOld.razao_social"
-              >"{{ pessoaOld.razao_social }}"</small
-            >
-          </div>
-          <div class="input col-4">
-            <label for="InpCnpjCpf">
-              <span *ngIf="pessoa.pessoa_juridica">CNPJ</span
-              ><span *ngIf="!pessoa.pessoa_juridica">CPF</span></label
-            >
-            <input
-              name="InpCnpjCpf"
-              class="p-inputtext"
-              type="text"
-              pInputText
-              [ngModel]="pessoa.cnpj_cpf | cpfCnpj"
-              [ngClass]="{ 'ng-erro': cnpj_cpfInvalido.length }"
-              (ngModelChange)="pessoa.cnpj_cpf = $event"
-              (change)="validaCpfCnpj()"
-              [ngClass]="{ cnpjLoading: cnpjLoading }"
-              maxlength="18"
-            />
-            <p-progressSpinner
-              *ngIf="cnpjLoading"
-              [style]="{ width: '27px', height: '27px', margin: 'auto' }"
-              styleClass="custom-spinner"
-              strokeWidth="8"
-              fill="var(--surface-ground)"
-              animationDuration="1s"
-            ></p-progressSpinner>
-            <small
-              class="p-error block"
-              *ngFor="let validacao of cnpj_cpfInvalido"
-              >{{ validacao.menssagem }}</small
-            >
-          </div>
-          <div class="input col-4">
-            <label for="InpIeRg">
-              <span *ngIf="pessoa.pessoa_juridica">Incrição Estadual</span>
-              <span *ngIf="!pessoa.pessoa_juridica">RG</span>
-            </label>
-            <input
-              name="InpIeRg"
-              class="p-inputtext"
-              type="text"
-              pInputText
-              [ngModel]="pessoa.ie_rg | ieRg"
-              (ngModelChange)="pessoa.ie_rg = $event"
-              maxlength="15"
-            />
-          </div>
-          <div class="input col-4">
-            <label for="InpTelefone">Telefone</label>
-            <input
-              name="InpTelefone"
-              class="p-inputtext"
-              type="text"
-              pInputText
-              [ngModel]="pessoa.telefone | telefone"
-              (ngModelChange)="pessoa.telefone = $event"
-            />
-            <small *ngIf="pessoaOld.telefone"
-              >"{{ pessoaOld.telefone | telefone }}"</small
-            >
-          </div>
-          <div class="input col-6">
-            <label for="InpEmail">Email</label>
-            <input
-              name="InpEmail"
-              class="p-inputtext"
-              type="text"
-              pInputText
-              [(ngModel)]="pessoa.email"
-              (ngModelChange)="validaEmail($event, 'email')"
-            />
-            <small *ngIf="pessoaOld.email">"{{ pessoaOld.email }}"</small>
-            <small
-              *ngIf="!emailInvalido.email && emailInvalido.email !== undefined"
-              class="p-error block"
-              >Email invalido.</small
-            >
-          </div>
-          <div class="input col-6">
-            <label for="InpEmailNFe">Email NFe</label>
-            <input
-              name="InpEmailNFe"
-              class="p-inputtext"
-              type="text"
-              pInputText
-              [(ngModel)]="pessoa.email_nfe"
-              (ngModelChange)="validaEmail($event, 'email_nfe')"
-            />
-            <small
-              *ngIf="
-                !emailInvalido.email_nfe &&
-                emailInvalido.email_nfe !== undefined
-              "
-              class="p-error block"
-              >Email invalido.</small
-            >
-          </div>
-          <div class="input col-3">
-            <label for="InpCEP">CEP</label>
-            <input
-              name="InpCEP"
-              class="p-inputtext"
-              type="text"
-              pInputText
-              [ngModel]="pessoa.cep | cep"
-              (ngModelChange)="pessoa.cep = $event"
-              (change)="consultaCep()"
-            />
-            <small *ngIf="pessoaOld.cep">"{{ pessoaOld.cep }}"</small>
-          </div>
-          <div class="input col-9">
-            <label for="InpEndereco">Endereço</label>
-            <input
-              name="InpEndereco"
-              class="p-inputtext"
-              type="text"
-              pInputText
-              [(ngModel)]="pessoa.endereco"
-            />
-            <small *ngIf="pessoaOld.endereco">"{{ pessoaOld.endereco }}"</small>
-          </div>
-          <div class="input col-4">
-            <label for="InpMunicipio">Cidade</label>
-            <input
-              name="InpMunicipio"
-              class="p-inputtext"
-              type="text"
-              pInputText
-              [(ngModel)]="pessoa.municipio"
-            />
-            <small *ngIf="pessoaOld.municipio"
-              >"{{ pessoaOld.municipio }}"</small
-            >
-          </div>
-          <div class="input col-2">
-            <label for="InpUF">UF</label>
-            <input
-              name="InpUF"
-              class="p-inputtext"
-              type="text"
-              pInputText
-              [ngModel]="pessoa.uf | uppercase"
-              (ngModelChange)="pessoa.uf = $event"
-              maxlength="2"
-            />
-            <small *ngIf="pessoaOld.uf">"{{ pessoaOld.uf }}"</small>
-          </div>
-
-          <div class="input col-6">
-            <label for="InpDataNasc">
-              <span *ngIf="pessoa.pessoa_juridica">Data de fundação</span>
-              <span *ngIf="!pessoa.pessoa_juridica">Data de nascimento</span>
-            </label>
-            <p-calendar
-              name="InpDataNasc"
-              [(ngModel)]="pessoa.data_nasc"
-              dateFormat="dd/mm/yy"
-              styleClass="w-100"
-            ></p-calendar>
-            <small *ngIf="pessoaOld.data_nasc"
-              >"{{ pessoaOld.data_nasc | date: "dd/MM/yyyy HH:mm:ss" }}"</small
-            >
-          </div>
-          <div class="input">
-            <label for="descricaoPessoa">Descrição</label>
-            <textarea
-              name="descricaoPessoa"
-              [rows]="5"
-              [cols]="30"
-              pInputTextarea
-              class="p-inputtextarea"
-              [(ngModel)]="pessoa.descricao"
-            ></textarea>
-          </div>
-          <div class="input col-6">
-            <label for="InpCreatedAt">Criado em</label>
-            <input
-              name="InpCreatedAt"
-              class="p-inputtext"
-              type="text"
-              pInputText
-              disabled
-              value="{{ pessoa.createdAt | date: 'dd/MM/yyyy HH:mm:ss' }}"
-            />
-          </div>
-          <div class="input col-6">
-            <label for="InpUpdatedAt">Atualizado em</label>
-            <input
-              name="InpUpdatedAt"
-              class="p-inputtext"
-              type="text"
-              pInputText
-              disabled
-              value="{{ pessoa.updatedAt | date: 'dd/MM/yyyy HH:mm:ss' }}"
-            />
-          </div>
-          <div>
-            <p-table
-              *ngIf="pessoa.contatos"
-              [value]="pessoa.contatos"
-              responsiveLayout="scroll"
-            >
-              <ng-template pTemplate="caption">
-                <div class="d-flex justify-content-between">
-                  <h3>Contatos</h3>
-
-                  &nbsp;<button pButton class="p-button" (click)="newContato()">
-                    <i class="pi pi-plus"></i>
-                  </button>
-                </div>
-              </ng-template>
-
-              <ng-template pTemplate="header">
-                <tr>
-                  <th>Nome</th>
-                  <th>Tipo</th>
-                  <th></th>
-                  <th></th>
-                </tr>
-              </ng-template>
-              <ng-template pTemplate="body" let-contato let-i="rowIndex">
-                <tr>
-                  <td>
-                    <input
-                      [name]="'InpContatoNome' + i"
-                      type="text"
-                      class="p-inputtext"
-                      pInputText
-                      [(ngModel)]="contato.nome"
-                    />
-                  </td>
-                  <td>
-                    <p-dropdown
-                      [name]="'InpContatoTipo' + i"
-                      [options]="categorias"
-                      [(ngModel)]="contato.tipo"
-                      styleClass="w-100"
-                      appendTo="body"
-                      optionLabel="valor"
-                      optionValue="valor"
-                    ></p-dropdown>
-                  </td>
-                  <td>
-                    <input
-                      *ngIf="
-                        contato.tipo === 'Telefone' ||
-                        contato.tipo === 'WhatsApp'
-                      "
-                      [name]="'InpContatoValor' + i"
-                      type="text"
-                      class="p-inputtext"
-                      pInputText
-                      [ngModel]="contato.valor | telefone"
-                      (ngModelChange)="contato.valor = $event"
-                    />
-                    <input
-                      *ngIf="contato.tipo === 'Email'"
-                      [name]="'InpContatoValor' + i"
-                      type="text"
-                      class="p-inputtext"
-                      pInputText
-                      [(ngModel)]="contato.valor"
-                      (ngModelChange)="validaEmail($event, 'contato' + i)"
-                    />
-                    <small
-                      *ngIf="
-                        !emailInvalido['contato' + i] &&
-                        emailInvalido['contato' + i] !== undefined
-                      "
-                      class="p-error block"
-                      >Email invalido.</small
-                    >
-                    <input
-                      *ngIf="
-                        contato.tipo !== 'Email' &&
-                        contato.tipo !== 'Telefone' &&
-                        contato.tipo !== 'WhatsApp'
-                      "
-                      [name]="'InpContatoValor' + i"
-                      type="text"
-                      class="p-inputtext"
-                      pInputText
-                      [(ngModel)]="contato.valor"
-                    />
-                  </td>
-                  <td>
-                    <i class="pi pi-trash trash" (click)="removeContato(i)"></i>
-                  </td>
-                </tr>
-              </ng-template>
-            </p-table>
-          </div>
-          <div>
-            <p-table
-              *ngIf="pessoa.files"
-              [value]="pessoa.files"
-              responsiveLayout="scroll"
-            >
-              <ng-template pTemplate="caption">
-                <div class="d-flex justify-content-between">
-                  <h3>Arquivos</h3>
-
-                  <div>
-                    <input
-                      type="file"
-                      class="file-input"
-                      (change)="onFileSelected($event)"
-                      #fileUpload
-                    />
-                    <button
-                      pButton
-                      class="p-button"
-                      (click)="fileUpload.click()"
-                    >
-                      <i *ngIf="!fileLoading" class="pi pi-paperclip"></i>
-                      <p-progressSpinner
-                        *ngIf="fileLoading"
-                        [style]="{
-                          width: '27px',
-                          height: '27px',
-                          margin: 'auto'
-                        }"
-                        styleClass="custom-spinner"
-                        strokeWidth="8"
-                        fill="var(--surface-ground)"
-                        animationDuration="1s"
-                      ></p-progressSpinner>
-                    </button>
-                  </div>
-                </div>
-              </ng-template>
-
-              <ng-template pTemplate="header">
-                <tr>
-                  <th>Código</th>
-                  <th>Nome</th>
-                  <th>Criado</th>
-                  <th></th>
-                </tr>
-              </ng-template>
-              <ng-template pTemplate="body" let-arquivo let-i="rowIndex">
-                <tr>
-                  <td>{{ arquivo.id }}</td>
-                  <td>
-                    <span class="link" (click)="goToUrl(arquivo.id)">{{
-                      arquivo.originalFilename
-                    }}</span>
-                  </td>
-                  <td>{{ arquivo.createdAt | date: "dd/MM/yyyy HH:mm:ss" }}</td>
-                  <td>
-                    <i class="pi pi-trash trash" (click)="removeArquivo(i)"></i>
-                  </td>
-                </tr>
-              </ng-template>
-            </p-table>
-          </div>
-        </div>
-      </form>
-    </p-accordionTab>
     <p-accordionTab header="Fornecedor">
       <ng-template pTemplate="header"
         >&nbsp;<button
