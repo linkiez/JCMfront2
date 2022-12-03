@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { AccessTokenService } from './accessToken.service';
 import { RefreshTokenService } from './refreshToken.service';
 import jwt_decode from 'jwt-decode';
-import { AuthenticationService } from './authentication.service';
 import { Usuario } from '../models/usuario';
 
 

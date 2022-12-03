@@ -12,6 +12,7 @@ import {DropdownModule} from 'primeng/dropdown';
 import {ConfirmDialogModule} from 'primeng/confirmdialog';
 import {PaginatorModule} from 'primeng/paginator';
 import { CheckboxModule } from 'primeng/checkbox';
+import { ListaFilesModule } from 'src/app/components/listaFiles/listaFiles.module';
 
 
 
@@ -27,7 +28,8 @@ import { CheckboxModule } from 'primeng/checkbox';
     ConfirmDialogModule,
     DropdownModule,
     PaginatorModule,
-    CheckboxModule
+    CheckboxModule,
+    ListaFilesModule
   ],
   providers: [
     {provide: LOCALE_ID, useValue: 'pt' }

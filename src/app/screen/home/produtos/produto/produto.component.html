@@ -1,78 +1,102 @@
 <div class="">
   <form name="produtoForm">
     <h2>Produto</h2>
-    <label for="id">ID:</label>
-    <input
-      pInputText
-      class="p-inputtext"
-      name="id"
-      type="text"
-      placeholder="id"
-      [(ngModel)]="produto.id"
-      disabled
-    />
-    <br />
-    <label for="nome">Nome:</label>
-    <input
-      pInputText
-      class="p-inputtext"
-      name="nome"
-      type="text"
-      placeholder="nome"
-      [(ngModel)]="produto.nome"
-      required
-    />
-    <br />
-    <label for="categoria">Categoria:</label>
-    <p-dropdown name="categoria" [options]="categorias$ | async" [editable]="false" [(ngModel)]="produto.categoria" optionLabel="valor" optionValue="valor"></p-dropdown>
-    <br />
-    <label for="espessura">Espessura:</label>
-    <input
-      pInputText
-      class="p-inputtext"
-      name="espessura"
-      type="text"
-      placeholder="espessura"
-      [ngModel]="produto.espessura | number"
-      (ngModelChange)="produto.espessura = toNumber($event)"
-    />
-    <br />
-    <label for="peso">Peso
-      <span *ngIf="produto.categoria === 'Chapa'">M²</span>
-      <span *ngIf="produto.categoria === 'Barra'">Linear</span>
-      <span *ngIf="produto.categoria === 'Peça'">Peça</span>
-      :</label>
-    <input
-      pInputText
-      class="p-inputtext"
-      name="peso"
-      type="text"
-      placeholder="peso"
-      [ngModel]="produto.peso | number"
-      (ngModelChange)="produto.peso = toNumber($event)"
-    />
-    <br />
 
-    <label for="createAt">Data de criação:</label>
-    <input
-      pInputText
-      class="p-inputtext"
-      name="createAt"
-      type="text"
-      value="{{ produto.createdAt | date: 'dd/MM/yyyy HH:mm:ss' }}"
-      disabled
-    />
-    <br />
-    <label for="updateAt">Data de atualização:</label>
-    <input
-      pInputText
-      class="p-inputtext"
-      name="updateAt"
-      type="text"
-      value="{{ produto.updatedAt | date: 'dd/MM/yyyy HH:mm:ss' }}"
-      disabled
-    />
-    <br /><br />
+    <div class="row">
+      <div class="col-2">
+        <label for="id">ID:</label>
+        <input
+          pInputText
+          class="p-inputtext"
+          name="id"
+          type="text"
+          placeholder="id"
+          [(ngModel)]="produto.id"
+          disabled
+        />
+      </div>
+      <div class="col-10">
+        <label for="nome">Nome:</label>
+        <input
+          pInputText
+          class="p-inputtext"
+          name="nome"
+          type="text"
+          placeholder="nome"
+          [(ngModel)]="produto.nome"
+          required
+        />
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-4">
+        <label for="categoria">Categoria:</label>
+        <p-dropdown
+          name="categoria"
+          [options]="categorias$ | async"
+          [editable]="false"
+          [(ngModel)]="produto.categoria"
+          optionLabel="valor"
+          optionValue="valor"
+        ></p-dropdown>
+      </div>
+      <div class="col-4">
+        <label for="espessura">Espessura:</label>
+        <input
+          pInputText
+          class="p-inputtext"
+          name="espessura"
+          type="text"
+          placeholder="espessura"
+          [ngModel]="produto.espessura | number"
+          (ngModelChange)="produto.espessura = toNumber($event)"
+        />
+      </div>
+      <div class="col-4">
+        <label for="peso"
+          >Peso
+          <span *ngIf="produto.categoria === 'Chapa'">M²</span>
+          <span *ngIf="produto.categoria === 'Barra'">Linear</span>
+          <span *ngIf="produto.categoria === 'Peça'">Peça</span>
+          :</label
+        >
+        <input
+          pInputText
+          class="p-inputtext"
+          name="peso"
+          type="text"
+          placeholder="peso"
+          [ngModel]="produto.peso | number"
+          (ngModelChange)="produto.peso = toNumber($event)"
+        />
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <label for="createAt">Data de criação:</label>
+        <input
+          pInputText
+          class="p-inputtext"
+          name="createAt"
+          type="text"
+          value="{{ produto.createdAt | date : 'dd/MM/yyyy HH:mm:ss' }}"
+          disabled
+        />
+      </div>
+      <div class="col-6">
+        <label for="updateAt">Data de atualização:</label>
+        <input
+          pInputText
+          class="p-inputtext"
+          name="updateAt"
+          type="text"
+          value="{{ produto.updatedAt | date : 'dd/MM/yyyy HH:mm:ss' }}"
+          disabled
+        />
+      </div>
+    </div>
+    <listaFiles class="noprint" [files]="produto.files!" (onChangeFiles)="produto.files = $event"></listaFiles>
   </form>
   <button pButton class="p-button p-button-danger" (click)="confirm()">
     Excluir

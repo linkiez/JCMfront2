@@ -13,6 +13,8 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
 import { CaixaUsuarioComponent } from 'src/app/components/caixa-usuario/caixa-usuario.component';
+import {ToastModule} from 'primeng/toast';
+
 
 @NgModule({
   declarations: [HomeComponent, CaixaUsuarioComponent, DashboardComponent],
@@ -25,6 +27,7 @@ import { CaixaUsuarioComponent } from 'src/app/components/caixa-usuario/caixa-us
     ButtonModule,
     MessagesModule,
     MessageModule,
+    ToastModule
   ],
   providers: [{ provide: LOCALE_ID, useValue: 'pt' }],
 })

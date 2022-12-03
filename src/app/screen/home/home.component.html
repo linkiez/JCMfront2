@@ -4,7 +4,7 @@
       <div class="menu noprint">
         <p-menubar [model]="menuItems"><app-caixa-usuario></app-caixa-usuario></p-menubar>
       </div>
-      <p-messages></p-messages>
+      <p-toast position="bottom-right" [preventDuplicates]=true></p-toast>
       <router-outlet></router-outlet>
     </div>
   </div>

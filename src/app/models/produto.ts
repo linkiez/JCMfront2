@@ -1,3 +1,5 @@
+import { Arquivo } from "./arquivo";
+
 export interface Produto {
   id?: number;
   nome?: string;
@@ -7,4 +9,6 @@ export interface Produto {
   updatedAt?: Date;
   createdAt?: Date;
   deletedAt?: Date;
+  files?: Array<Arquivo>;
+
 }
