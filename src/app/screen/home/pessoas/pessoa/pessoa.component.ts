@@ -289,11 +289,16 @@ export class PessoaComponent implements OnInit {
           });
         },
         complete: () =>
-          this.messageService.add({
+          {this.messageService.add({
             severity: 'success',
             summary: 'Sucesso',
             detail: 'A pessoa foi criada.',
-          }),
+          })
+          this.router.navigate([
+            `/home/pessoas/${this.pessoa.id}`,
+          ]);
+        }
+
       });
   }
 

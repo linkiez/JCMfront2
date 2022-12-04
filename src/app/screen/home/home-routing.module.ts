@@ -65,6 +65,15 @@ const routes: Routes = [
           import('./pedidoscompras/pedidoscompras.module').then(
             (module) => module.PedidosComprasModule
           ),
+          canLoad: [LoginGuard],
+      },
+      {
+        path: 'orcamentos',
+        loadChildren: () =>
+          import('./orcamentos/orcamentos.module').then(
+            (module) => module.OrcamentosModule
+          ),
+          canLoad: [LoginGuard],
       },
     ],
   },

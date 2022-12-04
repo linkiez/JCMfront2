@@ -26,7 +26,7 @@ export class ProdutoComponent implements OnInit, OnDestroy {
     private listaGenericaService: ListaGenericaService
   ) {}
 
-  produto: Produto = {};
+  produto: Produto = {files: []};
 
   categorias$ = this.listaGenericaService.getByNameListaGenerica('categoriaProduto').pipe(map((listaGenerica: any)=> listaGenerica.lista_generica_items))
 
@@ -91,11 +91,15 @@ export class ProdutoComponent implements OnInit, OnDestroy {
         })
       },
       complete: () =>
-        this.messageService.add({
+        {this.messageService.add({
           severity: 'success',
           summary: 'Sucesso',
           detail: 'O produto foi criado.',
-        }),
+        })
+        this.router.navigate([
+          `/home/produtos/${this.produto.id}`,
+        ]);
+      }
     });
   }
 

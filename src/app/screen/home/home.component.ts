@@ -23,6 +23,7 @@ export class HomeComponent implements OnInit {
         },
         {
           label: 'Orcamentos',
+          routerLink: 'orcamentos'
         },
         {
           label: 'Ordens de Produção',
