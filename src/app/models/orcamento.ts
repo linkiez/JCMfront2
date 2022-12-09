@@ -10,7 +10,8 @@ export interface Orcamento {
   contato?: Contato;
   id_contato?: number;
   pessoa?: Pessoa;
-  id_pessoa?: Vendedor;
+  id_pessoa?: number;
+  vendedor?: Vendedor;
   id_vendedor?: number;
   prazo_emdias?: number;
   prazo_data?: string;
@@ -26,7 +27,7 @@ export interface Orcamento {
   deletedAt?: Date;
   updatedAt?: Date;
   createdAt?: Date;
-  orcamento_item?: OrcamentoItem[]
+  orcamento_item: OrcamentoItem[]
   files?: Arquivo[];
 
 }
@@ -38,10 +39,11 @@ export interface OrcamentoItem{
   produto?: Produto;
   id_produto?: number;
   material_incluido?: boolean;
-  processo?: string;
+  processo?: string | string[];
   largura?: number;
   altura?: number;
   quantidade?: number;
+  imposto?: number;
   preco_quilo?: number;
   tempo?: string;
   preco_hora?: number;
@@ -50,4 +52,9 @@ export interface OrcamentoItem{
   updatedAt?: Date;
   createdAt?: Date;
   files?: File[];
+  peso?: number;
+  total?: number;
+  total_peso?: number;
+  total_hora?: number;
+  custo?: number;
 }

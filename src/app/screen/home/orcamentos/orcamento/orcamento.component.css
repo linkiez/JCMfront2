@@ -1,0 +1,13 @@
+.w-300 {
+  min-width: 300px !important;
+}
+
+:host ::ng-deep .p-datatable .p-datatable-tbody > tr > td{
+  text-align: center;
+}
+
+@media print {
+  .w-300 {
+    min-width: auto !important;
+  }
+}

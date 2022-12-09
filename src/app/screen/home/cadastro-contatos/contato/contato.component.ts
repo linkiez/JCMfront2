@@ -36,7 +36,7 @@ export class ContatoComponent implements OnInit, OnDestroy {
   getProduto() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     if (id != 0) {
-      this.subscription = this.contatoService.getProduto(id).subscribe({
+      this.subscription = this.contatoService.getContato(id).subscribe({
         next: (contato) => {
           console.log(contato)
           this.contato = contato;
@@ -54,7 +54,7 @@ export class ContatoComponent implements OnInit, OnDestroy {
   }
 
   updateProduto() {
-    this.contatoService.updateProduto(this.contato).subscribe({
+    this.contatoService.updateContato(this.contato).subscribe({
       error: (error) => {
         console.log(error)
         this.messageService.add({
@@ -74,7 +74,7 @@ export class ContatoComponent implements OnInit, OnDestroy {
   }
 
   createProduto(){
-    this.contatoService.addProduto(this.contato).subscribe({
+    this.contatoService.addContato(this.contato).subscribe({
       next: (contato) => this.contato=this.contato,
       error: (error) => {
         console.log(error)
@@ -102,7 +102,7 @@ export class ContatoComponent implements OnInit, OnDestroy {
   }
 
   deleteProduto() {
-    this.contatoService.deleteProduto(this.contato).subscribe();
+    this.contatoService.deleteContato(this.contato).subscribe();
     this.router.navigate(['/home/contatos']);
   }
 

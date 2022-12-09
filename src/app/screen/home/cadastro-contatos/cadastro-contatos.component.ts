@@ -3,6 +3,7 @@ import { Contato } from '../../../models/contato';
 import { ContatoService } from '../../../services/contato.service';
 import { Table } from 'primeng/table';
 import { Router } from '@angular/router';
+import { Query } from 'src/app/models/query';
 
 @Component({
   selector: 'app-cadastro-contatos',
@@ -13,6 +14,8 @@ export class CadastroContatosComponent implements OnInit {
 
   @ViewChild('dt') dt: Table | undefined;
 
+
+
   contatos: Array<Contato> = []
 
   first = 0;
@@ -22,12 +25,19 @@ export class CadastroContatosComponent implements OnInit {
   constructor(private contatoService: ContatoService, private router: Router) { }
 
   ngOnInit(): void {
-    this.getProdutos();
+    this.getContatos();
   }
 
-  getProdutos(): void {
+  getContatos(): void {
+    let query: Query = {
+      page: 0,
+      pageCount: 10,
+      searchValue: '',
+      deleted: false,
+    };
+
     this.contatoService
-      .getProdutos()
+      .getContatos(query)
       .subscribe((contatos) => (this.contatos = contatos), (error) => console.log(error));
   }
 

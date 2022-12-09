@@ -17,7 +17,7 @@ import { Orcamento } from 'src/app/models/orcamento';
 })
 export class OrcamentosComponent implements OnInit, OnDestroy {
 
-  orcamentos: Orcamento = {}
+  orcamentos: Orcamento[] = []
 
   constructor() { }
 

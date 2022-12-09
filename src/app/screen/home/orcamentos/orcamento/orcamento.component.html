@@ -1,7 +1,551 @@
-<h2>Orçamento</h2>
-<caixaDeStatus
-[status]="orcamento.status"
-[options]="status"
-[editable]=true
-(statusChange)="orcamento.status=$event"
-></caixaDeStatus>
+<form action="">
+  <h2>Proposta Comercial</h2>
+  <caixaDeStatus
+    [status]="orcamento.status"
+    [options]="status$ | async"
+    [editable]="false"
+    (statusChange)="orcamento.status = $event"
+  ></caixaDeStatus>
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <label for="inpId">Numero</label>
+        <input
+          pInputText
+          class="p-inputtext"
+          disabled
+          name="inpId"
+          type="text"
+          [(ngModel)]="orcamento.id"
+        />
+      </div>
+      <div class="col">
+        <label for="inpData">Data</label>
+        <input
+          pInputText
+          class="p-inputtext"
+          disabled
+          name="inpData"
+          type="text"
+          [(ngModel)]="orcamento.updatedAt"
+        />
+      </div>
+    </div>
+    <div class="row">
+      <div><h4>Contato</h4></div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <label for="inpContatoNome">Nome</label>
+        <p-autoComplete
+          name="inpContatoNome"
+          [(ngModel)]="orcamento.contato"
+          field="nome"
+          [suggestions]="contatos"
+          (completeMethod)="searchContato($event)"
+          [style]="{ width: '100%' }"
+          [inputStyle]="{ width: '100%' }"
+          appendTo="body"
+          ><ng-template let-contatoOption pTemplate="item">
+            <div>
+              <span>{{ contatoOption.nome }} - </span>
+              <span
+                *ngIf="
+                  contatoOption.tipo === 'Telefone' ||
+                  contatoOption.tipo === 'WhatsApp'
+                "
+              >{{ contatoOption.valor | telefone}}</span>
+              <span
+                *ngIf="
+                  contatoOption.tipo !== 'Telefone' &&
+                  contatoOption.tipo !== 'WhatsApp'
+                "
+              >{{ contatoOption.valor}}</span>
+            </div>
+          </ng-template>
+          <ng-template let-contatoSelected pTemplate="selectedItem">
+            <div>
+              {{ contatoSelected.nome }}
+            </div>
+          </ng-template></p-autoComplete
+        >
+      </div>
+      <div class="col">
+        <label for="inpContatoTipo">Tipo</label>
+        <p-dropdown
+          [name]="'InpContatoTipo'"
+          [options]="contatoCategorias$ | async"
+          [(ngModel)]="orcamento.contato!.tipo"
+          [style]="{ width: '100%' }"
+          appendTo="body"
+          optionLabel="valor"
+          optionValue="valor"
+        ></p-dropdown>
+      </div>
+      <div class="col">
+        <label for="inpContatoTipo">Contato</label>
+        <p-autoComplete
+          *ngIf="
+            orcamento.contato!.tipo === 'Telefone' ||
+            orcamento.contato!.tipo === 'WhatsApp'
+          "
+          name="inpContatoTelefone"
+          [(ngModel)]="orcamento.contato"
+          field="valor"
+          [suggestions]="contatos"
+          (completeMethod)="searchContato($event)"
+          [style]="{ width: '100%' }"
+          [inputStyle]="{ width: '100%' }"
+          appendTo="body"
+          ><ng-template let-contatoOption pTemplate="item">
+            <div>
+              {{ contatoOption.valor | telefone }}
+            </div>
+          </ng-template>
+          <ng-template let-contatoSelected pTemplate="selectedItem">
+            <div>
+              {{ contatoSelected.valor | telefone }}
+            </div>
+          </ng-template>
+        </p-autoComplete>
+        <p-autoComplete
+          *ngIf="orcamento.contato!.tipo === 'Email'"
+          name="inpContatoEmail"
+          [(ngModel)]="orcamento.contato"
+          field="valor"
+          [suggestions]="contatos"
+          (completeMethod)="searchContato($event)"
+          [style]="{ width: '100%' }"
+          [inputStyle]="{ width: '100%' }"
+          appendTo="body"
+        ></p-autoComplete>
+        <small
+          *ngIf="
+            orcamento.contato!.tipo === 'Email' &&
+            !validaEmail(orcamento.contato!.valor || '')
+          "
+          class="p-error block"
+          >Email invalido.</small
+        >
+        <p-autoComplete
+          *ngIf="
+            orcamento.contato!.tipo !== 'Email' &&
+            orcamento.contato!.tipo !== 'Telefone' &&
+            orcamento.contato!.tipo !== 'WhatsApp'
+          "
+          name="inpContatoValor"
+          [(ngModel)]="orcamento.contato"
+          field="valor"
+          [suggestions]="contatos"
+          (completeMethod)="searchContato($event)"
+          [style]="{ width: '100%' }"
+          [inputStyle]="{ width: '100%' }"
+          appendTo="body"
+        ></p-autoComplete>
+      </div>
+    </div>
+    <div class="row">
+      <div><h4>Pessoa</h4></div>
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <label for="inpPessoaNome">Nome</label>
+        <p-autoComplete
+          name="inpPessoaNome"
+          [(ngModel)]="orcamento.pessoa"
+          field="nome"
+          [suggestions]="pessoas"
+          (completeMethod)="searchPessoa($event)"
+          [style]="{ width: '100%' }"
+          [inputStyle]="{ width: '100%' }"
+          appendTo="body"
+        ></p-autoComplete>
+      </div>
+      <div class="col-3">
+        <label for="">{{
+          orcamento.pessoa?.pessoa_juridica ? "CNPJ" : "CPF"
+        }}</label>
+        <p>{{ (orcamento.pessoa?.cnpj_cpf | cpfCnpj) || "-" }}</p>
+      </div>
+      <div class="col-3">
+        <label for="">{{
+          orcamento.pessoa?.pessoa_juridica ? "IE" : "RG"
+        }}</label>
+        <p>{{ (orcamento.pessoa?.ie_rg | ieRg) || "-" }}</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <label for="">Endereço</label>
+        <p>{{ orcamento.pessoa?.endereco || "-" }}</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <label for="">Cidade</label>
+        <p>{{ orcamento.pessoa?.municipio || "-" }}</p>
+      </div>
+      <div class="col">
+        <label for="">UF</label>
+        <p>{{ orcamento.pessoa?.uf || "-" }}</p>
+      </div>
+      <div class="col">
+        <label for="">CEP</label>
+        <p>{{ (orcamento.pessoa?.cep | cep) || "-" }}</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <label for="">Telefone</label>
+        <p>{{ (orcamento.pessoa?.telefone | telefone) || "-" }}</p>
+      </div>
+      <div class="col">
+        <label for="">Email</label>
+        <p>{{ orcamento.pessoa?.email || "-" }}</p>
+      </div>
+      <div class="col">
+        <label for="">Email Nfe</label>
+        <p>{{ orcamento.pessoa?.email_nfe || "-" }}</p>
+      </div>
+    </div>
+    <div class="row">
+      <hr class="noprint" />
+      <div class="col">
+        <label for="">Vendedor</label>
+        <p-autoComplete
+          name="inpVendedorNome"
+          [(ngModel)]="orcamento.vendedor"
+          field="pessoa.nome"
+          [suggestions]="vendedores"
+          (completeMethod)="searchVendedor($event)"
+          [style]="{ width: '100%' }"
+          [inputStyle]="{ width: '100%' }"
+          appendTo="body"
+        ></p-autoComplete>
+      </div>
+      <div class="col">
+        <label for="inpPedidoCompraCliente">Pedido de Compra</label>
+        <input
+          pInputText
+          class="p-inputtext"
+          name="inpPedidoCompraCliente"
+          type="text"
+          [(ngModel)]="orcamento.pc_cliente"
+        />
+      </div>
+      <div class="col">
+        <label for="inpPedidoCompraCliente"
+          >Prazo de entrega (Dias Úteis)</label
+        >
+        <input
+          pInputText
+          class="p-inputtext"
+          name="inpPrazoEmDias"
+          type="number"
+          [(ngModel)]="orcamento.prazo_emdias"
+        />
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <p-table
+          [value]="orcamento.orcamento_item"
+          [scrollable]="true"
+          scrollDirection="horizontal"
+        >
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Item</th>
+              <th pSortableColumn="produto.descricao" class="w-300">
+                Descrição <p-sortIcon field="produto.descricao"></p-sortIcon>
+              </th>
+              <th pSortableColumn="produto.nome" class="w-300">
+                Material<p-sortIcon field="produto.nome"></p-sortIcon>
+              </th>
+              <th>Material Incluso</th>
+              <th class="noprint">RIR</th>
+              <th class="noprint">Processos</th>
+              <th>Largura (blank)</th>
+              <th>Altura (blank)</th>
+              <th>Qtd.</th>
+              <th>Imposto</th>
+              <th class="noprint">Preço (Quilo)</th>
+              <th class="noprint">Tempo</th>
+              <th class="noprint">Preço (Hora)</th>
+              <th>Valor Uni.</th>
+              <th class="noprint">Total Manual</th>
+              <th>Total</th>
+              <th class="noprint">Peso (Quilo)</th>
+              <th class="noprint">Total (Peso)</th>
+              <th class="noprint">Total (Hora)</th>
+              <th class="noprint">Custo Material</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-item let-index="rowIndex">
+            <tr>
+              <td>{{ index + 1 }}.</td>
+              <td pEditableColumn>
+                <p-cellEditor>
+                  <ng-template pTemplate="input">
+                    <input
+                      pInputText
+                      class="p-inputtext"
+                      name="inpItemDescricao"
+                      type="text"
+                      [(ngModel)]="item.descricao"
+                    />
+                  </ng-template>
+                  <ng-template pTemplate="output">
+                    {{ item.descricao || "-" }}
+                  </ng-template>
+                </p-cellEditor>
+              </td>
+              <td pEditableColumn>
+                <p-cellEditor>
+                  <ng-template pTemplate="input">
+                    <p-autoComplete
+                      pInputText
+                      class="p-autocomplete w-100"
+                      name="inpProdutos"
+                      type="text"
+                      [(ngModel)]="item.produto"
+                      (ngModelChange)="calculaPeso(item)"
+                      field="nome"
+                      [suggestions]="produtos"
+                      (completeMethod)="searchProduto($event)"
+                      [dropdown]="true"
+                      [style]="{ width: '100%' }"
+                      [inputStyle]="{ width: '100%' }"
+                      appendTo="body"
+                    ></p-autoComplete>
+                  </ng-template>
+                  <ng-template pTemplate="output">
+                    {{ item.produto.nome || "-" }}
+                  </ng-template>
+                </p-cellEditor>
+              </td>
+              <td class="text-center">
+                <p-checkbox
+                  name="chkMaterialIncluso"
+                  [(ngModel)]="item.material_incluido"
+                  [binary]="true"
+                  (ngModelChange)="calculaPeso(item)"
+                ></p-checkbox>
+              </td>
+              <td class="noprint" pEditableColumn>
+                <p-cellEditor>
+                  <ng-template pTemplate="input">
+                    <input
+                      pInputText
+                      class="p-inputtext"
+                      name="inpItemRir"
+                      type="text"
+                      [(ngModel)]="item.rir"
+                    />
+                  </ng-template>
+                  <ng-template pTemplate="output">
+                    {{ item.rir || "-" }}
+                  </ng-template>
+                </p-cellEditor>
+              </td>
+              <td class="noprint" pEditableColumn>
+                <p-cellEditor>
+                  <ng-template pTemplate="input">
+                    <p-multiSelect
+                      name="itemProcesso"
+                      [options]="processos$ | async"
+                      [(ngModel)]="item.processo"
+                      appendTo="body"
+                    ></p-multiSelect>
+                  </ng-template>
+                  <ng-template pTemplate="output">
+                    <p *ngFor="let processo of item.processo">
+                      {{ processo }}
+                    </p>
+                  </ng-template>
+                </p-cellEditor>
+              </td>
+              <td pEditableColumn>
+                <p-cellEditor *ngIf="item.produto.categoria !== 'Peça'">
+                  <ng-template pTemplate="input">
+                    <input
+                      pInputText
+                      class="p-inputtext"
+                      name="inpItemlargura"
+                      type="number"
+                      [(ngModel)]="item.largura"
+                      (input)="calculaPeso(item)"
+                    />
+                  </ng-template>
+                  <ng-template pTemplate="output">
+                    {{ item.largura }}
+                  </ng-template>
+                </p-cellEditor>
+              </td>
+              <td pEditableColumn>
+                <p-cellEditor *ngIf="item.produto.categoria === 'Chapa'">
+                  <ng-template pTemplate="input">
+                    <input
+                      pInputText
+                      class="p-inputtext"
+                      name="inpItemAltura"
+                      type="number"
+                      [(ngModel)]="item.altura"
+                      (input)="calculaPeso(item)"
+                    />
+                  </ng-template>
+                  <ng-template pTemplate="output">
+                    {{ item.altura }}
+                  </ng-template>
+                </p-cellEditor>
+              </td>
+              <td pEditableColumn>
+                <p-cellEditor>
+                  <ng-template pTemplate="input">
+                    <input
+                      pInputText
+                      class="p-inputtext"
+                      name="inpItemQuantidade"
+                      type="number"
+                      [(ngModel)]="item.quantidade"
+                      (input)="calculaHora(item); calculaPeso(item)"
+                    />
+                  </ng-template>
+                  <ng-template pTemplate="output">
+                    {{ item.quantidade || "-" }}
+                  </ng-template>
+                </p-cellEditor>
+              </td>
+              <td pEditableColumn>
+                <p-cellEditor>
+                  <ng-template pTemplate="input">
+                    <input
+                      pInputText
+                      class="p-inputtext"
+                      name="inpItemImposto"
+                      type="text"
+                      [ngModel]="item.imposto | percent : '1.2-2' : 'PT-BR'"
+                      (ngModelChange)="itemImposto($event, item)"
+                      (input)="calculaTotal(item)"
+                    />
+                  </ng-template>
+                  <ng-template pTemplate="output">
+                    {{ item.imposto | percent : "1.2-2" : "PT-BR" }}
+                  </ng-template>
+                </p-cellEditor>
+              </td>
+              <td class="noprint" pEditableColumn>
+                <p-cellEditor>
+                  <ng-template pTemplate="input">
+                    <input
+                      pInputText
+                      class="p-inputtext"
+                      name="inpItemPrecoQuilo"
+                      type="text"
+                      [ngModel]="item.preco_quilo | currency : 'BRL'"
+                      (ngModelChange)="itemPrecoQuilo($event, item)"
+                      (input)="calculaPeso(item)"
+                    />
+                  </ng-template>
+                  <ng-template pTemplate="output">
+                    {{ item.preco_quilo | currency : "BRL" }}
+                  </ng-template>
+                </p-cellEditor>
+              </td>
+              <td class="noprint" pEditableColumn>
+                <p-cellEditor>
+                  <ng-template pTemplate="input">
+                    <input
+                      pInputText
+                      class="p-inputtext"
+                      name="inpItemTempo"
+                      type="time"
+                      [(ngModel)]="item.tempo"
+                      (input)="calculaHora(item)"
+                      step="1"
+                    />
+                  </ng-template>
+                  <ng-template pTemplate="output">
+                    {{ item.tempo }}
+                  </ng-template>
+                </p-cellEditor>
+              </td>
+              <td class="noprint" pEditableColumn>
+                <p-cellEditor>
+                  <ng-template pTemplate="input">
+                    <input
+                      pInputText
+                      class="p-inputtext"
+                      name="inpItemPrecoHora"
+                      type="text"
+                      [ngModel]="item.preco_hora | currency : 'BRL'"
+                      (ngModelChange)="itemPrecoHora($event, item)"
+                      (input)="calculaHora(item)"
+                    />
+                  </ng-template>
+                  <ng-template pTemplate="output">
+                    {{ item.preco_hora | currency : "BRL" }}
+                  </ng-template>
+                </p-cellEditor>
+              </td>
+              <td>
+                {{ item.total / item.quantidade | currency : "BRL" }}
+              </td>
+              <td class="noprint" pEditableColumn>
+                <p-cellEditor>
+                  <ng-template pTemplate="input">
+                    <input
+                      pInputText
+                      class="p-inputtext"
+                      name="inpItemTotalManual"
+                      type="text"
+                      [ngModel]="item.total_manual | currency : 'BRL'"
+                      (ngModelChange)="itemTotalManual($event, item)"
+                    />
+                  </ng-template>
+                  <ng-template pTemplate="output">
+                    {{ item.total_manual | currency : "BRL" }}
+                  </ng-template>
+                </p-cellEditor>
+              </td>
+              <td>
+                {{ item.total | currency : "BRL" }}
+              </td>
+              <td class="noprint">
+                {{ item.peso | number : "1.0-2" : "pt-BR" }}
+              </td>
+              <td class="noprint">
+                {{ item.total_peso | currency : "BRL" }}
+              </td>
+              <td class="noprint">
+                {{ item.total_hora | currency : "BRL" }}
+              </td>
+              <td class="noprint">
+                {{ item.custo | currency : "BRL" }}
+              </td>
+
+              <td class="noprint">
+                <i class="pi pi-trash trash" (click)="removeItem(index)"></i>
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="footer">
+            <tr>
+              <td>
+                <button
+                  name="btNewItem"
+                  pButton
+                  class="button"
+                  (click)="newItem()"
+                  class="noprint"
+                >
+                  <i class="pi pi-plus"></i>
+                </button>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+  </div>
+</form>

@@ -4,8 +4,8 @@
     [ngClass]="{
       statusGreen: status == 'Aprovado',
       statusYellow: status == 'Orçamento',
-      statusRed: status == 'Cancelado',
-      statusBlue: status == 'Entregue',
+      statusRed: status == 'Cancelado' || status == 'Recusado',
+      statusBlue: status == 'Entregue' || status == 'Venda',
       statusPurple: status == 'Entregue Parcial'
     }"
   >
@@ -18,8 +18,8 @@
     [ngClass]="{
       statusGreen: status == 'Aprovado',
       statusYellow: status == 'Orçamento',
-      statusRed: status == 'Cancelado',
-      statusBlue: status == 'Entregue',
+      statusRed: status == 'Cancelado' || status == 'Recusado',
+      statusBlue: status == 'Entregue' || status == 'Venda',
       statusPurple: status == 'Entregue Parcial'
     }"
   >

@@ -8,9 +8,32 @@ body {
   color: white;
   height: 100%;
   min-height: 100%;
+
 }
 html {
   height: 100%;
+}
+
+label {
+  width: 100%;
+  margin-top: 5px;
+  font-size: small;
+}
+
+button {
+margin-right: 10px;
+}
+
+input, p, textarea {
+  width: 100%
+}
+
+h4 {
+  margin-top: 25px;
+}
+
+p {
+  margin-bottom: 5px;
 }
 
 .page {
@@ -30,15 +53,50 @@ html {
   cursor: pointer;
 }
 
+.p-datatable{
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.p-datatable .p-datatable-tbody > tr > td,
+.p-datatable .p-datatable-thead > tr > th {
+  padding: 5px;
+}
+
 @media print {
+
+  input {
+    height: 15px;
+    padding: 0px;
+  }
+
+  h4 {
+    margin: 5px
+  }
+
+  label, small {
+    font-size: xx-small;
+    margin: 1px
+  }
+
+  p {
+    font-size: small;
+    margin: 1px
+  }
+
+  .col{
+    height: fit-content;
+  }
+
   .container {
     padding: 0;
     margin: 0;
   }
 
   .page{
+
     padding: 0.5cm;
-    margin: 0.5cm;
+    margin: 1.5cm;
 
     padding-right: 0;
     margin-right: 0;
@@ -53,4 +111,9 @@ html {
   .noprint {
     display: none;
   }
+
+  .p-datatable .p-datatable-tbody > tr > td,
+.p-datatable .p-datatable-thead > tr > th {
+  font-size: x-small;
+}
 }

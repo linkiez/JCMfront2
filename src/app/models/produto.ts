@@ -1,6 +1,7 @@
 import { Arquivo } from "./arquivo";
 
 export interface Produto {
+  pedido_compra_items?: any;
   id?: number;
   nome?: string;
   categoria?: string;
