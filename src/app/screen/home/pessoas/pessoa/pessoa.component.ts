@@ -9,7 +9,7 @@ import { DOCUMENT } from '@angular/common';
 import { ArquivoService } from 'src/app/services/arquivo.service';
 import { Validação } from 'src/app/models/validacao';
 import { ListaGenericaService } from 'src/app/services/lista-generica.service';
-import { validador } from 'src/app/utils/validadores'
+import { validador } from 'src/app/utils/validadores';
 
 @Component({
   selector: 'app-pessoa',
@@ -40,8 +40,6 @@ export class PessoaComponent implements OnInit {
   categorias: any = [];
 
   cnpjLoading: boolean = false;
-
-
 
   ngOnInit(): void {
     this.getCategoria();
@@ -118,17 +116,14 @@ export class PessoaComponent implements OnInit {
             detail: `${error.status} - ${error.statusText} - ${error.error}`,
           });
         },
-        complete: () =>
-          {this.messageService.add({
+        complete: () => {
+          this.messageService.add({
             severity: 'success',
             summary: 'Sucesso',
             detail: 'A pessoa foi criada.',
-          })
-          this.router.navigate([
-            `/home/pessoas/${this.pessoa.id}`,
-          ]);
-        }
-
+          });
+          this.router.navigate([`/home/pessoas/${this.pessoa.id}`]);
+        },
       });
   }
 
@@ -171,8 +166,13 @@ export class PessoaComponent implements OnInit {
     if (pessoa.telefone)
       pessoa.telefone = Number(pessoa.telefone.toString().replace(/\D/g, ''));
     if (pessoa.cnpj_cpf)
-        pessoa.cnpj_cpf = pessoa.cnpj_cpf.toString().replace(/\D/g, '');
+      pessoa.cnpj_cpf = pessoa.cnpj_cpf.toString().replace(/\D/g, '');
     if (pessoa.ie_rg) pessoa.ie_rg = pessoa.ie_rg.toString().replace(/\D/g, '');
+    pessoa.contatos = pessoa.contatos?.map((contato: Contato) => {
+      if (contato.tipo == 'Telefone' || contato.tipo == 'WhatsApp')
+        contato.valor = (contato.valor||'').toString().replace(/\D/g, '');
+      return contato;
+    });
     return pessoa;
   }
 
@@ -242,8 +242,6 @@ export class PessoaComponent implements OnInit {
     this.pessoa.contatos!.splice(rowIndex, 1);
   }
 
-
-
   getBackPessoas() {
     this.router.navigate(['/home/pessoas']);
   }
@@ -310,7 +308,7 @@ export class PessoaComponent implements OnInit {
               this.pessoa.ie_rg =
                 consultaPJ.estabelecimento.inscricoes_estaduais[0].inscricao_estadual;
 
-              this.pessoa.descricao += `Situação Cadastral: ${consultaPJ.estabelecimento.situacao_cadastral}`
+              this.pessoa.descricao += `Situação Cadastral: ${consultaPJ.estabelecimento.situacao_cadastral}`;
             },
             complete: () => {
               this.cnpjLoading = false;
