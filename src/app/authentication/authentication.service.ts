@@ -48,11 +48,15 @@ export class AuthenticationService {
       return true;
     }
     if (refreshToken) {
-      let response = await firstValueFrom(this.refresh())
-      let body = response.body as Login;
-      if(body){
-        this.usuarioService.salvaToken(body!.accessToken, body!.refreshToken);
-        return true;
+      try{
+        let response = await firstValueFrom(this.refresh())
+        let body = response.body as Login;
+        if(body){
+          this.usuarioService.salvaToken(body!.accessToken, body!.refreshToken);
+          return true;
+        }
+      }catch(error: any){
+        console.log(error)
       }
       this.router.navigate(['login']);
       return false
