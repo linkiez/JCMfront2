@@ -151,4 +151,8 @@ export class ProdutoComponent implements OnInit, OnDestroy {
   toNumber(event: any): number {
     return Number(event.replace(',', '.'));
   }
+
+  goTo(id: number){
+    this.router.navigate(['/home/pedidoscompras/'+ id])
+  }
 }

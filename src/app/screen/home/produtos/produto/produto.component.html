@@ -97,6 +97,39 @@
       </div>
     </div>
     <listaFiles class="noprint" [files]="produto.files!" (onChangeFiles)="produto.files = $event"></listaFiles>
+    <div>
+      <p-table
+      [value]="produto.pedido_compra_items"
+      responsiveLayout="scroll"
+    >
+      <ng-template pTemplate="caption">
+        <div class="d-flex justify-content-between">
+          <h3>Compras</h3>
+        </div>
+      </ng-template>
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Pedido de Compra</th>
+          <th>Dimenção</th>
+          <th>Quantidade</th>
+          <th>Peso</th>
+          <th>Preço</th>
+          <th>Data</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-pedido let-i="rowIndex">
+        <tr>
+          <td (click)="goTo(pedido.pedido_compra.id)" class="link">{{pedido.pedido_compra.id}} - {{pedido.pedido_compra.pedido}}</td>
+          <td>{{pedido.dimensao}}</td>
+          <td>{{pedido.quantidade}}</td>
+          <td>{{pedido.peso}} Kg</td>
+          <td>{{pedido.preco| currency : 'BRL'}}</td>
+          <td>{{pedido.createdAt| date: "dd/MM/yyyy"}}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+    </div>
   </form>
   <button pButton class="p-button p-button-danger" (click)="confirm()">
     Excluir
