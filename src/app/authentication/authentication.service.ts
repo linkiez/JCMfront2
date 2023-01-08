@@ -3,7 +3,6 @@ import { environment } from '../../environments/environment.prod';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { RefreshTokenService } from './refreshToken.service';
-import { UsuarioService } from './usuario.service';
 import { Login } from '../models/login';
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
@@ -18,7 +17,6 @@ export class AuthenticationService {
     private httpClient: HttpClient,
     private refreshTokenService: RefreshTokenService,
     private accessTokenService: AccessTokenService,
-    private usuarioService: UsuarioService,
     private router: Router
   ) {}
 
@@ -52,7 +50,8 @@ export class AuthenticationService {
         let response = await firstValueFrom(this.refresh())
         let body = response.body as Login;
         if(body){
-          this.usuarioService.salvaToken(body!.accessToken, body!.refreshToken);
+          this.accessTokenService.salvaToken(body!.accessToken);
+          this.refreshTokenService.salvaToken(body!.refreshToken);
           return true;
         }
       }catch(error: any){

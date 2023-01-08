@@ -54,13 +54,15 @@
                   contatoOption.tipo === 'Telefone' ||
                   contatoOption.tipo === 'WhatsApp'
                 "
-              >{{ contatoOption.valor | telefone}}</span>
+                >{{ contatoOption.valor | telefone }}</span
+              >
               <span
                 *ngIf="
                   contatoOption.tipo !== 'Telefone' &&
                   contatoOption.tipo !== 'WhatsApp'
                 "
-              >{{ contatoOption.valor}}</span>
+                >{{ contatoOption.valor }}</span
+              >
             </div>
           </ng-template>
           <ng-template let-contatoSelected pTemplate="selectedItem">
@@ -221,6 +223,7 @@
           [style]="{ width: '100%' }"
           [inputStyle]="{ width: '100%' }"
           appendTo="body"
+          [dropdown]="true"
         ></p-autoComplete>
       </div>
       <div class="col">
@@ -251,10 +254,11 @@
         <p-table
           [value]="orcamento.orcamento_item"
           [scrollable]="true"
-          scrollDirection="horizontal"
+          dataKey="uniqueId"
         >
           <ng-template pTemplate="header">
             <tr>
+              <th style="width: 5rem" class="noprint"></th>
               <th>Item</th>
               <th pSortableColumn="produto.descricao" class="w-300">
                 Descrição <p-sortIcon field="produto.descricao"></p-sortIcon>
@@ -281,8 +285,25 @@
               <th class="noprint">Custo Material</th>
             </tr>
           </ng-template>
-          <ng-template pTemplate="body" let-item let-index="rowIndex">
+          <ng-template
+            pTemplate="body"
+            let-item
+            let-index="rowIndex"
+            let-expanded="expanded"
+          >
             <tr>
+              <td class="noprint">
+                <button
+                  type="button"
+                  pButton
+                  pRipple
+                  [pRowToggler]="item"
+                  class="p-button-text p-button-rounded p-button-plain"
+                  [icon]="
+                    expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'
+                  "
+                ></button>
+              </td>
               <td>{{ index + 1 }}.</td>
               <td pEditableColumn>
                 <p-cellEditor>
@@ -332,7 +353,7 @@
                   (ngModelChange)="calculaPeso(item)"
                 ></p-checkbox>
               </td>
-              <td class="noprint" pEditableColumn>
+              <td class="noprint w-100" pEditableColumn>
                 <p-cellEditor>
                   <ng-template pTemplate="input">
                     <input
@@ -365,7 +386,7 @@
                   </ng-template>
                 </p-cellEditor>
               </td>
-              <td pEditableColumn>
+              <td pEditableColumn class="w-100">
                 <p-cellEditor *ngIf="item.produto.categoria !== 'Peça'">
                   <ng-template pTemplate="input">
                     <input
@@ -382,7 +403,7 @@
                   </ng-template>
                 </p-cellEditor>
               </td>
-              <td pEditableColumn>
+              <td pEditableColumn class="w-100">
                 <p-cellEditor *ngIf="item.produto.categoria === 'Chapa'">
                   <ng-template pTemplate="input">
                     <input
@@ -399,7 +420,7 @@
                   </ng-template>
                 </p-cellEditor>
               </td>
-              <td pEditableColumn>
+              <td pEditableColumn class="w-100">
                 <p-cellEditor>
                   <ng-template pTemplate="input">
                     <input
@@ -416,7 +437,7 @@
                   </ng-template>
                 </p-cellEditor>
               </td>
-              <td pEditableColumn>
+              <td pEditableColumn class="w-100">
                 <p-cellEditor>
                   <ng-template pTemplate="input">
                     <input
@@ -425,7 +446,7 @@
                       name="inpItemImposto"
                       type="text"
                       [ngModel]="item.imposto | percent : '1.2-2' : 'PT-BR'"
-                      (ngModelChange)="itemImposto($event, item)"
+                      (ngModelChange)="onChangeItemImposto($event, item)"
                       (input)="calculaTotal(item)"
                     />
                   </ng-template>
@@ -434,7 +455,7 @@
                   </ng-template>
                 </p-cellEditor>
               </td>
-              <td class="noprint" pEditableColumn>
+              <td class="noprint w-100" pEditableColumn>
                 <p-cellEditor>
                   <ng-template pTemplate="input">
                     <input
@@ -443,7 +464,7 @@
                       name="inpItemPrecoQuilo"
                       type="text"
                       [ngModel]="item.preco_quilo | currency : 'BRL'"
-                      (ngModelChange)="itemPrecoQuilo($event, item)"
+                      (ngModelChange)="onChangeItemPrecoQuilo($event, item)"
                       (input)="calculaPeso(item)"
                     />
                   </ng-template>
@@ -470,7 +491,7 @@
                   </ng-template>
                 </p-cellEditor>
               </td>
-              <td class="noprint" pEditableColumn>
+              <td class="noprint w-100" pEditableColumn>
                 <p-cellEditor>
                   <ng-template pTemplate="input">
                     <input
@@ -479,7 +500,7 @@
                       name="inpItemPrecoHora"
                       type="text"
                       [ngModel]="item.preco_hora | currency : 'BRL'"
-                      (ngModelChange)="itemPrecoHora($event, item)"
+                      (ngModelChange)="onChangeItemPrecoHora($event, item)"
                       (input)="calculaHora(item)"
                     />
                   </ng-template>
@@ -491,7 +512,7 @@
               <td>
                 {{ item.total / item.quantidade | currency : "BRL" }}
               </td>
-              <td class="noprint" pEditableColumn>
+              <td class="noprint w-100" pEditableColumn>
                 <p-cellEditor>
                   <ng-template pTemplate="input">
                     <input
@@ -500,7 +521,10 @@
                       name="inpItemTotalManual"
                       type="text"
                       [ngModel]="item.total_manual | currency : 'BRL'"
-                      (ngModelChange)="itemTotalManual($event, item)"
+                      (ngModelChange)="
+                        onChangeItemTotalManual($event, item);
+                        calculaTotal(item)
+                      "
                     />
                   </ng-template>
                   <ng-template pTemplate="output">
@@ -529,6 +553,11 @@
               </td>
             </tr>
           </ng-template>
+          <ng-template pTemplate="rowexpansion" let-item>
+            <tr>
+              <td colspan="4"><listaFiles></listaFiles></td>
+            </tr>
+          </ng-template>
           <ng-template pTemplate="footer">
             <tr>
               <td>
@@ -547,5 +576,92 @@
         </p-table>
       </div>
     </div>
+    <div class="row">
+      <div class="col-6">
+        <label for="inpCondicaoPagamento">Condição de Pagamento</label>
+        <p-dropdown
+          name="inpCondicaoPagamento"
+          [options]="condicaoPagamento$ | async"
+          [(ngModel)]="orcamento.cond_pag"
+        ></p-dropdown>
+      </div>
+      <div class="col-2">
+        <label for="inpFrete">Frete: </label
+        ><input
+          pInputText
+          class="p-inputtext"
+          name="inpFrete"
+          type="text"
+          [ngModel]="orcamento.frete | currency : 'BRL'"
+          (ngModelChange)="onChangeFrete($event); calculaTotais()"
+        />
+      </div>
+      <div class="col-2">
+        <label for="inpDesconto">Desconto: </label
+        ><input
+          pInputText
+          class="p-inputtext"
+          name="inpDesconto"
+          type="text"
+          [ngModel]="orcamento.desconto | currency : 'BRL'"
+          (ngModelChange)="onChangeDesconto($event); calculaTotais()"
+        />
+      </div>
+      <div class="col-2">
+        <label>Total: </label>
+        <span style="width: 100%; font-size: x-large">{{
+          orcamento.total | currency : "BRL"
+        }}</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <label for="inpEmbalagens">Embalagens: </label>
+        <p-dropdown
+          name="inpEmbalagens"
+          [options]="embalagensOptions"
+          [(ngModel)]="orcamento.embalagem"
+        ></p-dropdown>
+      </div>
+      <div class="col-6">
+        <label for="inpTransporte">Transporte: </label>
+        <p-dropdown
+          name="inpTransporte"
+          [options]="transporteOptions"
+          [(ngModel)]="orcamento.transporte"
+        ></p-dropdown>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <label for="">Observações: </label>
+        <textarea
+          pInputTextarea
+          class="p-inputtextarea"
+          name="inpObservacoes"
+          [(ngModel)]="orcamento.observacao"
+        ></textarea>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <p *ngFor="let obs of condicaoOrcamento$ | async">- {{ obs }}</p>
+      </div>
+    </div>
   </div>
 </form>
+<div class="noprint">
+  <button pButton class="p-button p-button-danger" (click)="confirm()">
+    Excluir
+  </button>
+  <button pButton class="p-button p-button-success" (click)="createOrUpdate()">
+    Salvar
+  </button>
+  <button pButton class="p-button" (click)="getBackOrcamentos()">Voltar</button>
+  <p-confirmDialog
+    header="Confirmação"
+    acceptLabel="Sim"
+    rejectLabel="Não"
+    icon="pi pi-exclamation-triangle"
+  ></p-confirmDialog>
+</div>

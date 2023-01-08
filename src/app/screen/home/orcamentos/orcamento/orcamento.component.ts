@@ -1,7 +1,7 @@
 import { ContatoService } from 'src/app/services/contato.service';
 import { PessoaService } from './../../../../services/pessoa.service';
 import { Component, OnInit } from '@angular/core';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs';
 import { Contato } from 'src/app/models/contato';
 import { Orcamento, OrcamentoItem } from 'src/app/models/orcamento';
@@ -11,7 +11,8 @@ import { Query } from 'src/app/models/query';
 import { Vendedor } from 'src/app/models/vendedor';
 import { ListaGenericaService } from 'src/app/services/lista-generica.service';
 import { ProdutoService } from 'src/app/services/produto.service';
-import { validador } from 'src/app/utils/validadores'
+import { validador } from 'src/app/utils/validadores';
+import { VendedorService } from 'src/app/services/vendedor.service';
 
 @Component({
   selector: 'app-orcamento',
@@ -19,7 +20,31 @@ import { validador } from 'src/app/utils/validadores'
   styleUrls: ['./orcamento.component.css'],
 })
 export class OrcamentoComponent implements OnInit {
-  orcamento: Orcamento = { status: 'Orçamento', orcamento_item: [], contato: {} };
+  orcamento: Orcamento = {
+    status: 'Orçamento',
+    orcamento_item: [
+      {
+        produto: {},
+        peso: 0,
+        total: 0,
+        total_hora: 0,
+        total_manual: 0,
+        total_peso: 0,
+        imposto: 0,
+        preco_hora: 0,
+        preco_quilo: 0,
+        tempo: '00:00:00',
+        quantidade: 0,
+        largura: 0,
+        altura: 0,
+      },
+    ],
+    contato: {},
+    frete: 0,
+    total: 0,
+    embalagem: 'Por conta do Fornecedor(nosso padrão)',
+    cond_pag: 'AVISTA',
+  };
 
   contatos: Contato[] = [];
 
@@ -44,18 +69,48 @@ export class OrcamentoComponent implements OnInit {
     .pipe(map((listaGenerica: any) => listaGenerica.lista_generica_items));
 
   contatoCategorias$ = this.listaGenericaService
-  .getByNameListaGenerica('categoriaContato')
-  .pipe(map((listaGenerica: any) => listaGenerica.lista_generica_items));
+    .getByNameListaGenerica('categoriaContato')
+    .pipe(map((listaGenerica: any) => listaGenerica.lista_generica_items));
+
+  condicaoPagamento$ = this.listaGenericaService
+    .getByNameListaGenerica('condicaoPagamento')
+    .pipe(
+      map((listaGenerica: any) =>
+        listaGenerica.lista_generica_items.map(
+          (item: { valor: string }) => item.valor
+        )
+      )
+    );
+
+  condicaoOrcamento$ = this.listaGenericaService
+    .getByNameListaGenerica('condicoesOrcamento')
+    .pipe(
+      map((listaGenerica: any) =>
+        listaGenerica.lista_generica_items.map(
+          (item: { valor: string }) => item.valor
+        )
+      )
+    );
+
+  embalagensOptions = [
+    'Por conta do Fornecedor(nosso padrão)',
+    'Por conta do Cliente',
+  ];
+
+  transporteOptions = [
+    'FOB - Por Conta do Cliente',
+    'CIF - Por Conta do Fornecedor',
+  ];
 
   constructor(
     private listaGenericaService: ListaGenericaService,
     private produtoService: ProdutoService,
     private pessoaService: PessoaService,
     private contatoService: ContatoService,
-    private messageService: MessageService
+    private vendedorService: VendedorService,
+    private messageService: MessageService,
+    private confirmationService: ConfirmationService
   ) {}
-
-
 
   ngOnInit() {}
 
@@ -68,22 +123,19 @@ export class OrcamentoComponent implements OnInit {
     };
 
     this.contatoService
-    .getContatos(query)
-    .pipe(
-      debounceTime(1000),
-      distinctUntilChanged(),
-    )
-    .subscribe({
-      next: (consulta) => (this.contatos = consulta.contatos),
-      error: (error) => {
-        console.log(error);
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Erro',
-          detail: error.message,
-        });
-      },
-    });
+      .getContatos(query)
+      .pipe(debounceTime(1000), distinctUntilChanged())
+      .subscribe({
+        next: (consulta) => (this.contatos = consulta.contatos),
+        error: (error) => {
+          console.log(error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: error.message,
+          });
+        },
+      });
   }
 
   searchPessoa(searchTerm: any) {
@@ -98,25 +150,44 @@ export class OrcamentoComponent implements OnInit {
     };
 
     this.pessoaService
-    .getPessoas(query)
-    .pipe(
-      debounceTime(1000),
-      distinctUntilChanged(),
-    )
-    .subscribe({
-      next: (consulta) => (this.pessoas = consulta.pessoas),
-      error: (error) => {
-        console.log(error);
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Erro',
-          detail: error.message,
-        });
-      },
-    });
+      .getPessoas(query)
+      .pipe(debounceTime(1000), distinctUntilChanged())
+      .subscribe({
+        next: (consulta) => (this.pessoas = consulta.pessoas),
+        error: (error) => {
+          console.log(error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: error.message,
+          });
+        },
+      });
   }
 
-  searchVendedor(searchTerm: string) {}
+  searchVendedor(searchTerm: any) {
+    let query: Query = {
+      page: 0,
+      pageCount: 10,
+      searchValue: searchTerm.query,
+      deleted: false,
+    };
+
+    this.vendedorService
+      .getVendedores(query)
+      .pipe(debounceTime(1000), distinctUntilChanged())
+      .subscribe({
+        next: (consulta) => (this.vendedores = consulta.vendedores),
+        error: (error) => {
+          console.log(error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: error.message,
+          });
+        },
+      });
+  }
 
   searchProduto(event: any) {
     let query: Query = {
@@ -167,20 +238,28 @@ export class OrcamentoComponent implements OnInit {
     this.orcamento.orcamento_item.splice(index, 1);
   }
 
-  itemImposto(event: any, item: OrcamentoItem) {
+  onChangeItemImposto(event: any, item: OrcamentoItem) {
     item.imposto = event.replace(/[^\d]/g, '') / 10000;
   }
 
-  itemPrecoQuilo(event: any, item: OrcamentoItem) {
+  onChangeItemPrecoQuilo(event: any, item: OrcamentoItem) {
     item.preco_quilo = event.replace(/[^\d]/g, '') / 100;
   }
 
-  itemTotalManual(event: any, item: OrcamentoItem) {
+  onChangeItemTotalManual(event: any, item: OrcamentoItem) {
     item.total_manual = event.replace(/[^\d]/g, '') / 100;
   }
 
-  itemPrecoHora(event: any, item: OrcamentoItem) {
+  onChangeItemPrecoHora(event: any, item: OrcamentoItem) {
     item.preco_hora = event.replace(/[^\d]/g, '') / 100;
+  }
+
+  onChangeFrete(event: any) {
+    this.orcamento.frete = event.replace(/[^\d]/g, '') / 100;
+  }
+
+  onChangeDesconto(event: any) {
+    this.orcamento.desconto = event.replace(/[^\d]/g, '') / 100;
   }
 
   calculaPeso(item: OrcamentoItem) {
@@ -205,48 +284,57 @@ export class OrcamentoComponent implements OnInit {
           break;
       }
 
-      if(item.produto.categoria !== 'Peça'){
+      if (item.produto.categoria !== 'Peça') {
         item.total_peso = (item.peso || 0) * (item.preco_quilo || 0);
       } else {
         item.total_peso = (item.quantidade || 0) * (item.preco_quilo || 0);
       }
 
-      if(item.material_incluido)
-      {item.custo = (item.peso||0) * ((item.produto.pedido_compra_items||[])[0]?.precoComIpi||0)}
+      if (item.material_incluido) {
+        item.custo =
+          (item.peso || 0) *
+          ((item.produto.pedido_compra_items || [])[0]?.precoComIpi || 0);
+      }
 
       this.calculaTotal(item);
     }
   }
 
   calculaHora(item: OrcamentoItem) {
+    let tempoArray: string[] = item.tempo?.split(':') || [];
 
-    let tempoArray: string[] = item.tempo?.split(':')||[]
-
-    if(tempoArray.length > 0){
+    if (tempoArray.length > 0) {
       let hora: number =
-      (Number(tempoArray[0])) +
-      (Number(tempoArray[1])/60) +
-      (Number(tempoArray[2])/3600);
+        Number(tempoArray[0]) +
+        Number(tempoArray[1]) / 60 +
+        Number(tempoArray[2]) / 3600;
 
-      item.total_hora = (hora||0) * (item.preco_hora||0) * (item.quantidade||0)
+      item.total_hora =
+        (hora || 0) * (item.preco_hora || 0) * (item.quantidade || 0);
     }
     this.calculaTotal(item);
   }
 
   calculaTotal(item: OrcamentoItem) {
-    if((item.total_manual||0)>0){
-      item.total = item.total_manual
-    }else{
-      item.total = ((item.total_peso||0) + (item.total_hora||0))*((item.imposto||0)+1)
+    if ((item.total_manual || 0) > 0) {
+      item.total = item.total_manual;
+    } else {
+      item.total =
+        ((item.total_peso || 0) + (item.total_hora || 0)) *
+        ((item.imposto || 0) + 1);
     }
     this.calculaTotais();
   }
 
-  calculaTotais(){
-    this.orcamento.total = 0
+  calculaTotais() {
+    this.orcamento.total = 0;
     this.orcamento.orcamento_item.forEach((item) => {
-      this.orcamento.total = (this.orcamento.total||0) + (item.total||0)
-    })
+      this.orcamento.total = (this.orcamento.total || 0) + (item.total || 0);
+    });
+    this.orcamento.total =
+      (this.orcamento.total || 0) +
+      (this.orcamento.frete || 0) -
+      (this.orcamento.desconto || 0);
   }
 
   validaEmail(email: string) {
@@ -256,4 +344,53 @@ export class OrcamentoComponent implements OnInit {
 
     return emailValidador.funcao(email);
   }
+
+  getBackOrcamentos(){
+
+  }
+
+  create(){
+
+  }
+
+  update(){
+
+  }
+
+  createOrUpdate() {
+
+  }
+
+  delete(){
+
+  }
+
+  confirm() {
+    this.confirmationService.confirm({
+      message: 'Tem certeza que deseja excluir este pedido de compra?',
+      accept: () => {
+        this.delete();
+      },
+    });
+  }
 }
+function trigger(arg0: string, arg1: any[]): any {
+  throw new Error('Function not implemented.');
+}
+
+function state(arg0: string, arg1: any): any {
+  throw new Error('Function not implemented.');
+}
+
+function style(arg0: { transform: string; opacity: number; }): any {
+  throw new Error('Function not implemented.');
+}
+
+function transition(arg0: string, arg1: any): any {
+  throw new Error('Function not implemented.');
+}
+
+function animate(arg0: string): any {
+  throw new Error('Function not implemented.');
+}
+

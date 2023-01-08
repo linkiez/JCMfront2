@@ -3,7 +3,6 @@ import { Component, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { debounceTime, distinctUntilChanged, map, Subscription } from 'rxjs';
-import { Fornecedor } from 'src/app/models/fornecedor';
 import { PedidoCompra, PedidoCompraItem } from 'src/app/models/pedido-compra';
 import { Pessoa } from 'src/app/models/pessoa';
 import { Produto } from 'src/app/models/produto';
@@ -11,7 +10,7 @@ import { Query } from 'src/app/models/query';
 import { ListaGenericaService } from 'src/app/services/lista-generica.service';
 import { PedidoCompraService } from 'src/app/services/pedidocompra.service';
 import { ProdutoService } from 'src/app/services/produto.service';
-import * as lodash from 'lodash';
+import * as lodash from 'lodash-es';
 import { FornecedorService } from 'src/app/services/fornecedor.service';
 
 @Component({

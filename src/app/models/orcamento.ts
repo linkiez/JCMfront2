@@ -19,6 +19,7 @@ export interface Orcamento {
   pc_cliente?: string;
   cond_pag?: string;
   frete?: number;
+  embalagem?: string;
   transporte?: string;
   desconto?: number;
   imposto?: number;
