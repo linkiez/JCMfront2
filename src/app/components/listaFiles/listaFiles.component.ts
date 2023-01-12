@@ -15,6 +15,8 @@ export class ListaFilesComponent implements OnInit {
 
   @Input() files: Array<Arquivo> = []
 
+  @Input() compact: boolean = false;
+
   @Output() onChangeFiles = new EventEmitter<Array<Arquivo>>();
 
   fileLoading: boolean = false;

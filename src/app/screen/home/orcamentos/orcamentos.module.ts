@@ -15,7 +15,6 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ListaFilesModule } from 'src/app/components/listaFiles/listaFiles.module';
 
 @NgModule({

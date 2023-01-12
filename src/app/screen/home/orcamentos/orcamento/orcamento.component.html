@@ -1,4 +1,5 @@
-<form #orcamentoForm="ngForm" action="">
+<form #orcamentoForm="ngForm" (ngSubmit)="
+createOrUpdate()">
   <h2>Proposta Comercial</h2>
   <caixaDeStatus
     [status]="orcamento.status"
@@ -254,13 +255,14 @@
     <div class="row">
       <div class="col">
         <p-table
-          [value]="orcamento.orcamento_item"
+          [value]="orcamento.orcamento_items"
           [scrollable]="true"
           dataKey="uuid"
+          formArrayName="orcamento_items"
         >
           <ng-template pTemplate="header">
             <tr>
-              <th style="width: 5rem" class="noprint"></th>
+              <th style="width: 5rem" class="noprint">Arquivos</th>
               <th>Item</th>
               <th pSortableColumn="produto.descricao" class="w-300">
                 Descrição <p-sortIcon field="produto.descricao"></p-sortIcon>
@@ -340,6 +342,7 @@
                       [style]="{ width: '100%' }"
                       [inputStyle]="{ width: '100%' }"
                       appendTo="body"
+                      [required]="true"
                     ></p-autoComplete>
                   </ng-template>
                   <ng-template pTemplate="output">
@@ -557,7 +560,7 @@
           </ng-template>
           <ng-template pTemplate="rowexpansion" let-item>
             <tr>
-              <td colspan="4"><listaFiles></listaFiles></td>
+              <td colspan="8"><listaFiles [files]="item.files" (onChangeFiles)="onChangeFiles($event, item)" [compact]="true"></listaFiles></td>
             </tr>
           </ng-template>
           <ng-template pTemplate="footer">
@@ -651,19 +654,20 @@
       </div>
     </div>
   </div>
+  <div class="noprint">
+    <button pButton class="p-button p-button-danger" (click)="confirm()" type="button">
+      Excluir
+    </button>
+    <button pButton class="p-button p-button-success" type="submit">
+      Salvar
+    </button>
+    <button pButton class="p-button" (click)="getBackOrcamentos()" type="button">Voltar</button>
+    <p-confirmDialog
+      header="Confirmação"
+      acceptLabel="Sim"
+      rejectLabel="Não"
+      icon="pi pi-exclamation-triangle"
+    ></p-confirmDialog>
+  </div>
 </form>
-<div class="noprint">
-  <button pButton class="p-button p-button-danger" (click)="confirm()">
-    Excluir
-  </button>
-  <button pButton class="p-button p-button-success" (click)="createOrUpdate()">
-    Salvar
-  </button>
-  <button pButton class="p-button" (click)="getBackOrcamentos()">Voltar</button>
-  <p-confirmDialog
-    header="Confirmação"
-    acceptLabel="Sim"
-    rejectLabel="Não"
-    icon="pi pi-exclamation-triangle"
-  ></p-confirmDialog>
-</div>
+

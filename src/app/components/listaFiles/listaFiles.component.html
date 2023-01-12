@@ -1,4 +1,4 @@
-<div>
+<div *ngIf="!compact">
   <p-table
   [value]="files"
   responsiveLayout="scroll"
@@ -56,5 +56,36 @@
     </tr>
   </ng-template>
 </p-table>
+</div>
+
+
+<div *ngIf="compact" class="d-flex">
+  <input
+          type="file"
+          class="file-input"
+          (change)="onFileSelected($event)"
+          #fileUpload
+        />
+  <button pButton class="p-button" (click)="fileUpload.click()">
+    <i *ngIf="!fileLoading" class="pi pi-paperclip"></i>
+    <p-progressSpinner
+      *ngIf="fileLoading"
+      [style]="{
+        width: '27px',
+        height: '27px',
+        margin: 'auto'
+      }"
+      styleClass="custom-spinner"
+      strokeWidth="8"
+      fill="var(--surface-ground)"
+      animationDuration="1s"
+    ></p-progressSpinner>
+  </button>
+  <div *ngFor="let file of files" class="ml-3">
+    <div class="d-flex justify-content-between align-items-center h-100">
+      <span class="link" (click)="goToUrl(file.id!)">{{ file.originalFilename }}</span>
+      <i class="pi pi-trash trash ml-3" (click)="removeArquivo(file.id!)"></i>
+    </div>
+  </div>
 </div>
 

@@ -1,8 +1,8 @@
-import { Arquivo } from "./arquivo";
-import { Contato } from "./contato";
-import { Pessoa } from "./pessoa";
-import { Produto } from "./produto";
-import { Vendedor } from "./vendedor";
+import { Arquivo } from './arquivo';
+import { Contato } from './contato';
+import { Pessoa } from './pessoa';
+import { Produto } from './produto';
+import { Vendedor } from './vendedor';
 
 export interface Orcamento {
   id?: number;
@@ -28,12 +28,11 @@ export interface Orcamento {
   deletedAt?: Date;
   updatedAt?: Date;
   createdAt?: Date;
-  orcamento_item: OrcamentoItem[]
+  orcamento_items: OrcamentoItem[];
   files?: Arquivo[];
-
 }
 
-export interface OrcamentoItem{
+export interface OrcamentoItem {
   uuid?: string;
   id?: number;
   id_orcamento?: number;
