@@ -28,7 +28,7 @@ createOrUpdate()">
           disabled
           name="inpData"
           type="text"
-          [(ngModel)]="orcamento.updatedAt"
+          value="{{ orcamento.updatedAt | date: 'dd/MM/yyyy HH:mm:ss' }}"
         />
       </div>
     </div>

@@ -475,7 +475,20 @@ export class OrcamentoComponent implements OnInit {
   }
 
   delete() {
-    this.getBackOrcamentos();
+    this.orcamentoService.deleteOrcamento(this.orcamento).subscribe({
+      error: (error) => {
+        console.log(error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: `${error.status} - ${error.statusText} - ${error.error}`,
+        });
+      },
+      complete: () => {
+        this.getBackOrcamentos();
+      }
+    })
+
   }
 
   confirm() {
