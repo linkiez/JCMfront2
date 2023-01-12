@@ -13,6 +13,7 @@ import { ListaGenericaService } from 'src/app/services/lista-generica.service';
 import { ProdutoService } from 'src/app/services/produto.service';
 import { validador } from 'src/app/utils/validadores';
 import { VendedorService } from 'src/app/services/vendedor.service';
+import { v4 as uuidv4 } from 'uuid';
 
 @Component({
   selector: 'app-orcamento',
@@ -24,6 +25,7 @@ export class OrcamentoComponent implements OnInit {
     status: 'Orçamento',
     orcamento_item: [
       {
+        uuid: uuidv4(),
         produto: {},
         peso: 0,
         total: 0,
@@ -218,6 +220,7 @@ export class OrcamentoComponent implements OnInit {
 
   newItem() {
     this.orcamento.orcamento_item.push({
+      uuid: uuidv4(),
       produto: {},
       peso: 0,
       total: 0,
@@ -374,23 +377,5 @@ export class OrcamentoComponent implements OnInit {
     });
   }
 }
-function trigger(arg0: string, arg1: any[]): any {
-  throw new Error('Function not implemented.');
-}
 
-function state(arg0: string, arg1: any): any {
-  throw new Error('Function not implemented.');
-}
-
-function style(arg0: { transform: string; opacity: number; }): any {
-  throw new Error('Function not implemented.');
-}
-
-function transition(arg0: string, arg1: any): any {
-  throw new Error('Function not implemented.');
-}
-
-function animate(arg0: string): any {
-  throw new Error('Function not implemented.');
-}
 

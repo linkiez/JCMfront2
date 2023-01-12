@@ -34,6 +34,7 @@ export interface Orcamento {
 }
 
 export interface OrcamentoItem{
+  uuid?: string;
   id?: number;
   id_orcamento?: number;
   descricao?: string;

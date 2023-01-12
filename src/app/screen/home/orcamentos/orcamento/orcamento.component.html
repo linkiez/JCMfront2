@@ -1,4 +1,4 @@
-<form action="">
+<form #orcamentoForm="ngForm" action="">
   <h2>Proposta Comercial</h2>
   <caixaDeStatus
     [status]="orcamento.status"
@@ -120,6 +120,8 @@
           [style]="{ width: '100%' }"
           [inputStyle]="{ width: '100%' }"
           appendTo="body"
+          email
+          #emailContato="ngModel"
         ></p-autoComplete>
         <small
           *ngIf="
@@ -254,7 +256,7 @@
         <p-table
           [value]="orcamento.orcamento_item"
           [scrollable]="true"
-          dataKey="uniqueId"
+          dataKey="uuid"
         >
           <ng-template pTemplate="header">
             <tr>
@@ -634,7 +636,7 @@
     </div>
     <div class="row">
       <div class="col">
-        <label for="">Observações: </label>
+        <label for="inpObservacoes">Observações: </label>
         <textarea
           pInputTextarea
           class="p-inputtextarea"
