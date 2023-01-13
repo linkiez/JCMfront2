@@ -54,6 +54,7 @@ export class OrcamentoComponent implements OnInit {
     desconto: 0,
     embalagem: 'Por conta do Fornecedor(nosso padrão)',
     cond_pag: 'AVISTA',
+    prazo_emdias: 0,
   };
 
   contatos: Contato[] = [];
@@ -279,6 +280,10 @@ export class OrcamentoComponent implements OnInit {
     this.orcamento.desconto = event.replace(/[^\d]/g, '') / 100;
   }
 
+  onChangeFiles(event: any, item: any) {
+    item.files = event;
+  }
+
   calculaPeso(item: OrcamentoItem) {
     if (item.produto) {
       switch (item.produto.categoria) {
@@ -467,11 +472,13 @@ export class OrcamentoComponent implements OnInit {
   }
 
   createOrUpdate() {
+    if(this.validacoes()) {
       if (this.orcamento.id == undefined) {
         this.create();
       } else {
         this.update();
       }
+    }
   }
 
   delete() {
@@ -500,7 +507,87 @@ export class OrcamentoComponent implements OnInit {
     });
   }
 
-  onChangeFiles(event: any, item: any) {
-    item.files = event;
+  validacoes() {
+    let valido = true;
+    if (this.orcamento.orcamento_items.length == 0) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erro',
+        detail: 'É necessário ter pelo menos um item no orçamento.',
+      });
+      valido = false;
+    }
+
+    if (this.orcamento.prazo_emdias == 0 || this.orcamento.prazo_emdias == undefined) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erro',
+        detail: 'O prazo não pode ser 0.',
+      });
+      valido = false;
+    }
+
+    if (this.orcamento.prazo_emdias! < 0) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erro',
+        detail: 'O prazo não pode ser negativo.',
+      });
+      valido = false;
+    }
+    if (this.orcamento.pessoa?.nome == undefined && this.orcamento.contato?.valor == undefined) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erro',
+        detail: 'É necessário ter um cliente ou um contato.',
+      });
+      valido = false;
+    }
+
+    if (this.orcamento.vendedor?.id == undefined) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erro',
+        detail: 'É necessário ter um vendedor.',
+      });
+      valido = false;
+    }
+    this.orcamento.orcamento_items.forEach((item, index) => {
+      if (item.quantidade == 0) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: `A quantidade não pode ser 0. Item: ${index + 1}`,
+        });
+        valido = false;
+      }
+      if (item.preco_quilo == 0 && item.preco_hora == 0) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: `O valor não pode ser 0. Item: ${index + 1}`,
+        });
+        valido = false;
+      }
+      if (item.processo?.length == 0 || item.processo == undefined) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: `É necessário ter pelo menos um processo. Item: ${index + 1}`,
+        });
+        valido = false;
+      }
+      if (item.produto == undefined) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: `É necessário selecionar um produto. Item: ${index + 1}`,
+        });
+        valido = false;
+      }
+    });
+    return valido
   }
+
+
 }

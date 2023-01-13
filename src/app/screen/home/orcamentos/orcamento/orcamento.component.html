@@ -1,5 +1,4 @@
-<form #orcamentoForm="ngForm" (ngSubmit)="
-createOrUpdate()">
+<form #orcamentoForm="ngForm" (ngSubmit)="createOrUpdate()">
   <h2>Proposta Comercial</h2>
   <caixaDeStatus
     [status]="orcamento.status"
@@ -15,7 +14,8 @@ createOrUpdate()">
           pInputText
           class="p-inputtext"
           disabled
-          name="inpId"
+          name="id"
+          id="id"
           type="text"
           [(ngModel)]="orcamento.id"
         />
@@ -26,9 +26,10 @@ createOrUpdate()">
           pInputText
           class="p-inputtext"
           disabled
-          name="inpData"
+          name="updatedAt"
+          id="updatedAt"
           type="text"
-          value="{{ orcamento.updatedAt | date: 'dd/MM/yyyy HH:mm:ss' }}"
+          value="{{ orcamento.updatedAt | date : 'dd/MM/yyyy HH:mm:ss' }}"
         />
       </div>
     </div>
@@ -37,9 +38,10 @@ createOrUpdate()">
     </div>
     <div class="row">
       <div class="col">
-        <label for="inpContatoNome">Nome</label>
+        <label for="ContatoNome">Nome</label>
         <p-autoComplete
-          name="inpContatoNome"
+          name="ContatoNome"
+          id="ContatoNome"
           [(ngModel)]="orcamento.contato"
           field="nome"
           [suggestions]="contatos"
@@ -77,6 +79,7 @@ createOrUpdate()">
         <label for="inpContatoTipo">Tipo</label>
         <p-dropdown
           [name]="'InpContatoTipo'"
+          id="InpContatoTipo"
           [options]="contatoCategorias$ | async"
           [(ngModel)]="orcamento.contato!.tipo"
           [style]="{ width: '100%' }"
@@ -93,6 +96,7 @@ createOrUpdate()">
             orcamento.contato!.tipo === 'WhatsApp'
           "
           name="inpContatoTelefone"
+          id="inpContatoTelefone"
           [(ngModel)]="orcamento.contato"
           field="valor"
           [suggestions]="contatos"
@@ -114,6 +118,7 @@ createOrUpdate()">
         <p-autoComplete
           *ngIf="orcamento.contato!.tipo === 'Email'"
           name="inpContatoEmail"
+          id="inpContatoEmail"
           [(ngModel)]="orcamento.contato"
           field="valor"
           [suggestions]="contatos"
@@ -121,8 +126,6 @@ createOrUpdate()">
           [style]="{ width: '100%' }"
           [inputStyle]="{ width: '100%' }"
           appendTo="body"
-          email
-          #emailContato="ngModel"
         ></p-autoComplete>
         <small
           *ngIf="
@@ -139,6 +142,7 @@ createOrUpdate()">
             orcamento.contato!.tipo !== 'WhatsApp'
           "
           name="inpContatoValor"
+          id="inpContatoValor"
           [(ngModel)]="orcamento.contato"
           field="valor"
           [suggestions]="contatos"
@@ -157,6 +161,7 @@ createOrUpdate()">
         <label for="inpPessoaNome">Nome</label>
         <p-autoComplete
           name="inpPessoaNome"
+          id="inpPessoaNome"
           [(ngModel)]="orcamento.pessoa"
           field="nome"
           [suggestions]="pessoas"
@@ -219,6 +224,7 @@ createOrUpdate()">
         <label for="">Vendedor</label>
         <p-autoComplete
           name="inpVendedorNome"
+          id="inpVendedorNome"
           [(ngModel)]="orcamento.vendedor"
           field="pessoa.nome"
           [suggestions]="vendedores"
@@ -235,6 +241,7 @@ createOrUpdate()">
           pInputText
           class="p-inputtext"
           name="inpPedidoCompraCliente"
+          id="inpPedidoCompraCliente"
           type="text"
           [(ngModel)]="orcamento.pc_cliente"
         />
@@ -247,6 +254,7 @@ createOrUpdate()">
           pInputText
           class="p-inputtext"
           name="inpPrazoEmDias"
+          id="inpPrazoEmDias"
           type="number"
           [(ngModel)]="orcamento.prazo_emdias"
         />
@@ -259,6 +267,8 @@ createOrUpdate()">
           [scrollable]="true"
           dataKey="uuid"
           formArrayName="orcamento_items"
+          name="tblOrcamentoItems"
+          id="tblOrcamentoItems"
         >
           <ng-template pTemplate="header">
             <tr>
@@ -299,6 +309,8 @@ createOrUpdate()">
               <td class="noprint">
                 <button
                   type="button"
+                  name="btnArquivos"
+                  id="btnArquivos"
                   pButton
                   pRipple
                   [pRowToggler]="item"
@@ -316,6 +328,7 @@ createOrUpdate()">
                       pInputText
                       class="p-inputtext"
                       name="inpItemDescricao"
+                      id="inpItemDescricao"
                       type="text"
                       [(ngModel)]="item.descricao"
                     />
@@ -332,6 +345,7 @@ createOrUpdate()">
                       pInputText
                       class="p-autocomplete w-100"
                       name="inpProdutos"
+                      id="inpProdutos"
                       type="text"
                       [(ngModel)]="item.produto"
                       (ngModelChange)="calculaPeso(item)"
@@ -353,6 +367,8 @@ createOrUpdate()">
               <td class="text-center">
                 <p-checkbox
                   name="chkMaterialIncluso"
+                  id="chkMaterialIncluso"
+                  [tabindex]="0"
                   [(ngModel)]="item.material_incluido"
                   [binary]="true"
                   (ngModelChange)="calculaPeso(item)"
@@ -365,6 +381,7 @@ createOrUpdate()">
                       pInputText
                       class="p-inputtext"
                       name="inpItemRir"
+                      id="inpItemRir"
                       type="text"
                       [(ngModel)]="item.rir"
                     />
@@ -379,6 +396,7 @@ createOrUpdate()">
                   <ng-template pTemplate="input">
                     <p-multiSelect
                       name="itemProcesso"
+                      id="itemProcesso"
                       [options]="processos$ | async"
                       [(ngModel)]="item.processo"
                       appendTo="body"
@@ -398,6 +416,7 @@ createOrUpdate()">
                       pInputText
                       class="p-inputtext"
                       name="inpItemlargura"
+                      id="inpItemlargura"
                       type="number"
                       [(ngModel)]="item.largura"
                       (input)="calculaPeso(item)"
@@ -415,6 +434,7 @@ createOrUpdate()">
                       pInputText
                       class="p-inputtext"
                       name="inpItemAltura"
+                      id="inpItemAltura"
                       type="number"
                       [(ngModel)]="item.altura"
                       (input)="calculaPeso(item)"
@@ -432,6 +452,7 @@ createOrUpdate()">
                       pInputText
                       class="p-inputtext"
                       name="inpItemQuantidade"
+                      id="inpItemQuantidade"
                       type="number"
                       [(ngModel)]="item.quantidade"
                       (input)="calculaHora(item); calculaPeso(item)"
@@ -449,6 +470,7 @@ createOrUpdate()">
                       pInputText
                       class="p-inputtext"
                       name="inpItemImposto"
+                      id="inpItemImposto"
                       type="text"
                       [ngModel]="item.imposto | percent : '1.2-2' : 'PT-BR'"
                       (ngModelChange)="onChangeItemImposto($event, item)"
@@ -467,6 +489,7 @@ createOrUpdate()">
                       pInputText
                       class="p-inputtext"
                       name="inpItemPrecoQuilo"
+                      id="inpItemPrecoQuilo"
                       type="text"
                       [ngModel]="item.preco_quilo | currency : 'BRL'"
                       (ngModelChange)="onChangeItemPrecoQuilo($event, item)"
@@ -485,6 +508,7 @@ createOrUpdate()">
                       pInputText
                       class="p-inputtext"
                       name="inpItemTempo"
+                      id="inpItemTempo"
                       type="time"
                       [(ngModel)]="item.tempo"
                       (input)="calculaHora(item)"
@@ -503,6 +527,7 @@ createOrUpdate()">
                       pInputText
                       class="p-inputtext"
                       name="inpItemPrecoHora"
+                      id="inpItemPrecoHora"
                       type="text"
                       [ngModel]="item.preco_hora | currency : 'BRL'"
                       (ngModelChange)="onChangeItemPrecoHora($event, item)"
@@ -524,6 +549,7 @@ createOrUpdate()">
                       pInputText
                       class="p-inputtext"
                       name="inpItemTotalManual"
+                      id="inpItemTotalManual"
                       type="text"
                       [ngModel]="item.total_manual | currency : 'BRL'"
                       (ngModelChange)="
@@ -554,20 +580,32 @@ createOrUpdate()">
               </td>
 
               <td class="noprint">
-                <i class="pi pi-trash trash" (click)="removeItem(index)"></i>
+                <i
+                  class="pi pi-trash trash"
+                  (click)="removeItem(index)"
+                  name="btnRemove"
+                  id="btnRemove"
+                ></i>
               </td>
             </tr>
           </ng-template>
           <ng-template pTemplate="rowexpansion" let-item>
             <tr>
-              <td colspan="8"><listaFiles [files]="item.files" (onChangeFiles)="onChangeFiles($event, item)" [compact]="true"></listaFiles></td>
+              <td colspan="8">
+                <listaFiles
+                  [files]="item.files"
+                  (onChangeFiles)="onChangeFiles($event, item)"
+                  [compact]="true"
+                ></listaFiles>
+              </td>
             </tr>
           </ng-template>
           <ng-template pTemplate="footer">
             <tr>
               <td>
                 <button
-                  name="btNewItem"
+                  name="btnNewItem"
+                  id="btnNewItem"
                   pButton
                   class="button"
                   (click)="newItem()"
@@ -586,6 +624,7 @@ createOrUpdate()">
         <label for="inpCondicaoPagamento">Condição de Pagamento</label>
         <p-dropdown
           name="inpCondicaoPagamento"
+          id="inpCondicaoPagamento"
           [options]="condicaoPagamento$ | async"
           [(ngModel)]="orcamento.cond_pag"
         ></p-dropdown>
@@ -596,6 +635,7 @@ createOrUpdate()">
           pInputText
           class="p-inputtext"
           name="inpFrete"
+          id="inpFrete"
           type="text"
           [ngModel]="orcamento.frete | currency : 'BRL'"
           (ngModelChange)="onChangeFrete($event); calculaTotais()"
@@ -607,6 +647,7 @@ createOrUpdate()">
           pInputText
           class="p-inputtext"
           name="inpDesconto"
+          id="inpDesconto"
           type="text"
           [ngModel]="orcamento.desconto | currency : 'BRL'"
           (ngModelChange)="onChangeDesconto($event); calculaTotais()"
@@ -624,6 +665,7 @@ createOrUpdate()">
         <label for="inpEmbalagens">Embalagens: </label>
         <p-dropdown
           name="inpEmbalagens"
+          id="inpEmbalagens"
           [options]="embalagensOptions"
           [(ngModel)]="orcamento.embalagem"
         ></p-dropdown>
@@ -632,6 +674,7 @@ createOrUpdate()">
         <label for="inpTransporte">Transporte: </label>
         <p-dropdown
           name="inpTransporte"
+          id="inpTransporte"
           [options]="transporteOptions"
           [(ngModel)]="orcamento.transporte"
         ></p-dropdown>
@@ -644,6 +687,7 @@ createOrUpdate()">
           pInputTextarea
           class="p-inputtextarea"
           name="inpObservacoes"
+          id="inpObservacoes"
           [(ngModel)]="orcamento.observacao"
         ></textarea>
       </div>
@@ -655,13 +699,35 @@ createOrUpdate()">
     </div>
   </div>
   <div class="noprint">
-    <button pButton class="p-button p-button-danger" (click)="confirm()" type="button">
+    <button
+      pButton
+      class="p-button p-button-danger"
+      (click)="confirm()"
+      type="button"
+      name="btnExcluir"
+      id="btnExcluir"
+    >
       Excluir
     </button>
-    <button pButton class="p-button p-button-success" type="submit">
+    <button
+      pButton
+      class="p-button p-button-success"
+      type="submit"
+      name="btnSalvar"
+      id="btnSalvar"
+    >
       Salvar
     </button>
-    <button pButton class="p-button" (click)="getBackOrcamentos()" type="button">Voltar</button>
+    <button
+      pButton
+      class="p-button"
+      (click)="getBackOrcamentos()"
+      type="button"
+      name="btnVoltar"
+      id="btnVoltar"
+    >
+      Voltar
+    </button>
     <p-confirmDialog
       header="Confirmação"
       acceptLabel="Sim"
@@ -670,4 +736,3 @@ createOrUpdate()">
     ></p-confirmDialog>
   </div>
 </form>
-
