@@ -3,7 +3,7 @@ import { ContatoService } from 'src/app/services/contato.service';
 import { PessoaService } from './../../../../services/pessoa.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { debounceTime, distinctUntilChanged, map } from 'rxjs';
+import { debounceTime, distinctUntilChanged, firstValueFrom, map } from 'rxjs';
 import { Contato } from 'src/app/models/contato';
 import { Orcamento, OrcamentoItem } from 'src/app/models/orcamento';
 import { Pessoa } from 'src/app/models/pessoa';
@@ -25,7 +25,9 @@ import { NgForm } from '@angular/forms';
   styleUrls: ['./orcamento.component.css'],
 })
 export class OrcamentoComponent implements OnInit {
-  @ViewChild('orcamentoForm', { static: false }) orcamentoForm: NgForm | undefined;
+  @ViewChild('orcamentoForm', { static: false }) orcamentoForm:
+    | NgForm
+    | undefined;
 
   orcamento: Orcamento = {
     status: 'Orçamento',
@@ -375,13 +377,14 @@ export class OrcamentoComponent implements OnInit {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     if (id != 0) {
       this.orcamentoService.getOrcamento(id).subscribe({
-        next: (orcamento: Orcamento) => {
-          orcamento.orcamento_items = orcamento.orcamento_items.map((item) => {
+        next: (response: Orcamento) => {
+          if (response.contato === null) response.contato = {};
+          if (response.pessoa === null) response.pessoa = {};
+          if (response.vendedor === null) response.vendedor = {};
+          response.orcamento_items.forEach((item: OrcamentoItem) => {
             item.uuid = uuidv4();
-            item.processo = (<string>item.processo).split(' ')
-            return item;
           });
-          this.orcamento = orcamento;
+          this.orcamento = response;
         },
         error: (error) => {
           console.log(error);
@@ -398,21 +401,18 @@ export class OrcamentoComponent implements OnInit {
 
   create(clonar?: boolean) {
     let orcamentoSubmit: Orcamento = this.orcamento;
-    orcamentoSubmit.orcamento_items = orcamentoSubmit.orcamento_items.map((item: OrcamentoItem) => {
-      if (item.processo)
-      item.processo = (<string[]>item.processo).join(' ')
-      return item
-    })
+
     this.orcamentoService
       .addOrcamento(orcamentoSubmit)
       .pipe(debounceTime(1000))
       .subscribe({
         next: (response) => {
-          response.orcamento_items = response.orcamento_items.map((item: OrcamentoItem) => {
-            if (item.processo)
-            item.processo = (<string>item.processo).split(' ')
-            return item
-          })
+          if (response.contato === null) response.contato = {};
+          if (response.pessoa === null) response.pessoa = {};
+          if (response.vendedor === null) response.vendedor = {};
+          response.orcamento_items.forEach((item: OrcamentoItem) => {
+            item.uuid = uuidv4();
+          });
           this.orcamento = response;
         },
         error: (error) => {
@@ -427,7 +427,7 @@ export class OrcamentoComponent implements OnInit {
           this.messageService.add({
             severity: 'success',
             summary: 'Sucesso',
-            detail: `O orçamento foi ${clonar?'clonado':'criado'}.`,
+            detail: `O orçamento foi ${clonar ? 'clonado' : 'criado'}.`,
           });
           this.router.navigate([`/home/orcamentos/${this.orcamento.id}`]);
         },
@@ -436,21 +436,18 @@ export class OrcamentoComponent implements OnInit {
 
   update() {
     let orcamentoSubmit: Orcamento = this.orcamento;
-    orcamentoSubmit.orcamento_items = orcamentoSubmit.orcamento_items.map((item: OrcamentoItem) => {
-      if (item.processo)
-      item.processo = (<string[]>item.processo).join(' ')
-      return item
-    })
+
     this.orcamentoService
       .updateOrcamento(orcamentoSubmit)
       .pipe(debounceTime(1000))
       .subscribe({
         next: (response) => {
-          response.orcamento_items = response.orcamento_items.map((item: OrcamentoItem) => {
-            if (item.processo)
-            item.processo = (<string>item.processo).split(' ')
-            return item
-          })
+          if (response.contato === null) response.contato = {};
+          if (response.pessoa === null) response.pessoa = {};
+          if (response.vendedor === null) response.vendedor = {};
+          response.orcamento_items.forEach((item: OrcamentoItem) => {
+            item.uuid = uuidv4();
+          });
           this.orcamento = response;
         },
         error: (error) => {
@@ -472,7 +469,7 @@ export class OrcamentoComponent implements OnInit {
   }
 
   createOrUpdate() {
-    if(this.validacoes()) {
+    if (this.validacoes()) {
       if (this.orcamento.id == undefined) {
         this.create();
       } else {
@@ -493,9 +490,8 @@ export class OrcamentoComponent implements OnInit {
       },
       complete: () => {
         this.getBackOrcamentos();
-      }
-    })
-
+      },
+    });
   }
 
   confirm() {
@@ -509,6 +505,42 @@ export class OrcamentoComponent implements OnInit {
 
   validacoes() {
     let valido = true;
+    const id = Number(this.route.snapshot.paramMap.get('id'));
+
+    if (
+      id == 0 &&
+      firstValueFrom(
+        this.orcamentoService.getOrcamento(this.orcamento.id || 0)
+      ) != null
+    ) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erro',
+        detail: 'Já existe um orçamento com este número.',
+      });
+      valido = false;
+    }
+    if(!Number.isFinite(this.orcamento.id)){
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erro',
+        detail: 'O número do orçamento não é um numero.',
+      });
+      valido = false;
+    }
+    if (
+      this.orcamento.contato?.valor &&
+      this.orcamento.contato?.valor.length > 0 &&
+      (!this.orcamento.contato.nome || this.orcamento.contato.nome?.length == 0)
+    ) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erro',
+        detail: 'O nome do contato é obrigatório.',
+      });
+      valido = false;
+    }
+
     if (this.orcamento.orcamento_items.length == 0) {
       this.messageService.add({
         severity: 'error',
@@ -518,7 +550,10 @@ export class OrcamentoComponent implements OnInit {
       valido = false;
     }
 
-    if (this.orcamento.prazo_emdias == 0 || this.orcamento.prazo_emdias == undefined) {
+    if (
+      this.orcamento.prazo_emdias == 0 ||
+      this.orcamento.prazo_emdias == undefined
+    ) {
       this.messageService.add({
         severity: 'error',
         summary: 'Erro',
@@ -535,7 +570,10 @@ export class OrcamentoComponent implements OnInit {
       });
       valido = false;
     }
-    if (this.orcamento.pessoa?.nome == undefined && this.orcamento.contato?.valor == undefined) {
+    if (
+      this.orcamento.pessoa?.nome == undefined &&
+      this.orcamento.contato?.valor == undefined
+    ) {
       this.messageService.add({
         severity: 'error',
         summary: 'Erro',
@@ -586,16 +624,18 @@ export class OrcamentoComponent implements OnInit {
         valido = false;
       }
     });
-    return valido
+    return valido;
   }
 
-  clonar(){
-    this.orcamento.id = undefined
-    this.orcamento.orcamento_items = this.orcamento.orcamento_items.map((item: OrcamentoItem) => {
-      item.id = undefined
-      return item
-    })
-
-    this.create(true)
+  clonar() {
+    this.orcamento.id = undefined;
+    this.orcamento.orcamento_items = this.orcamento.orcamento_items.map(
+      (item: OrcamentoItem) => {
+        item.id = undefined;
+        return item;
+      }
+    );
+    console.log(this.orcamento);
+    this.create(true);
   }
 }

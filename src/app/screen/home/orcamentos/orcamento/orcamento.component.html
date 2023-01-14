@@ -13,10 +13,10 @@
         <input
           pInputText
           class="p-inputtext"
-          disabled
           name="id"
           id="id"
-          type="text"
+          type="number"
+          [disabled]="orcamento.id != undefined"
           [(ngModel)]="orcamento.id"
         />
       </div>
@@ -608,6 +608,7 @@
                   id="btnNewItem"
                   pButton
                   class="button"
+                  type="button"
                   (click)="newItem()"
                   class="noprint"
                 >
