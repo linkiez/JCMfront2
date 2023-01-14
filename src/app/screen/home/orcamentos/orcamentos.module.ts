@@ -16,6 +16,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { ListaFilesModule } from 'src/app/components/listaFiles/listaFiles.module';
+import { PaginatorModule } from 'primeng/paginator';
 
 @NgModule({
   declarations: [OrcamentosComponent, OrcamentoComponent],
@@ -32,6 +33,7 @@ import { ListaFilesModule } from 'src/app/components/listaFiles/listaFiles.modul
     MultiSelectModule,
     ConfirmDialogModule,
     ListaFilesModule,
+    PaginatorModule,
   ],
   providers: [ConfirmationService],
 })

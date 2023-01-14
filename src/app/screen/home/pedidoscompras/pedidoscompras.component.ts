@@ -92,7 +92,7 @@ export class PedidosComprasComponent implements OnInit, OnDestroy {
 
   confirm(id: number) {
     this.confirmationService.confirm({
-      message: 'Deseja restaurar esse produto?',
+      message: 'Deseja restaurar esse pedido de compra?',
       accept: () => {
         this.pedidoCompraService.restorePedidoCompra(id).subscribe({
           error: (error: any) => {

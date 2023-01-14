@@ -396,7 +396,7 @@ export class OrcamentoComponent implements OnInit {
     }
   }
 
-  create() {
+  create(clonar?: boolean) {
     let orcamentoSubmit: Orcamento = this.orcamento;
     orcamentoSubmit.orcamento_items = orcamentoSubmit.orcamento_items.map((item: OrcamentoItem) => {
       if (item.processo)
@@ -427,7 +427,7 @@ export class OrcamentoComponent implements OnInit {
           this.messageService.add({
             severity: 'success',
             summary: 'Sucesso',
-            detail: 'O orçamento foi criado.',
+            detail: `O orçamento foi ${clonar?'clonado':'criado'}.`,
           });
           this.router.navigate([`/home/orcamentos/${this.orcamento.id}`]);
         },
@@ -589,5 +589,13 @@ export class OrcamentoComponent implements OnInit {
     return valido
   }
 
+  clonar(){
+    this.orcamento.id = undefined
+    this.orcamento.orcamento_items = this.orcamento.orcamento_items.map((item: OrcamentoItem) => {
+      item.id = undefined
+      return item
+    })
 
+    this.create(true)
+  }
 }

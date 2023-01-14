@@ -699,6 +699,7 @@
     </div>
   </div>
   <div class="noprint">
+    <hr>
     <button
       pButton
       class="p-button p-button-danger"
@@ -727,6 +728,30 @@
       id="btnVoltar"
     >
       Voltar
+    </button>
+    <button
+      pButton
+      class="p-button p-button-secondary"
+      type="button"
+      name="btnImprimir"
+      id="btnImprimir"
+    >
+      <a
+        href="javascript:window.print()"
+      >
+        Imprimir
+      </a>
+    </button>
+
+    <button
+    pButton
+    class="p-button p-button-secondary"
+    type="button"
+    name="btnClonar"
+    id="btnClonar"
+    (click)="clonar()"
+    >
+      Clonar
     </button>
     <p-confirmDialog
       header="Confirmação"
