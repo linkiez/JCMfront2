@@ -62,4 +62,11 @@ export class OrcamentoService {
       { responseType: 'json' }
     );
   }
+
+  aprovarOrcamento(id: number): Observable<Object>{
+    return this.http.post(
+      environment.backendURL + 'orcamento/'+id+'/aprovar/',
+      { responseType: 'json' }
+    );
+  }
 }

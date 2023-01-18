@@ -16,7 +16,7 @@
           name="id"
           id="id"
           type="number"
-          [disabled]="orcamento.id != undefined"
+          [disabled]="orcamento.id != undefined && id != 0"
           [(ngModel)]="orcamento.id"
         />
       </div>
@@ -42,8 +42,9 @@
         <p-autoComplete
           name="ContatoNome"
           id="ContatoNome"
-          [(ngModel)]="orcamento.contato"
-          field="nome"
+          [(ngModel)]="orcamento.contato!.nome"
+          [contentEditable]="true"
+          (onSelect)="selectContato($event)"
           [suggestions]="contatos"
           (completeMethod)="searchContato($event)"
           [style]="{ width: '100%' }"
@@ -89,44 +90,32 @@
         ></p-dropdown>
       </div>
       <div class="col">
-        <label for="inpContatoTipo">Contato</label>
-        <p-autoComplete
+        <label for="">Contato</label>
+        <input
           *ngIf="
             orcamento.contato!.tipo === 'Telefone' ||
             orcamento.contato!.tipo === 'WhatsApp'
           "
           name="inpContatoTelefone"
           id="inpContatoTelefone"
-          [(ngModel)]="orcamento.contato"
-          field="valor"
-          [suggestions]="contatos"
-          (completeMethod)="searchContato($event)"
-          [style]="{ width: '100%' }"
-          [inputStyle]="{ width: '100%' }"
-          appendTo="body"
-          ><ng-template let-contatoOption pTemplate="item">
-            <div>
-              {{ contatoOption.valor | telefone }}
-            </div>
-          </ng-template>
-          <ng-template let-contatoSelected pTemplate="selectedItem">
-            <div>
-              {{ contatoSelected.valor | telefone }}
-            </div>
-          </ng-template>
-        </p-autoComplete>
-        <p-autoComplete
-          *ngIf="orcamento.contato!.tipo === 'Email'"
+          pInputText
+          class="p-inputtext"
+          type="text"
+          [ngModel]="orcamento.contato?.valor | telefone"
+          (ngModelChange)="onChangeWhatsapp($event)"
+        />
+        <input
+          *ngIf="
+            orcamento.contato!.tipo !== 'Telefone' &&
+            orcamento.contato!.tipo !== 'WhatsApp'
+          "
           name="inpContatoEmail"
           id="inpContatoEmail"
-          [(ngModel)]="orcamento.contato"
-          field="valor"
-          [suggestions]="contatos"
-          (completeMethod)="searchContato($event)"
-          [style]="{ width: '100%' }"
-          [inputStyle]="{ width: '100%' }"
-          appendTo="body"
-        ></p-autoComplete>
+          pInputText
+          class="p-inputtext"
+          type="text"
+          [(ngModel)]="orcamento.contato!.valor"
+        />
         <small
           *ngIf="
             orcamento.contato!.tipo === 'Email' &&
@@ -135,22 +124,6 @@
           class="p-error block"
           >Email invalido.</small
         >
-        <p-autoComplete
-          *ngIf="
-            orcamento.contato!.tipo !== 'Email' &&
-            orcamento.contato!.tipo !== 'Telefone' &&
-            orcamento.contato!.tipo !== 'WhatsApp'
-          "
-          name="inpContatoValor"
-          id="inpContatoValor"
-          [(ngModel)]="orcamento.contato"
-          field="valor"
-          [suggestions]="contatos"
-          (completeMethod)="searchContato($event)"
-          [style]="{ width: '100%' }"
-          [inputStyle]="{ width: '100%' }"
-          appendTo="body"
-        ></p-autoComplete>
       </div>
     </div>
     <div class="row">
@@ -185,9 +158,17 @@
       </div>
     </div>
     <div class="row">
-      <div class="col">
+      <div class="col-8">
         <label for="">Endereço</label>
         <p>{{ orcamento.pessoa?.endereco || "-" }}</p>
+      </div>
+      <div class="col-1">
+        <label for="">Numero</label>
+        <p>{{ orcamento.pessoa?.numero || "-" }}</p>
+      </div>
+      <div class="col-3">
+        <label for="">Bairro</label>
+        <p>{{ orcamento.pessoa?.bairro || "-" }}</p>
       </div>
     </div>
     <div class="row">
@@ -700,7 +681,7 @@
     </div>
   </div>
   <div class="noprint">
-    <hr>
+    <hr />
     <button
       pButton
       class="p-button p-button-danger"
@@ -722,6 +703,35 @@
     </button>
     <button
       pButton
+      class="p-button p-button-success"
+      type="button"
+      name="btnAprovar"
+      id="btnAprovar"
+      (click)="aprovar()"
+    >
+      Aprovar
+    </button>
+    <button
+      pButton
+      class="p-button"
+      type="button"
+      name="btnImprimir"
+      id="btnImprimir"
+    >
+      <a href="javascript:window.print()"> Imprimir </a>
+    </button>
+    <button
+      pButton
+      class="p-button"
+      type="button"
+      name="btnClonar"
+      id="btnClonar"
+      (click)="clonar()"
+    >
+      Clonar
+    </button>
+    <button
+      pButton
       class="p-button"
       (click)="getBackOrcamentos()"
       type="button"
@@ -729,30 +739,6 @@
       id="btnVoltar"
     >
       Voltar
-    </button>
-    <button
-      pButton
-      class="p-button p-button-secondary"
-      type="button"
-      name="btnImprimir"
-      id="btnImprimir"
-    >
-      <a
-        href="javascript:window.print()"
-      >
-        Imprimir
-      </a>
-    </button>
-
-    <button
-    pButton
-    class="p-button p-button-secondary"
-    type="button"
-    name="btnClonar"
-    id="btnClonar"
-    (click)="clonar()"
-    >
-      Clonar
     </button>
     <p-confirmDialog
       header="Confirmação"

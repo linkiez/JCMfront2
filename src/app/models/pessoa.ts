@@ -1,3 +1,4 @@
+import { Empresa } from './empresa';
 import { Arquivo } from "./arquivo";
 import { Contato } from "./contato";
 import { Fornecedor } from "./fornecedor";
@@ -14,6 +15,9 @@ export interface Pessoa {
   email?: string;
   email_nfe?: string;
   endereco?: string;
+  numero?: number;
+  complemento?: string;
+  bairro?: string;
   municipio?: string;
   uf?: string;
   cep?: number;
@@ -30,4 +34,5 @@ export interface Pessoa {
   operador?: Operador
   usuario?: Usuario
   vendedor?: Vendedor
+  empresa?: Empresa
 }

@@ -75,6 +75,7 @@ export class PessoaComponent implements OnInit {
               pessoa.fornecedor.data_venc = new Date(
                 pessoa.fornecedor.data_venc.toString()
               );
+              console.log(pessoa);
             this.pessoa = pessoa;
           },
           error: (error) => {
@@ -228,6 +229,10 @@ export class PessoaComponent implements OnInit {
     this.pessoa.operador = {};
   }
 
+  newEmpresa() {
+    this.pessoa.empresa = {};
+  }
+
   newVendedor() {
     this.pessoa.vendedor = {};
   }
@@ -292,11 +297,9 @@ export class PessoaComponent implements OnInit {
               );
               this.pessoa.endereco = `${
                 consultaPJ.estabelecimento.tipo_logradouro
-              } ${consultaPJ.estabelecimento.logradouro}, ${
-                consultaPJ.estabelecimento.numero
-              }, ${consultaPJ.estabelecimento.complemento || ''}, ${
-                consultaPJ.estabelecimento.bairro
-              }`;
+              } ${consultaPJ.estabelecimento.logradouro}, ${consultaPJ.estabelecimento.complemento || ''}`;
+              this.pessoa.numero = consultaPJ.estabelecimento.numero;
+              this.pessoa.bairro = consultaPJ.estabelecimento.bairro;
               this.pessoa.cep = Number(consultaPJ.estabelecimento.cep);
               this.pessoa.telefone = Number(
                 consultaPJ.estabelecimento.ddd1 +

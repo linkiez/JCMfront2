@@ -47,6 +47,9 @@
           >"{{ pessoaOld.razao_social }}"</small
         >
       </div>
+      <div class="input col-10" *ngIf="!pessoa.pessoa_juridica">
+
+      </div>
       <div class="input col-4">
         <label for="InpCnpjCpf">
           <span *ngIf="pessoa.pessoa_juridica">CNPJ</span
@@ -142,7 +145,7 @@
           >Email invalido.</small
         >
       </div>
-      <div class="input col-3">
+      <div class="input col-2">
         <label for="InpCEP">CEP</label>
         <input
           name="InpCEP"
@@ -155,7 +158,7 @@
         />
         <small *ngIf="pessoaOld.cep">"{{ pessoaOld.cep }}"</small>
       </div>
-      <div class="input col-9">
+      <div class="input col-4">
         <label for="InpEndereco">Endereço</label>
         <input
           name="InpEndereco"
@@ -165,6 +168,34 @@
           [(ngModel)]="pessoa.endereco"
         />
         <small *ngIf="pessoaOld.endereco">"{{ pessoaOld.endereco }}"</small>
+      </div>
+      <div class="input col-1">
+        <label for="InpNumero">Numero</label>
+        <input
+          name="InpNumero"
+          id="InpNumero"
+          class="p-inputtext"
+          type="text"
+          pInputText
+          [(ngModel)]="pessoa.numero">
+      </div>
+      <div class="input col-2">
+        <label for="InpComplemento">Complemento</label>
+        <input
+          name="InpComplemento"
+          class="p-inputtext"
+          type="text"
+          pInputText
+          [(ngModel)]="pessoa.complemento">
+      </div>
+      <div class="input col-3">
+        <label for="InpBairro">Bairro</label>
+        <input
+          name="InpBairro"
+          class="p-inputtext"
+          type="text"
+          pInputText
+          [(ngModel)]="pessoa.bairro">
       </div>
       <div class="input col-4">
         <label for="InpMunicipio">Cidade</label>
@@ -471,6 +502,68 @@
                 }}"
                 disabled
               />
+            </div>
+          </div></form
+      ></ng-template>
+    </p-accordionTab>
+    <p-accordionTab header="Empresa">
+      <ng-template pTemplate="header"
+        >&nbsp;<button
+          pButton
+          class="p-button"
+          (click)="newEmpresa()"
+          *ngIf="!pessoa.empresa"
+        >
+          <i class="pi pi-plus"></i></button
+      ></ng-template>
+      <ng-template pTemplate="content"
+        ><form action="" class="d-flex flex-wrap" *ngIf="pessoa.empresa">
+          <div class="row">
+            <div class="input col-3">
+              <label for="InpIdEmpresa">Id</label>
+              <input
+                name="InpIdEmpresa"
+                class="p-inputtext"
+                type="text"
+                pInputText
+                disabled
+                [(ngModel)]="pessoa.empresa.id"
+              />
+            </div>
+            <div class="input col-3">
+              <label for="InpCreatedAtEmpresa">Criado em</label>
+              <input
+                name="InpCreatedAtEmpresa"
+                class="p-inputtext"
+                type="text"
+                pInputText
+                value="{{
+                  pessoa.empresa.createdAt | date: 'dd/MM/yyyy HH:mm:ss'
+                }}"
+                disabled
+              />
+            </div>
+            <div class="input col-3">
+              <label for="InpUpdatedAtEmpresa">Atualizado em</label>
+              <input
+                name="InpUpdatedAtEmpresa"
+                class="p-inputtext"
+                type="text"
+                pInputText
+                value="{{
+                  pessoa.empresa.updatedAt | date: 'dd/MM/yyyy HH:mm:ss'
+                }}"
+                disabled
+              />
+            </div>
+            <div class="input col-3">
+              <label for="">Token TinyERP</label>
+              <input
+                name="InpTokenTinyERP"
+                class="p-inputtext"
+                type="text"
+                pInputText
+                [(ngModel)]="pessoa.empresa.token_tiny">
             </div>
           </div></form
       ></ng-template>

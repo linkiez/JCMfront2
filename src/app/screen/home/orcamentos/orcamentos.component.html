@@ -37,6 +37,7 @@
       <th>Status</th>
       <th>Código</th>
       <th>Venda</th>
+      <th>Contato</th>
       <th>Cliente</th>
       <th>Vendedor</th>
       <th>Emissão</th>
@@ -48,8 +49,9 @@
       <td><caixaDeStatus [status]="orcamento.status"></caixaDeStatus></td>
       <td>{{ orcamento.id }}</td>
       <td>{{ orcamento.venda }}</td>
-      <td>{{ orcamento.pessoa.nome}}</td>
-      <td>{{ orcamento.vendedor.pessoa.nome}}</td>
+      <td>{{orcamento.contato?.nome}}</td>
+      <td>{{ orcamento.pessoa?.nome}}</td>
+      <td>{{ orcamento.vendedor?.pessoa.nome}}</td>
       <td>{{ orcamento.createdAt | date: "dd/MM/yyyy" }}</td>
       <td>{{ orcamento.total | currency : 'BRL'  }}</td>
     </tr>

@@ -50,7 +50,7 @@ export class OrcamentoComponent implements OnInit {
         files: [],
       },
     ],
-    contato: {},
+    contato: { nome: '', valor: '' },
     frete: 0,
     total: 0,
     desconto: 0,
@@ -115,6 +115,8 @@ export class OrcamentoComponent implements OnInit {
     'CIF - Por Conta do Fornecedor',
   ];
 
+  id: number = 0;
+
   constructor(
     private listaGenericaService: ListaGenericaService,
     private produtoService: ProdutoService,
@@ -129,6 +131,7 @@ export class OrcamentoComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.id = Number(this.route.snapshot.paramMap.get('id'));
     this.getOrcamento();
   }
 
@@ -284,6 +287,14 @@ export class OrcamentoComponent implements OnInit {
 
   onChangeFiles(event: any, item: any) {
     item.files = event;
+  }
+
+  onChangeWhatsapp(event: any) {
+    this.orcamento.contato!.valor = event.replace(/[^\d]/g, '');
+  }
+
+  selectContato($event: any) {
+    this.orcamento.contato = $event;
   }
 
   calculaPeso(item: OrcamentoItem) {
@@ -468,9 +479,9 @@ export class OrcamentoComponent implements OnInit {
       });
   }
 
-  createOrUpdate() {
-    if (this.validacoes()) {
-      if (this.orcamento.id == undefined) {
+  async createOrUpdate() {
+    if (await this.validacoes()) {
+      if (this.id === 0) {
         this.create();
       } else {
         this.update();
@@ -503,16 +514,13 @@ export class OrcamentoComponent implements OnInit {
     });
   }
 
-  validacoes() {
+  async validacoes() {
     let valido = true;
-    const id = Number(this.route.snapshot.paramMap.get('id'));
+    let idExistente = await firstValueFrom(
+      this.orcamentoService.getOrcamento(this.orcamento.id || 0)
+    );
 
-    if (
-      id == 0 &&
-      firstValueFrom(
-        this.orcamentoService.getOrcamento(this.orcamento.id || 0)
-      ) != null
-    ) {
+    if (this.id == 0 && idExistente != null && this.orcamento.id) {
       this.messageService.add({
         severity: 'error',
         summary: 'Erro',
@@ -520,7 +528,7 @@ export class OrcamentoComponent implements OnInit {
       });
       valido = false;
     }
-    if(!Number.isFinite(this.orcamento.id)){
+    if (!Number.isFinite(Number(this.orcamento.id)) && this.orcamento.id) {
       this.messageService.add({
         severity: 'error',
         summary: 'Erro',
@@ -627,15 +635,32 @@ export class OrcamentoComponent implements OnInit {
     return valido;
   }
 
-  clonar() {
-    this.orcamento.id = undefined;
-    this.orcamento.orcamento_items = this.orcamento.orcamento_items.map(
-      (item: OrcamentoItem) => {
-        item.id = undefined;
-        return item;
-      }
-    );
-    console.log(this.orcamento);
-    this.create(true);
+  async clonar() {
+    if ((await this.validacoes()) && this.orcamento.id != undefined) {
+      this.orcamento.id = undefined;
+      this.orcamento.orcamento_items = this.orcamento.orcamento_items.map(
+        (item: OrcamentoItem) => {
+          item.id = undefined;
+          return item;
+        }
+      );
+      this.create(true);
+    }
+  }
+
+  async aprovar() {
+    if (!this.orcamento.pessoa?.cnpj_cpf) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erro',
+        detail: 'É necessário que a pessoa tenha CPF/CNPJ cadastrado.',
+      });
+    } else {
+      this.orcamentoService
+        .aprovarOrcamento(this.orcamento.id!)
+        .subscribe((response) => {
+          console.log(response);
+        });
+    }
   }
 }

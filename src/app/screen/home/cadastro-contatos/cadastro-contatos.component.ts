@@ -8,21 +8,18 @@ import { Query } from 'src/app/models/query';
 @Component({
   selector: 'app-cadastro-contatos',
   templateUrl: './cadastro-contatos.component.html',
-  styleUrls: ['./cadastro-contatos.component.scss']
+  styleUrls: ['./cadastro-contatos.component.scss'],
 })
 export class CadastroContatosComponent implements OnInit {
-
   @ViewChild('dt') dt: Table | undefined;
 
-
-
-  contatos: Array<Contato> = []
+  contatos: Array<Contato> = [];
 
   first = 0;
 
   rows = 10;
 
-  constructor(private contatoService: ContatoService, private router: Router) { }
+  constructor(private contatoService: ContatoService, private router: Router) {}
 
   ngOnInit(): void {
     this.getContatos();
@@ -36,13 +33,16 @@ export class CadastroContatosComponent implements OnInit {
       deleted: false,
     };
 
-    this.contatoService
-      .getContatos(query)
-      .subscribe((contatos) => (this.contatos = contatos), (error) => console.log(error));
+    this.contatoService.getContatos(query).subscribe({
+      next: (response) => {
+        this.contatos = response.contatos;
+      },
+      error: (error) => console.log(error),
+    });
   }
 
-  new(){
-    this.router.navigate(['/home/contatos/0'])
+  new() {
+    this.router.navigate(['/home/contatos/0']);
   }
 
   next() {
@@ -73,5 +73,5 @@ export class CadastroContatosComponent implements OnInit {
 
   clear(table: Table) {
     table.clear();
-}
+  }
 }
