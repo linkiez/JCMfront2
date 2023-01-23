@@ -1,3 +1,4 @@
+import { EmpresaService } from './../../../../services/empresa.service';
 import { Arquivo } from 'src/app/models/arquivo';
 import { ContatoService } from 'src/app/services/contato.service';
 import { PessoaService } from './../../../../services/pessoa.service';
@@ -18,6 +19,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { OrcamentoService } from 'src/app/services/orcamento.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
+import { query } from '@angular/animations';
 
 @Component({
   selector: 'app-orcamento',
@@ -57,6 +59,8 @@ export class OrcamentoComponent implements OnInit {
     embalagem: 'Por conta do Fornecedor(nosso padrão)',
     cond_pag: 'AVISTA',
     prazo_emdias: 0,
+    empresa: {},
+    vendastinies: [],
   };
 
   contatos: Contato[] = [];
@@ -105,6 +109,20 @@ export class OrcamentoComponent implements OnInit {
       )
     );
 
+  contatoEmpresas$ = this.empresaService
+    .getEmpresas({ page: 0, pageCount: 10, searchValue: '', deleted: false })
+    .pipe(map((empresas: any) => empresas.empresas));
+
+    aprovacaoOrcamento$ = this.listaGenericaService
+    .getByNameListaGenerica('aprovadoOrcamento')
+    .pipe(
+      map((listaGenerica: any) =>
+        listaGenerica.lista_generica_items.map(
+          (item: { valor: string }) => item.valor
+        )
+      )
+    );
+
   embalagensOptions = [
     'Por conta do Fornecedor(nosso padrão)',
     'Por conta do Cliente',
@@ -117,12 +135,17 @@ export class OrcamentoComponent implements OnInit {
 
   id: number = 0;
 
+  displayAprovacao: boolean = false;
+
+  aprovacao: string = '';
+
   constructor(
     private listaGenericaService: ListaGenericaService,
     private produtoService: ProdutoService,
     private pessoaService: PessoaService,
     private contatoService: ContatoService,
     private orcamentoService: OrcamentoService,
+    private empresaService: EmpresaService,
     private vendedorService: VendedorService,
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
@@ -392,6 +415,7 @@ export class OrcamentoComponent implements OnInit {
           if (response.contato === null) response.contato = {};
           if (response.pessoa === null) response.pessoa = {};
           if (response.vendedor === null) response.vendedor = {};
+          if (response.empresa === null) response.empresa = {};
           response.orcamento_items.forEach((item: OrcamentoItem) => {
             item.uuid = uuidv4();
           });
@@ -412,6 +436,7 @@ export class OrcamentoComponent implements OnInit {
 
   create(clonar?: boolean) {
     let orcamentoSubmit: Orcamento = this.orcamento;
+    orcamentoSubmit.status = "Orçamento"
 
     this.orcamentoService
       .addOrcamento(orcamentoSubmit)
@@ -421,6 +446,7 @@ export class OrcamentoComponent implements OnInit {
           if (response.contato === null) response.contato = {};
           if (response.pessoa === null) response.pessoa = {};
           if (response.vendedor === null) response.vendedor = {};
+          if (response.empresa === null) response.empresa = {};
           response.orcamento_items.forEach((item: OrcamentoItem) => {
             item.uuid = uuidv4();
           });
@@ -447,7 +473,7 @@ export class OrcamentoComponent implements OnInit {
 
   update() {
     let orcamentoSubmit: Orcamento = this.orcamento;
-
+    console.log(orcamentoSubmit);
     this.orcamentoService
       .updateOrcamento(orcamentoSubmit)
       .pipe(debounceTime(1000))
@@ -456,6 +482,7 @@ export class OrcamentoComponent implements OnInit {
           if (response.contato === null) response.contato = {};
           if (response.pessoa === null) response.pessoa = {};
           if (response.vendedor === null) response.vendedor = {};
+          if (response.empresa === null) response.empresa = {};
           response.orcamento_items.forEach((item: OrcamentoItem) => {
             item.uuid = uuidv4();
           });
@@ -657,7 +684,7 @@ export class OrcamentoComponent implements OnInit {
       });
     } else {
       this.orcamentoService
-        .aprovarOrcamento(this.orcamento.id!)
+        .aprovarOrcamento(this.orcamento.id!, this.aprovacao)
         .subscribe((response) => {
           console.log(response);
         });

@@ -17,6 +17,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { ListaFilesModule } from 'src/app/components/listaFiles/listaFiles.module';
 import { PaginatorModule } from 'primeng/paginator';
+import {DialogModule} from 'primeng/dialog';
 
 @NgModule({
   declarations: [OrcamentosComponent, OrcamentoComponent],
@@ -34,6 +35,7 @@ import { PaginatorModule } from 'primeng/paginator';
     ConfirmDialogModule,
     ListaFilesModule,
     PaginatorModule,
+    DialogModule
   ],
   providers: [ConfirmationService],
 })

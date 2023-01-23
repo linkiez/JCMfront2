@@ -6,26 +6,27 @@ import { environment } from 'src/environments/environment';
 import { Orcamento } from '../models/orcamento';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class OrcamentoService {
-
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getOrcamentos(query: Query): Observable<any> {
-    let chaves = Object.keys(query)
-      let valores = Object.values(query);
-      let queryString = '?';
+    let chaves = Object.keys(query);
+    let valores = Object.values(query);
+    let queryString = '?';
 
-      for(let i=0;i<chaves.length;i++){
-        if(i>0) queryString += '&'
-        queryString += chaves[i]+'='+valores[i]
+    for (let i = 0; i < chaves.length; i++) {
+      if (i > 0) queryString += '&';
+      queryString += chaves[i] + '=' + valores[i];
+    }
+
+    return this.http.get<Orcamento[]>(
+      environment.backendURL + 'orcamento' + queryString,
+      {
+        responseType: 'json',
       }
-
-
-    return this.http.get<Orcamento[]>(environment.backendURL + 'orcamento' + queryString, {
-      responseType: 'json',
-    });
+    );
   }
 
   getOrcamento(id: number): Observable<Orcamento> {
@@ -56,16 +57,16 @@ export class OrcamentoService {
     );
   }
 
-  restoreOrcamento(id: number): Observable<Object>{
-    return this.http.post(
-      environment.backendURL + 'orcamento/restore/' + id,
-      { responseType: 'json' }
-    );
+  restoreOrcamento(id: number): Observable<Object> {
+    return this.http.post(environment.backendURL + 'orcamento/restore/' + id, {
+      responseType: 'json',
+    });
   }
 
-  aprovarOrcamento(id: number): Observable<Object>{
+  aprovarOrcamento(id: number, aprovacao: string): Observable<Object> {
     return this.http.post(
-      environment.backendURL + 'orcamento/'+id+'/aprovar/',
+      environment.backendURL + 'orcamento/' + id + '/aprovar/',
+      { aprovacao: aprovacao },
       { responseType: 'json' }
     );
   }

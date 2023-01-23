@@ -33,6 +33,12 @@
         />
       </div>
     </div>
+    <div class="row noprint" *ngIf="orcamento.vendastinies!.length > 0">
+      <div class="col" *ngFor="let venda of orcamento.vendastinies">
+        <span>Venda: {{venda.id}} </span>
+        <span>Aprovação: {{venda.aprovacao}}</span>
+      </div>
+    </div>
     <div class="row">
       <div><h4>Contato</h4></div>
     </div>
@@ -50,6 +56,7 @@
           [style]="{ width: '100%' }"
           [inputStyle]="{ width: '100%' }"
           appendTo="body"
+          [disabled]="orcamento.status !== 'Orçamento'"
           ><ng-template let-contatoOption pTemplate="item">
             <div>
               <span>{{ contatoOption.nome }} - </span>
@@ -87,6 +94,7 @@
           appendTo="body"
           optionLabel="valor"
           optionValue="valor"
+          [disabled]="orcamento.status !== 'Orçamento'"
         ></p-dropdown>
       </div>
       <div class="col">
@@ -103,6 +111,7 @@
           type="text"
           [ngModel]="orcamento.contato?.valor | telefone"
           (ngModelChange)="onChangeWhatsapp($event)"
+          [disabled]="orcamento.status !== 'Orçamento'"
         />
         <input
           *ngIf="
@@ -115,6 +124,7 @@
           class="p-inputtext"
           type="text"
           [(ngModel)]="orcamento.contato!.valor"
+          [disabled]="orcamento.status !== 'Orçamento'"
         />
         <small
           *ngIf="
@@ -142,6 +152,7 @@
           [style]="{ width: '100%' }"
           [inputStyle]="{ width: '100%' }"
           appendTo="body"
+          [disabled]="orcamento.status !== 'Orçamento'"
         ></p-autoComplete>
       </div>
       <div class="col-3">
@@ -214,6 +225,7 @@
           [inputStyle]="{ width: '100%' }"
           appendTo="body"
           [dropdown]="true"
+          [disabled]="orcamento.status !== 'Orçamento'"
         ></p-autoComplete>
       </div>
       <div class="col">
@@ -225,6 +237,7 @@
           id="inpPedidoCompraCliente"
           type="text"
           [(ngModel)]="orcamento.pc_cliente"
+          [disabled]="orcamento.status !== 'Orçamento'"
         />
       </div>
       <div class="col">
@@ -238,6 +251,7 @@
           id="inpPrazoEmDias"
           type="number"
           [(ngModel)]="orcamento.prazo_emdias"
+          [disabled]="orcamento.status !== 'Orçamento'"
         />
       </div>
     </div>
@@ -312,6 +326,7 @@
                       id="inpItemDescricao"
                       type="text"
                       [(ngModel)]="item.descricao"
+                      [disabled]="orcamento.status !== 'Orçamento'"
                     />
                   </ng-template>
                   <ng-template pTemplate="output">
@@ -338,6 +353,7 @@
                       [inputStyle]="{ width: '100%' }"
                       appendTo="body"
                       [required]="true"
+                      [disabled]="orcamento.status !== 'Orçamento'"
                     ></p-autoComplete>
                   </ng-template>
                   <ng-template pTemplate="output">
@@ -351,6 +367,7 @@
                   id="chkMaterialIncluso"
                   [tabindex]="0"
                   [(ngModel)]="item.material_incluido"
+                  [disabled]="orcamento.status !== 'Orçamento'"
                   [binary]="true"
                   (ngModelChange)="calculaPeso(item)"
                 ></p-checkbox>
@@ -365,6 +382,7 @@
                       id="inpItemRir"
                       type="text"
                       [(ngModel)]="item.rir"
+                      [disabled]="orcamento.status !== 'Orçamento'"
                     />
                   </ng-template>
                   <ng-template pTemplate="output">
@@ -381,6 +399,7 @@
                       [options]="processos$ | async"
                       [(ngModel)]="item.processo"
                       appendTo="body"
+                      [disabled]="orcamento.status !== 'Orçamento'"
                     ></p-multiSelect>
                   </ng-template>
                   <ng-template pTemplate="output">
@@ -400,6 +419,7 @@
                       id="inpItemlargura"
                       type="number"
                       [(ngModel)]="item.largura"
+                      [disabled]="orcamento.status !== 'Orçamento'"
                       (input)="calculaPeso(item)"
                     />
                   </ng-template>
@@ -418,6 +438,7 @@
                       id="inpItemAltura"
                       type="number"
                       [(ngModel)]="item.altura"
+                      [disabled]="orcamento.status !== 'Orçamento'"
                       (input)="calculaPeso(item)"
                     />
                   </ng-template>
@@ -436,6 +457,7 @@
                       id="inpItemQuantidade"
                       type="number"
                       [(ngModel)]="item.quantidade"
+                      [disabled]="orcamento.status !== 'Orçamento'"
                       (input)="calculaHora(item); calculaPeso(item)"
                     />
                   </ng-template>
@@ -455,6 +477,7 @@
                       type="text"
                       [ngModel]="item.imposto | percent : '1.2-2' : 'PT-BR'"
                       (ngModelChange)="onChangeItemImposto($event, item)"
+                      [disabled]="orcamento.status !== 'Orçamento'"
                       (input)="calculaTotal(item)"
                     />
                   </ng-template>
@@ -474,6 +497,7 @@
                       type="text"
                       [ngModel]="item.preco_quilo | currency : 'BRL'"
                       (ngModelChange)="onChangeItemPrecoQuilo($event, item)"
+                      [disabled]="orcamento.status !== 'Orçamento'"
                       (input)="calculaPeso(item)"
                     />
                   </ng-template>
@@ -494,6 +518,7 @@
                       [(ngModel)]="item.tempo"
                       (input)="calculaHora(item)"
                       step="1"
+                      [disabled]="orcamento.status !== 'Orçamento'"
                     />
                   </ng-template>
                   <ng-template pTemplate="output">
@@ -513,6 +538,7 @@
                       [ngModel]="item.preco_hora | currency : 'BRL'"
                       (ngModelChange)="onChangeItemPrecoHora($event, item)"
                       (input)="calculaHora(item)"
+                      [disabled]="orcamento.status !== 'Orçamento'"
                     />
                   </ng-template>
                   <ng-template pTemplate="output">
@@ -537,6 +563,7 @@
                         onChangeItemTotalManual($event, item);
                         calculaTotal(item)
                       "
+                      [disabled]="orcamento.status !== 'Orçamento'"
                     />
                   </ng-template>
                   <ng-template pTemplate="output">
@@ -561,12 +588,18 @@
               </td>
 
               <td class="noprint">
-                <i
-                  class="pi pi-trash trash"
-                  (click)="removeItem(index)"
+                <button
+                [disabled]="orcamento.status !== 'Orçamento'"
+                (click)="removeItem(index)"
                   name="btnRemove"
                   id="btnRemove"
-                ></i>
+                >
+                <i
+                class="pi pi-trash trash"
+
+              ></i>
+                </button>
+
               </td>
             </tr>
           </ng-template>
@@ -592,6 +625,7 @@
                   type="button"
                   (click)="newItem()"
                   class="noprint"
+                  [disabled]="orcamento.status !== 'Orçamento'"
                 >
                   <i class="pi pi-plus"></i>
                 </button>
@@ -609,6 +643,7 @@
           id="inpCondicaoPagamento"
           [options]="condicaoPagamento$ | async"
           [(ngModel)]="orcamento.cond_pag"
+          [disabled]="orcamento.status !== 'Orçamento'"
         ></p-dropdown>
       </div>
       <div class="col-2">
@@ -621,6 +656,7 @@
           type="text"
           [ngModel]="orcamento.frete | currency : 'BRL'"
           (ngModelChange)="onChangeFrete($event); calculaTotais()"
+          [disabled]="orcamento.status !== 'Orçamento'"
         />
       </div>
       <div class="col-2">
@@ -633,6 +669,7 @@
           type="text"
           [ngModel]="orcamento.desconto | currency : 'BRL'"
           (ngModelChange)="onChangeDesconto($event); calculaTotais()"
+          [disabled]="orcamento.status !== 'Orçamento'"
         />
       </div>
       <div class="col-2">
@@ -650,6 +687,7 @@
           id="inpEmbalagens"
           [options]="embalagensOptions"
           [(ngModel)]="orcamento.embalagem"
+          [disabled]="orcamento.status !== 'Orçamento'"
         ></p-dropdown>
       </div>
       <div class="col-6">
@@ -659,6 +697,7 @@
           id="inpTransporte"
           [options]="transporteOptions"
           [(ngModel)]="orcamento.transporte"
+          [disabled]="orcamento.status !== 'Orçamento'"
         ></p-dropdown>
       </div>
     </div>
@@ -666,11 +705,12 @@
       <div class="col">
         <label for="inpObservacoes">Observações: </label>
         <textarea
-          pInputTextarea
+          pInputTextArea
           class="p-inputtextarea"
           name="inpObservacoes"
           id="inpObservacoes"
           [(ngModel)]="orcamento.observacao"
+          [disabled]="orcamento.status !== 'Orçamento'"
         ></textarea>
       </div>
     </div>
@@ -698,6 +738,7 @@
       type="submit"
       name="btnSalvar"
       id="btnSalvar"
+      [disabled]="orcamento.status !== 'Orçamento'"
     >
       Salvar
     </button>
@@ -707,7 +748,7 @@
       type="button"
       name="btnAprovar"
       id="btnAprovar"
-      (click)="aprovar()"
+      (click)="displayAprovacao=true"
     >
       Aprovar
     </button>
@@ -747,4 +788,28 @@
       icon="pi pi-exclamation-triangle"
     ></p-confirmDialog>
   </div>
+  <p-dialog [(visible)]="displayAprovacao">
+    <ng-template pTemplate="header">
+        Como o orçamento foi aprovado?
+    </ng-template>
+    <p-dropdown
+    [options]="aprovacaoOrcamento$ | async"
+    [(ngModel)]="aprovacao"
+    appendTo="body"
+    [style]="{'width':'100%'}"
+    ></p-dropdown>
+    <ng-template pTemplate="footer">
+
+      <button
+      pButton
+      class="p-button p-button-success"
+      type="button"
+      name="btnAprovar"
+      id="btnAprovar"
+      (click)="aprovar()"
+    >
+      Aprovar
+    </button>
+    </ng-template>
+</p-dialog>
 </form>

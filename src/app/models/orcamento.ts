@@ -1,7 +1,9 @@
 import { Arquivo } from './arquivo';
 import { Contato } from './contato';
+import { Empresa } from './empresa';
 import { Pessoa } from './pessoa';
 import { Produto } from './produto';
+import { VendaTiny } from './vendatiny';
 import { Vendedor } from './vendedor';
 
 export interface Orcamento {
@@ -30,6 +32,8 @@ export interface Orcamento {
   createdAt?: Date;
   orcamento_items: OrcamentoItem[];
   files?: Arquivo[];
+  empresa: Empresa
+  vendastinies?: VendaTiny[];
 }
 
 export interface OrcamentoItem {

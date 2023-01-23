@@ -48,12 +48,12 @@
     <tr (click)="clickDeleted(orcamento.id)">
       <td><caixaDeStatus [status]="orcamento.status"></caixaDeStatus></td>
       <td>{{ orcamento.id }}</td>
-      <td>{{ orcamento.venda }}</td>
-      <td>{{orcamento.contato?.nome}}</td>
-      <td>{{ orcamento.pessoa?.nome}}</td>
-      <td>{{ orcamento.vendedor?.pessoa.nome}}</td>
+      <td>{{ orcamento.venda||'' }}</td>
+      <td>{{orcamento.contato?.nome||''}}</td>
+      <td>{{ orcamento.pessoa?.nome||''}}</td>
+      <td>{{ orcamento.vendedor?.pessoa.nome||''}}</td>
       <td>{{ orcamento.createdAt | date: "dd/MM/yyyy" }}</td>
-      <td>{{ orcamento.total | currency : 'BRL'  }}</td>
+      <td>{{ orcamento.total||'' | currency : 'BRL'  }}</td>
     </tr>
   </ng-template>
 </p-table>
