@@ -23,7 +23,7 @@
     </div>
     <div class="row">
       <div class="col">
-        <label for="id">Numero</label>
+        <label for="id">Numero: </label>
         <input
           pInputText
           class="p-inputtext"
@@ -35,7 +35,7 @@
         />
       </div>
       <div class="col">
-        <label for="updatedAt">Data</label>
+        <label for="updatedAt">Data: </label>
         <input
           pInputText
           class="p-inputtext"
@@ -171,57 +171,57 @@
       </div>
       <div class="col-3">
         <label for="">{{
-          orcamento.pessoa?.pessoa_juridica ? "CNPJ" : "CPF"
+          orcamento.pessoa?.pessoa_juridica ? "CNPJ: " : "CPF: "
         }}</label>
-        <p>{{ (orcamento.pessoa?.cnpj_cpf | cpfCnpj) || "-" }}</p>
+        <span>{{ (orcamento.pessoa?.cnpj_cpf | cpfCnpj) || "-" }}</span>
       </div>
       <div class="col-3">
         <label for="">{{
-          orcamento.pessoa?.pessoa_juridica ? "IE" : "RG"
+          orcamento.pessoa?.pessoa_juridica ? "IE: " : "RG: "
         }}</label>
-        <p>{{ (orcamento.pessoa?.ie_rg | ieRg) || "-" }}</p>
+        <span>{{ (orcamento.pessoa?.ie_rg | ieRg) || "-" }}</span>
       </div>
     </div>
     <div class="row">
-      <div class="col-8">
-        <label for="">Endereço</label>
-        <p>{{ orcamento.pessoa?.endereco || "-" }}</p>
+      <div class="col-7">
+        <label for="">Endereço: </label>
+        <span>{{ orcamento.pessoa?.endereco || "-" }}</span>
       </div>
-      <div class="col-1">
-        <label for="">Numero</label>
-        <p>{{ orcamento.pessoa?.numero || "-" }}</p>
+      <div class="col-2">
+        <label for="">Numero: </label>
+        <span>{{ orcamento.pessoa?.numero || "-" }}</span>
       </div>
       <div class="col-3">
-        <label for="">Bairro</label>
-        <p>{{ orcamento.pessoa?.bairro || "-" }}</p>
+        <label for="">Bairro: </label>
+        <span>{{ orcamento.pessoa?.bairro || "-" }}</span>
       </div>
     </div>
     <div class="row">
       <div class="col">
-        <label for="">Cidade</label>
-        <p>{{ orcamento.pessoa?.municipio || "-" }}</p>
+        <label for="">Cidade: </label>
+        <span>{{ orcamento.pessoa?.municipio || "-" }}</span>
       </div>
       <div class="col">
-        <label for="">UF</label>
-        <p>{{ orcamento.pessoa?.uf || "-" }}</p>
+        <label for="">UF: </label>
+        <span>{{ orcamento.pessoa?.uf || "-" }}</span>
       </div>
       <div class="col">
-        <label for="">CEP</label>
-        <p>{{ (orcamento.pessoa?.cep | cep) || "-" }}</p>
+        <label for="">CEP: </label>
+        <span>{{ (orcamento.pessoa?.cep | cep) || "-" }}</span>
       </div>
     </div>
     <div class="row">
       <div class="col">
-        <label for="">Telefone</label>
-        <p>{{ (orcamento.pessoa?.telefone | telefone) || "-" }}</p>
+        <label for="">Telefone: </label>
+        <span>{{ (orcamento.pessoa?.telefone | telefone) || "-" }}</span>
       </div>
       <div class="col">
-        <label for="">Email</label>
-        <p>{{ orcamento.pessoa?.email || "-" }}</p>
+        <label for="">Email: </label>
+        <span>{{ orcamento.pessoa?.email || "-" }}</span>
       </div>
       <div class="col">
-        <label for="">Email Nfe</label>
-        <p>{{ orcamento.pessoa?.email_nfe || "-" }}</p>
+        <label for="">Email Nfe: </label>
+        <span>{{ orcamento.pessoa?.email_nfe || "-" }}</span>
       </div>
     </div>
     <div class="row">
@@ -283,16 +283,16 @@
             <tr>
               <th style="width: 5rem" class="noprint">Arquivos</th>
               <th>Item</th>
-              <th class="w-300">
+              <th class="wv-300">
                 Descrição
               </th>
-              <th class="w-300">
+              <th class="wv-300">
                 Material
               </th>
               <th>Material Incluso</th>
               <th class="noprint">RIR</th>
-              <th class="noprint">Processos</th>
-              <th>Largura (blank)</th>
+              <th>Processos</th>
+              <th >Largura (blank)</th>
               <th>Altura (blank)</th>
               <th>Qtd.</th>
               <th>Imposto</th>
@@ -353,7 +353,7 @@
                   <ng-template pTemplate="input">
                     <p-autoComplete
                       pInputText
-                      class="p-autocomplete w-100"
+                      class="p-autocomplete wv-100"
                       name="produto"
                       id="produto"
                       type="text"
@@ -386,7 +386,7 @@
                   (ngModelChange)="calculaPeso(item)"
                 ></p-checkbox>
               </td>
-              <td class="noprint w-100" pEditableColumn>
+              <td class="noprint wv-100" pEditableColumn>
                 <p-cellEditor>
                   <ng-template pTemplate="input">
                     <input
@@ -404,7 +404,7 @@
                   </ng-template>
                 </p-cellEditor>
               </td>
-              <td class="noprint" pEditableColumn>
+              <td class="" pEditableColumn>
                 <p-cellEditor>
                   <ng-template pTemplate="input">
                     <p-multiSelect
@@ -423,7 +423,7 @@
                   </ng-template>
                 </p-cellEditor>
               </td>
-              <td pEditableColumn class="w-100">
+              <td pEditableColumn class="wv-100 wp-50">
                 <p-cellEditor *ngIf="item.produto.categoria !== 'Peça'">
                   <ng-template pTemplate="input">
                     <input
@@ -444,7 +444,7 @@
                   </ng-template>
                 </p-cellEditor>
               </td>
-              <td pEditableColumn class="w-100">
+              <td pEditableColumn class="wv-100">
                 <p-cellEditor *ngIf="item.produto.categoria === 'Chapa'">
                   <ng-template pTemplate="input">
                     <input
@@ -465,7 +465,7 @@
                   </ng-template>
                 </p-cellEditor>
               </td>
-              <td pEditableColumn class="w-100">
+              <td pEditableColumn class="wv-100">
                 <p-cellEditor>
                   <ng-template pTemplate="input">
                     <input
@@ -486,7 +486,7 @@
                   </ng-template>
                 </p-cellEditor>
               </td>
-              <td pEditableColumn class="w-100">
+              <td pEditableColumn class="wv-100">
                 <p-cellEditor>
                   <ng-template pTemplate="input">
                     <input
@@ -506,7 +506,7 @@
                   </ng-template>
                 </p-cellEditor>
               </td>
-              <td class="noprint w-100" pEditableColumn>
+              <td class="noprint wv-100" pEditableColumn>
                 <p-cellEditor>
                   <ng-template pTemplate="input">
                     <input
@@ -546,7 +546,7 @@
                   </ng-template>
                 </p-cellEditor>
               </td>
-              <td class="noprint w-100" pEditableColumn>
+              <td class="noprint wv-100" pEditableColumn>
                 <p-cellEditor>
                   <ng-template pTemplate="input">
                     <input
@@ -631,7 +631,7 @@
             </tr>
           </ng-template>
           <ng-template pTemplate="footer">
-            <tr>
+            <tr class="noprint">
               <td>
                 <button
                   name="btnNewItem"
@@ -653,7 +653,7 @@
     </div>
     <div class="row">
       <div class="col-6">
-        <label for="inpCondicaoPagamento">Condição de Pagamento</label>
+        <label for="inpCondicaoPagamento">Condição de Pagamento: </label>
         <p-dropdown
           name="inpCondicaoPagamento"
           id="inpCondicaoPagamento"
@@ -690,7 +690,7 @@
       </div>
       <div class="col-2">
         <label>Total: </label>
-        <span style="width: 100%; font-size: x-large">{{
+        <span class="total">{{
           orcamento.total | currency : "BRL"
         }}</span>
       </div>

@@ -285,27 +285,27 @@ export class OrcamentoComponent implements OnInit {
   }
 
   onChangeItemImposto(event: any, item: OrcamentoItem) {
-    item.imposto = event.replace(/[^\d]/g, '') / 10000;
+    item.imposto = Number(event.replace(/[^\d]/g, '') / 10000);
   }
 
   onChangeItemPrecoQuilo(event: any, item: OrcamentoItem) {
-    item.preco_quilo = event.replace(/[^\d]/g, '') / 100;
+    item.preco_quilo = Number(event.replace(/[^\d]/g, '') / 100);
   }
 
   onChangeItemTotalManual(event: any, item: OrcamentoItem) {
-    item.total_manual = event.replace(/[^\d]/g, '') / 100;
+    item.total_manual = Number(event.replace(/[^\d]/g, '') / 100);
   }
 
   onChangeItemPrecoHora(event: any, item: OrcamentoItem) {
-    item.preco_hora = event.replace(/[^\d]/g, '') / 100;
+    item.preco_hora = Number(event.replace(/[^\d]/g, '') / 100);
   }
 
   onChangeFrete(event: any) {
-    this.orcamento.frete = event.replace(/[^\d]/g, '') / 100;
+    this.orcamento.frete = Number(event.replace(/[^\d]/g, '') / 100);
   }
 
   onChangeDesconto(event: any) {
-    this.orcamento.desconto = event.replace(/[^\d]/g, '') / 100;
+    this.orcamento.desconto = Number(event.replace(/[^\d]/g, '') / 100);
   }
 
   onChangeFiles(event: any, item: any) {

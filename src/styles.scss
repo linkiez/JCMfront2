@@ -62,26 +62,51 @@ p {
 .p-datatable .p-datatable-thead > tr > th {
   padding: 5px;
 }
-
+@page {
+  size: A4;
+  margin: 0;
+}
 @media print {
 
+  html, body {
+    width: 210mm;
+  }
+
   input {
-    height: 15px;
+    height: 20px;
+    padding: 0px;
+    width:  100%;
+    font-size: xx-small !important;
+  }
+
+  .p-dropdown {
+    width: fit-content ;
+    height: 20px;
     padding: 0px;
   }
 
+  .p-dropdown-label {
+    font-size: xx-small !important;
+  }
+
+  .p-autocomplete-dd .p-autocomplete-dropdown{
+    height: 20px;
+  }
+
   h4 {
-    margin: 5px
+    margin: 1px;
+    font-size: medium;
   }
 
-  label, small {
-    font-size: xx-small;
-    margin: 1px
+  h2 {
+    margin: 1px;
+    font-size: large;
   }
 
-  p {
+  label, small, p, span {
     font-size: xx-small;
-    margin: 1px
+    margin: 1px;
+    width: fit-content;
   }
 
   .col{

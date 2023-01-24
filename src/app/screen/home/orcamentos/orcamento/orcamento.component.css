@@ -1,9 +1,13 @@
-.w-300 {
+.wv-300 {
   min-width: 300px;
 }
 
-.w-100 {
+.wv-100 {
   min-width: 100px;
+}
+
+.wv-50 {
+  min-width: 50px;
 }
 
 :host ::ng-deep .p-datatable .p-datatable-tbody > tr > td{
@@ -15,16 +19,15 @@ button {
   }
 
 @media print {
-  .w-300, .w-100 {
+  .wv-300, .wv-100{
     min-width: auto;
   }
 
-  input {
-    border: none;
-    width: auto;
+  .wp-150{
+    min-width: 150px;
   }
 
-  label {
-    width: auto;
+  .total{
+    font-size: large;
   }
 }
