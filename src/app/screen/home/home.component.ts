@@ -27,6 +27,7 @@ export class HomeComponent implements OnInit {
         },
         {
           label: 'Ordens de Produção',
+          routerLink: 'ordensproducao'
         },
         {
           label: 'Pedidos de Compra',

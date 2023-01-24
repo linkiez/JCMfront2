@@ -685,9 +685,23 @@ export class OrcamentoComponent implements OnInit {
     } else {
       this.orcamentoService
         .aprovarOrcamento(this.orcamento.id!, this.aprovacao)
-        .subscribe((response) => {
+        .subscribe({next:(response) => {
           console.log(response);
-        });
+        },
+        error: (error) => {
+          console.log(error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: `${error.status} - ${error.statusText} - ${error.error}`,
+          });
+        },
+        complete: () => {
+          this.getOrcamento();
+        }
+      });
     }
+    this.displayAprovacao = false
   }
+
 }

@@ -9,7 +9,21 @@
   <div class="container">
     <div class="row">
       <div class="col">
-        <label for="inpId">Numero</label>
+        <label for="">Faturamento</label>
+        <p-dropdown
+          [options]="contatoEmpresas$ | async"
+          [(ngModel)]="orcamento.empresa"
+          name="empresa"
+          id="empresa"
+          optionLabel="pessoa.nome"
+          [style]="{ width: '100%' }"
+          [disabled]="orcamento.status !== 'Orçamento'"
+        ></p-dropdown>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <label for="id">Numero</label>
         <input
           pInputText
           class="p-inputtext"
@@ -21,7 +35,7 @@
         />
       </div>
       <div class="col">
-        <label for="inpData">Data</label>
+        <label for="updatedAt">Data</label>
         <input
           pInputText
           class="p-inputtext"
@@ -35,8 +49,8 @@
     </div>
     <div class="row noprint" *ngIf="orcamento.vendastinies!.length > 0">
       <div class="col" *ngFor="let venda of orcamento.vendastinies">
-        <span>Venda: {{venda.id}} </span>
-        <span>Aprovação: {{venda.aprovacao}}</span>
+        <span>Venda: {{ venda.venda }} </span>
+        <span>Aprovação: {{ venda.aprovacao }}</span>
       </div>
     </div>
     <div class="row">
@@ -269,11 +283,11 @@
             <tr>
               <th style="width: 5rem" class="noprint">Arquivos</th>
               <th>Item</th>
-              <th pSortableColumn="produto.descricao" class="w-300">
-                Descrição <p-sortIcon field="produto.descricao"></p-sortIcon>
+              <th class="w-300">
+                Descrição
               </th>
-              <th pSortableColumn="produto.nome" class="w-300">
-                Material<p-sortIcon field="produto.nome"></p-sortIcon>
+              <th class="w-300">
+                Material
               </th>
               <th>Material Incluso</th>
               <th class="noprint">RIR</th>
@@ -340,8 +354,8 @@
                     <p-autoComplete
                       pInputText
                       class="p-autocomplete w-100"
-                      name="inpProdutos"
-                      id="inpProdutos"
+                      name="produto"
+                      id="produto"
                       type="text"
                       [(ngModel)]="item.produto"
                       (ngModelChange)="calculaPeso(item)"
@@ -415,16 +429,18 @@
                     <input
                       pInputText
                       class="p-inputtext"
-                      name="inpItemlargura"
-                      id="inpItemlargura"
+                      name="largura"
+                      id="largura"
                       type="number"
-                      [(ngModel)]="item.largura"
+                      lang="pt-BR"
+                      [ngModel]="item.largura | number: '1.0-2':'pt-BR'"
+                      (ngModelChange)="item.largura = $event"
                       [disabled]="orcamento.status !== 'Orçamento'"
                       (input)="calculaPeso(item)"
                     />
                   </ng-template>
                   <ng-template pTemplate="output">
-                    {{ item.largura }}
+                    {{ item.largura | number: '1.0-2': 'pt-BR'}}
                   </ng-template>
                 </p-cellEditor>
               </td>
@@ -434,16 +450,18 @@
                     <input
                       pInputText
                       class="p-inputtext"
-                      name="inpItemAltura"
-                      id="inpItemAltura"
+                      name="altura"
+                      id="altura"
                       type="number"
-                      [(ngModel)]="item.altura"
+                      lang="pt-BR"
+                      [ngModel]="item.altura| number: '1.0-2': 'pt-BR'"
+                      (ngModelChange)="item.altura = $event"
                       [disabled]="orcamento.status !== 'Orçamento'"
                       (input)="calculaPeso(item)"
                     />
                   </ng-template>
                   <ng-template pTemplate="output">
-                    {{ item.altura }}
+                    {{ item.altura| number: '1.0-2': 'pt-BR' }}
                   </ng-template>
                 </p-cellEditor>
               </td>
@@ -453,16 +471,18 @@
                     <input
                       pInputText
                       class="p-inputtext"
-                      name="inpItemQuantidade"
-                      id="inpItemQuantidade"
+                      name="quantidade"
+                      id="quantidade"
                       type="number"
-                      [(ngModel)]="item.quantidade"
+                      lang="pt-BR"
+                      [ngModel]="item.quantidade| number: '1.0-2': 'pt-BR'"
+                      (ngModelChange)="item.quantidade = $event"
                       [disabled]="orcamento.status !== 'Orçamento'"
                       (input)="calculaHora(item); calculaPeso(item)"
                     />
                   </ng-template>
                   <ng-template pTemplate="output">
-                    {{ item.quantidade || "-" }}
+                    {{ item.quantidade| number: '1.0-2': 'pt-BR' || "-" }}
                   </ng-template>
                 </p-cellEditor>
               </td>
@@ -589,17 +609,13 @@
 
               <td class="noprint">
                 <button
-                [disabled]="orcamento.status !== 'Orçamento'"
-                (click)="removeItem(index)"
+                  [disabled]="orcamento.status !== 'Orçamento'"
+                  (click)="removeItem(index)"
                   name="btnRemove"
                   id="btnRemove"
                 >
-                <i
-                class="pi pi-trash trash"
-
-              ></i>
+                  <i class="pi pi-trash trash"></i>
                 </button>
-
               </td>
             </tr>
           </ng-template>
@@ -705,7 +721,7 @@
       <div class="col">
         <label for="inpObservacoes">Observações: </label>
         <textarea
-          pInputTextArea
+          pInputTextarea
           class="p-inputtextarea"
           name="inpObservacoes"
           id="inpObservacoes"
@@ -748,7 +764,8 @@
       type="button"
       name="btnAprovar"
       id="btnAprovar"
-      (click)="displayAprovacao=true"
+      (click)="displayAprovacao = true"
+      [disabled]="id == 0"
     >
       Aprovar
     </button>
@@ -790,26 +807,27 @@
   </div>
   <p-dialog [(visible)]="displayAprovacao">
     <ng-template pTemplate="header">
-        Como o orçamento foi aprovado?
+      Como o orçamento foi aprovado?
     </ng-template>
     <p-dropdown
-    [options]="aprovacaoOrcamento$ | async"
-    [(ngModel)]="aprovacao"
-    appendTo="body"
-    [style]="{'width':'100%'}"
+      [options]="aprovacaoOrcamento$ | async"
+      [(ngModel)]="aprovacao"
+      appendTo="body"
+      [style]="{ width: '100%' }"
+      name="aprovacao"
+      id="aprovacao"
     ></p-dropdown>
     <ng-template pTemplate="footer">
-
       <button
-      pButton
-      class="p-button p-button-success"
-      type="button"
-      name="btnAprovar"
-      id="btnAprovar"
-      (click)="aprovar()"
-    >
-      Aprovar
-    </button>
+        pButton
+        class="p-button p-button-success"
+        type="button"
+        name="btnAprovar"
+        id="btnAprovar"
+        (click)="aprovar()"
+      >
+        Aprovar
+      </button>
     </ng-template>
-</p-dialog>
+  </p-dialog>
 </form>
