@@ -1,3 +1,4 @@
+import { Arquivo } from "./arquivo";
 import { Pessoa } from "./pessoa";
 
 export interface Empresa {
@@ -9,4 +10,5 @@ export interface Empresa {
   id_pessoa?: number;
   pessoa?: Pessoa;
   token_tiny?: string;
+  file?: Arquivo
 }

@@ -65,32 +65,17 @@ p {
 @page {
   size: A4;
   margin: 0;
+  
 }
+
+.noview {
+  display: none;
+}
+
 @media print {
 
   html, body {
     width: 210mm;
-  }
-
-  input {
-    height: 20px;
-    padding: 0px;
-    width:  100%;
-    font-size: xx-small !important;
-  }
-
-  .p-dropdown {
-    width: fit-content ;
-    height: 20px;
-    padding: 0px;
-  }
-
-  .p-dropdown-label {
-    font-size: xx-small !important;
-  }
-
-  .p-autocomplete-dd .p-autocomplete-dropdown{
-    height: 20px;
   }
 
   h4 {
@@ -106,11 +91,7 @@ p {
   label, small, p, span {
     font-size: xx-small;
     margin: 1px;
-    width: fit-content;
-  }
-
-  .col{
-    height: fit-content;
+    width: auto;
   }
 
   .container {
@@ -137,8 +118,16 @@ p {
     display: none;
   }
 
+  .noview {
+    display: inline;
+  }
+
   .p-datatable .p-datatable-tbody > tr > td,
 .p-datatable .p-datatable-thead > tr > th {
   font-size: x-small;
+}
+
+.h-12{
+  height: 12px;
 }
 }

@@ -20,6 +20,7 @@ import { OrcamentoService } from 'src/app/services/orcamento.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { query } from '@angular/animations';
+import { ArquivoService } from 'src/app/services/arquivo.service';
 
 @Component({
   selector: 'app-orcamento',
@@ -113,7 +114,7 @@ export class OrcamentoComponent implements OnInit {
     .getEmpresas({ page: 0, pageCount: 10, searchValue: '', deleted: false })
     .pipe(map((empresas: any) => empresas.empresas));
 
-    aprovacaoOrcamento$ = this.listaGenericaService
+  aprovacaoOrcamento$ = this.listaGenericaService
     .getByNameListaGenerica('aprovadoOrcamento')
     .pipe(
       map((listaGenerica: any) =>
@@ -139,6 +140,8 @@ export class OrcamentoComponent implements OnInit {
 
   aprovacao: string = '';
 
+  logotipoUrl: string = '';
+
   constructor(
     private listaGenericaService: ListaGenericaService,
     private produtoService: ProdutoService,
@@ -146,6 +149,7 @@ export class OrcamentoComponent implements OnInit {
     private contatoService: ContatoService,
     private orcamentoService: OrcamentoService,
     private empresaService: EmpresaService,
+    private arquivoService: ArquivoService,
     private vendedorService: VendedorService,
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
@@ -285,27 +289,27 @@ export class OrcamentoComponent implements OnInit {
   }
 
   onChangeItemImposto(event: any, item: OrcamentoItem) {
-    item.imposto = Number(event.replace(/[^\d]/g, '') / 10000);
+    item.imposto = Number(event.replace(/[^\d]/g, '')) / 10000;
   }
 
   onChangeItemPrecoQuilo(event: any, item: OrcamentoItem) {
-    item.preco_quilo = Number(event.replace(/[^\d]/g, '') / 100);
+    item.preco_quilo = Number(event.replace(/[^\d]/g, '')) / 100;
   }
 
   onChangeItemTotalManual(event: any, item: OrcamentoItem) {
-    item.total_manual = Number(event.replace(/[^\d]/g, '') / 100);
+    item.total_manual = Number(event.replace(/[^\d]/g, '')) / 100;
   }
 
   onChangeItemPrecoHora(event: any, item: OrcamentoItem) {
-    item.preco_hora = Number(event.replace(/[^\d]/g, '') / 100);
+    item.preco_hora = Number(event.replace(/[^\d]/g, '')) / 100;
   }
 
   onChangeFrete(event: any) {
-    this.orcamento.frete = Number(event.replace(/[^\d]/g, '') / 100);
+    this.orcamento.frete = Number(event.replace(/[^\d]/g, '')) / 100;
   }
 
   onChangeDesconto(event: any) {
-    this.orcamento.desconto = Number(event.replace(/[^\d]/g, '') / 100);
+    this.orcamento.desconto = Number(event.replace(/[^\d]/g, '')) / 100;
   }
 
   onChangeFiles(event: any, item: any) {
@@ -429,14 +433,27 @@ export class OrcamentoComponent implements OnInit {
             detail: `${error.status} - ${error.statusText} - ${error.error}`,
           });
         },
-        complete: () => {},
+        complete: () => {
+          this.getLogoUrl();
+        },
       });
+    }
+  }
+
+  async getLogoUrl() {
+    if (this.orcamento.empresa?.file?.id) {
+      const url: any = await firstValueFrom(
+        this.arquivoService.getUrlArquivo(this.orcamento.empresa?.file?.id)
+      );
+      this.logotipoUrl = url.url;
+    } else {
+      this.logotipoUrl = '';
     }
   }
 
   create(clonar?: boolean) {
     let orcamentoSubmit: Orcamento = this.orcamento;
-    orcamentoSubmit.status = "Orçamento"
+    orcamentoSubmit.status = 'Orçamento';
 
     this.orcamentoService
       .addOrcamento(orcamentoSubmit)
@@ -625,6 +642,18 @@ export class OrcamentoComponent implements OnInit {
       });
       valido = false;
     }
+    if (
+      (this.orcamento.contato?.tipo == 'Email' ||
+        this.orcamento.contato?.tipo == 'Email Nfe') &&
+      !this.validaEmail(this.orcamento.contato?.valor || '')
+    ) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erro',
+        detail: 'O email do contato é inválido.',
+      });
+      valido = false;
+    }
     this.orcamento.orcamento_items.forEach((item, index) => {
       if (item.quantidade == 0) {
         this.messageService.add({
@@ -685,23 +714,28 @@ export class OrcamentoComponent implements OnInit {
     } else {
       this.orcamentoService
         .aprovarOrcamento(this.orcamento.id!, this.aprovacao)
-        .subscribe({next:(response) => {
-          console.log(response);
-        },
-        error: (error) => {
-          console.log(error);
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Erro',
-            detail: `${error.status} - ${error.statusText} - ${error.error}`,
-          });
-        },
-        complete: () => {
-          this.getOrcamento();
-        }
-      });
+        .subscribe({
+          next: (response) => {
+            console.log(response);
+          },
+          error: (error) => {
+            console.log(error);
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Erro',
+              detail: `${error.status} - ${error.statusText} - ${error.error}`,
+            });
+          },
+          complete: () => {
+            this.getOrcamento();
+          },
+        });
     }
-    this.displayAprovacao = false
+    this.displayAprovacao = false;
   }
 
+  onEmpresaChange(event: any) {
+    this.orcamento.empresa = event;
+    this.getLogoUrl();
+  }
 }

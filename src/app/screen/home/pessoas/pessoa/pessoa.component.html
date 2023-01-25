@@ -47,9 +47,7 @@
           >"{{ pessoaOld.razao_social }}"</small
         >
       </div>
-      <div class="input col-10" *ngIf="!pessoa.pessoa_juridica">
-
-      </div>
+      <div class="input col-10" *ngIf="!pessoa.pessoa_juridica"></div>
       <div class="input col-4">
         <label for="InpCnpjCpf">
           <span *ngIf="pessoa.pessoa_juridica">CNPJ</span
@@ -177,7 +175,8 @@
           class="p-inputtext"
           type="text"
           pInputText
-          [(ngModel)]="pessoa.numero">
+          [(ngModel)]="pessoa.numero"
+        />
       </div>
       <div class="input col-2">
         <label for="InpComplemento">Complemento</label>
@@ -186,7 +185,8 @@
           class="p-inputtext"
           type="text"
           pInputText
-          [(ngModel)]="pessoa.complemento">
+          [(ngModel)]="pessoa.complemento"
+        />
       </div>
       <div class="input col-3">
         <label for="InpBairro">Bairro</label>
@@ -195,7 +195,8 @@
           class="p-inputtext"
           type="text"
           pInputText
-          [(ngModel)]="pessoa.bairro">
+          [(ngModel)]="pessoa.bairro"
+        />
       </div>
       <div class="input col-4">
         <label for="InpMunicipio">Cidade</label>
@@ -234,7 +235,7 @@
           styleClass="w-100"
         ></p-calendar>
         <small *ngIf="pessoaOld.data_nasc"
-          >"{{ pessoaOld.data_nasc | date: "dd/MM/yyyy HH:mm:ss" }}"</small
+          >"{{ pessoaOld.data_nasc | date : "dd/MM/yyyy HH:mm:ss" }}"</small
         >
       </div>
       <div class="input">
@@ -256,7 +257,7 @@
           type="text"
           pInputText
           disabled
-          value="{{ pessoa.createdAt | date: 'dd/MM/yyyy HH:mm:ss' }}"
+          value="{{ pessoa.createdAt | date : 'dd/MM/yyyy HH:mm:ss' }}"
         />
       </div>
       <div class="input col-6">
@@ -267,7 +268,7 @@
           type="text"
           pInputText
           disabled
-          value="{{ pessoa.updatedAt | date: 'dd/MM/yyyy HH:mm:ss' }}"
+          value="{{ pessoa.updatedAt | date : 'dd/MM/yyyy HH:mm:ss' }}"
         />
       </div>
       <div>
@@ -366,7 +367,10 @@
         </p-table>
       </div>
       <div>
-        <listaFiles [files]="pessoa.files!" (onChangeFiles)="pessoa.files = $event"></listaFiles>
+        <listaFiles
+          [files]="pessoa.files!"
+          (onChangeFiles)="pessoa.files = $event"
+        ></listaFiles>
       </div>
     </div>
   </form>
@@ -432,7 +436,7 @@
                 type="text"
                 pInputText
                 value="{{
-                  pessoa.fornecedor.createdAt | date: 'dd/MM/yyyy HH:mm:ss'
+                  pessoa.fornecedor.createdAt | date : 'dd/MM/yyyy HH:mm:ss'
                 }}"
                 disabled
               />
@@ -445,7 +449,7 @@
                 type="text"
                 pInputText
                 value="{{
-                  pessoa.fornecedor.updatedAt | date: 'dd/MM/yyyy HH:mm:ss'
+                  pessoa.fornecedor.updatedAt | date : 'dd/MM/yyyy HH:mm:ss'
                 }}"
                 disabled
               />
@@ -485,7 +489,7 @@
                 type="text"
                 pInputText
                 value="{{
-                  pessoa.operador.createdAt | date: 'dd/MM/yyyy HH:mm:ss'
+                  pessoa.operador.createdAt | date : 'dd/MM/yyyy HH:mm:ss'
                 }}"
                 disabled
               />
@@ -498,7 +502,7 @@
                 type="text"
                 pInputText
                 value="{{
-                  pessoa.operador.updatedAt | date: 'dd/MM/yyyy HH:mm:ss'
+                  pessoa.operador.updatedAt | date : 'dd/MM/yyyy HH:mm:ss'
                 }}"
                 disabled
               />
@@ -538,7 +542,7 @@
                 type="text"
                 pInputText
                 value="{{
-                  pessoa.empresa.createdAt | date: 'dd/MM/yyyy HH:mm:ss'
+                  pessoa.empresa.createdAt | date : 'dd/MM/yyyy HH:mm:ss'
                 }}"
                 disabled
               />
@@ -551,7 +555,7 @@
                 type="text"
                 pInputText
                 value="{{
-                  pessoa.empresa.updatedAt | date: 'dd/MM/yyyy HH:mm:ss'
+                  pessoa.empresa.updatedAt | date : 'dd/MM/yyyy HH:mm:ss'
                 }}"
                 disabled
               />
@@ -563,7 +567,36 @@
                 class="p-inputtext"
                 type="text"
                 pInputText
-                [(ngModel)]="pessoa.empresa.token_tiny">
+                [(ngModel)]="pessoa.empresa.token_tiny"
+              />
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <label for="">Logotipo: </label>
+              <input
+                type="file"
+                class="file-input"
+                (change)="onFileSelected($event)"
+                #fileUpload
+                accept="image/*"
+              />
+              <button pButton class="p-button" (click)="fileUpload.click()">
+                <i *ngIf="!fileLoading" class="pi pi-paperclip"></i>
+                <p-progressSpinner
+                  *ngIf="fileLoading"
+                  [style]="{
+                    width: '27px',
+                    height: '27px',
+                    margin: 'auto'
+                  }"
+                  styleClass="custom-spinner"
+                  strokeWidth="8"
+                  fill="var(--surface-ground)"
+                  animationDuration="1s"
+                ></p-progressSpinner>
+              </button>
+              <img #logotipo [src]="logtipoUrl" alt="Logotipo">
             </div>
           </div></form
       ></ng-template>
@@ -601,7 +634,7 @@
                 type="text"
                 pInputText
                 value="{{
-                  pessoa.vendedor.createdAt | date: 'dd/MM/yyyy HH:mm:ss'
+                  pessoa.vendedor.createdAt | date : 'dd/MM/yyyy HH:mm:ss'
                 }}"
                 disabled
               />
@@ -614,7 +647,7 @@
                 type="text"
                 pInputText
                 value="{{
-                  pessoa.vendedor.updatedAt | date: 'dd/MM/yyyy HH:mm:ss'
+                  pessoa.vendedor.updatedAt | date : 'dd/MM/yyyy HH:mm:ss'
                 }}"
                 disabled
               />

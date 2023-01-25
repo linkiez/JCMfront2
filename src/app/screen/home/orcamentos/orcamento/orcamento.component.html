@@ -1,26 +1,60 @@
 <form #orcamentoForm="ngForm" (ngSubmit)="createOrUpdate()">
-  <h2>Proposta Comercial</h2>
-  <caixaDeStatus
-    [status]="orcamento.status"
-    [options]="status$ | async"
-    [editable]="false"
-    (statusChange)="orcamento.status = $event"
-  ></caixaDeStatus>
   <div class="container">
     <div class="row">
+      <div class="col-2 d-flex align-items-center">
+        <img #logotipo [src]="logotipoUrl" alt="Logotipo" />
+      </div>
       <div class="col">
-        <label for="">Faturamento</label>
-        <p-dropdown
-          [options]="contatoEmpresas$ | async"
-          [(ngModel)]="orcamento.empresa"
-          name="empresa"
-          id="empresa"
-          optionLabel="pessoa.nome"
-          [style]="{ width: '100%' }"
-          [disabled]="orcamento.status !== 'Orçamento'"
-        ></p-dropdown>
+        <div class="row">
+          <div class="col">
+            <h2>Proposta Comercial</h2>
+          </div>
+          <div class="col d-flex justify-content-end align-items-center">
+            <caixaDeStatus
+              [status]="orcamento.status"
+              [options]="status$ | async"
+              [editable]="false"
+              (statusChange)="orcamento.status = $event"
+            ></caixaDeStatus>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col d-flex flex-column">
+            <label for="empresa" class="noprint">Faturamento: </label>
+            <p-dropdown
+              [options]="contatoEmpresas$ | async"
+              [(ngModel)]="orcamento.empresa"
+              (ngModelChange)="onEmpresaChange($event)"
+              name="empresa"
+              id="empresa"
+              optionLabel="pessoa.nome"
+              [style]="{ width: '100%' }"
+              [disabled]="orcamento.status !== 'Orçamento'"
+              class="noprint"
+            ></p-dropdown>
+            <p class="noview">
+              {{ orcamento.empresa.pessoa?.nome || "-" }} CNPJ:
+              {{ (orcamento.empresa.pessoa?.cnpj_cpf | cpfCnpj) || "-" }} IE:
+              {{ (orcamento.empresa.pessoa?.ie_rg | ieRg) || "-" }}
+            </p>
+            <br />
+            <p class="noview">
+              {{ orcamento.empresa.pessoa?.endereco }},
+              {{ orcamento.empresa.pessoa?.numero }},
+              {{ orcamento.empresa.pessoa?.bairro }},
+              {{ orcamento.empresa.pessoa?.municipio }} -
+              {{ orcamento.empresa.pessoa?.uf }}
+            </p>
+            <br />
+            <p class="noview">
+              {{ orcamento.empresa.pessoa?.telefone | telefone }}
+              {{ orcamento.empresa.pessoa?.email }}
+            </p>
+          </div>
+        </div>
       </div>
     </div>
+
     <div class="row">
       <div class="col">
         <label for="id">Numero: </label>
@@ -32,7 +66,9 @@
           type="number"
           [disabled]="orcamento.id != undefined && id != 0"
           [(ngModel)]="orcamento.id"
+          class="noprint"
         />
+        <span class="noview">{{ orcamento.id }}</span>
       </div>
       <div class="col">
         <label for="updatedAt">Data: </label>
@@ -44,7 +80,11 @@
           id="updatedAt"
           type="text"
           value="{{ orcamento.updatedAt | date : 'dd/MM/yyyy HH:mm:ss' }}"
+          class="noprint"
         />
+        <span class="noview">{{
+          orcamento.updatedAt | date : "dd/MM/yyyy HH:mm:ss"
+        }}</span>
       </div>
     </div>
     <div class="row noprint" *ngIf="orcamento.vendastinies!.length > 0">
@@ -53,184 +93,213 @@
         <span>Aprovação: {{ venda.aprovacao }}</span>
       </div>
     </div>
-    <div class="row">
-      <div><h4>Contato</h4></div>
+    <div [ngClass]="{ noprint: orcamento.contato?.valor == '' }">
+      <div class="row">
+        <div><h4>Contato</h4></div>
+      </div>
+      <div class="row">
+        <div class="col d-print-flex">
+          <label for="ContatoNome">Nome: </label>
+          <p-autoComplete
+            name="ContatoNome"
+            id="ContatoNome"
+            [(ngModel)]="orcamento.contato!.nome"
+            [contentEditable]="true"
+            (onSelect)="selectContato($event)"
+            [suggestions]="contatos"
+            (completeMethod)="searchContato($event)"
+            [style]="{ width: '100%' }"
+            [inputStyle]="{ width: '100%' }"
+            appendTo="body"
+            [disabled]="orcamento.status !== 'Orçamento'"
+            class="noprint"
+            ><ng-template let-contatoOption pTemplate="item">
+              <div>
+                <span>{{ contatoOption.nome }} - </span>
+                <span
+                  *ngIf="
+                    contatoOption.tipo === 'Telefone' ||
+                    contatoOption.tipo === 'WhatsApp'
+                  "
+                  >{{ contatoOption.valor | telefone }}</span
+                >
+                <span
+                  *ngIf="
+                    contatoOption.tipo !== 'Telefone' &&
+                    contatoOption.tipo !== 'WhatsApp'
+                  "
+                  >{{ contatoOption.valor }}</span
+                >
+              </div>
+            </ng-template>
+            <ng-template let-contatoSelected pTemplate="selectedItem">
+              <div>
+                {{ contatoSelected.nome }}
+              </div>
+            </ng-template></p-autoComplete
+          >
+          <span class="noview">{{ orcamento.contato?.nome || "-" }}</span>
+        </div>
+        <div class="col d-print-flex">
+          <label for="inpContatoTipo">Tipo: </label>
+          <p-dropdown
+            [name]="'InpContatoTipo'"
+            id="InpContatoTipo"
+            [options]="contatoCategorias$ | async"
+            [(ngModel)]="orcamento.contato!.tipo"
+            [style]="{ width: '100%' }"
+            appendTo="body"
+            optionLabel="valor"
+            optionValue="valor"
+            [disabled]="orcamento.status !== 'Orçamento'"
+            class="noprint"
+          ></p-dropdown>
+          <span class="noview">{{ orcamento.contato?.tipo || "-" }}</span>
+        </div>
+        <div class="col d-print-flex">
+          <label for="">Contato: </label>
+          <input
+            *ngIf="
+              orcamento.contato!.tipo === 'Telefone' ||
+              orcamento.contato!.tipo === 'WhatsApp'
+            "
+            name="inpContatoTelefone"
+            id="inpContatoTelefone"
+            pInputText
+            class="p-inputtext"
+            type="text"
+            [ngModel]="orcamento.contato?.valor | telefone"
+            (ngModelChange)="onChangeWhatsapp($event)"
+            [disabled]="orcamento.status !== 'Orçamento'"
+            class="noprint"
+          />
+          <span
+            *ngIf="
+              orcamento.contato!.tipo === 'Telefone' ||
+              orcamento.contato!.tipo === 'WhatsApp'
+            "
+            class="noview"
+            >{{ orcamento.contato?.valor | telefone }}</span
+          >
+          <input
+            *ngIf="
+              orcamento.contato!.tipo !== 'Telefone' &&
+              orcamento.contato!.tipo !== 'WhatsApp'
+            "
+            name="inpContatoEmail"
+            id="inpContatoEmail"
+            pInputText
+            class="p-inputtext"
+            type="text"
+            [(ngModel)]="orcamento.contato!.valor"
+            [disabled]="orcamento.status !== 'Orçamento'"
+            class="noprint"
+          />
+          <small
+            *ngIf="
+              (orcamento.contato!.tipo === 'Email' ||
+                orcamento.contato!.tipo === 'Email Nfe') &&
+              !validaEmail(orcamento.contato!.valor || '')
+            "
+            class="p-error block"
+            >Email invalido.</small
+          >
+          <span
+            *ngIf="
+              orcamento.contato!.tipo !== 'Telefone' &&
+              orcamento.contato!.tipo !== 'WhatsApp'
+            "
+            class="noview"
+            >{{ orcamento.contato?.valor }}</span
+          >
+        </div>
+      </div>
+    </div>
+    <div [ngClass]="{noprint: orcamento.pessoa?.id == undefined}">
+      <div class="row">
+        <div><h4>Pessoa</h4></div>
+      </div>
+      <div class="row">
+        <div class="col-6 d-print-flex" >
+          <label for="inpPessoaNome">Nome: </label>
+          <p-autoComplete
+            name="inpPessoaNome"
+            id="inpPessoaNome"
+            [(ngModel)]="orcamento.pessoa"
+            field="nome"
+            [suggestions]="pessoas"
+            (completeMethod)="searchPessoa($event)"
+            [style]="{ width: '100%' }"
+            [inputStyle]="{ width: '100%' }"
+            appendTo="body"
+            [disabled]="orcamento.status !== 'Orçamento'"
+            class="noprint flex-grow-1"
+          ></p-autoComplete>
+          <span class="noview">{{ orcamento.pessoa?.nome || "-" }}</span>
+        </div>
+        <div class="col-3 d-print-flex">
+          <label for="">{{
+            orcamento.pessoa?.pessoa_juridica ? "CNPJ: " : "CPF: "
+          }}</label>
+          <span>{{ (orcamento.pessoa?.cnpj_cpf | cpfCnpj) || "-" }}</span>
+        </div>
+        <div class="col-3 d-print-flex">
+          <label for="">{{
+            orcamento.pessoa?.pessoa_juridica ? "IE: " : "RG: "
+          }}</label>
+          <span>{{ (orcamento.pessoa?.ie_rg | ieRg) || "-" }}</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-7 d-print-flex">
+          <label for="">Endereço: </label>
+          <span>{{ orcamento.pessoa?.endereco || "-" }}</span>
+        </div>
+        <div class="col-2 d-print-flex">
+          <label for="">Numero: </label>
+          <span>{{ orcamento.pessoa?.numero || "-" }}</span>
+        </div>
+        <div class="col-3 d-print-flex">
+          <label for="">Bairro: </label>
+          <span>{{ orcamento.pessoa?.bairro || "-" }}</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col d-print-flex">
+          <label for="">Cidade: </label>
+          <span>{{ orcamento.pessoa?.municipio || "-" }}</span>
+        </div>
+        <div class="col d-print-flex">
+          <label for="">UF: </label>
+          <span>{{ orcamento.pessoa?.uf || "-" }}</span>
+        </div>
+        <div class="col d-print-flex">
+          <label for="">CEP: </label>
+          <span>{{ (orcamento.pessoa?.cep | cep) || "-" }}</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col d-print-flex">
+          <label for="">Telefone: </label>
+          <span>{{ (orcamento.pessoa?.telefone | telefone) || "-" }}</span>
+        </div>
+        <div class="col d-print-flex">
+          <label for="">Email: </label>
+          <span>{{ orcamento.pessoa?.email || "-" }}</span>
+        </div>
+        <div class="col d-print-flex">
+          <label for="">Email Nfe: </label>
+          <span>{{ orcamento.pessoa?.email_nfe || "-" }}</span>
+        </div>
+      </div>
     </div>
     <div class="row">
-      <div class="col">
-        <label for="ContatoNome">Nome</label>
+      <hr class="" />
+      <div class="col d-print-flex">
+        <label for="vendedor">Vendedor: </label>
         <p-autoComplete
-          name="ContatoNome"
-          id="ContatoNome"
-          [(ngModel)]="orcamento.contato!.nome"
-          [contentEditable]="true"
-          (onSelect)="selectContato($event)"
-          [suggestions]="contatos"
-          (completeMethod)="searchContato($event)"
-          [style]="{ width: '100%' }"
-          [inputStyle]="{ width: '100%' }"
-          appendTo="body"
-          [disabled]="orcamento.status !== 'Orçamento'"
-          ><ng-template let-contatoOption pTemplate="item">
-            <div>
-              <span>{{ contatoOption.nome }} - </span>
-              <span
-                *ngIf="
-                  contatoOption.tipo === 'Telefone' ||
-                  contatoOption.tipo === 'WhatsApp'
-                "
-                >{{ contatoOption.valor | telefone }}</span
-              >
-              <span
-                *ngIf="
-                  contatoOption.tipo !== 'Telefone' &&
-                  contatoOption.tipo !== 'WhatsApp'
-                "
-                >{{ contatoOption.valor }}</span
-              >
-            </div>
-          </ng-template>
-          <ng-template let-contatoSelected pTemplate="selectedItem">
-            <div>
-              {{ contatoSelected.nome }}
-            </div>
-          </ng-template></p-autoComplete
-        >
-      </div>
-      <div class="col">
-        <label for="inpContatoTipo">Tipo</label>
-        <p-dropdown
-          [name]="'InpContatoTipo'"
-          id="InpContatoTipo"
-          [options]="contatoCategorias$ | async"
-          [(ngModel)]="orcamento.contato!.tipo"
-          [style]="{ width: '100%' }"
-          appendTo="body"
-          optionLabel="valor"
-          optionValue="valor"
-          [disabled]="orcamento.status !== 'Orçamento'"
-        ></p-dropdown>
-      </div>
-      <div class="col">
-        <label for="">Contato</label>
-        <input
-          *ngIf="
-            orcamento.contato!.tipo === 'Telefone' ||
-            orcamento.contato!.tipo === 'WhatsApp'
-          "
-          name="inpContatoTelefone"
-          id="inpContatoTelefone"
-          pInputText
-          class="p-inputtext"
-          type="text"
-          [ngModel]="orcamento.contato?.valor | telefone"
-          (ngModelChange)="onChangeWhatsapp($event)"
-          [disabled]="orcamento.status !== 'Orçamento'"
-        />
-        <input
-          *ngIf="
-            orcamento.contato!.tipo !== 'Telefone' &&
-            orcamento.contato!.tipo !== 'WhatsApp'
-          "
-          name="inpContatoEmail"
-          id="inpContatoEmail"
-          pInputText
-          class="p-inputtext"
-          type="text"
-          [(ngModel)]="orcamento.contato!.valor"
-          [disabled]="orcamento.status !== 'Orçamento'"
-        />
-        <small
-          *ngIf="
-            orcamento.contato!.tipo === 'Email' &&
-            !validaEmail(orcamento.contato!.valor || '')
-          "
-          class="p-error block"
-          >Email invalido.</small
-        >
-      </div>
-    </div>
-    <div class="row">
-      <div><h4>Pessoa</h4></div>
-    </div>
-    <div class="row">
-      <div class="col-6">
-        <label for="inpPessoaNome">Nome</label>
-        <p-autoComplete
-          name="inpPessoaNome"
-          id="inpPessoaNome"
-          [(ngModel)]="orcamento.pessoa"
-          field="nome"
-          [suggestions]="pessoas"
-          (completeMethod)="searchPessoa($event)"
-          [style]="{ width: '100%' }"
-          [inputStyle]="{ width: '100%' }"
-          appendTo="body"
-          [disabled]="orcamento.status !== 'Orçamento'"
-        ></p-autoComplete>
-      </div>
-      <div class="col-3">
-        <label for="">{{
-          orcamento.pessoa?.pessoa_juridica ? "CNPJ: " : "CPF: "
-        }}</label>
-        <span>{{ (orcamento.pessoa?.cnpj_cpf | cpfCnpj) || "-" }}</span>
-      </div>
-      <div class="col-3">
-        <label for="">{{
-          orcamento.pessoa?.pessoa_juridica ? "IE: " : "RG: "
-        }}</label>
-        <span>{{ (orcamento.pessoa?.ie_rg | ieRg) || "-" }}</span>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-7">
-        <label for="">Endereço: </label>
-        <span>{{ orcamento.pessoa?.endereco || "-" }}</span>
-      </div>
-      <div class="col-2">
-        <label for="">Numero: </label>
-        <span>{{ orcamento.pessoa?.numero || "-" }}</span>
-      </div>
-      <div class="col-3">
-        <label for="">Bairro: </label>
-        <span>{{ orcamento.pessoa?.bairro || "-" }}</span>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        <label for="">Cidade: </label>
-        <span>{{ orcamento.pessoa?.municipio || "-" }}</span>
-      </div>
-      <div class="col">
-        <label for="">UF: </label>
-        <span>{{ orcamento.pessoa?.uf || "-" }}</span>
-      </div>
-      <div class="col">
-        <label for="">CEP: </label>
-        <span>{{ (orcamento.pessoa?.cep | cep) || "-" }}</span>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        <label for="">Telefone: </label>
-        <span>{{ (orcamento.pessoa?.telefone | telefone) || "-" }}</span>
-      </div>
-      <div class="col">
-        <label for="">Email: </label>
-        <span>{{ orcamento.pessoa?.email || "-" }}</span>
-      </div>
-      <div class="col">
-        <label for="">Email Nfe: </label>
-        <span>{{ orcamento.pessoa?.email_nfe || "-" }}</span>
-      </div>
-    </div>
-    <div class="row">
-      <hr class="noprint" />
-      <div class="col">
-        <label for="">Vendedor</label>
-        <p-autoComplete
-          name="inpVendedorNome"
-          id="inpVendedorNome"
+          name="vendedor"
+          id="vendedor"
           [(ngModel)]="orcamento.vendedor"
           field="pessoa.nome"
           [suggestions]="vendedores"
@@ -240,33 +309,39 @@
           appendTo="body"
           [dropdown]="true"
           [disabled]="orcamento.status !== 'Orçamento'"
+          class="noprint"
         ></p-autoComplete>
+        <span class="noview">{{
+          orcamento.vendedor?.pessoa?.nome || "-"
+        }}</span>
       </div>
-      <div class="col">
-        <label for="inpPedidoCompraCliente">Pedido de Compra</label>
+      <div class="col d-print-flex">
+        <label for="pc_cliente">Pedido de Compra</label>
         <input
           pInputText
           class="p-inputtext"
-          name="inpPedidoCompraCliente"
-          id="inpPedidoCompraCliente"
+          name="pc_cliente"
+          id="pc_cliente"
           type="text"
           [(ngModel)]="orcamento.pc_cliente"
           [disabled]="orcamento.status !== 'Orçamento'"
+          class="noprint"
         />
+        <span class="noview">{{ orcamento.pc_cliente }}</span>
       </div>
-      <div class="col">
-        <label for="inpPedidoCompraCliente"
-          >Prazo de entrega (Dias Úteis)</label
-        >
+      <div class="col d-print-flex">
+        <label for="prazo_emdias">Prazo de entrega (Dias Úteis)</label>
         <input
           pInputText
           class="p-inputtext"
-          name="inpPrazoEmDias"
-          id="inpPrazoEmDias"
+          name="prazo_emdias"
+          id="prazo_emdias"
           type="number"
           [(ngModel)]="orcamento.prazo_emdias"
           [disabled]="orcamento.status !== 'Orçamento'"
+          class="noprint"
         />
+        <span class="noview">{{ orcamento.prazo_emdias }}</span>
       </div>
     </div>
     <div class="row">
@@ -283,16 +358,12 @@
             <tr>
               <th style="width: 5rem" class="noprint">Arquivos</th>
               <th>Item</th>
-              <th class="wv-300">
-                Descrição
-              </th>
-              <th class="wv-300">
-                Material
-              </th>
+              <th class="wv-300">Descrição</th>
+              <th class="wv-300">Material</th>
               <th>Material Incluso</th>
               <th class="noprint">RIR</th>
               <th>Processos</th>
-              <th >Largura (blank)</th>
+              <th>Largura (blank)</th>
               <th>Altura (blank)</th>
               <th>Qtd.</th>
               <th>Imposto</th>
@@ -433,14 +504,14 @@
                       id="largura"
                       type="number"
                       lang="pt-BR"
-                      [ngModel]="item.largura | number: '1.0-2':'pt-BR'"
+                      [ngModel]="item.largura | number : '1.0-2' : 'pt-BR'"
                       (ngModelChange)="item.largura = $event"
                       [disabled]="orcamento.status !== 'Orçamento'"
                       (input)="calculaPeso(item)"
                     />
                   </ng-template>
                   <ng-template pTemplate="output">
-                    {{ item.largura | number: '1.0-2': 'pt-BR'}}
+                    {{ item.largura | number : "1.0-2" : "pt-BR" }}
                   </ng-template>
                 </p-cellEditor>
               </td>
@@ -454,14 +525,14 @@
                       id="altura"
                       type="number"
                       lang="pt-BR"
-                      [ngModel]="item.altura| number: '1.0-2': 'pt-BR'"
+                      [ngModel]="item.altura | number : '1.0-2' : 'pt-BR'"
                       (ngModelChange)="item.altura = $event"
                       [disabled]="orcamento.status !== 'Orçamento'"
                       (input)="calculaPeso(item)"
                     />
                   </ng-template>
                   <ng-template pTemplate="output">
-                    {{ item.altura| number: '1.0-2': 'pt-BR' }}
+                    {{ item.altura | number : "1.0-2" : "pt-BR" }}
                   </ng-template>
                 </p-cellEditor>
               </td>
@@ -475,14 +546,14 @@
                       id="quantidade"
                       type="number"
                       lang="pt-BR"
-                      [ngModel]="item.quantidade| number: '1.0-2': 'pt-BR'"
+                      [ngModel]="item.quantidade | number : '1.0-2' : 'pt-BR'"
                       (ngModelChange)="item.quantidade = $event"
                       [disabled]="orcamento.status !== 'Orçamento'"
                       (input)="calculaHora(item); calculaPeso(item)"
                     />
                   </ng-template>
                   <ng-template pTemplate="output">
-                    {{ item.quantidade| number: '1.0-2': 'pt-BR' || "-" }}
+                    {{ item.quantidade | number : "1.0-2" : "pt-BR" || "-" }}
                   </ng-template>
                 </p-cellEditor>
               </td>
@@ -653,81 +724,88 @@
     </div>
     <div class="row">
       <div class="col-6">
-        <label for="inpCondicaoPagamento">Condição de Pagamento: </label>
+        <label for="cond_pag">Condição de Pagamento: </label>
         <p-dropdown
-          name="inpCondicaoPagamento"
-          id="inpCondicaoPagamento"
+          name="cond_pag"
+          id="cond_pag"
           [options]="condicaoPagamento$ | async"
           [(ngModel)]="orcamento.cond_pag"
           [disabled]="orcamento.status !== 'Orçamento'"
+          class="noprint"
         ></p-dropdown>
+        <span class="noview">{{ orcamento.cond_pag }}</span>
       </div>
       <div class="col-2">
-        <label for="inpFrete">Frete: </label
+        <label for="frete">Frete: </label
         ><input
           pInputText
-          class="p-inputtext"
-          name="inpFrete"
-          id="inpFrete"
+          class="p-inputtext noprint"
+          name="frete"
+          id="frete"
           type="text"
           [ngModel]="orcamento.frete | currency : 'BRL'"
           (ngModelChange)="onChangeFrete($event); calculaTotais()"
           [disabled]="orcamento.status !== 'Orçamento'"
         />
+        <span class="noview">{{ orcamento.frete | currency : "BRL" }}</span>
       </div>
       <div class="col-2">
-        <label for="inpDesconto">Desconto: </label
+        <label for="desconto">Desconto: </label
         ><input
           pInputText
-          class="p-inputtext"
-          name="inpDesconto"
-          id="inpDesconto"
+          class="p-inputtext noprint"
+          name="desconto"
+          id="desconto"
           type="text"
           [ngModel]="orcamento.desconto | currency : 'BRL'"
           (ngModelChange)="onChangeDesconto($event); calculaTotais()"
           [disabled]="orcamento.status !== 'Orçamento'"
         />
+        <span class="noview">{{ orcamento.desconto | currency : "BRL" }}</span>
       </div>
       <div class="col-2">
         <label>Total: </label>
-        <span class="total">{{
-          orcamento.total | currency : "BRL"
-        }}</span>
+        <span class="total">{{ orcamento.total | currency : "BRL" }}</span>
       </div>
     </div>
     <div class="row">
       <div class="col-6">
-        <label for="inpEmbalagens">Embalagens: </label>
+        <label for="embalagem">Embalagens: </label>
         <p-dropdown
-          name="inpEmbalagens"
-          id="inpEmbalagens"
+          name="embalagem"
+          id="embalagem"
           [options]="embalagensOptions"
           [(ngModel)]="orcamento.embalagem"
           [disabled]="orcamento.status !== 'Orçamento'"
+          class="noprint"
         ></p-dropdown>
+        <span class="noview">{{ orcamento.embalagem }}</span>
       </div>
       <div class="col-6">
-        <label for="inpTransporte">Transporte: </label>
+        <label for="transporte">Transporte: </label>
         <p-dropdown
-          name="inpTransporte"
-          id="inpTransporte"
+          name="transporte"
+          id="transporte"
           [options]="transporteOptions"
           [(ngModel)]="orcamento.transporte"
           [disabled]="orcamento.status !== 'Orçamento'"
+          class="noprint"
         ></p-dropdown>
+        <span class="noview">{{ orcamento.transporte }}</span>
       </div>
     </div>
     <div class="row">
       <div class="col">
-        <label for="inpObservacoes">Observações: </label>
+        <label for="observacao">Observações: </label>
         <textarea
           pInputTextarea
-          class="p-inputtextarea"
-          name="inpObservacoes"
-          id="inpObservacoes"
+          class="p-inputtextarea noprint"
+          name="observacao"
+          id="observacao"
           [(ngModel)]="orcamento.observacao"
           [disabled]="orcamento.status !== 'Orçamento'"
         ></textarea>
+        <span class="noview">{{ orcamento.observacao }}</span>
       </div>
     </div>
     <div class="row">

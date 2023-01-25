@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { debounceTime, firstValueFrom, map, Subscription } from 'rxjs';
@@ -10,6 +10,7 @@ import { ArquivoService } from 'src/app/services/arquivo.service';
 import { Validação } from 'src/app/models/validacao';
 import { ListaGenericaService } from 'src/app/services/lista-generica.service';
 import { validador } from 'src/app/utils/validadores';
+import { Arquivo } from 'src/app/models/arquivo';
 
 @Component({
   selector: 'app-pessoa',
@@ -41,6 +42,12 @@ export class PessoaComponent implements OnInit {
 
   cnpjLoading: boolean = false;
 
+  fileLoading: boolean = false;
+
+  logtipoUrl: string = '';
+
+  @ViewChild('logotipo', { static: false }) logotipo?: HTMLImageElement;
+
   ngOnInit(): void {
     this.getCategoria();
     this.getPessoa();
@@ -64,7 +71,7 @@ export class PessoaComponent implements OnInit {
         .getPessoa(id)
         .pipe(debounceTime(1000))
         .subscribe({
-          next: (pessoa) => {
+          next: async(pessoa) => {
             if (pessoa.data_nasc)
               pessoa.data_nasc = new Date(pessoa.data_nasc!.toString());
             if (pessoa.fornecedor?.data_aprov)
@@ -77,6 +84,10 @@ export class PessoaComponent implements OnInit {
               );
               console.log(pessoa);
             this.pessoa = pessoa;
+            if (pessoa.empresa?.file?.id) {
+              const url: any = await firstValueFrom(this.arquivoService.getUrlArquivo(pessoa.empresa?.file?.id))
+              this.logtipoUrl = url.url;
+            }
           },
           error: (error) => {
             console.log(error);
@@ -349,6 +360,47 @@ export class PessoaComponent implements OnInit {
             console.log(error);
           },
         });
+    }
+  }
+
+  onFileSelected(event: Event) {
+    if (this.pessoa.empresa?.file?.id)
+    this.arquivoService.deleteArquivo(this.pessoa.empresa?.file?.id).subscribe()
+    const file: File = (event.target as HTMLInputElement).files![0];
+    if (file) {
+      this.fileLoading = true;
+      this.arquivoService
+        .uploadArquivo(file)
+        .pipe(debounceTime(1000))
+        .subscribe({
+          next: (arquivo: Arquivo) => {
+            this.pessoa.empresa!.file = arquivo;
+          },
+          error: (error) => {
+            this.fileLoading = false;
+            console.log(error);
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Erro',
+              detail: `${error.status} - ${error.statusText} - ${error.error}`,
+            });
+          },
+          complete: async() => {
+            this.fileLoading = false;
+            if (this.pessoa.empresa?.file?.id) {
+              const url: any = await firstValueFrom(this.arquivoService.getUrlArquivo(this.pessoa.empresa?.file?.id))
+              this.logtipoUrl = url.url;
+            }
+          },
+        });
+    }
+  }
+
+  async getLogo(id: any) {
+    id = Number(id)
+    if(Number.isFinite(id)){
+      const url: any = await firstValueFrom(this.arquivoService.getUrlArquivo(id))
+      return url.url;
     }
   }
 }
