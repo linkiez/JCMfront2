@@ -1,3 +1,84 @@
-<p>
-  ordem-producao works!
-</p>
+<form action="">
+  <div class="conteiner">
+    <div class="row">
+      <div class="col">
+        <h4>F-026 Monitoramento de Processo - Ordem de Produção Rev.07</h4>
+        <table>
+          <tbody>
+            <tr>
+              <td>Cliente:</td>
+              <td>nome do cliente</td>
+              <td>Data de abertura:</td>
+              <td><strong>data de abertura</strong></td>
+            </tr>
+            <tr>
+              <td>Orçamento:</td>
+              <td>numero do orçamento</td>
+              <td>Prazo de entrega:</td>
+              <td>prazo de entrega</td>
+            </tr>
+            <tr>
+              <td>Vendendor:</td>
+              <td>vendedor</td>
+              <td>Ordem de Produção</td>
+              <td><strong> numero</strong> </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <hr>
+        <div>
+          <table>
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Descrição</th>
+                <th>Material</th>
+                <th>Qtd.</th>
+                <th>RIR</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>item</td>
+                <td>descricao</td>
+                <td>material</td>
+                <td>quantidade</td>
+                <td>rir</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="row">
+          <div class="col-6">
+            <table>
+              <tbody>
+                <tr>
+                  <td>processo</td>
+                  <td>Data:</td>
+                  <td>Ass:</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="col-6">observações</div>
+          <div class="col noprint">
+            <listaFiles [compact]="true"></listaFiles>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <table>
+          <tbody>
+
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</form>

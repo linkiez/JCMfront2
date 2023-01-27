@@ -1,0 +1,33 @@
+td {
+  border: 0px solid #ccc;
+}
+
+th {
+  border: 0px solid #ccc;
+  font-weight: bold;
+  background-color: #c8ffc8;
+  color: black;
+}
+
+table {
+  width: 100%;
+  font-size: small;
+}
+
+@media print{
+  td {
+    border: 2px solid #bbb !important;
+  }
+
+  th {
+    border: 2px solid #bbb !important;
+    font-weight: bold;
+    background-color: #c8ffc8;
+    color: black;
+  }
+
+  hr {
+    border: 2px solid #ccc !important;
+  }
+
+}
