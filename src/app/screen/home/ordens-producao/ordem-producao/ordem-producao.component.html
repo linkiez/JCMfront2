@@ -2,35 +2,63 @@
   <div class="conteiner">
     <div class="row">
       <div class="col">
-        <h4>F-026 Monitoramento de Processo - Ordem de Produção Rev.07</h4>
+        <span
+          >F-026 - Ordem de Produção Rev.07 Data Emissäo: 25/09/2019 Data
+          Revisäo: 30/01/2023</span
+        >
         <table>
           <tbody>
             <tr>
               <td>Cliente:</td>
-              <td>nome do cliente</td>
+              <td>{{ ordemProducao.orcamento?.pessoa?.nome }}</td>
               <td>Data de abertura:</td>
-              <td><strong>data de abertura</strong></td>
+              <td>
+                <strong>{{
+                  ordemProducao.createdAt | date : "dd/MM/yyyy HH:mm:ss"
+                }}</strong>
+              </td>
             </tr>
             <tr>
               <td>Orçamento:</td>
-              <td>numero do orçamento</td>
+              <td>{{ ordemProducao.orcamento?.id }}</td>
               <td>Prazo de entrega:</td>
-              <td>prazo de entrega</td>
+              <td>{{ ordemProducao.data_prazo | date : "dd/MM/yyyy" }}</td>
             </tr>
             <tr>
               <td>Vendendor:</td>
-              <td>vendedor</td>
+              <td>{{ ordemProducao.vendedor?.pessoa?.nome }}</td>
               <td>Ordem de Produção</td>
-              <td><strong> numero</strong> </td>
+              <td>
+                <strong> {{ ordemProducao.id }}</strong>
+              </td>
             </tr>
           </tbody>
         </table>
+        <small
+          >Observações: Tolerâncias não indicadas nos desenhos/amostras serão
+          utilizados as da norma NBR ISO2768-1 conforme determinado pelo
+          cliente. Setores: Caldeiraria (C) Grosso, Plasma/Dobra (C) Grosso.
+          Baixo Carbono: Aços 1006/1008/1010/1020.
+        </small>
+        <small>Análise Crítica OK, conforme I-002 de vendas, item 6.1.2</small>
+      </div>
+      <div class="row">
+        <div class="col">
+          <strong>Inspeção Final:</strong>
+        </div>
+        <div class="col">Visto:</div>
+        <div class="col">Data:</div>
       </div>
     </div>
     <div class="row">
       <div class="col">
-        <hr>
-        <div>
+        <hr />
+        <div
+          *ngFor="
+            let itemProducao of ordemProducao.ordem_producao_items;
+            let index = index
+          "
+        >
           <table>
             <thead>
               <tr>
@@ -43,42 +71,84 @@
             </thead>
             <tbody>
               <tr>
-                <td>item</td>
-                <td>descricao</td>
-                <td>material</td>
-                <td>quantidade</td>
-                <td>rir</td>
+                <td>{{ index + 1 }}</td>
+                <td>{{ itemProducao.descricao }}</td>
+                <td>{{ itemProducao.produto?.nome }}</td>
+                <td>{{ itemProducao.quantidade }}</td>
+                <td></td>
               </tr>
             </tbody>
           </table>
-        </div>
-        <div class="row">
-          <div class="col-6">
-            <table>
-              <tbody>
-                <tr>
-                  <td>processo</td>
-                  <td>Data:</td>
-                  <td>Ass:</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="col-6">observações</div>
-          <div class="col noprint">
-            <listaFiles [compact]="true"></listaFiles>
+
+          <div class="row">
+            <div class="col-6">
+              <table>
+                <tbody>
+                  <tr
+                    *ngFor="
+                      let processo of itemProducao.ordem_producao_item_processos
+                    "
+                  >
+                    <td>{{ processo.processo }}</td>
+                    <td>Data:</td>
+                    <td>Ass:</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="col-6">
+              <p-editor
+                [(ngModel)]="itemProducao.observacao"
+                name="observacao"
+                id="observacao"
+                class="noprint"
+              ></p-editor
+              ><div class="noview" [innerHTML]="itemProducao.observacao"></div>
+            </div>
+            <div class="col">
+              <listaFiles [compact]="true"></listaFiles>
+            </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col">
-        <table>
-          <tbody>
-
-          </tbody>
-        </table>
-      </div>
+    <div class="noprint">
+      <hr />
+      <button
+        pButton
+        class="p-button p-button-success"
+        type="submit"
+        name="btnSalvar"
+        id="btnSalvar"
+        (click)="salvar()"
+      >
+        Salvar
+      </button>
+      <button
+        pButton
+        class="p-button"
+        type="button"
+        name="btnImprimir"
+        id="btnImprimir"
+      >
+        <a href="javascript:window.print()"> Imprimir </a>
+      </button>
+      <button
+        pButton
+        class="p-button"
+        (click)="getBack()"
+        type="button"
+        name="btnVoltar"
+        id="btnVoltar"
+      >
+        Voltar
+      </button>
+      <p-confirmDialog
+        header="Confirmação"
+        acceptLabel="Sim"
+        rejectLabel="Não"
+        icon="pi pi-exclamation-triangle"
+      ></p-confirmDialog>
     </div>
   </div>
 </form>

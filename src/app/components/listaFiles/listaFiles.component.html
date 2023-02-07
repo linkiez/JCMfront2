@@ -14,7 +14,7 @@
           (change)="onFileSelected($event)"
           #fileUpload
         />
-        <button pButton class="p-button" (click)="fileUpload.click()">
+        <button pButton class="p-button noprint" (click)="fileUpload.click()">
           <i *ngIf="!fileLoading" class="pi pi-paperclip"></i>
           <p-progressSpinner
             *ngIf="fileLoading"
@@ -66,7 +66,7 @@
           (change)="onFileSelected($event)"
           #fileUpload
         />
-  <button pButton class="p-button" (click)="fileUpload.click()">
+  <button pButton class="p-button noprint" (click)="fileUpload.click()">
     <i *ngIf="!fileLoading" class="pi pi-paperclip"></i>
     <p-progressSpinner
       *ngIf="fileLoading"

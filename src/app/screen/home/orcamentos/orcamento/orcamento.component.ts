@@ -382,8 +382,8 @@ export class OrcamentoComponent implements OnInit {
       item.total = item.total_manual;
     } else {
       item.total =
-        ((item.total_peso || 0) + (item.total_hora || 0)) *
-        ((item.imposto || 0) + 1);
+        ((Number(item.total_peso || 0)) + (Number(item.total_hora || 0))) *
+        ((Number(item.imposto|| 0) ) + 1);
     }
     this.calculaTotais();
   }
@@ -728,6 +728,11 @@ export class OrcamentoComponent implements OnInit {
           },
           complete: () => {
             this.getOrcamento();
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Sucesso',
+              detail: 'Orçamento aprovado com sucesso.',
+            });
           },
         });
     }
