@@ -25,7 +25,7 @@
               <td>{{ ordemProducao.data_prazo | date : "dd/MM/yyyy" }}</td>
             </tr>
             <tr>
-              <td>Vendendor:</td>
+              <td>Vendedor:</td>
               <td>{{ ordemProducao.vendedor?.pessoa?.nome }}</td>
               <td>Ordem de Produção</td>
               <td>
@@ -55,7 +55,7 @@
         <hr />
         <div
           *ngFor="
-            let itemProducao of ordemProducao.ordem_producao_items;
+            let itemProducao of ordemProducao.ordem_producao_items;let indexItemProducao = index
             let index = index
           "
         >
@@ -97,8 +97,9 @@
               </table>
             </div>
             <div class="col-6">
-              <p-editor
-                [(ngModel)]="itemProducao.observacao"
+              <p-editor #editor
+                (onInit)="editor.quill.pasteHTML(itemProducao.observacao)"
+                (onTextChange)="itemProducao.observacao = $event.htmlValue"
                 name="observacao"
                 id="observacao"
                 class="noprint"
