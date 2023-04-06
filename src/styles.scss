@@ -65,11 +65,19 @@ p {
 @page {
   size: A4;
   margin: 0;
-  
+
 }
 
 .noview {
   display: none;
+}
+
+.p-card {
+  width: 360px;
+  background: #343e4d;
+  margin-top: 10px;
+  margin-left: 10px;
+  padding: 10px;
 }
 
 @media print {

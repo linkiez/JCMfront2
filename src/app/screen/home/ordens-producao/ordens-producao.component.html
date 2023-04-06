@@ -1,3 +1,105 @@
-<p>
-  ordens-producao works!
-</p>
+<div class="d-flex">
+  <div *ngFor="let op of ordemProducao">
+    <p-card>
+      <ng-template pTemplate="header">
+        <caixaDeStatus
+          [status]="op.status"
+          *ngIf="!op.editable"
+        ></caixaDeStatus>
+        <caixaDeStatus
+          [status]="op.new?.status"
+          [editable]="op.editable"
+          [options]="CaixaDeStatusOptions"
+          *ngIf="op.editable"
+        ></caixaDeStatus>
+        <span
+          >OP: <strong>{{ op.id }}</strong> Orçamento:
+          {{ op.orcamento?.id }}</span
+        >
+      </ng-template>
+      <p>Cliente: {{ op.orcamento?.pessoa?.nome }}</p>
+      <p>Vendedor: {{ op.vendedor?.pessoa?.nome }}</p>
+      <p>Total: {{ op.orcamento?.total | currency : "BRL" }}</p>
+      <p>
+        Prazo: {{ op.data_prazo | date : "dd/MM/yyyy" }}<br />
+        <span
+          >Fabricado:
+          <span *ngIf="!op.editable">{{
+            op.data_finalizacao | date : "dd/MM/yyyy"
+          }}</span>
+          <p-calendar
+            name="data_finalizacao"
+            [(ngModel)]="op.new!.data_finalizacao"
+            dateFormat="dd/mm/yy"
+            styleClass="w-100"
+            *ngIf="op.editable"
+          ></p-calendar></span
+        ><br />
+        <span
+          >Negociado:
+          <span *ngIf="!op.editable">{{
+            op.data_negociado | date : "dd/MM/yyyy"
+          }}</span>
+          <p-calendar
+            name="data_negociado"
+            [(ngModel)]="op.new!.data_negociado"
+            dateFormat="dd/mm/yy"
+            styleClass="w-100"
+            *ngIf="op.editable"
+          ></p-calendar></span
+        ><br />
+        <span
+          >Entregue:
+          <span *ngIf="!op.editable">{{
+            op.data_entregue | date : "dd/MM/yyyy"
+          }}</span>
+          <p-calendar
+            name="data_entregue"
+            [(ngModel)]="op.new!.data_entregue"
+            dateFormat="dd/mm/yy"
+            styleClass="w-100"
+            *ngIf="op.editable"
+          ></p-calendar>
+        </span>
+      </p>
+      <ng-template pTemplate="footer">
+        <div class="d-flex justify-content-between">
+          <div>
+            <button
+              pButton
+              icon="pi pi-pencil"
+              label="Editar"
+              (click)="op.editable = true; op.new = op"
+              *ngIf="!op.editable"
+            ></button>
+            <button
+              pButton
+              icon="pi pi-check"
+              label="Salvar"
+              (click)="op.editable = false;"
+              *ngIf="op.editable"
+            ></button>
+            <button
+              pButton
+              icon="pi pi-times"
+              label="Cancelar"
+              (click)="op.editable = false; op.new = undefined;"
+              *ngIf="op.editable"
+            ></button>
+          </div>
+        </div>
+      </ng-template>
+    </p-card>
+  </div>
+</div>
+<div class="">
+  <p-paginator
+    #paginator
+    [rows]="query.pageCount"
+    [totalRecords]="totalRecords"
+    [rowsPerPageOptions]="[10, 25, 50]"
+    (onPageChange)="pageChange($event)"
+    [showCurrentPageReport]="true"
+    [currentPageReportTemplate]="totalRecords + ' resultados'"
+  ></p-paginator>
+</div>

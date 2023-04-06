@@ -12,7 +12,7 @@ import { OrdemProducao } from '../models/ordem-producao';
 export class OrdemProducaoService {
   constructor(private http: HttpClient) {}
 
-  getOrdemProducaos(query: Query): Observable<any> {
+  getOrdemProducoes(query: Query): Observable<any> {
     let chaves = Object.keys(query);
     let valores = Object.values(query);
     let queryString = '?';

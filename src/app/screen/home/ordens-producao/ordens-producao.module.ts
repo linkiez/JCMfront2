@@ -10,7 +10,10 @@ import { ListaFilesModule } from 'src/app/components/listaFiles/listaFiles.modul
 import { EditorModule } from 'primeng/editor';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
-
+import { PaginatorModule } from 'primeng/paginator';
+import { CardModule } from 'primeng/card';
+import { CaixaDeStatusModule } from 'src/app/components/caixaDeStatus/caixaDeStatus.module';
+import { CalendarModule } from 'primeng/calendar';
 
 @NgModule({
   declarations: [OrdensProducaoComponent, OrdemProducaoComponent],
@@ -20,7 +23,11 @@ import { ConfirmationService } from 'primeng/api';
     ListaFilesModule,
     EditorModule,
     FormsModule,
-    ConfirmDialogModule
+    ConfirmDialogModule,
+    PaginatorModule,
+    CardModule,
+    CaixaDeStatusModule,
+    CalendarModule
   ],
   providers: [ConfirmationService],
 })

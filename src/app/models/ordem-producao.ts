@@ -6,6 +6,8 @@ import { Produto } from "./produto";
 import { Vendedor } from "./vendedor";
 
 export interface OrdemProducao {
+  new?: OrdemProducao;
+  editable?: boolean;
   id?: number;
   data_prazo?: Date;
   data_finalizacao?: Date;
