@@ -1,5 +1,5 @@
-<div class="d-flex">
-  <div *ngFor="let op of ordemProducao">
+<div class="d-flex justify-content-between flex-wrap">
+  <div *ngFor="let op of ordemProducao; let index = index" class="flex-fill">
     <p-card>
       <ng-template pTemplate="header">
         <caixaDeStatus
@@ -59,9 +59,43 @@
             dateFormat="dd/mm/yy"
             styleClass="w-100"
             *ngIf="op.editable"
+            (onSelect)="op.new!.status='Entregue'"
           ></p-calendar>
         </span>
       </p>
+      <br />
+      <span>
+        Historico:
+        <div class="d-flex" *ngIf="op.editable">
+          <div class="flex-fill">
+              <input pInputText type="text" id="newItem" [(ngModel)] = "op.new!.newItem" />
+          </div>
+          <div class="">
+            <button pButton type="button" icon="pi pi-plus"></button>
+          </div>
+        </div>
+        <div
+          *ngFor="
+            let historico of !op.editable
+              ? op.ordem_producao_historicos!
+              : op.new!.ordem_producao_historicos!;
+            let indexHistorico = index
+          "
+          class="d-flex d-column"
+        >
+          <div class="d-flex justify-content-between">
+            <div>
+              <span>
+                {{ historico.usuario?.pessoa?.nome }}: {{ historico.texto }} -
+              </span>
+              <span
+                >{{ historico.updatedAt | date : "dd/MM/yyyy HH:mm:ss" }}
+              </span>
+            </div>
+            <div *ngIf="op.editable"><i class="pi pi-trash trash"></i></div>
+          </div>
+        </div>
+      </span>
       <ng-template pTemplate="footer">
         <div class="d-flex justify-content-between">
           <div>
@@ -69,22 +103,29 @@
               pButton
               icon="pi pi-pencil"
               label="Editar"
-              (click)="op.editable = true; op.new = op"
+              (click)="op.editable = true; newEditable(op)"
               *ngIf="!op.editable"
             ></button>
             <button
               pButton
               icon="pi pi-check"
               label="Salvar"
-              (click)="op.editable = false;"
+              (click)="salvar(op, index)"
               *ngIf="op.editable"
             ></button>
             <button
               pButton
               icon="pi pi-times"
               label="Cancelar"
-              (click)="op.editable = false; op.new = undefined;"
+              (click)="op.editable = false; op.new = undefined"
               *ngIf="op.editable"
+            ></button>
+            <button
+              pButton
+              icon="pi pi-external-link"
+              label="Abrir"
+              [routerLink]="[op.id]"
+              *ngIf="!op.editable"
             ></button>
           </div>
         </div>

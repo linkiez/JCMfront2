@@ -56,6 +56,7 @@ export class OrdensProducaoComponent implements OnInit {
             ordemProducao.editable = false;
             return ordemProducao;
           });
+          console.log(this.ordemProducao)
         },
         error: (error) => {
           this.messageService.add({
@@ -65,6 +66,32 @@ export class OrdensProducaoComponent implements OnInit {
           });
         },
       });
+  }
+
+  newEditable(op: OrdemProducao) {
+    op.new = {...op}
+  }
+
+  salvar(op: OrdemProducao, index: number) {
+    this.ordemProducaoService.updateOrdemProducao(op.new!).subscribe({
+      next: (ordemProducao) => {
+        this.ordemProducao[index] = ordemProducao;
+        this.ordemProducao[index].editable = false;
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Sucesso',
+          detail: 'A ordem de produção foi atualizada.',
+        });
+
+      },
+      error: (error) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: error.message,
+        });
+      },
+    });
   }
 
   pageChange(event: any) {

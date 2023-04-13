@@ -3,6 +3,7 @@ import { Empresa } from "./empresa";
 import { Operador } from "./operador";
 import { Orcamento } from "./orcamento";
 import { Produto } from "./produto";
+import { Usuario } from "./usuario";
 import { Vendedor } from "./vendedor";
 
 export interface OrdemProducao {
@@ -25,6 +26,8 @@ export interface OrdemProducao {
   empresa?: Empresa;
   vendedor?: Vendedor;
   ordem_producao_items?: OrdemProducaoItem[];
+  ordem_producao_historicos?: OrdemProducaoHistorico[];
+  newItem?: string;
 }
 
 export interface OrdemProducaoItem {
@@ -52,4 +55,14 @@ export interface OrdemProducaoItemProcesso {
   deletedAt?: Date;
   id_operador?: number;
   operador?: Operador
+}
+
+export interface OrdemProducaoHistorico{
+  id?: number;
+  texto?: string;
+  id_usuario?: number;
+  usuario?: Usuario
+  createdAt?: Date;
+  updatedAt?: Date;
+  deletedAt?: Date;
 }

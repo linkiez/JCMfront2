@@ -14,6 +14,8 @@ import { PaginatorModule } from 'primeng/paginator';
 import { CardModule } from 'primeng/card';
 import { CaixaDeStatusModule } from 'src/app/components/caixaDeStatus/caixaDeStatus.module';
 import { CalendarModule } from 'primeng/calendar';
+import { ListboxModule } from 'primeng/listbox';
+import { InputTextModule } from 'primeng/inputtext';
 
 @NgModule({
   declarations: [OrdensProducaoComponent, OrdemProducaoComponent],
@@ -27,7 +29,9 @@ import { CalendarModule } from 'primeng/calendar';
     PaginatorModule,
     CardModule,
     CaixaDeStatusModule,
-    CalendarModule
+    CalendarModule,
+    ListboxModule,
+    InputTextModule
   ],
   providers: [ConfirmationService],
 })

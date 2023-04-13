@@ -48,7 +48,7 @@ export class OrdemProducaoComponent implements OnInit {
   }
 
   getBack() {
-    this.router.navigate(['home/ordemproducao']);
+    this.router.navigate(['home/ordensproducao']);
   }
 
   salvar() {
