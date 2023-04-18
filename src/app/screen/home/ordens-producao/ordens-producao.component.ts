@@ -6,6 +6,7 @@ import { OrdemProducaoService } from 'src/app/services/ordem-producao.service';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { Paginator } from 'primeng/paginator';
 import { MessageService } from 'primeng/api';
+import { UsuarioService } from 'src/app/authentication/usuario.service';
 
 @Component({
   selector: 'app-ordens-producao',
@@ -26,11 +27,13 @@ export class OrdensProducaoComponent implements OnInit {
     pageCount: 10,
     searchValue: '',
     deleted: false,
+    status: '',
   };
 
   constructor(
     private ordemProducaoService: OrdemProducaoService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private usuarioService: UsuarioService,
   ) {}
 
   ngOnInit() {
@@ -56,7 +59,6 @@ export class OrdensProducaoComponent implements OnInit {
             ordemProducao.editable = false;
             return ordemProducao;
           });
-          console.log(this.ordemProducao)
         },
         error: (error) => {
           this.messageService.add({
@@ -69,7 +71,19 @@ export class OrdensProducaoComponent implements OnInit {
   }
 
   newEditable(op: OrdemProducao) {
-    op.new = {...op}
+
+    if (op.data_prazo) op.data_prazo = new Date(op.data_prazo);
+    if (op.data_finalizacao) op.data_finalizacao = new Date(op.data_finalizacao);
+    if (op.data_entregue) op.data_entregue = new Date(op.data_entregue);
+    if (op.data_negociado) op.data_negociado = new Date(op.data_negociado);
+    op.new = { ...op };
+    if (op.ordem_producao_historicos != undefined) {
+      op.new.ordem_producao_historicos = [...op.ordem_producao_historicos];
+    }
+  }
+
+  log(op: OrdemProducao) {
+    console.log(op)
   }
 
   salvar(op: OrdemProducao, index: number) {
@@ -100,5 +114,62 @@ export class OrdensProducaoComponent implements OnInit {
       this.query.pageCount = event.rows;
       this.getOrdemProducao(true);
     }
+  }
+
+  addHistorico(index: number) {
+    const historico = {
+      texto: this.ordemProducao[index].new?.newItem,
+      usuario: this.usuarioService.getUsuario(),
+      updatedAt: new Date(),
+    }
+    this.ordemProducao[index].new?.ordem_producao_historicos?.push(historico)
+    console.log(this.ordemProducao[index])
+  }
+
+  deleteHistorico(index: number, indexHistorico: number) {
+    this.ordemProducao[index].new?.ordem_producao_historicos?.splice(indexHistorico, 1)
+  }
+
+  search() {
+    this.getOrdemProducao();
+  }
+
+  isToday(date: Date) {
+    if (!date) return false;
+    date = new Date(date);
+    const today = new Date();
+    return date.getDate() === today.getDate()
+      && date.getMonth() === today.getMonth()
+      && date.getFullYear() === today.getFullYear();
+  }
+
+  isBeforeToday(date: Date) {
+    if (!date) return false;
+    date = new Date(date);
+    const today = new Date();
+    return date < today;
+  }
+
+  isBeforeDate(date: Date, date2: Date) {
+    if (!date || !date2) return false;
+    date = new Date(date);
+    date2 = new Date(date2);
+    return date < date2;
+  }
+
+  isAfterDate(date: Date, date2: Date) {
+    if (!date || !date2) return false;
+    date = new Date(date);
+    date2 = new Date(date2);
+    return date > date2;
+  }
+
+  isEqualsDate(date: Date, date2: Date) {
+    if (!date || !date2) return false;
+    date = new Date(date);
+    date2 = new Date(date2);
+    return date.getDate() === date2.getDate()
+      && date.getMonth() === date2.getMonth()
+      && date.getFullYear() === date2.getFullYear();
   }
 }

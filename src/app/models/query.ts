@@ -5,5 +5,6 @@ export interface Query {
   fornecedor?: boolean;
   operador?: boolean;
   vendedor?: boolean;
-  deleted: boolean
+  deleted: boolean;
+  status?: string;
 }

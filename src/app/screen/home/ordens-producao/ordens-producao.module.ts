@@ -16,6 +16,7 @@ import { CaixaDeStatusModule } from 'src/app/components/caixaDeStatus/caixaDeSta
 import { CalendarModule } from 'primeng/calendar';
 import { ListboxModule } from 'primeng/listbox';
 import { InputTextModule } from 'primeng/inputtext';
+import { DropdownModule } from 'primeng/dropdown';
 
 @NgModule({
   declarations: [OrdensProducaoComponent, OrdemProducaoComponent],
@@ -31,7 +32,8 @@ import { InputTextModule } from 'primeng/inputtext';
     CaixaDeStatusModule,
     CalendarModule,
     ListboxModule,
-    InputTextModule
+    InputTextModule,
+    DropdownModule
   ],
   providers: [ConfirmationService],
 })

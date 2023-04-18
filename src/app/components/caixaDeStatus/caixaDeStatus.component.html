@@ -2,7 +2,7 @@
   <div
     class="caixa"
     [ngClass]="{
-      statusGreen: status == 'Aprovado',
+      statusGreen: status == 'Aprovado'|| status == 'Finalizado',
       statusYellow: status == 'Orçamento' || status == 'Aguardando',
       statusRed: status == 'Cancelado' || status == 'Recusado',
       statusBlue: status == 'Entregue' || status == 'Venda',
@@ -16,7 +16,7 @@
   <div
     class="caixa"
     [ngClass]="{
-      statusGreen: status == 'Aprovado',
+      statusGreen: status == 'Aprovado' || status == 'Finalizado',
       statusYellow: status == 'Orçamento',
       statusRed: status == 'Cancelado' || status == 'Recusado',
       statusBlue: status == 'Entregue' || status == 'Venda',

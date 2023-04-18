@@ -1,9 +1,13 @@
 import { MessageService } from 'primeng/api';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { OrdemProducao } from 'src/app/models/ordem-producao';
+import {
+  OrdemProducao,
+  OrdemProducaoItemProcesso,
+} from 'src/app/models/ordem-producao';
 import { OrdemProducaoService } from 'src/app/services/ordem-producao.service';
-import {Quill} from 'quill';
+import { Quill } from 'quill';
+import * as xlsx from 'xlsx';
 
 @Component({
   selector: 'app-ordem-producao',
@@ -31,9 +35,9 @@ export class OrdemProducaoComponent implements OnInit {
         console.log(ordemProducao);
         this.ordemProducao = ordemProducao;
 
-        this.ordemProducao.ordem_producao_items?.forEach((item)=>{
-          item.observacao = '<p>'+item.observacao+'<p>'
-        })
+        this.ordemProducao.ordem_producao_items?.forEach((item) => {
+          item.observacao = '<p>' + item.observacao + '<p>';
+        });
       },
       error: (error) => {
         console.log(error);
@@ -76,13 +80,56 @@ export class OrdemProducaoComponent implements OnInit {
       });
   }
 
-  onEditorModelChange(editor: Quill, content: string, index: number){
-    const contents = editor.clipboard.convert({html: content});
+  onEditorModelChange(editor: Quill, content: string, index: number) {
+    const contents = editor.clipboard.convert({ html: content });
     editor.setContents(contents);
   }
 
-  consolelog(content:any){
-    console.log(content)
-    console.log(this.ordemProducao)
+  consolelog(content: any) {
+    console.log(content);
+    console.log(this.ordemProducao);
+  }
+
+  gerarEtiquetas() {
+    const etiquetas = this.ordemProducao.ordem_producao_items?.map(
+      (item, index) => {
+        this.ordemProducao.createdAt = new Date(this.ordemProducao.createdAt!);
+        return {
+          Orçamento: this.ordemProducao.orcamento?.id,
+          OP: this.ordemProducao.id,
+          Cliente: this.ordemProducao.orcamento?.pessoa?.nome,
+          Item: index + 1,
+          Quantidade: item.quantidade,
+          Material: `${item.produto?.nome} - ${item.descricao} - ${Number(
+            this.ordemProducao.orcamento?.orcamento_items[index].altura
+          ).toFixed(0)}x${Number(
+            this.ordemProducao.orcamento?.orcamento_items[index].largura
+          ).toFixed(0)}mm ${item.quantidade}PC`,
+          Data:
+            this.ordemProducao.createdAt?.getDate() +
+            '/' +
+            (this.ordemProducao.createdAt!.getMonth() + 1) +
+            '/' +
+            this.ordemProducao.createdAt?.getFullYear(),
+          RIR: item.id_rir,
+          Processo: this.concatenarProcessosString(
+            item.ordem_producao_item_processos!
+          ),
+        };
+      }
+    );
+
+    const ws = xlsx.utils.json_to_sheet(etiquetas!);
+    const wb = xlsx.utils.book_new();
+    xlsx.utils.book_append_sheet(wb, ws, 'Etiquetas');
+    xlsx.writeFile(wb, 'etiquetas.xlsx');
+  }
+
+  concatenarProcessosString(processos: OrdemProducaoItemProcesso[]) {
+    let processosString = '';
+    processos.forEach((item) => {
+      processosString = processosString + item.processo + ', ';
+    });
+    return processosString.slice(0, -2);
   }
 }

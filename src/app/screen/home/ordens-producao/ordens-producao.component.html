@@ -1,3 +1,36 @@
+<div class="d-flex header">
+  <div class="p-2 align-items-center">
+    <span class="p-input-icon-left ml-auto">
+      <i class="pi pi-search"></i>
+      <input
+        pInputText
+        class="p-inputtext"
+        type="text"
+        placeholder="Search keyword"
+        [(ngModel)]="query.searchValue"
+        (ngModelChange)="search()"
+      />
+    </span>
+  </div>
+  <div class="p-2 align-items-center">
+    Filtrar por status:
+    <p-dropdown
+      name="status"
+      [options]="CaixaDeStatusOptions"
+      [ngModel]="query.status"
+      (ngModelChange)="query.status = $event.valor; search()"
+      optionLabel="valor"
+      [editable]="true"
+    ></p-dropdown>
+    <button
+      pButton
+      type="button"
+      icon="pi pi-times"
+      (click)="query.status = undefined; search()"
+      style="margin-left: 10px;"
+    ></button>
+  </div>
+</div>
 <div class="d-flex justify-content-between flex-wrap">
   <div *ngFor="let op of ordemProducao; let index = index" class="flex-fill">
     <p-card>
@@ -21,25 +54,57 @@
       <p>Vendedor: {{ op.vendedor?.pessoa?.nome }}</p>
       <p>Total: {{ op.orcamento?.total | currency : "BRL" }}</p>
       <p>
-        Prazo: {{ op.data_prazo | date : "dd/MM/yyyy" }}<br />
+        <span
+          >Prazo:
+          <span
+            class="caixa"
+            [ngClass]="{
+              statusYellow: isToday(op.data_prazo!) && !op.data_finalizacao,
+              statusRed:
+                (isBeforeToday(op.data_prazo!) && !op.data_finalizacao) ||
+                isBeforeDate(op.data_prazo!, op.data_finalizacao!),
+              statusGreen:
+                isAfterDate(op.data_prazo!, op.data_finalizacao!) ||
+                isEqualsDate(op.data_prazo!, op.data_finalizacao!)
+            }"
+            >{{ op.data_prazo | date : "dd/MM/yyyy" }}</span
+          ></span
+        >
+        <br />
         <span
           >Fabricado:
-          <span *ngIf="!op.editable">{{
-            op.data_finalizacao | date : "dd/MM/yyyy"
-          }}</span>
+          <span
+            *ngIf="!op.editable"
+            [ngClass]="{
+              caixa: op.data_finalizacao
+            }"
+            >{{ op.data_finalizacao | date : "dd/MM/yyyy" }}</span
+          >
           <p-calendar
             name="data_finalizacao"
             [(ngModel)]="op.new!.data_finalizacao"
             dateFormat="dd/mm/yy"
             styleClass="w-100"
             *ngIf="op.editable"
+            (onSelect)="op.new!.status = 'Finalizado'"
           ></p-calendar></span
         ><br />
         <span
           >Negociado:
-          <span *ngIf="!op.editable">{{
-            op.data_negociado | date : "dd/MM/yyyy"
-          }}</span>
+          <span
+            *ngIf="!op.editable"
+            [ngClass]="{
+              caixa: op.data_negociado,
+              statusYellow: isToday(op.data_negociado!) && !op.data_finalizacao,
+              statusRed:
+                isBeforeToday(op.data_negociado!) &&
+                !isToday(op.data_negociado!),
+              statusGreen:
+                isAfterDate(op.data_negociado!, op.data_finalizacao!) ||
+                isEqualsDate(op.data_negociado!, op.data_finalizacao!)
+            }"
+            >{{ op.data_negociado | date : "dd/MM/yyyy" }}</span
+          >
           <p-calendar
             name="data_negociado"
             [(ngModel)]="op.new!.data_negociado"
@@ -50,28 +115,42 @@
         ><br />
         <span
           >Entregue:
-          <span *ngIf="!op.editable">{{
-            op.data_entregue | date : "dd/MM/yyyy"
-          }}</span>
+          <span
+            *ngIf="!op.editable"
+            [ngClass]="{
+              caixa: op.data_entregue
+            }"
+            >{{ op.data_entregue | date : "dd/MM/yyyy" }}</span
+          >
           <p-calendar
             name="data_entregue"
             [(ngModel)]="op.new!.data_entregue"
             dateFormat="dd/mm/yy"
             styleClass="w-100"
             *ngIf="op.editable"
-            (onSelect)="op.new!.status='Entregue'"
+            (onSelect)="op.new!.status = 'Entregue'"
           ></p-calendar>
         </span>
       </p>
       <br />
-      <span>
+      <div>
         Historico:
         <div class="d-flex" *ngIf="op.editable">
           <div class="flex-fill">
-              <input pInputText type="text" id="newItem" [(ngModel)] = "op.new!.newItem" />
+            <input
+              pInputText
+              type="text"
+              id="newItem"
+              [(ngModel)]="op.new!.newItem"
+            />
           </div>
           <div class="">
-            <button pButton type="button" icon="pi pi-plus"></button>
+            <button
+              pButton
+              type="button"
+              icon="pi pi-plus"
+              (click)="addHistorico(index)"
+            ></button>
           </div>
         </div>
         <div
@@ -84,7 +163,7 @@
           class="d-flex d-column"
         >
           <div class="d-flex justify-content-between">
-            <div>
+            <div class="flex-fill p-2">
               <span>
                 {{ historico.usuario?.pessoa?.nome }}: {{ historico.texto }} -
               </span>
@@ -92,10 +171,16 @@
                 >{{ historico.updatedAt | date : "dd/MM/yyyy HH:mm:ss" }}
               </span>
             </div>
-            <div *ngIf="op.editable"><i class="pi pi-trash trash"></i></div>
+            <div
+              *ngIf="op.editable"
+              (click)="deleteHistorico(index, indexHistorico)"
+              class="d-flex flex-column justify-content-center"
+            >
+              <i class="pi pi-trash trash"></i>
+            </div>
           </div>
         </div>
-      </span>
+      </div>
       <ng-template pTemplate="footer">
         <div class="d-flex justify-content-between">
           <div>
