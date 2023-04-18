@@ -82,6 +82,14 @@ const routes: Routes = [
             (module) => module.OrdensProducaoModule
           ),
           canLoad: [LoginGuard],
+      },
+      {
+        path: 'usuarios',
+        loadChildren: () =>
+          import('./usuarios/usuarios.module').then(
+            (module) => module.UsuariosModule
+          ),
+          canLoad: [LoginGuard],
       }
     ],
   },
