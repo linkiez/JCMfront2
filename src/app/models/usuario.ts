@@ -4,6 +4,7 @@ export interface Usuario {
   id?: number;
   email?: string;
   senha?: string;
+  confirmarSenha?: string;
   deletedAt?: Date;
   updatedAt?: Date;
   createdAt?: Date;

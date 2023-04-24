@@ -90,6 +90,10 @@ const routes: Routes = [
             (module) => module.UsuariosModule
           ),
           canLoad: [LoginGuard],
+      },
+      {
+        path: '*',
+        redirectTo: 'dashboard',
       }
     ],
   },

@@ -66,7 +66,7 @@ export class PessoaComponent implements OnInit {
 
   getPessoa() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
-    if (id != 0) {
+    if (id != 0 && isFinite(id)) {
       this.subscription = this.pessoaService
         .getPessoa(id)
         .pipe(debounceTime(1000))
@@ -264,7 +264,7 @@ export class PessoaComponent implements OnInit {
 
   confirm() {
     this.confirmationService.confirm({
-      message: 'Tem certeza que deseja excluir este produto?',
+      message: 'Tem certeza que deseja excluir esta pessoa?',
       accept: () => {
         this.deletePessoa();
       },

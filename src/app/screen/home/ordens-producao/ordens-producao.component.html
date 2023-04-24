@@ -44,6 +44,7 @@
           [editable]="op.editable"
           [options]="CaixaDeStatusOptions"
           *ngIf="op.editable"
+          (statusChange)="onChangeStatus($event, index)"
         ></caixaDeStatus>
         <span
           >OP: <strong>{{ op.id }}</strong> Orçamento:

@@ -1,1 +1,225 @@
-<p>usuario works!</p>
+<div>
+  <h2>Usuário</h2>
+  <form action="" class="container">
+    <div class="row">
+      <div class="col">
+        <label for="id">Código</label>
+        <input
+          pInputText
+          type="text"
+          name="id"
+          id="id"
+          disabled
+          [(ngModel)]="usuario.id"
+        />
+      </div>
+      <div class="col">
+        <label for="email">Email</label>
+        <input
+          pInputText
+          type="text"
+          name="email"
+          id="email"
+          [(ngModel)]="usuario.email"
+        />
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <label for="senha">Senha</label>
+        <input
+          pInputText
+          type="password"
+          name="senha"
+          id="senha"
+          [(ngModel)]="usuario.senha"
+          (ngModelChange)="validaSenha($event)"
+        />
+        <div *ngFor="let erro of validacoes" class="w-100">
+          <small class="p-error">- {{ erro.message }}</small>
+        </div>
+      </div>
+      <div class="col">
+        <label for="confirmarSenha">Confirmar Senha</label>
+        <input
+          pInputText
+          type="password"
+          name="confirmarSenha"
+          id="confirmarSenha"
+          [(ngModel)]="usuario.confirmarSenha"
+          (ngModelChange)="validaSenha($event)"
+        />
+        <div class="w-100" *ngIf="usuario.senha != usuario.confirmarSenha">
+          <small class="p-error">
+            - Senha e confirmação de senha não conferem.
+          </small>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <h4>Pessoa</h4>
+    </div>
+    <div class="row">
+      <div class="col-6 d-print-flex">
+        <label for="pessoa">Nome: </label>
+        <p-autoComplete
+          name="pessoa"
+          id="pessoa"
+          [(ngModel)]="usuario.pessoa"
+          field="nome"
+          [suggestions]="pessoas"
+          (completeMethod)="searchPessoa($event)"
+          [style]="{ width: '100%' }"
+          [inputStyle]="{ width: '100%' }"
+          appendTo="body"
+          class="noprint flex-grow-1"
+        ></p-autoComplete>
+        <span class="noview">{{ usuario.pessoa?.nome || "-" }}</span>
+      </div>
+      <div class="col-3 d-print-flex">
+        <label for="">{{
+          usuario.pessoa?.pessoa_juridica ? "CNPJ: " : "CPF: "
+        }}</label>
+        <span>{{ (usuario.pessoa?.cnpj_cpf | cpfCnpj) || "-" }}</span>
+      </div>
+      <div class="col-3 d-print-flex">
+        <label for="">{{
+          usuario.pessoa?.pessoa_juridica ? "IE: " : "RG: "
+        }}</label>
+        <span>{{ (usuario.pessoa?.ie_rg | ieRg) || "-" }}</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-7 d-print-flex">
+        <label for="">Endereço: </label>
+        <span>{{ usuario.pessoa?.endereco || "-" }}</span>
+      </div>
+      <div class="col-2 d-print-flex">
+        <label for="">Numero: </label>
+        <span>{{ usuario.pessoa?.numero || "-" }}</span>
+      </div>
+      <div class="col-3 d-print-flex">
+        <label for="">Bairro: </label>
+        <span>{{ usuario.pessoa?.bairro || "-" }}</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col d-print-flex">
+        <label for="">Cidade: </label>
+        <span>{{ usuario.pessoa?.municipio || "-" }}</span>
+      </div>
+      <div class="col d-print-flex">
+        <label for="">UF: </label>
+        <span>{{ usuario.pessoa?.uf || "-" }}</span>
+      </div>
+      <div class="col d-print-flex">
+        <label for="">CEP: </label>
+        <span>{{ (usuario.pessoa?.cep | cep) || "-" }}</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col d-print-flex">
+        <label for="">Telefone: </label>
+        <span>{{ (usuario.pessoa?.telefone | telefone) || "-" }}</span>
+      </div>
+      <div class="col d-print-flex">
+        <label for="">Email: </label>
+        <span>{{ usuario.pessoa?.email || "-" }}</span>
+      </div>
+      <div class="col d-print-flex">
+        <label for="">Email Nfe: </label>
+        <span>{{ usuario.pessoa?.email_nfe || "-" }}</span>
+      </div>
+    </div>
+    <div class="row">
+      <h4>Acessos</h4>
+    </div>
+    <div class="row header">
+      <div class="col-2">Administrador</div>
+      <div class="col-6">
+        <p-checkbox
+          name="admin"
+          id="admin"
+          [(ngModel)]="usuario.acesso.admin"
+          [binary]="true"
+        ></p-checkbox>
+      </div>
+      <div class="col-4">
+        <button
+          pButton
+          class="p-button"
+          (click)="selecionarTodosAcessos()"
+          name="btnSelecioneTodos"
+          id="btnSelecioneTodos"
+        >
+          Selecionar Todos
+        </button>
+        <button
+          pButton
+          class="p-button"
+          (click)="limparTodosAcessos()"
+          name="btnLimparTodos"
+          id="btnLimparTodos"
+        >
+          Limpar Todos
+        </button>
+      </div>
+    </div>
+    <div class="row header" *ngFor="let acessos of getKeys(listaDeAcessos)">
+      <div class="col-2">
+        <span>{{ acessos }}</span>
+      </div>
+      <div class="col-10 row">
+        <div
+          class="col-2"
+          *ngFor="let acesso of getKeys(listaDeAcessos[acessos])"
+        >
+          <p-checkbox
+            [name]="acessos + acesso"
+            [id]="acessos + acesso"
+            [label]="acesso"
+            [(ngModel)]="usuario.acesso[acessos][acesso]"
+            [binary]="true"
+          ></p-checkbox>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<br />
+<div>
+  <button
+    pButton
+    class="p-button p-button-danger"
+    (click)="confirm()"
+    name="btnExcluir"
+    id="btnExcluir"
+  >
+    Excluir
+  </button>
+  <button
+    pButton
+    class="p-button p-button-success"
+    (click)="createOrUpdateUsuario()"
+    name="btnSalvar"
+    id="btnSalvar"
+    [disabled]="validacoes.length > 0"
+  >
+    Salvar
+  </button>
+  <button
+    pButton
+    class="p-button"
+    (click)="getBack()"
+    name="btnVoltar"
+    id="btnVoltar"
+  >
+    Voltar
+  </button>
+</div>
+<p-confirmDialog
+  header="Confirmação"
+  acceptLabel="Sim"
+  rejectLabel="Não"
+  icon="pi pi-exclamation-triangle"
+></p-confirmDialog>

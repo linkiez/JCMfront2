@@ -82,7 +82,7 @@ export class OrdensProducaoComponent implements OnInit {
     }
   }
 
-  log(op: OrdemProducao) {
+  log(op: any) {
     console.log(op)
   }
 
@@ -171,5 +171,9 @@ export class OrdensProducaoComponent implements OnInit {
     return date.getDate() === date2.getDate()
       && date.getMonth() === date2.getMonth()
       && date.getFullYear() === date2.getFullYear();
+  }
+
+  onChangeStatus(event: any, index: number) {
+    this.ordemProducao[index].new!.status = event;
   }
 }

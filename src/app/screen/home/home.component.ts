@@ -59,6 +59,7 @@ export class HomeComponent implements OnInit {
         },
         {
           label: 'Usuarios',
+          routerLink: 'usuarios',
         },
       ],
     },
