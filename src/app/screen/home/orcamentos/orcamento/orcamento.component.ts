@@ -325,7 +325,7 @@ export class OrcamentoComponent implements OnInit {
   }
 
   calculaPeso(item: OrcamentoItem) {
-    if (item.produto) {
+    if (item.produto !== null && item.produto !== undefined) {
       switch (item.produto.categoria) {
         case 'Chapa':
           item.peso =
@@ -344,6 +344,15 @@ export class OrcamentoComponent implements OnInit {
         case 'Peça':
           item.peso = (item.produto.peso || 0) * (item.quantidade || 0);
           break;
+        default:
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: `Categoria do produto invalida: ${item.produto.categoria}`,
+          });
+          throw new Error(
+            `Categoria do produto invalida: ${item.produto.categoria}`
+          );
       }
 
       if (item.produto.categoria !== 'Peça') {
@@ -359,45 +368,97 @@ export class OrcamentoComponent implements OnInit {
       }
 
       this.calculaTotal(item);
+    } else {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erro',
+        detail: 'Produto inválido',
+      });
+      throw new Error('Produto inválido');
     }
   }
 
   calculaHora(item: OrcamentoItem) {
-    let tempoArray: string[] = item.tempo?.split(':') || [];
-
-    if (tempoArray.length > 0) {
-      let hora: number =
-        Number(tempoArray[0]) +
-        Number(tempoArray[1]) / 60 +
-        Number(tempoArray[2]) / 3600;
-
-      item.total_hora =
-        (hora || 0) * (item.preco_hora || 0) * (item.quantidade || 0);
+    if (!item) {
+      throw new Error('Invalid input: item is null or undefined');
     }
+
+    let [hours = '0', minutes = '0', seconds = '0'] = item.tempo?.split(':') ?? [];
+
+    const hora: number = Number(hours) + Number(minutes) / 60 + Number(seconds) / 3600;
+
+    item.total_hora = (hora || 0) * (item.preco_hora || 0) * (item.quantidade || 0);
+
     this.calculaTotal(item);
   }
 
+
   calculaTotal(item: OrcamentoItem) {
+    if (!item) {
+      throw new Error('Invalid input: item is null or undefined');
+    }
+
+    const imposto = Number(item.imposto ?? '0');
+    if (isNaN(imposto)) {
+      this.messageService
+        .add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: 'Imposto não é um numero.',
+        });
+      throw new Error('Invalid input: imposto is not a number');
+    }
+
+    const total_peso = Number(item.total_peso ?? '0');
+    const total_hora = Number(item.total_hora ?? '0');
+    if (isNaN(total_peso) || isNaN(total_hora)) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erro',
+        detail: 'total_peso ou total_hora não é um numero.',
+      });
+      throw new Error('Invalid input: total_peso or total_hora is not a number');
+    }
+
+    const total = (total_peso + total_hora) / (1 - imposto);
+    if (!isFinite(total)) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erro',
+        detail: 'total não é um numero finito.',
+      });
+      throw new Error('Invalid output: total is not a finite number');
+    }
+
     if ((item.total_manual || 0) > 0) {
       item.total = item.total_manual;
     } else {
-      item.total =
-        ((Number(item.total_peso || 0)) + (Number(item.total_hora || 0))) /
-        (1 - (Number(item.imposto|| 0) ));
+      item.total = total;
     }
+
     this.calculaTotais();
   }
 
+
   calculaTotais() {
-    this.orcamento.total = 0;
-    this.orcamento.orcamento_items.forEach((item) => {
-      this.orcamento.total = (this.orcamento.total || 0) + (item.total || 0);
-    });
-    this.orcamento.total =
-      (this.orcamento.total || 0) +
-      (this.orcamento.frete || 0) -
-      (this.orcamento.desconto || 0);
+    if (!this.orcamento) {
+      throw new Error('Invalid state: orcamento is null or undefined');
+    }
+
+    const total_items = this.orcamento.orcamento_items.reduce(
+      (total, item) => (total || 0) + (item.total || 0),
+      0
+    );
+
+    this.orcamento.total = parseFloat(
+      (
+        (total_items || 0) +
+        (this.orcamento.frete || 0) -
+        (this.orcamento.desconto || 0)
+      ).toFixed(2)
+    );
   }
+
 
   validaEmail(email: string) {
     let emailValidador = validador.filter(
