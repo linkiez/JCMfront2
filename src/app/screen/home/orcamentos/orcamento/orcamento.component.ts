@@ -268,6 +268,7 @@ export class OrcamentoComponent implements OnInit {
     this.orcamento.orcamento_items.push({
       uuid: uuidv4(),
       produto: {},
+      material_incluido: false,
       peso: 0,
       total: 0,
       total_hora: 0,

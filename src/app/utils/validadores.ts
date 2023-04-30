@@ -81,6 +81,7 @@ export const validador: Validação[] = [
       campo: 'cnpj_cpf',
       nome: 'CNPJ tem 14 numeros',
       funcao: (pessoa: Pessoa) => {
+
         let cnpjQuantosNumeros = pessoa.cnpj_cpf
           ?.toString()
           .replace(/\D/g, '')

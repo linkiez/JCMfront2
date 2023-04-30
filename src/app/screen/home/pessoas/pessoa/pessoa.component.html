@@ -60,7 +60,7 @@
           pInputText
           [ngModel]="pessoa.cnpj_cpf | cpfCnpj"
           [ngClass]="{ 'ng-erro': cnpj_cpfInvalido.length }"
-          (ngModelChange)="pessoa.cnpj_cpf = $event"
+          (ngModelChange)="pessoa.cnpj_cpf = $event;cleanPessoa(pessoa)"
           (change)="validaCpfCnpj()"
           [ngClass]="{ cnpjLoading: cnpjLoading }"
           maxlength="18"
