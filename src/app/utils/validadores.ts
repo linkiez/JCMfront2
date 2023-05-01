@@ -3,12 +3,13 @@ import { HttpClient, HttpXhrBackend } from "@angular/common/http";
 import { firstValueFrom } from "rxjs";
 import { Pessoa } from "../models/pessoa";
 import { Validação } from "../models/validacao";
+import { MessageService } from 'primeng/api';
 
 const http = new HttpClient(new HttpXhrBackend({
     build: () => new XMLHttpRequest()
 }));
 
-const pessoaService = new PessoaService(http)
+const pessoaService = new PessoaService(http, new MessageService());
 
 export const validador: Validação[] = [
     {
