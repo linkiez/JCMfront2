@@ -1,15 +1,16 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, catchError, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Query } from '../models/query';
+import { MessageService } from 'primeng/api';
 
 @Injectable({
   providedIn: 'root'
 })
 export class VendedorService {
 
-constructor(private http: HttpClient) { }
+constructor(private http: HttpClient, private messageService: MessageService) { }
 
 getVendedores(query: Query): Observable<any> {
   let chaves = Object.keys(query)
@@ -23,6 +24,11 @@ getVendedores(query: Query): Observable<any> {
 
   return this.http.get(environment.backendURL + 'vendedor'+ queryString, {
     responseType: 'json',
-  });
+  }).pipe(
+    catchError((error) => {
+      console.error(error);
+      this.messageService.add({severity:'error', summary:'Erro', detail:'Erro ao buscar vendedores'});
+      return throwError(()=> new Error('Erro ao buscar vendendores'));
+    }));
 }
 }

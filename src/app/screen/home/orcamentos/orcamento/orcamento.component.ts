@@ -1,5 +1,4 @@
 import { EmpresaService } from './../../../../services/empresa.service';
-import { Arquivo } from 'src/app/models/arquivo';
 import { ContatoService } from 'src/app/services/contato.service';
 import { PessoaService } from './../../../../services/pessoa.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
@@ -19,7 +18,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { OrcamentoService } from 'src/app/services/orcamento.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
-import { query } from '@angular/animations';
 import { ArquivoService } from 'src/app/services/arquivo.service';
 
 @Component({

@@ -1,16 +1,17 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, catchError, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Fornecedor } from '../models/fornecedor';
 import { Query } from '../models/query';
+import { MessageService } from 'primeng/api';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FornecedorService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private messageService: MessageService) { }
 
   getFornecedores(query: Query): Observable<any> {
     let chaves = Object.keys(query)
@@ -24,6 +25,11 @@ export class FornecedorService {
 
     return this.http.get<Fornecedor[]>(environment.backendURL + 'fornecedor' + queryString, {
       responseType: 'json',
-    });
+    }).pipe(
+      catchError((error) => {
+        console.error(error);
+        this.messageService.add({severity:'error', summary:'Erro', detail:'Erro ao buscar fornecedores'});
+        return throwError(()=> new Error('Erro ao buscar fornecedores'));
+      }));
   }
 }
