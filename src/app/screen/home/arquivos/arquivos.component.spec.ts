@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ArquivosComponent } from './arquivos.component';
+import { AppModule } from 'src/app/app.module';
+import { ArquivosModule } from './arquivos.module';
 
 describe('ArquivosComponent', () => {
   let component: ArquivosComponent;
@@ -8,7 +10,7 @@ describe('ArquivosComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ArquivosComponent ]
+      imports: [AppModule, ArquivosModule]
     })
     .compileComponents();
 

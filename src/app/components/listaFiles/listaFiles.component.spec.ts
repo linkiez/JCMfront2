@@ -4,6 +4,8 @@ import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
 import { ListaFilesComponent } from './listaFiles.component';
+import { AppModule } from 'src/app/app.module';
+import { ListaFilesModule } from './listaFiles.module';
 
 describe('ListaFilesComponent', () => {
   let component: ListaFilesComponent;
@@ -11,7 +13,7 @@ describe('ListaFilesComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ListaFilesComponent ]
+      imports: [AppModule, ListaFilesModule]
     })
     .compileComponents();
   }));

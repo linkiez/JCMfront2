@@ -19,6 +19,7 @@ import { OrcamentoService } from 'src/app/services/orcamento.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { ArquivoService } from 'src/app/services/arquivo.service';
+import { isUndefined } from 'lodash-es';
 
 @Component({
   selector: 'app-orcamento',
@@ -328,20 +329,20 @@ export class OrcamentoComponent implements OnInit {
       switch (item.produto.categoria) {
         case 'Chapa':
           item.peso =
-            ((item.largura || 0) / 1000) *
-            ((item.altura || 0) / 1000) *
-            (item.produto.espessura || 0) *
-            (item.produto.peso || 0) *
-            (item.quantidade || 0);
+            ((item.largura||0)/1000) *
+            ((item.altura||0)/1000) *
+            (item.produto.espessura||0) *
+            (item.produto.peso||0) *
+            (item.quantidade||0);
           break;
         case 'Barra':
           item.peso =
-            (item.largura || 0 / 1000) *
-            (item.produto.peso || 0) *
-            (item.quantidade || 0);
+            ((item.largura||0)/1000) *
+            (item.produto.peso||0) *
+            (item.quantidade||0);
           break;
         case 'Peça':
-          item.peso = (item.produto.peso || 0) * (item.quantidade || 0);
+          item.peso = (item.produto.peso||0) * (item.quantidade||0);
           break;
         default:
           this.messageService.add({
@@ -362,8 +363,8 @@ export class OrcamentoComponent implements OnInit {
 
       if (item.material_incluido) {
         item.custo =
-          (item.peso || 0) *
-          ((item.produto.pedido_compra_items || [])[0]?.precoComIpi || 0);
+          (item.peso||0) *
+          ((item.produto.pedido_compra_items||[])[0]?.precoComIpi||0);
       }
 
       this.calculaTotal(item);
@@ -378,55 +379,30 @@ export class OrcamentoComponent implements OnInit {
   }
 
   calculaHora(item: OrcamentoItem) {
-    if (!item) {
-      throw new Error('Invalid input: item is null or undefined');
-    }
 
     let [hours = '0', minutes = '0', seconds = '0'] = item.tempo?.split(':') ?? [];
 
     const hora: number = Number(hours) + Number(minutes) / 60 + Number(seconds) / 3600;
 
-    item.total_hora = (hora || 0) * (item.preco_hora || 0) * (item.quantidade || 0);
+    item.total_hora = (hora||0) * (item.preco_hora||0) * (item.quantidade||0);
 
     this.calculaTotal(item);
   }
 
 
   calculaTotal(item: OrcamentoItem) {
-    if (!item) {
-      throw new Error('Invalid input: item is null or undefined');
-    }
 
-    const imposto = Number(item.imposto ?? '0');
-    if (isNaN(imposto)) {
-      this.messageService
-        .add({
-          severity: 'error',
-          summary: 'Erro',
-          detail: 'Imposto não é um numero.',
-        });
-      throw new Error('Invalid input: imposto is not a number');
-    }
 
-    const total_peso = Number(item.total_peso ?? '0');
-    const total_hora = Number(item.total_hora ?? '0');
-    if (isNaN(total_peso) || isNaN(total_hora)) {
+
+    const total = ((item.total_peso||0) + (item.total_hora||0)) / (1 - (item.imposto||0));
+
+    if(total <= 0){
       this.messageService.add({
         severity: 'error',
         summary: 'Erro',
-        detail: 'total_peso ou total_hora não é um numero.',
+        detail: 'Total do item inválido',
       });
-      throw new Error('Invalid input: total_peso or total_hora is not a number');
-    }
-
-    const total = (total_peso + total_hora) / (1 - imposto);
-    if (!isFinite(total)) {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Erro',
-        detail: 'total não é um numero finito.',
-      });
-      throw new Error('Invalid output: total is not a finite number');
+      throw new Error('Total do item inválido');
     }
 
     if ((item.total_manual || 0) > 0) {
@@ -440,20 +416,17 @@ export class OrcamentoComponent implements OnInit {
 
 
   calculaTotais() {
-    if (!this.orcamento) {
-      throw new Error('Invalid state: orcamento is null or undefined');
-    }
 
     const total_items = this.orcamento.orcamento_items.reduce(
-      (total, item) => (total || 0) + (item.total || 0),
+      (total, item) => (total||0) + (item.total||0),
       0
     );
 
     this.orcamento.total = parseFloat(
       (
-        (total_items || 0) +
-        (this.orcamento.frete || 0) -
-        (this.orcamento.desconto || 0)
+        (total_items||0) +
+        (this.orcamento.frete||0) -
+        (this.orcamento.desconto||0)
       ).toFixed(2)
     );
   }

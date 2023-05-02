@@ -4,6 +4,8 @@ import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
 import { OrdemProducaoComponent } from './ordem-producao.component';
+import { AppModule } from 'src/app/app.module';
+import { OrdensProducaoModule } from '../ordens-producao.module';
 
 describe('OrdemProducaoComponent', () => {
   let component: OrdemProducaoComponent;
@@ -11,7 +13,7 @@ describe('OrdemProducaoComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ OrdemProducaoComponent ]
+      imports: [AppModule, OrdensProducaoModule]
     })
     .compileComponents();
   }));

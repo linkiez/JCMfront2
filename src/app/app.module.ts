@@ -17,6 +17,7 @@ import { AuthenticationInterceptor } from './authentication/authentication.inter
 
 import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
+import { MessageService } from 'primeng/api';
 
 @NgModule({
   declarations: [AppComponent, LoginComponent],
@@ -38,6 +39,7 @@ import { MessageModule } from 'primeng/message';
       useClass: AuthenticationInterceptor,
       multi: true,
     },
+    MessageService
   ],
   bootstrap: [AppComponent],
 })

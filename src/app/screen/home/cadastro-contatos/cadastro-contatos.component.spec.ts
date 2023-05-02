@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CadastroContatosComponent } from './cadastro-contatos.component';
+import { AppModule } from 'src/app/app.module';
+import { CadastroContatosModule } from './cadastro-contatos.module';
 
 describe('CadastroContatosComponent', () => {
   let component: CadastroContatosComponent;
@@ -8,7 +10,7 @@ describe('CadastroContatosComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CadastroContatosComponent ]
+      imports: [AppModule, CadastroContatosModule]
     })
     .compileComponents();
 

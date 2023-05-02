@@ -4,6 +4,8 @@ import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
 import { CaixaDeStatusComponent } from './caixaDeStatus.component';
+import { AppModule } from 'src/app/app.module';
+import { CaixaDeStatusModule } from './caixaDeStatus.module';
 
 describe('CaixaDeStatusComponent', () => {
   let component: CaixaDeStatusComponent;
@@ -11,7 +13,7 @@ describe('CaixaDeStatusComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CaixaDeStatusComponent ]
+      imports: [AppModule, CaixaDeStatusModule]
     })
     .compileComponents();
   }));
