@@ -396,14 +396,14 @@ export class OrcamentoComponent implements OnInit {
 
     const total = ((item.total_peso||0) + (item.total_hora||0)) / (1 - (item.imposto||0));
 
-    if(total <= 0){
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Erro',
-        detail: 'Total do item inválido',
-      });
-      throw new Error('Total do item inválido');
-    }
+    // if(total <= 0){
+    //   this.messageService.add({
+    //     severity: 'error',
+    //     summary: 'Erro',
+    //     detail: 'Total do item inválido',
+    //   });
+    //   throw new Error('Total do item inválido');
+    // }
 
     if ((item.total_manual || 0) > 0) {
       item.total = item.total_manual;
@@ -717,6 +717,14 @@ export class OrcamentoComponent implements OnInit {
           severity: 'error',
           summary: 'Erro',
           detail: `É necessário selecionar um produto. Item: ${index + 1}`,
+        });
+        valido = false;
+      }
+      if (!item.total || item.total <= 0) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: `O total não pode ser 0. Item: ${index + 1}`,
         });
         valido = false;
       }
