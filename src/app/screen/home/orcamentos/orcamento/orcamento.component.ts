@@ -687,6 +687,22 @@ export class OrcamentoComponent implements OnInit {
       });
       valido = false;
     }
+    if (!this.orcamento.total){
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erro',
+        detail: 'O valor total não pode ser 0.',
+      });
+      valido = false;
+    }
+    if(this.orcamento.orcamento_items.length <= 0){
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erro',
+        detail: 'É necessário ter pelo menos um item no orçamento.',
+      });
+      valido = false;
+    }
     this.orcamento.orcamento_items.forEach((item, index) => {
       if (item.quantidade == 0) {
         this.messageService.add({
