@@ -324,6 +324,11 @@ export class OrcamentoComponent implements OnInit {
     this.orcamento.contato = $event;
   }
 
+  onChangeEmpresa(event: any) {
+    this.orcamento.empresa = event;
+    this.getLogoUrl();
+  }
+
   calculaPeso(item: OrcamentoItem) {
     if (item.produto !== null && item.produto !== undefined) {
       switch (item.produto.categoria) {
@@ -796,8 +801,5 @@ export class OrcamentoComponent implements OnInit {
     this.displayAprovacao = false;
   }
 
-  onEmpresaChange(event: any) {
-    this.orcamento.empresa = event;
-    this.getLogoUrl();
-  }
+
 }

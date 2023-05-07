@@ -24,7 +24,7 @@
             <p-dropdown
               [options]="contatoEmpresas$ | async"
               [(ngModel)]="orcamento.empresa"
-              (ngModelChange)="onEmpresaChange($event)"
+              (ngModelChange)="onChangeEmpresa($event)"
               name="empresa"
               id="empresa"
               optionLabel="pessoa.nome"
