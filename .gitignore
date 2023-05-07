@@ -29,8 +29,11 @@ chrome-profiler-events*.json
 !.vscode/launch.json
 !.vscode/extensions.json
 .history/*
+.vscode
 
 # misc
+.angular
+
 /.angular/cache
 /.sass-cache
 /connect.lock
