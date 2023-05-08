@@ -27,7 +27,7 @@ export class ProdutoService {
       responseType: 'json',
     }).pipe(
       catchError((error) => {
-        console.error(error);
+        console.log(error, query);
         this.messageService.add({severity:'error', summary:'Erro', detail:'Erro ao buscar produtos'});
         return throwError(()=> new Error('Erro ao buscar produtos'));
       }));
@@ -50,7 +50,7 @@ export class ProdutoService {
       responseType: 'json',
     }).pipe(
       catchError((error) => {
-        console.error(error);
+        console.log(error, produto);
         this.messageService.add({severity:'error', summary:'Erro', detail:'Erro ao adicionar produto'});
         return throwError(()=> new Error('Erro ao adicionar produto'));
       }));
@@ -63,7 +63,7 @@ export class ProdutoService {
       { responseType: 'json' }
     ).pipe(
       catchError((error) => {
-        console.error(error);
+        console.log(error, produto);
         this.messageService.add({severity:'error', summary:'Erro', detail:'Erro ao alterar produto'});
         return throwError(()=> new Error('Erro ao alterar produto'));
       }));
@@ -75,7 +75,7 @@ export class ProdutoService {
       { responseType: 'json' }
     ).pipe(
       catchError((error) => {
-        console.error(error);
+        console.log(error, produto);
         this.messageService.add({severity:'error', summary:'Erro', detail:'Erro ao apagar produto'});
         return throwError(()=> new Error('Erro ao apagar produto'));
       }));

@@ -51,7 +51,7 @@ export class ListaGenericaService {
       responseType: 'json',
     }).pipe(
       catchError((error) => {
-        console.error(error);
+        console.log(error, listaGenerica);
         this.messageService.add({severity:'error', summary:'Erro', detail:'Erro ao adicionar lista generica'});
         return throwError(()=> new Error('Erro ao adicionar lista generica'));
       }));
@@ -64,7 +64,7 @@ export class ListaGenericaService {
       { responseType: 'json' }
     ).pipe(
       catchError((error) => {
-        console.error(error);
+        console.log(error, listaGenerica);
         this.messageService.add({severity:'error', summary:'Erro', detail:'Erro ao alterar lista generica'});
         return throwError(()=> new Error('Erro ao alterar lista generica'));
       }));
@@ -76,7 +76,7 @@ export class ListaGenericaService {
       { responseType: 'json' }
     ).pipe(
       catchError((error) => {
-        console.error(error);
+        console.log(error, listaGenerica);
         this.messageService.add({severity:'error', summary:'Erro', detail:'Erro ao apagar lista generica'});
         return throwError(()=> new Error('Erro ao apagar lista generica'));
       }));

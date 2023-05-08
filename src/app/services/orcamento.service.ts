@@ -29,7 +29,7 @@ export class OrcamentoService {
       }
     ).pipe(
       catchError((error) => {
-        console.error(error);
+        console.log(error, query);
         this.messageService.add({severity:'error', summary:'Erro', detail:'Erro ao buscar orçamentos'});
         return throwError(()=> new Error('Erro ao buscar orçamentos'));
       }));
@@ -52,7 +52,7 @@ export class OrcamentoService {
       responseType: 'json',
     }).pipe(
       catchError((error) => {
-        console.error(error);
+        console.log(error, orcamento);
         this.messageService.add({severity:'error', summary:'Erro', detail:'Erro ao adicionar orçamento'});
         return throwError(()=> new Error('Erro ao adicionar orçamento'));
       }));
@@ -65,7 +65,7 @@ export class OrcamentoService {
       { responseType: 'json' }
     ).pipe(
       catchError((error) => {
-        console.error(error);
+        console.log(error, orcamento);
         this.messageService.add({severity:'error', summary:'Erro', detail:'Erro ao alterar orçamento'});
         return throwError(()=> new Error('Erro ao alterar orçamento'));
       }));
@@ -77,7 +77,7 @@ export class OrcamentoService {
       { responseType: 'json' }
     ).pipe(
       catchError((error) => {
-        console.error(error);
+        console.log(error, orcamento);
         this.messageService.add({severity:'error', summary:'Erro', detail:'Erro ao apagar orçamento'});
         return throwError(()=> new Error('Erro ao apagar orçamento'));
       }));

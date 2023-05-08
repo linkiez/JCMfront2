@@ -26,7 +26,7 @@ getVendedores(query: Query): Observable<any> {
     responseType: 'json',
   }).pipe(
     catchError((error) => {
-      console.error(error);
+      console.log(error, query);
       this.messageService.add({severity:'error', summary:'Erro', detail:'Erro ao buscar vendedores'});
       return throwError(()=> new Error('Erro ao buscar vendendores'));
     }));

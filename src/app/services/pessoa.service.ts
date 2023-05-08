@@ -28,7 +28,7 @@ export class PessoaService {
         responseType: 'json',
       }).pipe(
         catchError((error) => {
-          console.error(error);
+          console.log(error, query);
           this.messageService.add({severity:'error', summary:'Erro', detail:'Erro ao buscar pessoas'});
           return throwError(()=> new Error('Erro ao buscar pessoas'));
         }));
@@ -51,7 +51,7 @@ export class PessoaService {
       responseType: 'json',
     }).pipe(
       catchError((error) => {
-        console.error(error);
+        console.log(error, pessoa);
         this.messageService.add({severity:'error', summary:'Erro', detail:'Erro ao adicionar pessoa'});
         return throwError(()=> new Error('Erro ao buscar pessoa'));
       }));
@@ -64,7 +64,7 @@ export class PessoaService {
       { responseType: 'json' }
     ).pipe(
       catchError((error) => {
-        console.error(error);
+        console.log(error, pessoa);
         this.messageService.add({severity:'error', summary:'Erro', detail:'Erro ao alterar pessoa'});
         return throwError(()=> new Error('Erro ao alterar pessoa'));
       }));
@@ -76,7 +76,7 @@ export class PessoaService {
       { responseType: 'json' }
     ).pipe(
       catchError((error) => {
-        console.error(error);
+        console.log(error, pessoa);
         this.messageService.add({severity:'error', summary:'Erro', detail:'Erro ao apagar pessoa'});
         return throwError(()=> new Error('Erro ao apagar pessoa'));
       }));
@@ -97,7 +97,7 @@ export class PessoaService {
   existeCnpjCpfPessoa(pessoa: Pessoa): Observable<any>{
    return this.http.post(environment.backendURL + 'pessoa/cnpj_cpf/existe', pessoa).pipe(
     catchError((error) => {
-      console.error(error);
+      console.log(error, pessoa);
       this.messageService.add({severity:'error', summary:'Erro', detail:`Erro ao buscar ${pessoa.pessoa_juridica?"CNPJ":"CPF"} da pessoa`});
       return throwError(()=> new Error(`Erro ao buscar ${pessoa.pessoa_juridica?"CNPJ":"CPF"} da pessoa`));
     }));

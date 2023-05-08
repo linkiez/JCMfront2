@@ -53,7 +53,7 @@ export class ContatoService {
       responseType: 'json',
     }).pipe(
       catchError((error) => {
-        console.error(error);
+        console.log(error, contato);
         this.messageService.add({severity:'error', summary:'Erro', detail:'Erro ao adicionar contato'});
         return throwError(()=> new Error('Erro ao adicionar contato'));
       }));
@@ -66,7 +66,7 @@ export class ContatoService {
       { responseType: 'json' }
     ).pipe(
       catchError((error) => {
-        console.error(error);
+        console.log(error, contato);
         this.messageService.add({severity:'error', summary:'Erro', detail:'Erro ao alterar contato'});
         return throwError(()=> new Error('Erro ao alterar contato'));
       }));
@@ -77,7 +77,7 @@ export class ContatoService {
       responseType: 'json',
     }).pipe(
       catchError((error) => {
-        console.error(error);
+        console.log(error, contato);
         this.messageService.add({severity:'error', summary:'Erro', detail:'Erro ao apagar contato'});
         return throwError(()=> new Error('Erro ao apagar contato'));
       }));;

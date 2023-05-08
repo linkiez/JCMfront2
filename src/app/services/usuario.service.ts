@@ -27,7 +27,7 @@ export class UsuarioServiceDB {
       responseType: 'json',
     }).pipe(
       catchError((error) => {
-        console.error(error);
+        console.log(error, query);
         this.messageService.add({severity:'error', summary:'Erro', detail:'Erro ao buscar usuarios'});
         return throwError(()=> new Error('Erro ao buscar usuarios'));
       }));
@@ -50,7 +50,7 @@ export class UsuarioServiceDB {
       responseType: 'json',
     }).pipe(
       catchError((error) => {
-        console.error(error);
+        console.log(error, usuario);
         this.messageService.add({severity:'error', summary:'Erro', detail:'Erro ao adicionar usuario'});
         return throwError(()=> new Error('Erro ao adicionar usuario'));
       }));;
@@ -63,7 +63,7 @@ export class UsuarioServiceDB {
       { responseType: 'json' }
     ).pipe(
       catchError((error) => {
-        console.error(error);
+        console.log(error, usuario);
         this.messageService.add({severity:'error', summary:'Erro', detail:'Erro ao alterar usuario'});
         return throwError(()=> new Error('Erro ao alterar usuario'));
       }));
@@ -75,7 +75,7 @@ export class UsuarioServiceDB {
       { responseType: 'json' }
     ).pipe(
       catchError((error) => {
-        console.error(error);
+        console.log(error, usuario);
         this.messageService.add({severity:'error', summary:'Erro', detail:'Erro ao apagar usuario'});
         return throwError(()=> new Error('Erro ao apagar usuario'));
       }));;

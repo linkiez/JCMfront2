@@ -28,7 +28,7 @@ export class PedidoCompraService {
       responseType: 'json',
     }).pipe(
       catchError((error) => {
-        console.error(error);
+        console.log(error, query);
         this.messageService.add({severity:'error', summary:'Erro', detail:'Erro ao buscar pedidos de compra'});
         return throwError(()=> new Error('Erro ao buscar pedidos de compra'));
       }));
@@ -51,7 +51,7 @@ export class PedidoCompraService {
       responseType: 'json',
     }).pipe(
       catchError((error) => {
-        console.error(error);
+        console.log(error, pedidoCompra);
         this.messageService.add({severity:'error', summary:'Erro', detail:'Erro ao adicionar pedido de compra'});
         return throwError(()=> new Error('Erro ao adicionar pedido de compra'));
       }));
@@ -64,7 +64,7 @@ export class PedidoCompraService {
       { responseType: 'json' }
     ).pipe(
       catchError((error) => {
-        console.error(error);
+        console.log(error, pedidoCompra);
         this.messageService.add({severity:'error', summary:'Erro', detail:'Erro ao alterar pedido de compra'});
         return throwError(()=> new Error('Erro ao alterar pedido de compra'));
       }));
@@ -76,7 +76,7 @@ export class PedidoCompraService {
       { responseType: 'json' }
     ).pipe(
       catchError((error) => {
-        console.error(error);
+        console.log(error, pedidoCompra);
         this.messageService.add({severity:'error', summary:'Erro', detail:'Erro ao apagar pedido de compra'});
         return throwError(()=> new Error('Erro ao apagar pedido de compra'));
       }));

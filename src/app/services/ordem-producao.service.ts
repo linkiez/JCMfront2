@@ -30,7 +30,7 @@ export class OrdemProducaoService {
       }
     ).pipe(
       catchError((error) => {
-        console.error(error);
+        console.log(error, query);
         this.messageService.add({severity:'error', summary:'Erro', detail:'Erro ao buscar Ordens de Produção'});
         return throwError(()=> new Error('Erro ao buscar Ordens de Produção'));
       }));
@@ -53,7 +53,7 @@ export class OrdemProducaoService {
       responseType: 'json',
     }).pipe(
       catchError((error) => {
-        console.error(error);
+        console.log(error, ordemproducao);
         this.messageService.add({severity:'error', summary:'Erro', detail:'Erro ao adicionar Ordem de Produção'});
         return throwError(()=> new Error('Erro ao buscar Ordem de Produção'));
       }));
@@ -66,7 +66,7 @@ export class OrdemProducaoService {
       { responseType: 'json' }
     ).pipe(
       catchError((error) => {
-        console.error(error);
+        console.log(error, ordemproducao);
         this.messageService.add({severity:'error', summary:'Erro', detail:'Erro ao alterar Ordem de Produção'});
         return throwError(()=> new Error('Erro ao alterar Ordem de Produção'));
       }));
@@ -78,7 +78,7 @@ export class OrdemProducaoService {
       { responseType: 'json' }
     ).pipe(
       catchError((error) => {
-        console.error(error);
+        console.log(error, ordemproducao);
         this.messageService.add({severity:'error', summary:'Erro', detail:'Erro ao apagar Ordem de Produção'});
         return throwError(()=> new Error('Erro ao apagar Ordem de Produção'));
       }));
