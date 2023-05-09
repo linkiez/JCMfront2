@@ -290,6 +290,9 @@ export class OrcamentoComponent implements OnInit {
 
   onChangeItemImposto(event: any, item: OrcamentoItem) {
     item.imposto = Number(event.replace(/[^\d]/g, '')) / 10000;
+    if (item.imposto > 1) {
+      item.imposto = 1;
+    }
   }
 
   onChangeItemPrecoQuilo(event: any, item: OrcamentoItem) {
@@ -334,20 +337,20 @@ export class OrcamentoComponent implements OnInit {
       switch (item.produto.categoria) {
         case 'Chapa':
           item.peso =
-            ((item.largura||0)/1000) *
-            ((item.altura||0)/1000) *
-            (item.produto.espessura||0) *
-            (item.produto.peso||0) *
-            (item.quantidade||0);
+            ((item.largura || 0) / 1000) *
+            ((item.altura || 0) / 1000) *
+            (item.produto.espessura || 0) *
+            (item.produto.peso || 0) *
+            (item.quantidade || 0);
           break;
         case 'Barra':
           item.peso =
-            ((item.largura||0)/1000) *
-            (item.produto.peso||0) *
-            (item.quantidade||0);
+            ((item.largura || 0) / 1000) *
+            (item.produto.peso || 0) *
+            (item.quantidade || 0);
           break;
         case 'Peça':
-          item.peso = (item.produto.peso||0) * (item.quantidade||0);
+          item.peso = (item.produto.peso || 0) * (item.quantidade || 0);
           break;
         default:
           this.messageService.add({
@@ -368,8 +371,8 @@ export class OrcamentoComponent implements OnInit {
 
       if (item.material_incluido) {
         item.custo =
-          (item.peso||0) *
-          ((item.produto.pedido_compra_items||[])[0]?.precoComIpi||0);
+          (item.peso || 0) *
+          ((item.produto.pedido_compra_items || [])[0]?.precoComIpi || 0);
       }
 
       this.calculaTotal(item);
@@ -384,22 +387,22 @@ export class OrcamentoComponent implements OnInit {
   }
 
   calculaHora(item: OrcamentoItem) {
+    let [hours = '0', minutes = '0', seconds = '0'] =
+      item.tempo?.split(':') ?? [];
 
-    let [hours = '0', minutes = '0', seconds = '0'] = item.tempo?.split(':') ?? [];
+    const hora: number =
+      Number(hours) + Number(minutes) / 60 + Number(seconds) / 3600;
 
-    const hora: number = Number(hours) + Number(minutes) / 60 + Number(seconds) / 3600;
-
-    item.total_hora = (hora||0) * (item.preco_hora||0) * (item.quantidade||0);
+    item.total_hora =
+      (hora || 0) * (item.preco_hora || 0) * (item.quantidade || 0);
 
     this.calculaTotal(item);
   }
 
-
   calculaTotal(item: OrcamentoItem) {
-
-
-
-    const total = ((item.total_peso||0) + (item.total_hora||0)) / (1 - (item.imposto||0));
+    const total =
+      ((item.total_peso || 0) + (item.total_hora || 0)) /
+      (1 - (item.imposto || 0));
 
     // if(total <= 0){
     //   this.messageService.add({
@@ -419,23 +422,20 @@ export class OrcamentoComponent implements OnInit {
     this.calculaTotais();
   }
 
-
   calculaTotais() {
-
     const total_items = this.orcamento.orcamento_items.reduce(
-      (total, item) => (total||0) + (item.total||0),
+      (total, item) => (total || 0) + (item.total || 0),
       0
     );
 
     this.orcamento.total = parseFloat(
       (
-        (total_items||0) +
-        (this.orcamento.frete||0) -
-        (this.orcamento.desconto||0)
+        (total_items || 0) +
+        (this.orcamento.frete || 0) -
+        (this.orcamento.desconto || 0)
       ).toFixed(2)
     );
   }
-
 
   validaEmail(email: string) {
     let emailValidador = validador.filter(
@@ -619,14 +619,15 @@ export class OrcamentoComponent implements OnInit {
       valido = false;
     }
     if (
-      this.orcamento.contato?.valor &&
-      this.orcamento.contato?.valor.length > 0 &&
-      (!this.orcamento.contato.nome || this.orcamento.contato.nome?.length == 0)
+      (!this.orcamento.contato?.valor ||
+        this.orcamento.contato?.valor.length == 0) &&
+      (!this.orcamento.contato?.nome ||
+        this.orcamento.contato?.nome.length == 0)
     ) {
       this.messageService.add({
         severity: 'error',
         summary: 'Erro',
-        detail: 'O nome do contato é obrigatório.',
+        detail: 'O contato é obrigatório.',
       });
       valido = false;
     }
@@ -692,7 +693,7 @@ export class OrcamentoComponent implements OnInit {
       });
       valido = false;
     }
-    if (!this.orcamento.total){
+    if (!this.orcamento.total) {
       this.messageService.add({
         severity: 'error',
         summary: 'Erro',
@@ -700,7 +701,7 @@ export class OrcamentoComponent implements OnInit {
       });
       valido = false;
     }
-    if(this.orcamento.orcamento_items.length <= 0){
+    if (this.orcamento.orcamento_items.length <= 0) {
       this.messageService.add({
         severity: 'error',
         summary: 'Erro',
@@ -800,6 +801,4 @@ export class OrcamentoComponent implements OnInit {
     }
     this.displayAprovacao = false;
   }
-
-
 }
