@@ -10,6 +10,7 @@ export interface ListaGenerica {
 export interface ListaGenericaItem {
   id?: number;
   valor?: string;
+  valor2?: string;
   deletedAt?: Date;
   updateAt?: Date;
   createAt?: Date;

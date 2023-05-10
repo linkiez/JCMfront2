@@ -123,6 +123,14 @@ export class OrcamentoComponent implements OnInit {
       )
     );
 
+    markupOptions$  = this.listaGenericaService
+    .getByNameListaGenerica('markup')
+    .pipe(
+      map((listaGenerica: any) =>
+        listaGenerica.lista_generica_items
+      )
+    );
+
   embalagensOptions = [
     'Por conta do Fornecedor(nosso padrão)',
     'Por conta do Cliente',
@@ -299,6 +307,11 @@ export class OrcamentoComponent implements OnInit {
     item.preco_quilo = Number(event.replace(/[^\d]/g, '')) / 100;
   }
 
+  onChangeItemPrecoQuilo2(event: any, item: OrcamentoItem) {
+    item.preco_quilo = (item.produto?.pedido_compra_items[0].precoComIpi||0) *
+    event.valor2;
+  }
+
   onChangeItemTotalManual(event: any, item: OrcamentoItem) {
     item.total_manual = Number(event.replace(/[^\d]/g, '')) / 100;
   }
@@ -424,17 +437,16 @@ export class OrcamentoComponent implements OnInit {
 
   calculaTotais() {
     const total_items = this.orcamento.orcamento_items.reduce(
-      (total, item) => (total || 0) + (item.total || 0),
+      (total, item) => Number(total || 0) + Number(item.total || 0),
       0
     );
 
-    this.orcamento.total = parseFloat(
-      (
-        (total_items || 0) +
-        (this.orcamento.frete || 0) -
-        (this.orcamento.desconto || 0)
+    this.orcamento.total =
+      +(
+        Number(total_items || 0) +
+        Number(this.orcamento.frete || 0) -
+        Number(this.orcamento.desconto || 0)
       ).toFixed(2)
-    );
   }
 
   validaEmail(email: string) {
@@ -462,6 +474,7 @@ export class OrcamentoComponent implements OnInit {
             item.uuid = uuidv4();
           });
           this.orcamento = response;
+          console.log(this.orcamento);
         },
         error: (error) => {
           console.log(error);

@@ -32,4 +32,22 @@ export class FornecedorService {
         return throwError(()=> new Error('Erro ao buscar fornecedores'));
       }));
   }
+
+  deleteFornecedor(fornecedor: Fornecedor): Observable<Object> {
+    return this.http
+      .delete(environment.backendURL + 'fornecedor/' + fornecedor.id, {
+        responseType: 'json',
+      })
+      .pipe(
+        catchError((error) => {
+          console.log(error, fornecedor);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: 'Erro ao apagar fornecedor',
+          });
+          return throwError(() => new Error('Erro ao apagar fornecedor'));
+        })
+      );
+  }
 }

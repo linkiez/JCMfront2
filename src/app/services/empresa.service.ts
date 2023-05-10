@@ -32,4 +32,16 @@ export class EmpresaService {
         return throwError(()=> new Error('Erro ao buscar empresas'));
       }));
   }
+
+  deleteEmpresa(empresa: Empresa): Observable<Object> {
+    return this.http.delete(
+      environment.backendURL + 'empresa/' + empresa.id,
+      { responseType: 'json' }
+    ).pipe(
+      catchError((error) => {
+        console.log(error, empresa);
+        this.messageService.add({severity:'error', summary:'Erro', detail:'Erro ao apagar empresa'});
+        return throwError(()=> new Error('Erro ao apagar empresa'));
+      }));
+  }
 }

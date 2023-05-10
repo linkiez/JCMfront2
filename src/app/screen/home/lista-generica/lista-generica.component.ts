@@ -16,6 +16,8 @@ export class ListaGenericaComponent implements OnInit {
 
   novoItem: string = '';
 
+  novoValor: string = '';
+
   selectedLista: ListaGenerica = { lista_generica_items: [] };
 
   first = 0;
@@ -58,7 +60,7 @@ export class ListaGenericaComponent implements OnInit {
   addItem() {
     if (!this.selectedLista.lista_generica_items)
       this.selectedLista.lista_generica_items = [];
-    this.selectedLista.lista_generica_items.push({ valor: this.novoItem });
+    this.selectedLista.lista_generica_items.push({ valor: this.novoItem, valor2: this.novoValor });
   }
 
   removeItem(item: ListaGenericaItem) {

@@ -1,3 +1,5 @@
+import { EmpresaService } from './../../../../services/empresa.service';
+import { Vendedor } from 'src/app/models/vendedor';
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -11,6 +13,9 @@ import { Validação } from 'src/app/models/validacao';
 import { ListaGenericaService } from 'src/app/services/lista-generica.service';
 import { validador } from 'src/app/utils/validadores';
 import { Arquivo } from 'src/app/models/arquivo';
+import { VendedorService } from 'src/app/services/vendedor.service';
+import { OperadorService } from 'src/app/services/operador.service';
+import { FornecedorService } from 'src/app/services/fornecedor.service';
 
 @Component({
   selector: 'app-pessoa',
@@ -27,7 +32,11 @@ export class PessoaComponent implements OnInit {
     private arquivoService: ArquivoService,
     private confirmationService: ConfirmationService,
     @Inject(DOCUMENT) private document: Document,
-    private listaGenericaService: ListaGenericaService
+    private listaGenericaService: ListaGenericaService,
+    private vendedorService: VendedorService,
+    private empresaService: EmpresaService,
+    private operadorService: OperadorService,
+    private fornecedorService: FornecedorService
   ) {}
   pessoa: Pessoa = { pessoa_juridica: false };
   pessoaOld: Pessoa = {};
@@ -230,6 +239,106 @@ export class PessoaComponent implements OnInit {
           this.router.navigate(['/home/pessoas']);
         },
       });
+  }
+
+  deleteVendedor(){
+    if(this.pessoa.vendedor?.id){
+      this.vendedorService.deleteVendedor(this.pessoa.vendedor).subscribe({
+        error: (error) => {
+          console.log(error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: `${error.status} - ${error.statusText} - ${error.error}`,
+          });
+        },
+        complete: () => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Sucesso',
+            detail: 'O vendedor foi exluido.',
+          });
+          this.pessoa.vendedor = {};
+        },
+      });
+    }else{
+      this.pessoa.vendedor = undefined;
+    }
+  }
+
+  deleteEmpresa(){
+    if(this.pessoa.empresa?.id){
+      this.empresaService.deleteEmpresa(this.pessoa.empresa).subscribe({
+        error: (error) => {
+          console.log(error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: `${error.status} - ${error.statusText} - ${error.error}`,
+          });
+        },
+        complete: () => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Sucesso',
+            detail: 'A empresa foi exluida.',
+          });
+          this.pessoa.empresa = {};
+        },
+      });
+    }else{
+      this.pessoa.empresa = undefined;
+    }
+  }
+
+  deleteOperador(){
+    if(this.pessoa.operador?.id){
+      this.operadorService.deleteOperador(this.pessoa.operador).subscribe({
+        error: (error: any) => {
+          console.log(error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: `${error.status} - ${error.statusText} - ${error.error}`,
+          });
+        },
+        complete: () => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Sucesso',
+            detail: 'O operador foi exluido.',
+          });
+          this.pessoa.operador = undefined;
+        },
+      });
+    }else{
+      this.pessoa.operador = undefined;
+    }
+  }
+
+  deleteFornecedor(){
+    if(this.pessoa.fornecedor?.id){
+      this.fornecedorService.deleteFornecedor(this.pessoa.fornecedor).subscribe({
+        error: (error: any) => {
+          console.log(error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: `${error.status} - ${error.statusText} - ${error.error}`,
+          });
+        },
+        complete: () => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Sucesso',
+            detail: 'O fornecedor foi exluido.',
+          });
+          this.pessoa.fornecedor = undefined;
+        },
+      });
+    }else{
+      this.pessoa.fornecedor = undefined;
+    }
   }
 
   newFornecedor() {

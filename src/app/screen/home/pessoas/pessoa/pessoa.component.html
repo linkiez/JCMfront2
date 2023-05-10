@@ -441,7 +441,7 @@
                 disabled
               />
             </div>
-            <div class="input col-6">
+            <div class="input col-5">
               <label for="InpUpdatedAtFornecedor">Atualizado em</label>
               <input
                 name="InpUpdatedAtFornecedor"
@@ -453,6 +453,9 @@
                 }}"
                 disabled
               />
+            </div>
+            <div class="col-1 d-flex flex-column justify-content-end">
+              <button pButton type="button" icon="pi pi-trash" (click)="deleteFornecedor()"></button>
             </div>
           </div></form
       ></ng-template>
@@ -470,7 +473,7 @@
       <ng-template pTemplate="content"
         ><form action="" class="d-flex flex-wrap" *ngIf="pessoa.operador">
           <div class="row">
-            <div class="input col-4">
+            <div class="input col-3">
               <label for="InpIdOperador">Id</label>
               <input
                 name="InpIdOperador"
@@ -507,6 +510,9 @@
                 disabled
               />
             </div>
+            <div class="col-1 d-flex flex-column justify-content-end">
+              <button pButton type="button" icon="pi pi-trash" (click)="deleteOperador()"></button>
+            </div>
           </div></form
       ></ng-template>
     </p-accordionTab>
@@ -523,7 +529,7 @@
       <ng-template pTemplate="content"
         ><form action="" class="d-flex flex-wrap" *ngIf="pessoa.empresa">
           <div class="row">
-            <div class="input col-3">
+            <div class="input col-2">
               <label for="InpIdEmpresa">Id</label>
               <input
                 name="InpIdEmpresa"
@@ -569,6 +575,9 @@
                 pInputText
                 [(ngModel)]="pessoa.empresa.token_tiny"
               />
+            </div>
+            <div class="col-1 d-flex flex-column justify-content-end">
+              <button pButton type="button" icon="pi pi-trash" (click)="deleteEmpresa()"></button>
             </div>
           </div>
           <div class="row">
@@ -639,7 +648,7 @@
                 disabled
               />
             </div>
-            <div class="input col-4">
+            <div class="input col-3">
               <label for="InpUpdatedAtVendedor">Atualizado em</label>
               <input
                 name="InpUpdatedAtVendedor"
@@ -652,6 +661,10 @@
                 disabled
               />
             </div>
+            <div class="col-1 d-flex flex-column justify-content-end">
+              <button pButton type="button" icon="pi pi-trash" (click)="deleteVendedor()"></button>
+            </div>
+
           </div></form
       ></ng-template>
     </p-accordionTab>

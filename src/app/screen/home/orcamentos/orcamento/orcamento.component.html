@@ -215,12 +215,12 @@
         </div>
       </div>
     </div>
-    <div [ngClass]="{noprint: orcamento.pessoa?.id == undefined}">
+    <div [ngClass]="{ noprint: orcamento.pessoa?.id == undefined }">
       <div class="row">
         <div><h4>Pessoa</h4></div>
       </div>
       <div class="row">
-        <div class="col-6 d-print-flex" >
+        <div class="col-6 d-print-flex">
           <label for="inpPessoaNome">Nome: </label>
           <p-autoComplete
             name="inpPessoaNome"
@@ -451,7 +451,9 @@
                   name="chkMaterialIncluso"
                   id="chkMaterialIncluso"
                   [tabindex]="0"
-                  [(ngModel)]="orcamento.orcamento_items[index].material_incluido"
+                  [(ngModel)]="
+                    orcamento.orcamento_items[index].material_incluido
+                  "
                   [disabled]="orcamento.status !== 'Orçamento'"
                   [binary]="true"
                   (ngModelChange)="calculaPeso(item)"

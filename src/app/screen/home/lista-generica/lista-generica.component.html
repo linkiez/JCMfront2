@@ -63,14 +63,24 @@
   >
     <ng-template pTemplate="caption">
       <div class="d-flex justify-content-between">
-        <label for="novalista">Novo Item:&nbsp;</label
+        <label for="novoItem">Novo Item:&nbsp;</label
         ><input
           pInputText
           class="p-inputtext"
           name="novoItem"
           type="text"
           [(ngModel)]="novoItem"
-        />&nbsp;<button pButton (click)="addItem()" class="button">
+        />
+        <label for="novoItem">Novo Valor:&nbsp;</label
+          >
+        <input
+          pInputText
+          class="p-inputtext"
+          name="novoItemValor"
+          type="text"
+          [(ngModel)]="novoValor"
+        />
+        &nbsp;<button pButton (click)="addItem()" class="button">
 
           <i class="pi pi-plus"></i></button
         >&nbsp; &nbsp;
@@ -90,7 +100,8 @@
     <ng-template pTemplate="header">
       <tr>
         <th class="col-1">Código</th>
-        <th class="col-10">Nome</th>
+        <th class="col-5">Nome</th>
+        <th class="col-5">Valor</th>
         <th class="col-1"></th>
       </tr>
     </ng-template>
@@ -98,6 +109,7 @@
       <tr>
         <td>{{ listaItem.id }}</td>
         <td>{{ listaItem.valor }}</td>
+        <td>{{ listaItem.valor2}}</td>
         <td>
           <i class="pi pi-trash trash" (click)="removeItem(listaItem)"></i>
         </td>
