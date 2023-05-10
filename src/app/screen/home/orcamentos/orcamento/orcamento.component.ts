@@ -414,8 +414,8 @@ export class OrcamentoComponent implements OnInit {
 
   calculaTotal(item: OrcamentoItem) {
     const total =
-      ((item.total_peso || 0) + (item.total_hora || 0)) /
-      (1 - (item.imposto || 0));
+      Number((item.total_peso || 0) + Number(item.total_hora || 0)) /
+      (1 - Number(item.imposto || 0));
 
     // if(total <= 0){
     //   this.messageService.add({
@@ -427,7 +427,7 @@ export class OrcamentoComponent implements OnInit {
     // }
 
     if ((item.total_manual || 0) > 0) {
-      item.total = item.total_manual;
+      item.total = Number(item.total_manual);
     } else {
       item.total = total;
     }
