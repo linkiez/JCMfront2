@@ -17,9 +17,10 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { ListaFilesModule } from 'src/app/components/listaFiles/listaFiles.module';
 import { PaginatorModule } from 'primeng/paginator';
-import {DialogModule} from 'primeng/dialog';
-import {InputTextareaModule} from 'primeng/inputtextarea';
-import {InputTextModule} from 'primeng/inputtext';
+import { DialogModule } from 'primeng/dialog';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import { InputTextModule } from 'primeng/inputtext';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @NgModule({
   declarations: [OrcamentosComponent, OrcamentoComponent],
@@ -39,7 +40,8 @@ import {InputTextModule} from 'primeng/inputtext';
     PaginatorModule,
     DialogModule,
     InputTextareaModule,
-    InputTextModule
+    InputTextModule,
+    ProgressSpinnerModule,
   ],
   providers: [ConfirmationService],
 })

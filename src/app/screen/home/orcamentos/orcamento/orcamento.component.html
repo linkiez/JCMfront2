@@ -834,9 +834,17 @@
       type="submit"
       name="btnSalvar"
       id="btnSalvar"
-      [disabled]="orcamento.status !== 'Orçamento'"
+      [disabled]="orcamento.status !== 'Orçamento' || loadingSalvar"
     >
       Salvar
+      <p-progressSpinner
+          *ngIf="loadingSalvar"
+          [style]="{ width: '27px', height: '27px', margin: 'auto' }"
+          styleClass="custom-spinner"
+          strokeWidth="8"
+          fill="var(--surface-ground)"
+          animationDuration="1s"
+        ></p-progressSpinner>
     </button>
     <button
       pButton
@@ -845,9 +853,17 @@
       name="btnAprovar"
       id="btnAprovar"
       (click)="displayAprovacao = true"
-      [disabled]="id == 0"
+      [disabled]="id == 0 || loadingAprovar"
     >
       Aprovar
+      <p-progressSpinner
+          *ngIf="loadingAprovar"
+          [style]="{ width: '27px', height: '27px', margin: 'auto' }"
+          styleClass="custom-spinner"
+          strokeWidth="8"
+          fill="var(--surface-ground)"
+          animationDuration="1s"
+        ></p-progressSpinner>
     </button>
     <button
       pButton

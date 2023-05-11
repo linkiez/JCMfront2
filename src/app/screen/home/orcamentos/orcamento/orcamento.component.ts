@@ -71,6 +71,9 @@ export class OrcamentoComponent implements OnInit {
 
   produtos: Produto[] = [];
 
+  loadingSalvar: boolean = false;
+  loadingAprovar: boolean = false;
+
   processos$ = this.listaGenericaService
     .getByNameListaGenerica('processos')
     .pipe(
@@ -505,7 +508,7 @@ export class OrcamentoComponent implements OnInit {
   create(clonar?: boolean) {
     let orcamentoSubmit: Orcamento = this.orcamento;
     orcamentoSubmit.status = 'Orçamento';
-
+    this.loadingSalvar = true;
     this.orcamentoService
       .addOrcamento(orcamentoSubmit)
       .pipe(debounceTime(1000))
@@ -527,6 +530,7 @@ export class OrcamentoComponent implements OnInit {
             summary: 'Erro',
             detail: `${error.status} - ${error.statusText} - ${error.error}`,
           });
+          this.loadingSalvar = false;
         },
         complete: () => {
           this.messageService.add({
@@ -534,6 +538,7 @@ export class OrcamentoComponent implements OnInit {
             summary: 'Sucesso',
             detail: `O orçamento foi ${clonar ? 'clonado' : 'criado'}.`,
           });
+          this.loadingSalvar = false;
           this.router.navigate([`/home/orcamentos/${this.orcamento.id}`]);
         },
       });
@@ -541,7 +546,7 @@ export class OrcamentoComponent implements OnInit {
 
   update() {
     let orcamentoSubmit: Orcamento = this.orcamento;
-    console.log(orcamentoSubmit);
+    this.loadingSalvar = true;
     this.orcamentoService
       .updateOrcamento(orcamentoSubmit)
       .pipe(debounceTime(1000))
@@ -563,6 +568,7 @@ export class OrcamentoComponent implements OnInit {
             summary: 'Erro',
             detail: `${error.status} - ${error.statusText} - ${error.error}`,
           });
+          this.loadingSalvar = false;
         },
         complete: () => {
           this.messageService.add({
@@ -570,6 +576,7 @@ export class OrcamentoComponent implements OnInit {
             summary: 'Sucesso',
             detail: 'O orçamento foi atualizado.',
           });
+          this.loadingSalvar = false;
         },
       });
   }
@@ -788,6 +795,7 @@ export class OrcamentoComponent implements OnInit {
         detail: 'É necessário que a pessoa tenha CPF/CNPJ cadastrado.',
       });
     } else {
+      this.loadingAprovar = true;
       this.orcamentoService
         .aprovarOrcamento(this.orcamento.id!, this.aprovacao)
         .subscribe({
@@ -801,6 +809,7 @@ export class OrcamentoComponent implements OnInit {
               summary: 'Erro',
               detail: `${error.status} - ${error.statusText} - ${error.error}`,
             });
+            this.loadingAprovar = false;
           },
           complete: () => {
             this.getOrcamento();
@@ -809,6 +818,7 @@ export class OrcamentoComponent implements OnInit {
               summary: 'Sucesso',
               detail: 'Orçamento aprovado com sucesso.',
             });
+            this.loadingAprovar = false;
           },
         });
     }
