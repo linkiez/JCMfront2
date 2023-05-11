@@ -49,10 +49,10 @@ export class PedidosComprasComponent implements OnInit, OnDestroy {
 
     this.subscription = this.pedidoCompraService
       .getPedidoCompras(this.query)
-      .pipe(
-        debounceTime(1000), // espera um tempo antes de começar
-        distinctUntilChanged() // recorda a ultima pesquisa
-      )
+      // .pipe(
+      //   debounceTime(1000), // espera um tempo antes de começar
+      //   distinctUntilChanged() // recorda a ultima pesquisa
+      // )
       .subscribe({
         next: (consulta) => {
           this.pedidosCompra = consulta.pedidosCompra;

@@ -51,10 +51,10 @@ export class ProdutosComponent implements OnInit, OnDestroy {
 
     this.subscription = this.produtoService
       .getProdutos(this.query)
-      .pipe(
-        debounceTime(1000), // espera um tempo antes de começar
-        distinctUntilChanged() // recorda a ultima pesquisa
-      )
+      // .pipe(
+      //   debounceTime(1000), // espera um tempo antes de começar
+      //   distinctUntilChanged() // recorda a ultima pesquisa
+      // )
       .subscribe({
         next: (consulta) => {
           this.produtos = consulta.produtos.map((produto: any) => {

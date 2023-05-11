@@ -40,10 +40,10 @@ export class UsuariosComponent implements OnInit {
     this.query.page = pageChange ? this.query.page : 0;
     this.usuarioServiceDB
       .getUsuarios(this.query)
-      .pipe(
-        debounceTime(1000),
-        distinctUntilChanged()
-      )
+      // .pipe(
+      //   debounceTime(1000),
+      //   distinctUntilChanged()
+      // )
       .subscribe({
         next: (consulta) => {
           this.usuarios = consulta.usuarios;

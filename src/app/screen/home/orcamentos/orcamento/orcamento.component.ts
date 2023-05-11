@@ -179,7 +179,7 @@ export class OrcamentoComponent implements OnInit {
 
     this.contatoService
       .getContatos(query)
-      .pipe(debounceTime(1000), distinctUntilChanged())
+      // .pipe(debounceTime(1000), distinctUntilChanged())
       .subscribe({
         next: (consulta) => (this.contatos = consulta.contatos),
         error: (error) => {
@@ -206,7 +206,7 @@ export class OrcamentoComponent implements OnInit {
 
     this.pessoaService
       .getPessoas(query)
-      .pipe(debounceTime(1000), distinctUntilChanged())
+      // .pipe(debounceTime(1000), distinctUntilChanged())
       .subscribe({
         next: (consulta) => (this.pessoas = consulta.pessoas),
         error: (error) => {
@@ -230,7 +230,7 @@ export class OrcamentoComponent implements OnInit {
 
     this.vendedorService
       .getVendedores(query)
-      .pipe(debounceTime(1000), distinctUntilChanged())
+      // .pipe(debounceTime(1000), distinctUntilChanged())
       .subscribe({
         next: (consulta) => (this.vendedores = consulta.vendedores),
         error: (error) => {
@@ -254,10 +254,10 @@ export class OrcamentoComponent implements OnInit {
 
     this.produtoService
       .getProdutos(query)
-      .pipe(
-        distinctUntilChanged(), // recorda a ultima pesquisa
-        debounceTime(1000) // espera um tempo antes de começar
-      )
+      // .pipe(
+      //   distinctUntilChanged(), // recorda a ultima pesquisa
+      //   debounceTime(1000) // espera um tempo antes de começar
+      // )
       .subscribe({
         next: (consulta) => (this.produtos = consulta.produtos),
         error: (error) => {

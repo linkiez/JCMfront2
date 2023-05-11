@@ -78,7 +78,7 @@ export class PessoaComponent implements OnInit {
     if (id != 0 && isFinite(id)) {
       this.subscription = this.pessoaService
         .getPessoa(id)
-        .pipe(debounceTime(1000))
+        // .pipe(debounceTime(1000))
         .subscribe({
           next: async(pessoa) => {
             if (pessoa.data_nasc)
@@ -115,7 +115,7 @@ export class PessoaComponent implements OnInit {
 
     this.pessoaService
       .addPessoa(pessoaClean)
-      .pipe(debounceTime(1000))
+      // .pipe(debounceTime(1000))
       .subscribe({
         next: (pessoa) => {
           pessoa.data_nasc = new Date(pessoa.data_nasc!.toString());
@@ -152,7 +152,7 @@ export class PessoaComponent implements OnInit {
     let pessoaClean = this.cleanPessoa(this.pessoa);
     this.pessoaService
       .updatePessoa(pessoaClean)
-      .pipe(debounceTime(1000))
+      // .pipe(debounceTime(1000))
       .subscribe({
         next: (pessoa) => {
           pessoa.data_nasc = new Date(pessoa.data_nasc!.toString());
@@ -220,7 +220,7 @@ export class PessoaComponent implements OnInit {
   deletePessoa() {
     this.pessoaService
       .deletePessoa(this.pessoa)
-      .pipe(debounceTime(1000))
+      // .pipe(debounceTime(1000))
       .subscribe({
         error: (error) => {
           console.log(error);
@@ -480,7 +480,7 @@ export class PessoaComponent implements OnInit {
       this.fileLoading = true;
       this.arquivoService
         .uploadArquivo(file)
-        .pipe(debounceTime(1000))
+        // .pipe(debounceTime(1000))
         .subscribe({
           next: (arquivo: Arquivo) => {
             this.pessoa.empresa!.file = arquivo;

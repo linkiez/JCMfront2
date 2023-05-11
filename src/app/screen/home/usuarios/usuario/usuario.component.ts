@@ -198,7 +198,7 @@ export class UsuarioComponent implements OnInit {
   createUsuario() {
     this.usuarioServiceDB
       .addUsuario(this.usuario)
-      .pipe(debounceTime(1000))
+      // .pipe(debounceTime(1000))
       .subscribe({
         next: (usuario) => {
           this.usuario = usuario;
@@ -225,7 +225,7 @@ export class UsuarioComponent implements OnInit {
   updateUsuario() {
     this.usuarioServiceDB
       .updateUsuario(this.usuario)
-      .pipe(debounceTime(1000))
+      // .pipe(debounceTime(1000))
       .subscribe({
         next: (usuario) => {
           this.usuario = usuario;

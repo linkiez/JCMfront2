@@ -46,10 +46,10 @@ export class OrdensProducaoComponent implements OnInit {
 
     this.ordemProducaoService
       .getOrdemProducoes(this.query)
-      .pipe(
-        debounceTime(1000), // espera um tempo antes de começar
-        distinctUntilChanged() // recorda a ultima pesquisa
-      )
+      // .pipe(
+      //   debounceTime(1000), // espera um tempo antes de começar
+      //   distinctUntilChanged() // recorda a ultima pesquisa
+      // )
       .subscribe({
         next: (consulta) => {
           this.ordemProducao = consulta.ordemProducao;
