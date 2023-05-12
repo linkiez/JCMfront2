@@ -94,7 +94,7 @@
           statusRed: isBeforeToday(pessoa.fornecedor?.data_venc) && pessoa.fornecedor?.data_venc,
           statusGreen: isAfterToday(pessoa.fornecedor?.data_venc)
         }"
-        class="statusRed"
+        (click)="clickDeleted(pessoa.id)"
       >
         <td>{{ pessoa.id }}</td>
         <td>{{ pessoa.nome }}</td>
