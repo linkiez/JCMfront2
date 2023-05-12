@@ -3,3 +3,14 @@ tr:hover:nth-child(n + 1) {
   background-color: rgba(255, 255, 255, 0.04);
   cursor: pointer;
 }
+
+.statusRed{
+  color: #f8d7da !important;
+  background-color: rgba(157, 28, 36, 0.1) !important;
+}
+
+.statusGreen {
+  color: #d4edda !important;
+  background-color: rgba(21, 87, 36, 0.1) !important;
+}
+

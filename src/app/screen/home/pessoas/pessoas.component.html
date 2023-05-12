@@ -20,41 +20,105 @@
           (ngModelChange)="search()"
         />
       </span>
-      <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header"
-            selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" placeholder="Choose Columns"></p-multiSelect>
       <button pButton class="button" (click)="new()">
         <i class="pi pi-plus"></i>
       </button>
-      <p-checkbox name="chkFornecedor" label="Fornecedor" [(ngModel)]="query.fornecedor" [binary]="true" (ngModelChange)="getPessoas()" ></p-checkbox>
-      <p-checkbox name="chkOperador" label="Operador" [(ngModel)]="query.operador" [binary]="true" (ngModelChange)="getPessoas()" ></p-checkbox>
-      <p-checkbox name="chkVendedor" label="Vendedor" [(ngModel)]="query.vendedor" [binary]="true" (ngModelChange)="getPessoas()" ></p-checkbox>
-      <p-checkbox name="chkDeleted" label="Deletados" [(ngModel)]="query.deleted" [binary]="true" (ngModelChange)="getPessoas()" ></p-checkbox>
+      <p-checkbox
+        name="chkFornecedor"
+        label="Fornecedor"
+        [(ngModel)]="query.fornecedor"
+        [binary]="true"
+        (ngModelChange)="getPessoas()"
+      ></p-checkbox>
+      <p-checkbox
+        name="chkOperador"
+        label="Operador"
+        [(ngModel)]="query.operador"
+        [binary]="true"
+        (ngModelChange)="getPessoas()"
+      ></p-checkbox>
+      <p-checkbox
+        name="chkVendedor"
+        label="Vendedor"
+        [(ngModel)]="query.vendedor"
+        [binary]="true"
+        (ngModelChange)="getPessoas()"
+      ></p-checkbox>
+      <p-checkbox
+        name="chkDeleted"
+        label="Deletados"
+        [(ngModel)]="query.deleted"
+        [binary]="true"
+        (ngModelChange)="getPessoas()"
+      ></p-checkbox>
     </div>
   </ng-template>
 
   <ng-template pTemplate="header" let-columns>
-    <tr>
-      <th *ngFor="let col of columns">
-        {{col.header}}
-    </th>
-
-    </tr>
+    <ng-container *ngIf="!query.fornecedor">
+      <tr>
+        <th>Id</th>
+        <th>Nome</th>
+        <th>CNPJ / CPF</th>
+        <th>Email</th>
+        <th>Telefone</th>
+        <th>Atualizado em</th>
+      </tr>
+    </ng-container>
+    <ng-container *ngIf="query.fornecedor">
+      <tr>
+        <th>Id</th>
+        <th>Nome</th>
+        <th>CNPJ / CPF</th>
+        <th>Telefone</th>
+        <th>Atualizado em</th>
+        <th>Aprovação</th>
+        <th>Vencimento</th>
+      </tr>
+    </ng-container>
   </ng-template>
-  <ng-template pTemplate="body" let-pessoa let-columns="columns">
-    <tr (click)="clickDeleted(pessoa.id)">
-
-      <td *ngFor="let col of columns">
-        <span *ngIf="col.field!='cnpj_cpf'&&col.field!='updatedAt'&&col.field!='telefone'&&col.field!='createdAt'">{{pessoa[col.field]}}</span>
-        <span *ngIf="col.field=='cnpj_cpf'">{{pessoa[col.field] | cpfCnpj}}</span>
-        <span *ngIf="col.field=='updatedAt'">{{pessoa[col.field] | date: 'dd/MM/yyyy HH:mm:ss' }}</span>
-        <span *ngIf="col.field=='createdAt'">{{pessoa[col.field] | date: 'dd/MM/yyyy HH:mm:ss' }}</span>
-        <span *ngIf="col.field=='telefone'">{{pessoa[col.field] | telefone }}</span>
-    </td>
-    </tr>
+  <ng-template pTemplate="body" let-pessoa>
+    <ng-container *ngIf="!query.fornecedor">
+      <tr (click)="clickDeleted(pessoa.id)">
+        <td>{{ pessoa.id }}</td>
+        <td>{{ pessoa.nome }}</td>
+        <td>{{ pessoa.cnpj_cpf | cpfCnpj }}</td>
+        <td>{{ pessoa.email }}</td>
+        <td>{{ pessoa.telefone | telefone }}</td>
+        <td>{{ pessoa.updatedAt | date : "dd/MM/yyyy HH:mm" }}</td>
+      </tr>
+    </ng-container>
+    <ng-container *ngIf="query.fornecedor">
+      <tr
+        [ngClass]="{
+          statusRed: isBeforeToday(pessoa.fornecedor?.data_venc) && pessoa.fornecedor?.data_venc,
+          statusGreen: isAfterToday(pessoa.fornecedor?.data_venc)
+        }"
+        class="statusRed"
+      >
+        <td>{{ pessoa.id }}</td>
+        <td>{{ pessoa.nome }}</td>
+        <td>{{ pessoa.cnpj_cpf | cpfCnpj }}</td>
+        <td>{{ pessoa.telefone | telefone }}</td>
+        <td>{{ pessoa.updatedAt | date : "dd/MM/yyyy HH:mm" }}</td>
+        <td>{{ pessoa.fornecedor.data_aprov | date : "dd/MM/yyyy" }}</td>
+        <td>{{ pessoa.fornecedor.data_venc | date : "dd/MM/yyyy" }}</td>
+      </tr>
+    </ng-container>
   </ng-template>
-
 </p-table>
 <div class="">
-  <p-paginator #paginator [rows]="query.pageCount" [totalRecords]="totalRecords"[rowsPerPageOptions]="[10,25,50]" (onPageChange)="pageChange($event)" [showCurrentPageReport]=true [currentPageReportTemplate]="totalRecords+' resultados'"></p-paginator>
+  <p-paginator
+    #paginator
+    [rows]="query.pageCount"
+    [totalRecords]="totalRecords"
+    [rowsPerPageOptions]="[10, 25, 50]"
+    (onPageChange)="pageChange($event)"
+    [showCurrentPageReport]="true"
+    [currentPageReportTemplate]="totalRecords + ' resultados'"
+  ></p-paginator>
 </div>
-<p-confirmDialog header="Confirmação" icon="pi pi-exclamation-triangle"></p-confirmDialog>
+<p-confirmDialog
+  header="Confirmação"
+  icon="pi pi-exclamation-triangle"
+></p-confirmDialog>

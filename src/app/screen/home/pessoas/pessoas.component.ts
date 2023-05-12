@@ -46,27 +46,6 @@ export class PessoasComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.getPessoas();
-
-    this.cols = [
-      { field: 'id', header: 'Id' },
-      { field: 'nome', header: 'Nome' },
-      { field: 'razao_social', header: 'Razão Social' },
-      { field: 'cnpj_cpf', header: 'CNPJ / CPF' },
-      { field: 'telefone', header: 'Telefone' },
-      { field: 'email', header: 'Email' },
-      { field: 'municipio', header: 'Cidade' },
-      { field: 'createdAt', header: 'Criado em' },
-      { field: 'updatedAt', header: 'Atualizado em' },
-    ];
-
-    this._selectedColumns = [
-      { field: 'id', header: 'Id' },
-      { field: 'nome', header: 'Nome' },
-      { field: 'cnpj_cpf', header: 'CNPJ / CPF' },
-      { field: 'email', header: 'Email' },
-      { field: 'telefone', header: 'Telefone' },
-      { field: 'updatedAt', header: 'Atualizado em' },
-    ];
   }
 
   ngOnDestroy(): void {
@@ -161,6 +140,20 @@ export class PessoasComponent implements OnInit, OnDestroy {
         }
     )}
     });
+  }
+
+  isBeforeToday(date: string | Date) {
+    date = new Date(date)
+    if(!date) return false
+    const today = new Date();
+    return date < today;
+  }
+
+  isAfterToday(date: string | Date) {
+    date = new Date(date)
+    if(!date) return false
+    const today = new Date();
+    return date > today;
   }
 
 }
