@@ -182,9 +182,14 @@ export class OrcamentoComponent implements OnInit {
 
     this.contatoService
       .getContatos(query)
-      // .pipe(debounceTime(1000), distinctUntilChanged())
+      .pipe(distinctUntilChanged())
       .subscribe({
-        next: (consulta) => (this.contatos = consulta.contatos),
+        next: (consulta) => {
+          this.contatos = consulta.contatos
+          if(this.contatos.length == 0 && this.orcamento.contato){
+            this.orcamento.contato.id = undefined
+          }
+        },
         error: (error) => {
           console.log(error);
           this.messageService.add({
