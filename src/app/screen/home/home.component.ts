@@ -43,6 +43,7 @@ export class HomeComponent implements OnInit {
         },
         {
           label: 'Registro de Inspeção e Recebimento',
+          routerLink: 'rir',
         },
       ],
     },
