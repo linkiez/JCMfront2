@@ -1,1 +1,98 @@
-<p>rir works!</p>
+<div>
+  <h2>Registro de Inspeção e Recebimento</h2>
+  <form action="">
+    <div class="row">
+      <div class="col-1">
+        <label for="rir">Id</label>
+        <input
+          pInputText
+          type="text"
+          id="rir"
+          name="rir"
+          placeholder="RIR"
+          disabled="true"
+          [(ngModel)]="rir.id"
+        />
+      </div>
+      <div class="col">
+        <label for="rir">Descrição</label>
+        <input
+          pInputText
+          type="text"
+          id="descricao"
+          name="descricao"
+          placeholder="Descrição"
+          [(ngModel)]="rir.descricao"
+        />
+      </div>
+      <div class="col">
+        <label for="produto">Material</label>
+        <p-autoComplete
+          class="p-autocomplete wv-100"
+          name="produto"
+          id="produto"
+          type="text"
+          [(ngModel)]="rir.produto"
+          field="nome"
+          [suggestions]="produtos"
+          (completeMethod)="searchProduto($event)"
+          [dropdown]="true"
+          [style]="{ width: '100%' }"
+          [inputStyle]="{ width: '100%' }"
+          appendTo="body"
+          [required]="true"
+        ></p-autoComplete>
+      </div>
+      <div class="col">
+        <label for="quantidade">Quantidade</label>
+        <input
+          pInputText
+          type="text"
+          id="quantidade"
+          name="quantidade"
+          placeholder="Quantidade"
+          [(ngModel)]="rir.quantidade"
+        />
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <label for="">Nota Fiscal</label>
+        <input
+          pInputText
+          type="text"
+          id="nfe"
+          name="nfe"
+          placeholder="Nota Fiscal"
+          [(ngModel)]="rir.nfe"
+        />
+      </div>
+      <div class="col">
+        <label for="">Data Nota Fiscal</label>
+        <p-calendar
+          name="nfe_data"
+          id="nfe_data"
+          [(ngModel)]="rir.nfe_data"
+          dateFormat="dd/mm/yy"
+          appendTo="body"
+          [style]="{ width: '100%' }"
+        ></p-calendar>
+      </div>
+      <div class="col-1">
+        <label for="">Cliente?
+        </label>
+        <p-checkbox
+          name="cliente"
+          id="cliente"
+          [tabindex]="0"
+          [(ngModel)]="rir.cliente"
+          [binary]="true"
+        ></p-checkbox>
+      </div>
+      <div class="col">
+        <label for="" *ngIf="rir.cliente">Cliente</label>
+        <label for="" *ngIf="!rir.cliente">Fornecedor</label>
+      </div>
+    </div>
+  </form>
+</div>
