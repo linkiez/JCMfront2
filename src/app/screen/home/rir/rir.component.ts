@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
 import { MessageService } from 'primeng/api';
+import { Pessoa } from 'src/app/models/pessoa';
 import { Produto } from 'src/app/models/produto';
 import { Query } from 'src/app/models/query';
 import { RIR } from 'src/app/models/rir';
+import { PessoaService } from 'src/app/services/pessoa.service';
 import { ProdutoService } from 'src/app/services/produto.service';
 
 @Component({
@@ -11,13 +13,16 @@ import { ProdutoService } from 'src/app/services/produto.service';
   styleUrls: ['./rir.component.scss'],
 })
 export class RirComponent {
-  rir: RIR = {};
+  rir: RIR = {cliente: false};
 
   produtos: Produto[] = [];
 
+  pessoas: Pessoa[] = [];
+
   constructor(
     private produtoService: ProdutoService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private pessoaService: PessoaService
   ) {}
 
   searchProduto(event: any) {
@@ -36,6 +41,34 @@ export class RirComponent {
       // )
       .subscribe({
         next: (consulta) => (this.produtos = consulta.produtos),
+        error: (error) => {
+          console.log(error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: error.message,
+          });
+        },
+      });
+  }
+
+  searchPessoa(event: any) {
+    let query: Query = {
+      page: 0,
+      pageCount: 10,
+      searchValue: event.query,
+      deleted: false,
+      fornecedor: !this.rir.cliente,
+    };
+
+    this.pessoaService
+      .getPessoas(query)
+      // .pipe(
+      //   distinctUntilChanged(), // recorda a ultima pesquisa
+      //   debounceTime(1000) // espera um tempo antes de começar
+      // )
+      .subscribe({
+        next: (consulta) => (this.pessoas = consulta.pessoas),
         error: (error) => {
           console.log(error);
           this.messageService.add({

@@ -78,21 +78,54 @@
           [style]="{ width: '100%' }"
         ></p-calendar>
       </div>
-      <div class="col-1">
-        <label for="">Cliente?
-        </label>
-        <p-checkbox
+      <div
+        class="col-1 d-flex flex-column"
+      >
+        <label for="">Cliente?</label>
+        <div class="flex-grow-1 d-flex align-content-center justify-content-center">
+          <p-checkbox
           name="cliente"
           id="cliente"
           [tabindex]="0"
           [(ngModel)]="rir.cliente"
           [binary]="true"
         ></p-checkbox>
+        </div>
       </div>
+
       <div class="col">
         <label for="" *ngIf="rir.cliente">Cliente</label>
         <label for="" *ngIf="!rir.cliente">Fornecedor</label>
+        <p-autoComplete
+          class="p-autocomplete wv-100"
+          name="produto"
+          id="produto"
+          type="text"
+          [(ngModel)]="rir.pessoa"
+          field="nome"
+          [suggestions]="pessoas"
+          (completeMethod)="searchPessoa($event)"
+          [dropdown]="true"
+          [style]="{ width: '100%' }"
+          [inputStyle]="{ width: '100%' }"
+          appendTo="body"
+          [required]="true"
+        ></p-autoComplete>
       </div>
+      <div class="col">
+        <label for="recebido_data">Recebido Data</label>
+        <p-calendar
+          name="recebido_data"
+          id="recebido_data"
+          [(ngModel)]="rir.recebido_data"
+          dateFormat="dd/mm/yy"
+          appendTo="body"
+          [style]="{ width: '100%' }"
+        ></p-calendar>
+      </div>
+    </div>
+    <div class="row">
+      
     </div>
   </form>
 </div>

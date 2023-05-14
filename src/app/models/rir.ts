@@ -12,10 +12,10 @@ export interface RIR {
   quantidade?:number;
   nfe?:string;
   nfe_data?:Date;
-  cliente?: Boolean;
+  cliente?: boolean;
   pessoa?: Pessoa;
-  operador?: Operador;
   recebido_data?: Date;
+  operador?: Operador;
   conferido?: boolean;
   observacoes?: string;
   registro_inspecao_recebimento_file?: Arquivo[];
