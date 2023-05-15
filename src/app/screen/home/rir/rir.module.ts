@@ -8,6 +8,7 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
 import { FormsModule } from '@angular/forms';
 import { CalendarModule } from 'primeng/calendar';
 import { CheckboxModule } from 'primeng/checkbox';
+import { ListaFilesModule } from 'src/app/components/listaFiles/listaFiles.module';
 
 
 
@@ -22,7 +23,8 @@ import { CheckboxModule } from 'primeng/checkbox';
     InputTextModule,
     AutoCompleteModule,
     CalendarModule,
-    CheckboxModule
+    CheckboxModule,
+    ListaFilesModule
   ]
 })
 export class RirModule { }
