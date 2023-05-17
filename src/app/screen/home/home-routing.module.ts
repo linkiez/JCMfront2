@@ -39,7 +39,7 @@ const routes: Routes = [
         path: 'contatos',
         loadChildren: () =>
           import('./cadastro-contatos/contatos.module').then(
-            (module) => module.CadastroContatosModule
+            (module) => module.ContatosModule
           ),
         canLoad: [LoginGuard],
       },

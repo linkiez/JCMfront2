@@ -19,7 +19,8 @@ import { OrcamentoService } from 'src/app/services/orcamento.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { ArquivoService } from 'src/app/services/arquivo.service';
-import { isUndefined } from 'lodash-es';
+import * as XLSX from 'xlsx';
+
 
 @Component({
   selector: 'app-orcamento',
@@ -828,5 +829,29 @@ export class OrcamentoComponent implements OnInit {
         });
     }
     this.displayAprovacao = false;
+  }
+
+  exportOrcamentoItemToXlsx() {
+    const data = this.orcamento.orcamento_items.map((item, index) => {
+      return {
+        item: index + 1,
+        descricao: item.descricao,
+        produto: item.produto?.nome,
+        material_incluido: item.material_incluido ? 'Sim' : 'Não',
+        processo: (item.processo as String[])?.join(', '),
+        largura: item.largura,
+        altura: item.altura,
+        quantidade: item.quantidade,
+        imposto: item.imposto,
+        preco_quilo: item.preco_quilo,
+        tempo: item.tempo,
+        preco_hora: item.preco_hora,
+        total_manual: item.total_manual,
+      };
+    });
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+    XLSX.writeFile(workbook, 'orcamento_items.xlsx');
   }
 }
