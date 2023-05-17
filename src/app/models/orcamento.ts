@@ -32,7 +32,7 @@ export interface Orcamento {
   createdAt?: Date;
   orcamento_items: OrcamentoItem[];
   files?: Arquivo[];
-  empresa: Empresa
+  empresa: Empresa;
   vendastinies?: VendaTiny[];
 }
 
@@ -62,4 +62,20 @@ export interface OrcamentoItem {
   total_peso?: number;
   total_hora?: number;
   custo?: number;
+}
+
+export interface OrcamentoItemXlSX {
+  item: number;
+  descricao: string;
+  produto: string;
+  material_incluido: string | boolean;
+  processo: string;
+  largura: number;
+  altura: number;
+  quantidade: number;
+  imposto: number;
+  preco_quilo: number;
+  tempo: string;
+  preco_hora: number;
+  total_manual: number;
 }

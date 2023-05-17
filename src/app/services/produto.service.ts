@@ -45,6 +45,19 @@ export class ProdutoService {
       }));
   }
 
+  getProdutoByName(nome: string): Observable<Produto> {
+    return this.http.post<Produto>(
+      environment.backendURL + 'produto/nome', {nome: nome},
+      { responseType: 'json' }
+    ).pipe(
+      catchError((error) => {
+        console.error(error);
+        this.messageService.add({severity:'error', summary:'Erro', detail:'Erro ao buscar produto por nome'});
+        return throwError(()=> new Error('Erro ao buscar produto por nome'));
+      }
+    ));
+  }
+
   addProduto(produto: Produto): Observable<Object> {
     return this.http.post(environment.backendURL + 'produto', produto, {
       responseType: 'json',

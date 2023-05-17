@@ -5,7 +5,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { debounceTime, distinctUntilChanged, firstValueFrom, map } from 'rxjs';
 import { Contato } from 'src/app/models/contato';
-import { Orcamento, OrcamentoItem } from 'src/app/models/orcamento';
+import { Orcamento, OrcamentoItem, OrcamentoItemXlSX } from 'src/app/models/orcamento';
 import { Pessoa } from 'src/app/models/pessoa';
 import { Produto } from 'src/app/models/produto';
 import { Query } from 'src/app/models/query';
@@ -20,6 +20,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { ArquivoService } from 'src/app/services/arquivo.service';
 import * as XLSX from 'xlsx';
+
 
 
 @Component({
@@ -63,6 +64,8 @@ export class OrcamentoComponent implements OnInit {
     empresa: {},
     vendastinies: [],
   };
+
+  fileLoading: boolean = false;
 
   contatos: Contato[] = [];
 
@@ -853,5 +856,90 @@ export class OrcamentoComponent implements OnInit {
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
     XLSX.writeFile(workbook, 'orcamento_items.xlsx');
+  }
+
+  importOrcamentoItemFromXlsx(event: Event) {
+    const target = event.target as HTMLInputElement;
+    const files = target.files as FileList;
+    const file = files[0];
+    const reader: FileReader = new FileReader();
+    reader.onload = async(e: any) => {
+      const bstr: string = e.target.result;
+      const data = XLSX.read(bstr, { type: 'binary' });
+      const wsname: string = data.SheetNames[0];
+      const ws: XLSX.WorkSheet = data.Sheets[wsname];
+      const orcamento_items: OrcamentoItemXlSX[] = XLSX.utils.sheet_to_json(ws);
+      const listaProdutos = await this.procuraProdutos(orcamento_items);
+      console.log(listaProdutos);
+      orcamento_items.forEach((item) => {
+        const produto = listaProdutos.find((produto) => produto.nome === item.produto);
+        if (produto) {
+          if(this.orcamento.orcamento_items[item.item - 1])
+          {
+            this.orcamento.orcamento_items[item.item - 1].descricao = item.descricao;
+            this.orcamento.orcamento_items[item.item - 1].produto = produto;
+            this.orcamento.orcamento_items[item.item - 1].material_incluido = item.material_incluido === 'Sim';
+            this.orcamento.orcamento_items[item.item - 1].processo = item.processo?.split(',').map((processo) => processo.trim());
+            this.orcamento.orcamento_items[item.item - 1].largura = +item.largura;
+            this.orcamento.orcamento_items[item.item - 1].altura = +item.altura;
+            this.orcamento.orcamento_items[item.item - 1].quantidade = +item.quantidade;
+            this.orcamento.orcamento_items[item.item - 1].imposto = +item.imposto;
+            this.orcamento.orcamento_items[item.item - 1].preco_quilo = +item.preco_quilo;
+            this.orcamento.orcamento_items[item.item - 1].tempo = item.tempo;
+            this.orcamento.orcamento_items[item.item - 1].preco_hora = +item.preco_hora;
+            this.orcamento.orcamento_items[item.item - 1].total_manual = +item.total_manual;
+          }else{
+            const orcamento_item: OrcamentoItem = {
+              descricao: item.descricao,
+              produto: produto,
+              material_incluido: item.material_incluido === 'Sim',
+              processo: item.processo?.split(',').map((processo) => processo.trim()),
+              largura: +item.largura,
+              altura: +item.altura,
+              quantidade: +item.quantidade,
+              imposto: +item.imposto,
+              preco_quilo: +item.preco_quilo,
+              tempo: item.tempo,
+              preco_hora: +item.preco_hora,
+              total_manual: +item.total_manual,
+            };
+            this.orcamento.orcamento_items.push(orcamento_item);
+          }
+          this.orcamento.orcamento_items.forEach((item) => {
+            this.calculaPeso(item);
+            this.calculaHora(item);
+          });
+
+
+        }else{
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: `Produto ${item.produto} não encontrado no item ${item.item}.`,
+          });
+        }
+      });
+    };
+    reader.readAsBinaryString(file);
+  }
+
+  async procuraProdutos(orcamento_items: OrcamentoItemXlSX[]): Promise<Produto[]> {
+    const listaProdutos: Produto[] = [];
+
+    for (const item of orcamento_items) {
+      const find = listaProdutos.find((produto) => produto.nome === item.produto);
+
+      if (!find) {
+        try {
+          const produto$ = this.produtoService.getProdutoByName(item.produto);
+          const produto = await firstValueFrom(produto$);
+          listaProdutos.push(produto);
+        } catch (error) {
+          // Handle any errors that may occur
+        }
+      }
+    }
+
+    return listaProdutos;
   }
 }
