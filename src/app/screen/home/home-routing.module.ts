@@ -38,7 +38,7 @@ const routes: Routes = [
       {
         path: 'contatos',
         loadChildren: () =>
-          import('./cadastro-contatos/cadastro-contatos.module').then(
+          import('./cadastro-contatos/contatos.module').then(
             (module) => module.CadastroContatosModule
           ),
         canLoad: [LoginGuard],
@@ -65,7 +65,7 @@ const routes: Routes = [
           import('./pedidoscompras/pedidoscompras.module').then(
             (module) => module.PedidosComprasModule
           ),
-          canLoad: [LoginGuard],
+        canLoad: [LoginGuard],
       },
       {
         path: 'orcamentos',
@@ -73,7 +73,7 @@ const routes: Routes = [
           import('./orcamentos/orcamentos.module').then(
             (module) => module.OrcamentosModule
           ),
-          canLoad: [LoginGuard],
+        canLoad: [LoginGuard],
       },
       {
         path: 'ordensproducao',
@@ -81,7 +81,7 @@ const routes: Routes = [
           import('./ordens-producao/ordens-producao.module').then(
             (module) => module.OrdensProducaoModule
           ),
-          canLoad: [LoginGuard],
+        canLoad: [LoginGuard],
       },
       {
         path: 'usuarios',
@@ -89,12 +89,12 @@ const routes: Routes = [
           import('./usuarios/usuarios.module').then(
             (module) => module.UsuariosModule
           ),
-          canLoad: [LoginGuard],
+        canLoad: [LoginGuard],
       },
       {
         path: '*',
         redirectTo: 'dashboard',
-      }
+      },
     ],
   },
 ];
