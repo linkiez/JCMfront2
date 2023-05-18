@@ -107,7 +107,7 @@
               ><div class="noview" [innerHTML]="itemProducao.observacao"></div>
             </div>
             <div class="col">
-              <listaFiles [compact]="true"></listaFiles>
+              <listaFiles [compact]="true" (onChangeFiles)="itemProducao.files = $event" [files]="itemProducao.files!" ></listaFiles>
             </div>
           </div>
         </div>
