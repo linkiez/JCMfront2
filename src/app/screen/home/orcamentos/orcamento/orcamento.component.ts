@@ -16,7 +16,7 @@ import { validador } from 'src/app/utils/validadores';
 import { VendedorService } from 'src/app/services/vendedor.service';
 import { v4 as uuidv4 } from 'uuid';
 import { OrcamentoService } from 'src/app/services/orcamento.service';
-import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { ArquivoService } from 'src/app/services/arquivo.service';
 import * as XLSX from 'xlsx';
@@ -548,13 +548,7 @@ export class OrcamentoComponent implements OnInit {
             detail: `O orçamento foi ${clonar ? 'clonado' : 'criado'}.`,
           });
           this.loadingSalvar = false;
-
-          const navigationExtras: NavigationExtras = {
-            skipLocationChange: true,
-            replaceUrl: true
-          };
-          
-          this.router.navigate([`/home/orcamentos/${this.orcamento.id}`, navigationExtras]);
+          this.router.navigate([`/home/orcamentos/${this.orcamento.id}`]);
         },
       });
   }
