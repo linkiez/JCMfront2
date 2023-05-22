@@ -171,5 +171,45 @@
         <listaFiles [compact]="true" (onChangeFiles)="rir.registro_inspecao_recebimento_file = $event"></listaFiles>
       </div>
     </div>
+    <div class="row" *ngIf="!this.rir.cliente">
+      <div class="col">
+        <label for="">Pedido de compra</label>
+        <p-autoComplete
+        name="pedido_compra"
+          id="pedido_compra"
+          type="text"
+          [(ngModel)]="rir.pedido_compra_item"
+          field="pedido_compra.pedido"
+          [suggestions]="pedidos_compra_item"
+          (completeMethod)="searchPedidoCompraItem()"
+          [dropdown]="true"
+          [style]="{ width: '100%' }"
+          [inputStyle]="{ width: '100%' }"
+          appendTo="body"
+          [required]="false"
+        >
+
+        </p-autoComplete>
+      </div>
+    </div>
+    <div class="row">
+      <hr>
+      <div class="col">
+        <button
+          pButton
+          type="button"
+          label="Salvar"
+          class="p-button-success"
+          (click)="createOrUpdate()"
+        ></button>
+        <button
+          pButton
+          type="button"
+          label="Limpar"
+          (click)="limpar()"
+        ></button>
+      </div>
+    </div>
   </form>
+
 </div>
