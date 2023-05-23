@@ -417,7 +417,8 @@ export class PessoaComponent implements OnInit {
               );
               this.pessoa.endereco = `${
                 consultaPJ.estabelecimento.tipo_logradouro
-              } ${consultaPJ.estabelecimento.logradouro}, ${consultaPJ.estabelecimento.complemento || ''}`;
+              } ${consultaPJ.estabelecimento.logradouro}`;
+              this.pessoa.complemento = consultaPJ.estabelecimento.complemento;
               this.pessoa.numero = consultaPJ.estabelecimento.numero;
               this.pessoa.bairro = consultaPJ.estabelecimento.bairro;
               this.pessoa.cep = Number(consultaPJ.estabelecimento.cep);
@@ -461,7 +462,9 @@ export class PessoaComponent implements OnInit {
         .subscribe({
           next: (cep: any) => {
             console.log(cep);
-            this.pessoa.endereco = `${cep.logradouro}, ${cep.complemento}, ${cep.bairro}`;
+            this.pessoa.endereco = cep.logradouro;
+            this.pessoa.complemento = cep.complemento;
+            this.pessoa.bairro = cep.bairro;
             this.pessoa.municipio = cep.localidade;
             this.pessoa.uf = cep.uf;
           },
