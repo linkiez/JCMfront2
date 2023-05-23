@@ -9,6 +9,10 @@ import { FormsModule } from '@angular/forms';
 import { CalendarModule } from 'primeng/calendar';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ListaFilesModule } from 'src/app/components/listaFiles/listaFiles.module';
+import { TableModule } from 'primeng/table';
+import {PaginatorModule} from 'primeng/paginator';
+import {ConfirmDialogModule} from 'primeng/confirmdialog';
+import { ConfirmationService } from 'primeng/api';
 
 
 
@@ -24,7 +28,11 @@ import { ListaFilesModule } from 'src/app/components/listaFiles/listaFiles.modul
     AutoCompleteModule,
     CalendarModule,
     CheckboxModule,
-    ListaFilesModule
-  ]
+    ListaFilesModule,
+    TableModule,
+    PaginatorModule,
+    ConfirmDialogModule
+  ],
+  providers: [ ConfirmationService ]  
 })
 export class RirModule { }

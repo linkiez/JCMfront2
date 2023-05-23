@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { MessageService } from 'primeng/api';
+import { Component, OnInit } from '@angular/core';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { Operador } from 'src/app/models/operador';
 import { PedidoCompraItem } from 'src/app/models/pedido-compra';
 import { Pessoa } from 'src/app/models/pessoa';
@@ -10,13 +10,14 @@ import { OperadorService } from 'src/app/services/operador.service';
 import { PedidoCompraService } from 'src/app/services/pedidocompra.service';
 import { PessoaService } from 'src/app/services/pessoa.service';
 import { ProdutoService } from 'src/app/services/produto.service';
+import { RIRService } from 'src/app/services/rir.service';
 
 @Component({
   selector: 'app-rir',
   templateUrl: './rir.component.html',
   styleUrls: ['./rir.component.scss'],
 })
-export class RirComponent {
+export class RirComponent implements OnInit {
   rir: RIR = { cliente: false, recebido_data: new Date() };
 
   produtos: Produto[] = [];
@@ -27,13 +28,29 @@ export class RirComponent {
 
   pedidos_compra_item: PedidoCompraItem[] = [];
 
+  query: Query = {
+    page: 0,
+    pageCount: 10,
+    searchValue: '',
+    deleted: false,
+  };
+
+  totalRecords: number = 0;
+
+  rirs: RIR[] = [];
+
   constructor(
     private produtoService: ProdutoService,
     private messageService: MessageService,
     private pessoaService: PessoaService,
     private operadorService: OperadorService,
-    private pedidoCompraService: PedidoCompraService
+    private pedidoCompraService: PedidoCompraService,
+    private RIRService: RIRService,
+    private confirmationService: ConfirmationService
   ) {}
+  ngOnInit(): void {
+    this.getRIRs();
+  }
 
   searchProduto(event: any) {
     let query: Query = {
@@ -117,9 +134,49 @@ export class RirComponent {
       });
   }
 
-  update() {}
+  update() {
+    this.RIRService.updateRIR(this.rir).subscribe({
+      next: (rir) => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Sucesso',
+          detail: 'RIR atualizado',
+        });
+        this.rir = rir;
+        console.log(rir);
+      },
+      error: (error) => {
+        console.log(error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: error.message,
+        });
+      },
+    });
+  }
 
-  create() {}
+  create() {
+    this.RIRService.addRIR(this.rir).subscribe({
+      next: (rir) => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Sucesso',
+          detail: 'RIR adicionado',
+        });
+        this.rir = rir;
+        console.log(rir);
+      },
+      error: (error) => {
+        console.log(error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: error.message,
+        });
+      },
+    });
+  }
 
   createOrUpdate() {
     if (this.validacoes()) {
@@ -194,5 +251,36 @@ export class RirComponent {
       valido = false;
     }
     return valido;
+  }
+
+  searchRIRs() {
+
+  }
+
+  pageChange(event: any) {
+    this.query.page = event.page;
+    this.query.pageCount = event.rows;
+    this.getRIRs(true);
+  }
+
+  getRIRs(pageChange?: boolean) {
+    this.query.page = pageChange ? this.query.page : 0;
+
+    this.RIRService.getRIRs(this.query).subscribe({
+      next: (consulta) => {
+        console.log(consulta);
+        this.rirs = consulta.rirs;
+        this.totalRecords = consulta.count;
+      },
+      error: (error) => {
+        console.log(error, this.query);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: 'Erro ao buscar rirs',
+        });
+      },
+    });
+
   }
 }
