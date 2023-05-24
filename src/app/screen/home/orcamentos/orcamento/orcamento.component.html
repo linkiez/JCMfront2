@@ -749,9 +749,21 @@
                     class="p-button noprint"
                     type="button"
                     (click)="fileUpload.click()"
-                    [disabled]="orcamento.status !== 'Orçamento'"
+                    [disabled]="orcamento.status !== 'Orçamento' || loadingImportar"
                   >
                     Importar
+                    <p-progressSpinner
+                      *ngIf="loadingImportar"
+                      [style]="{
+                        width: '27px',
+                        height: '27px',
+                        margin: 'auto'
+                      }"
+                      styleClass="custom-spinner"
+                      strokeWidth="8"
+                      fill="var(--surface-ground)"
+                      animationDuration="1s"
+                    ></p-progressSpinner>
                   </button>
                 </div>
               </td>

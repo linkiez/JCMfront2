@@ -77,6 +77,7 @@ export class OrcamentoComponent implements OnInit {
 
   loadingSalvar: boolean = false;
   loadingAprovar: boolean = false;
+  loadingImportar: boolean = false;
 
   processos$ = this.listaGenericaService
     .getByNameListaGenerica('processos')
@@ -859,6 +860,7 @@ export class OrcamentoComponent implements OnInit {
   }
 
   importOrcamentoItemFromXlsx(event: Event) {
+    this.loadingImportar = true;
     const target = event.target as HTMLInputElement;
     const files = target.files as FileList;
     const file = files[0];
@@ -870,7 +872,6 @@ export class OrcamentoComponent implements OnInit {
       const ws: XLSX.WorkSheet = data.Sheets[wsname];
       const orcamento_items: OrcamentoItemXlSX[] = XLSX.utils.sheet_to_json(ws);
       const listaProdutos = await this.procuraProdutos(orcamento_items);
-      console.log(listaProdutos);
       orcamento_items.forEach((item) => {
         const produto = listaProdutos.find((produto) => produto.nome === item.produto);
         if (produto) {
@@ -919,6 +920,7 @@ export class OrcamentoComponent implements OnInit {
           });
         }
       });
+      this.loadingImportar = false;
     };
     reader.readAsBinaryString(file);
   }
@@ -931,11 +933,21 @@ export class OrcamentoComponent implements OnInit {
 
       if (!find) {
         try {
-          const produto$ = this.produtoService.getProdutoByName(item.produto);
+          const produto$ = this.produtoService.getProdutoByName(item.produto.trim());
           const produto = await firstValueFrom(produto$);
+          if(!produto)
+          {
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Erro',
+              detail: `Produto ${item.produto} não encontrado.`,
+            });
+            return [];
+          }else
           listaProdutos.push(produto);
         } catch (error) {
           // Handle any errors that may occur
+          console.log(error)
         }
       }
     }
