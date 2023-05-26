@@ -34,6 +34,27 @@ export class PedidoCompraService {
       }));
   }
 
+  getPedidoCompraItem(query: Query): Observable<any> {
+    let chaves = Object.keys(query)
+      let valores = Object.values(query);
+      let queryString = '?';
+
+      for(let i=0;i<chaves.length;i++){
+        if(i>0) queryString += '&'
+        queryString += chaves[i]+'='+valores[i]
+      }
+
+
+    return this.http.get<PedidoCompra[]>(environment.backendURL + 'pedidocompra/item' + queryString, {
+      responseType: 'json',
+    }).pipe(
+      catchError((error) => {
+        console.log(error, query);
+        this.messageService.add({severity:'error', summary:'Erro', detail:'Erro ao buscar pedidos de compra item'});
+        return throwError(()=> new Error('Erro ao buscar pedidos de compra item'));
+      }));
+  }
+
   getPedidoCompra(id: number): Observable<PedidoCompra> {
     return this.http.get<PedidoCompra>(
       environment.backendURL + 'pedidocompra/' + id,

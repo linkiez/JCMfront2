@@ -92,6 +92,14 @@ const routes: Routes = [
         canLoad: [LoginGuard],
       },
       {
+        path: 'rir',
+        loadChildren: () =>
+          import('./rir/rir.module').then(
+            (module) => module.RirModule
+          ),
+          canLoad: [LoginGuard],
+      },
+      {
         path: '*',
         redirectTo: 'dashboard',
       },
