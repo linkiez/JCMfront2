@@ -132,4 +132,5 @@ export class OrdemProducaoComponent implements OnInit {
     });
     return processosString.slice(0, -2);
   }
+
 }

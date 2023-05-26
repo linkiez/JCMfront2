@@ -3,7 +3,7 @@
     class="caixa"
     [ngClass]="{
       statusGreen: status == 'Aprovado'|| status == 'Finalizado',
-      statusYellow: status == 'Orçamento' || status == 'Aguardando',
+      statusYellow: status == 'Orçamento' || status == 'Aguardando' || status == 'Em produção',
       statusRed: status == 'Cancelado' || status == 'Recusado',
       statusBlue: status == 'Entregue' || status == 'Venda',
       statusPurple: status == 'Entregue Parcial'
@@ -17,7 +17,7 @@
     class="caixa"
     [ngClass]="{
       statusGreen: status == 'Aprovado' || status == 'Finalizado',
-      statusYellow: status == 'Orçamento',
+      statusYellow: status == 'Orçamento' || status == 'Em produção',
       statusRed: status == 'Cancelado' || status == 'Recusado',
       statusBlue: status == 'Entregue' || status == 'Venda',
       statusPurple: status == 'Entregue Parcial'

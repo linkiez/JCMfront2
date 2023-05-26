@@ -138,7 +138,9 @@
               </div>
             </ng-template></p-autoComplete
           >
-          <span class="noview fontLarge">{{ orcamento.contato?.nome || "-" }}</span>
+          <span class="noview fontLarge">{{
+            orcamento.contato?.nome || "-"
+          }}</span>
         </div>
         <div class="col d-print-flex">
           <label for="inpContatoTipo">Tipo: </label>
@@ -448,8 +450,8 @@
               </td>
               <td class="text-center">
                 <p-checkbox
-                  name="chkMaterialIncluso"
-                  id="chkMaterialIncluso"
+                  [name]="'chkMaterialIncluso'+index"
+                  [id]="'chkMaterialIncluso'+index"
                   [tabindex]="0"
                   [(ngModel)]="
                     orcamento.orcamento_items[index].material_incluido
@@ -719,6 +721,52 @@
                   <i class="pi pi-plus"></i>
                 </button>
               </td>
+              <td>
+                <button
+                  name="btnExportar"
+                  id="btnExportar"
+                  pButton
+                  type="button"
+                  (click)="exportOrcamentoItemToXlsx()"
+                  class="noprint"
+                  [disabled]="orcamento.orcamento_items.length === 0"
+                >
+                  Exportar
+                </button>
+              </td>
+              <td>
+                <div>
+                  <input
+                    type="file"
+                    class="file-input"
+                    (change)="importOrcamentoItemFromXlsx($event)"
+                    #fileUpload
+                  />
+                  <button
+                    pButton
+                    name="btnImportar"
+                    id="btnImportar"
+                    class="p-button noprint"
+                    type="button"
+                    (click)="fileUpload.click()"
+                    [disabled]="orcamento.status !== 'Orçamento' || loadingImportar"
+                  >
+                    Importar
+                    <p-progressSpinner
+                      *ngIf="loadingImportar"
+                      [style]="{
+                        width: '27px',
+                        height: '27px',
+                        margin: 'auto'
+                      }"
+                      styleClass="custom-spinner"
+                      strokeWidth="8"
+                      fill="var(--surface-ground)"
+                      animationDuration="1s"
+                    ></p-progressSpinner>
+                  </button>
+                </div>
+              </td>
             </tr>
           </ng-template>
         </p-table>
@@ -838,13 +886,13 @@
     >
       Salvar
       <p-progressSpinner
-          *ngIf="loadingSalvar"
-          [style]="{ width: '27px', height: '27px', margin: 'auto' }"
-          styleClass="custom-spinner"
-          strokeWidth="8"
-          fill="var(--surface-ground)"
-          animationDuration="1s"
-        ></p-progressSpinner>
+        *ngIf="loadingSalvar"
+        [style]="{ width: '27px', height: '27px', margin: 'auto' }"
+        styleClass="custom-spinner"
+        strokeWidth="8"
+        fill="var(--surface-ground)"
+        animationDuration="1s"
+      ></p-progressSpinner>
     </button>
     <button
       pButton
@@ -857,13 +905,13 @@
     >
       Aprovar
       <p-progressSpinner
-          *ngIf="loadingAprovar"
-          [style]="{ width: '27px', height: '27px', margin: 'auto' }"
-          styleClass="custom-spinner"
-          strokeWidth="8"
-          fill="var(--surface-ground)"
-          animationDuration="1s"
-        ></p-progressSpinner>
+        *ngIf="loadingAprovar"
+        [style]="{ width: '27px', height: '27px', margin: 'auto' }"
+        styleClass="custom-spinner"
+        strokeWidth="8"
+        fill="var(--surface-ground)"
+        animationDuration="1s"
+      ></p-progressSpinner>
     </button>
     <button
       pButton

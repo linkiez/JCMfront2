@@ -10,24 +10,29 @@
   min-width: 50px;
 }
 
-:host ::ng-deep .p-datatable .p-datatable-tbody > tr > td{
+:host ::ng-deep .p-datatable .p-datatable-tbody > tr > td {
   text-align: center;
 }
 
 button {
   margin-right: 10px;
-  }
+}
+
+.file-input {
+  display: none;
+}
 
 @media print {
-  .wv-300, .wv-100{
+  .wv-300,
+  .wv-100 {
     min-width: auto;
   }
 
-  .wp-150{
+  .wp-150 {
     min-width: 150px;
   }
 
-  .fontLarge{
+  .fontLarge {
     font-size: large;
   }
 }

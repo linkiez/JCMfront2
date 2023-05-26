@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ContatoComponent } from './contato.component';
 import { AppModule } from 'src/app/app.module';
-import { CadastroContatosModule } from '../cadastro-contatos.module';
+import { CadastroContatosModule } from '../contatos.module';
 
 describe('ContatoComponent', () => {
   let component: ContatoComponent;
@@ -10,9 +10,8 @@ describe('ContatoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AppModule, CadastroContatosModule]
-    })
-    .compileComponents();
+      imports: [AppModule, CadastroContatosModule],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ContatoComponent);
     component = fixture.componentInstance;

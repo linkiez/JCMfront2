@@ -6,11 +6,11 @@ import { Router } from '@angular/router';
 import { Query } from 'src/app/models/query';
 
 @Component({
-  selector: 'app-cadastro-contatos',
-  templateUrl: './cadastro-contatos.component.html',
-  styleUrls: ['./cadastro-contatos.component.scss'],
+  selector: 'app-contatos',
+  templateUrl: './contatos.component.html',
+  styleUrls: ['./contatos.component.scss'],
 })
-export class CadastroContatosComponent implements OnInit {
+export class ContatosComponent implements OnInit {
   @ViewChild('dt') dt: Table | undefined;
 
   contatos: Array<Contato> = [];
