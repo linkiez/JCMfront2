@@ -18,7 +18,7 @@ export interface RIR {
   operador?: Operador;
   conferido?: boolean;
   observacoes?: string;
-  registro_inspecao_recebimento_file?: Arquivo[];
+  files?: Arquivo[];
   pedido_compra_item?: PedidoCompraItem;
   ordem_producao_item?: OrdemProducaoItem;
   updatedAt?: Date;

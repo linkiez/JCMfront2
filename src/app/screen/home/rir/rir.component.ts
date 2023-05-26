@@ -153,6 +153,7 @@ export class RirComponent implements OnInit {
           detail: error.message,
         });
       },
+      complete: () => this.getRIRs(),
     });
   }
 
@@ -175,10 +176,12 @@ export class RirComponent implements OnInit {
           detail: error.message,
         });
       },
+      complete: () => this.getRIRs(),
     });
   }
 
   createOrUpdate() {
+    console.log(this.rir)
     if (this.validacoes()) {
       if (this.rir.id) {
         this.update();
@@ -270,7 +273,16 @@ export class RirComponent implements OnInit {
       next: (consulta) => {
         console.log(consulta);
         this.rirs = consulta.rirs;
-        this.totalRecords = consulta.count;
+        this.rirs = this.rirs.map((rir) => {
+          if (rir.recebido_data !== undefined) {
+            rir.recebido_data = new Date(rir.recebido_data);
+          }
+          if (rir.nfe_data !== undefined) {
+            rir.nfe_data = new Date(rir.nfe_data);
+          }
+          return rir;
+        });
+        this.totalRecords = consulta.totalRecords;
       },
       error: (error) => {
         console.log(error, this.query);
@@ -282,5 +294,9 @@ export class RirComponent implements OnInit {
       },
     });
 
+  }
+
+  log(item: any) {
+    console.log(item);
   }
 }

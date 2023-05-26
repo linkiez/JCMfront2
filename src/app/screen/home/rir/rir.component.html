@@ -96,8 +96,8 @@
         <label for="" *ngIf="rir.cliente">Cliente</label>
         <label for="" *ngIf="!rir.cliente">Fornecedor</label>
         <p-autoComplete
-          name="produto"
-          id="produto"
+          name="pessoa"
+          id="pessoa"
           type="text"
           [(ngModel)]="rir.pessoa"
           field="nome"
@@ -124,8 +124,8 @@
       <div class="col-3">
         <label for="">Recebido Por</label>
         <p-autoComplete
-          name="produto"
-          id="produto"
+          name="recebido_por"
+          id="recebido_por"
           type="text"
           [(ngModel)]="rir.operador"
           field="pessoa.nome"
@@ -146,8 +146,8 @@
           class="flex-grow-1 d-flex align-content-center justify-content-center"
         >
           <p-checkbox
-            name="cliente"
-            id="cliente"
+            name="conferido"
+            id="conferido"
             [tabindex]="0"
             [(ngModel)]="rir.conferido"
             [binary]="true"
@@ -159,8 +159,8 @@
         <input
           pInputText
           type="text"
-          id="nfe"
-          name="nfe"
+          id="observacoes"
+          name="observacoes"
           placeholder=""
           [(ngModel)]="rir.observacoes"
         />
@@ -169,7 +169,8 @@
         <label for="">Anexos</label>
         <listaFiles
           [compact]="true"
-          (onChangeFiles)="rir.registro_inspecao_recebimento_file = $event"
+          [files]="rir.files!"
+          (onChangeFiles)="rir.files = $event"
         ></listaFiles>
       </div>
     </div>
@@ -207,7 +208,7 @@
         <button
           pButton
           type="button"
-          label="Limpar"
+          label="Novo"
           (click)="limpar()"
         ></button>
       </div>
@@ -242,17 +243,19 @@
     <ng-template pTemplate="header">
       <tr>
         <th>RIR</th>
+        <th>Data</th>
         <th>Descrição</th>
         <th>Material</th>
         <th>Qtd.(Kg)</th>
         <th>Conferido</th>
         <th>Cliente</th>
-        <th>Pessoa</th>
+        <th>Cliente/Fornecedor</th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-RirLista>
-      <tr (click)="rir=RirLista">
+      <tr (click)="rir=RirLista;log(rir)">
         <td>{{ RirLista.id }}</td>
+        <td>{{ RirLista.createdAt | date : 'dd/MM/yyyy HH:mm:ss'}}</td>
         <td>{{ RirLista.descricao }}</td>
         <td>{{ RirLista.produto.nome }}</td>
         <td>{{ RirLista.quantidade }}</td>
