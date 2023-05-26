@@ -450,8 +450,8 @@
               </td>
               <td class="text-center">
                 <p-checkbox
-                  name="chkMaterialIncluso"
-                  id="chkMaterialIncluso"
+                  [name]="'chkMaterialIncluso'+index"
+                  [id]="'chkMaterialIncluso'+index"
                   [tabindex]="0"
                   [(ngModel)]="
                     orcamento.orcamento_items[index].material_incluido
