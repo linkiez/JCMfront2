@@ -20,11 +20,20 @@
 # Use official nginx image as the base image
 FROM nginx:latest
 
+# Create a directory to store the SSL certificate files
+RUN mkdir /etc/nginx/ssl
+
+# Copy the SSL certificate files to the container
+COPY ./ssl/linkiez_ddns_net.crt /etc/nginx/ssl/linkiez_ddns_net.crt
+COPY ./ssl/linkiez_ddns_net.key /etc/nginx/ssl/linkiez_ddns_net.key
+COPY ./ssl/DigiCertCA.crt /etc/nginx/ssl/DigiCertCA.crt
+COPY ./ssl/TrustedRoot.crt /etc/nginx/ssl/TrustedRoot.crt
+
 # Copy the nginx configuration file to the default nginx configuration path
 COPY ./nginx.conf /etc/nginx/conf.d/default.conf
 
 # Copy the build output to replace the default nginx contents.
 COPY ./dist/jcmfront2 /usr/share/nginx/html
 
-# Expose port 80
-EXPOSE 80
+# Expose the HTTPS port
+EXPOSE 443
