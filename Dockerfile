@@ -37,3 +37,4 @@ COPY ./dist/jcmfront2 /usr/share/nginx/html
 
 # Expose the HTTPS port
 EXPOSE 443
+EXPOSE 80
