@@ -66,14 +66,14 @@
                 <th>Descrição</th>
                 <th>Material</th>
                 <th>Qtd.</th>
-                <th>RIR</th>
+                <th style="width: 100px;">RIR</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td>{{ index + 1 }}</td>
                 <td>{{ itemProducao.descricao }}</td>
-                <td>{{ itemProducao.produto?.nome }}</td>
+                <td>{{ itemProducao.produto?.nome }} - {{ordemProducao.orcamento!.orcamento_items[index].largura | number}}x{{ordemProducao.orcamento!.orcamento_items[index].altura | number}}mm</td>
                 <td>{{ itemProducao.quantidade }}</td>
                 <td></td>
               </tr>
@@ -89,8 +89,8 @@
                       let processo of itemProducao.ordem_producao_item_processos
                     "
                   >
-                    <td>{{ processo.processo }}</td>
-                    <td>Data:</td>
+                    <td style="width: 100px;">{{ processo.processo }}</td>
+                    <td style="width: 100px;">Data:</td>
                     <td>Ass:</td>
                   </tr>
                 </tbody>

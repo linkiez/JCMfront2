@@ -101,9 +101,9 @@ export class OrdemProducaoComponent implements OnInit {
           Item: index + 1,
           Quantidade: item.quantidade,
           Material: `${item.produto?.nome} - ${item.descricao} - ${Number(
-            this.ordemProducao.orcamento?.orcamento_items[index].altura
-          ).toFixed(0)}x${Number(
             this.ordemProducao.orcamento?.orcamento_items[index].largura
+          ).toFixed(0)}x${Number(
+            this.ordemProducao.orcamento?.orcamento_items[index].altura
           ).toFixed(0)}mm ${item.quantidade}PC`,
           Data:
             this.ordemProducao.createdAt?.getDate() +
