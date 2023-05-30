@@ -307,6 +307,7 @@ export class OrcamentoComponent implements OnInit {
 
   removeItem(index: number) {
     this.orcamento.orcamento_items.splice(index, 1);
+    this.calculaTotais();
   }
 
   onChangeItemImposto(event: any, item: OrcamentoItem) {
@@ -817,7 +818,7 @@ export class OrcamentoComponent implements OnInit {
             this.messageService.add({
               severity: 'error',
               summary: 'Erro',
-              detail: `${error.status} - ${error.statusText} - ${error.error}`,
+              detail: `${error.message}`,
             });
             this.loadingAprovar = false;
           },
