@@ -32,8 +32,8 @@
   </div>
 </div>
 <div class="d-flex justify-content-between flex-wrap">
-  <div *ngFor="let op of ordemProducao; let index = index" class="flex-fill">
-    <p-card>
+  <div *ngFor="let op of ordemProducao; let index = index" style="max-width: 25%;">
+    <p-card >
       <ng-template pTemplate="header">
         <caixaDeStatus
           [status]="op.status"
@@ -229,4 +229,5 @@
     [showCurrentPageReport]="true"
     [currentPageReportTemplate]="totalRecords + ' resultados'"
   ></p-paginator>
+  <span>F-020 - Controle de Ordem de Produção - Emissão: 25/09/2018 Revisão: 26/4/2023</span>
 </div>
