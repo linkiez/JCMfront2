@@ -22,7 +22,7 @@ export class PedidosComprasComponent implements OnInit, OnDestroy {
 
   query: Query = {
     page: 0,
-    pageCount: 10,
+    pageCount: 25,
     searchValue: '',
     deleted: false,
   };

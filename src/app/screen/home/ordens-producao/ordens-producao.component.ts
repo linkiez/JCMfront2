@@ -24,7 +24,7 @@ export class OrdensProducaoComponent implements OnInit {
 
   query: Query = {
     page: 0,
-    pageCount: 10,
+    pageCount: 25,
     searchValue: '',
     deleted: false,
     status: '',

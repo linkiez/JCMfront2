@@ -25,7 +25,7 @@ export class OrcamentosComponent implements OnInit, OnDestroy {
 
   query: Query = {
     page: 0,
-    pageCount: 10,
+    pageCount: 25,
     searchValue: '',
     deleted: false,
   };
@@ -47,10 +47,10 @@ export class OrcamentosComponent implements OnInit, OnDestroy {
     this.query.page = pageChange ? this.query.page : 0;
 
     this.orcamentoService.getOrcamentos(this.query)
-      // .pipe(
-      //   debounceTime(1000), // espera um tempo antes de começar
-      //   distinctUntilChanged() // recorda a ultima pesquisa
-      // )
+      .pipe(
+        // debounceTime(1000), // espera um tempo antes de começar
+        distinctUntilChanged() // recorda a ultima pesquisa
+      )
       .subscribe({
         next: (consulta) => {
           this.orcamentos = consulta.orcamento;
