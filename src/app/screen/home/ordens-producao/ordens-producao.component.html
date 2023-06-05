@@ -32,7 +32,7 @@
   </div>
 </div>
 <div class="d-flex justify-content-between flex-wrap">
-  <div *ngFor="let op of ordemProducao; let index = index" style="max-width: 25%;">
+  <div *ngFor="let op of ordemProducao; let index = index" style="max-width: 25%;" class="flex-fill">
     <p-card >
       <ng-template pTemplate="header">
         <caixaDeStatus
@@ -73,7 +73,7 @@
         >
         <br />
         <span
-          >Fabricado:
+          ><span *ngIf="op.data_finalizacao || op.editable">Fabricado:</span>
           <span
             *ngIf="!op.editable"
             [ngClass]="{
@@ -89,9 +89,9 @@
             *ngIf="op.editable"
             (onSelect)="op.new!.status = 'Finalizado'"
           ></p-calendar></span
-        ><br />
+        ><br *ngIf="op.data_finalizacao || op.editable"/>
         <span
-          >Negociado:
+          ><span *ngIf="op.data_negociado || op.editable">Negociado:</span>
           <span
             *ngIf="!op.editable"
             [ngClass]="{
@@ -113,9 +113,9 @@
             styleClass="w-100"
             *ngIf="op.editable"
           ></p-calendar></span
-        ><br />
+        ><br *ngIf="op.data_negociado || op.editable"/>
         <span
-          >Entregue:
+          ><span *ngIf="op.data_entregue || op.editable">Entregue:</span>
           <span
             *ngIf="!op.editable"
             [ngClass]="{
@@ -133,9 +133,9 @@
           ></p-calendar>
         </span>
       </p>
-      <br />
+      <br *ngIf="op.ordem_producao_historicos?.[0] || op.editable"/>
       <div>
-        Historico:
+        <span *ngIf="op.ordem_producao_historicos?.[0] || op.editable">Historico:</span>
         <div class="d-flex" *ngIf="op.editable">
           <div class="flex-fill">
             <input
