@@ -32,12 +32,22 @@ export class OrdemProducaoComponent implements OnInit {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     this.ordemProducaoService.getOrdemProducao(id).subscribe({
       next: (ordemProducao) => {
-        console.log(ordemProducao);
+        ordemProducao.orcamento?.orcamento_items?.sort((a, b) => {
+          if(a.id && b.id){
+          if (a.id < b.id) {
+            return -1;
+          }
+          if (a.id > b.id) {
+            return 1;
+          }}
+          return 0;
+        })
         this.ordemProducao = ordemProducao;
-
         this.ordemProducao.ordem_producao_items?.forEach((item) => {
           item.observacao = '<p>' + item.observacao + '<p>';
         });
+
+
       },
       error: (error) => {
         console.log(error);

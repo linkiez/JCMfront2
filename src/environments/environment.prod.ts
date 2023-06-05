@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  backendURL: 'https://jcm-backend.herokuapp.com/',
-  accessTokenExpirein: 15 /*in minutes*/,
+  backendURL: 'http://linkiez.ddns.net:2486/',
+  accessTokenExpirein: 480 /*in minutes*/,
   refreshTokenExpireIn: 5 /*in days*/
 };
