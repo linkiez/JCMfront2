@@ -3,7 +3,7 @@ export interface Contato {
     nome?: string;
     tipo?: string;
     valor?: string;
-    updateAt?: Date;
-    createAt?: Date;
+    updatedAt?: Date;
+    createdAt?: Date;
     deletedAt?: Date;
   }

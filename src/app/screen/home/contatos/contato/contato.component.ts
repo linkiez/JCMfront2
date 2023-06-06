@@ -1,9 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { Subscription } from 'rxjs';
+import { Subscription, map } from 'rxjs';
 import { Contato } from 'src/app/models/contato';
 import { ContatoService } from 'src/app/services/contato.service';
+import { ListaGenericaService } from 'src/app/services/lista-generica.service';
 
 @Component({
   selector: 'app-contato',
@@ -13,12 +14,17 @@ import { ContatoService } from 'src/app/services/contato.service';
 })
 export class ContatoComponent implements OnInit, OnDestroy {
 
+  contatoCategorias$ = this.listaGenericaService
+    .getByNameListaGenerica('categoriaContato')
+    .pipe(map((listaGenerica: any) => listaGenerica.lista_generica_items));
+
   constructor(
     private contatoService: ContatoService,
     private route: ActivatedRoute,
     private router: Router,
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
+    private listaGenericaService: ListaGenericaService
   ) { }
 
   contato: Contato = {};
@@ -26,19 +32,18 @@ export class ContatoComponent implements OnInit, OnDestroy {
   private subscription: Subscription = new Subscription;
 
   ngOnInit(): void {
-    this.getProduto();
+    this.getContato();
   }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
 
-  getProduto() {
+  getContato() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     if (id != 0) {
       this.subscription = this.contatoService.getContato(id).subscribe({
         next: (contato) => {
-          console.log(contato)
           this.contato = contato;
         },
         error: (error) => {
@@ -53,7 +58,7 @@ export class ContatoComponent implements OnInit, OnDestroy {
     }
   }
 
-  updateProduto() {
+  updateContato() {
     this.contatoService.updateContato(this.contato).subscribe({
       error: (error) => {
         console.log(error)
@@ -73,7 +78,7 @@ export class ContatoComponent implements OnInit, OnDestroy {
     //this.router.navigate(['/home/produtos']);
   }
 
-  createProduto(){
+  createContato(){
     this.contatoService.addContato(this.contato).subscribe({
       next: (contato) => this.contato=this.contato,
       error: (error) => {
@@ -95,13 +100,13 @@ export class ContatoComponent implements OnInit, OnDestroy {
 
   createOrUpdate(){
     if(this.contato.id == undefined){
-      this.createProduto()
+      this.createContato()
     }else{
-      this.updateProduto()
+      this.updateContato()
     }
   }
 
-  deleteProduto() {
+  deleteContato() {
     this.contatoService.deleteContato(this.contato).subscribe();
     this.router.navigate(['/home/contatos']);
   }
@@ -110,13 +115,17 @@ export class ContatoComponent implements OnInit, OnDestroy {
     this.confirmationService.confirm({
       message: 'Tem certeza que deseja excluir este contato?',
       accept: () => {
-        this.deleteProduto();
+        this.deleteContato();
       },
     });
   }
 
-  getBackProdutos() {
+  getBackContatos() {
     this.router.navigate(['/home/contatos']);
+  }
+
+  onChangeValor(event: any) {
+    this.contato.valor = event.replace(/[^\d]/g, '');
   }
 
 }
