@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   backendURL: 'http://localhost:3000/',
-  accessTokenExpirein: 10 /*in minutes*/,
+  accessTokenExpirein: 480 /*in minutes*/,
   refreshTokenExpireIn: 5 /*in days*/
 
 };

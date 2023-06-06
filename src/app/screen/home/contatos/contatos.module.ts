@@ -9,6 +9,8 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
 import { FormsModule } from '@angular/forms';
+import { PaginatorModule } from 'primeng/paginator';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   declarations: [ContatosComponent, ContatoComponent],
@@ -20,6 +22,8 @@ import { FormsModule } from '@angular/forms';
     MessageModule,
     FormsModule,
     ConfirmDialogModule,
+    PaginatorModule,
+    SharedModule
   ],
 })
 export class ContatosModule {}

@@ -15,9 +15,14 @@ export class ContatosComponent implements OnInit {
 
   contatos: Array<Contato> = [];
 
-  first = 0;
+  query: Query = {
+    page: 0,
+    pageCount: 25,
+    searchValue: '',
+    deleted: false,
+  };
 
-  rows = 10;
+  totalRecords: number = 0;
 
   constructor(private contatoService: ContatoService, private router: Router) {}
 
@@ -25,53 +30,26 @@ export class ContatosComponent implements OnInit {
     this.getContatos();
   }
 
-  getContatos(): void {
-    let query: Query = {
-      page: 0,
-      pageCount: 10,
-      searchValue: '',
-      deleted: false,
-    };
-
-    this.contatoService.getContatos(query).subscribe({
+  getContatos(pageChange?: boolean): void {
+    this.query.page = pageChange ? this.query.page : 0;
+    this.contatoService.getContatos(this.query).subscribe({
       next: (response) => {
         this.contatos = response.contatos;
+        this.totalRecords = response.totalRecords;
       },
       error: (error) => console.log(error),
     });
   }
 
+  pageChange(event: any) {
+    if (event) {
+      this.query.page = event.page;
+      this.query.pageCount = event.rows;
+      this.getContatos(true);
+    }
+  }
+
   new() {
     this.router.navigate(['/home/contatos/0']);
-  }
-
-  next() {
-    this.first = this.first + this.rows;
-  }
-
-  prev() {
-    this.first = this.first - this.rows;
-  }
-
-  reset() {
-    this.first = 0;
-  }
-
-  isLastPage(): boolean {
-    return this.contatos
-      ? this.first === this.contatos.length - this.rows
-      : true;
-  }
-
-  isFirstPage(): boolean {
-    return this.contatos ? this.first === 0 : true;
-  }
-
-  applyFilterGlobal($event: any, stringVal: any) {
-    this.dt!.filterGlobal(($event.target as HTMLInputElement).value, stringVal);
-  }
-
-  clear(table: Table) {
-    table.clear();
   }
 }
