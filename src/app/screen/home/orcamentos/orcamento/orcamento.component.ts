@@ -351,7 +351,6 @@ export class OrcamentoComponent implements OnInit {
     this.orcamento.contato!.valor = event.replace(/[^\d]/g, '');
   }
 
-
   selectContato($event: any) {
     this.orcamento.contato = $event;
   }
@@ -873,65 +872,68 @@ export class OrcamentoComponent implements OnInit {
       const wsname: string = data.SheetNames[0];
       const ws: XLSX.WorkSheet = data.Sheets[wsname];
       const orcamento_items: OrcamentoItemXlSX[] = XLSX.utils.sheet_to_json(ws);
-      const listaProdutos = await this.procuraProdutos(orcamento_items);
-      orcamento_items.forEach((item) => {
-        const produto = listaProdutos.find(
-          (produto) => produto.nome === item.produto
-        );
-        if (produto) {
-          if (this.orcamento.orcamento_items[item.item - 1]) {
-            this.orcamento.orcamento_items[item.item - 1].descricao =
-              item.descricao;
-            this.orcamento.orcamento_items[item.item - 1].produto = produto;
-            this.orcamento.orcamento_items[item.item - 1].material_incluido =
-              item.material_incluido === 'Sim';
-            this.orcamento.orcamento_items[item.item - 1].processo =
-              item.processo?.split(',').map((processo) => processo.trim());
-            this.orcamento.orcamento_items[item.item - 1].largura =
-              +item.largura;
-            this.orcamento.orcamento_items[item.item - 1].altura = +item.altura;
-            this.orcamento.orcamento_items[item.item - 1].quantidade =
-              +item.quantidade;
-            this.orcamento.orcamento_items[item.item - 1].imposto =
-              +item.imposto;
-            this.orcamento.orcamento_items[item.item - 1].preco_quilo =
-              +item.preco_quilo;
-            this.orcamento.orcamento_items[item.item - 1].tempo = item.tempo;
-            this.orcamento.orcamento_items[item.item - 1].preco_hora =
-              +item.preco_hora;
-            this.orcamento.orcamento_items[item.item - 1].total_manual =
-              +item.total_manual;
+      if (this.validaXLSX(orcamento_items)) {
+        const listaProdutos = await this.procuraProdutos(orcamento_items);
+        orcamento_items.forEach((item) => {
+          const produto = listaProdutos.find(
+            (produto) => produto.nome === item.produto
+          );
+          if (produto) {
+            if (this.orcamento.orcamento_items[item.item - 1]) {
+              this.orcamento.orcamento_items[item.item - 1].descricao =
+                item.descricao;
+              this.orcamento.orcamento_items[item.item - 1].produto = produto;
+              this.orcamento.orcamento_items[item.item - 1].material_incluido =
+                item.material_incluido === 'Sim';
+              this.orcamento.orcamento_items[item.item - 1].processo =
+                item.processo?.split(',').map((processo) => processo.trim());
+              this.orcamento.orcamento_items[item.item - 1].largura =
+                +item.largura;
+              this.orcamento.orcamento_items[item.item - 1].altura =
+                +item.altura;
+              this.orcamento.orcamento_items[item.item - 1].quantidade =
+                +item.quantidade;
+              this.orcamento.orcamento_items[item.item - 1].imposto =
+                +item.imposto;
+              this.orcamento.orcamento_items[item.item - 1].preco_quilo =
+                +item.preco_quilo;
+              this.orcamento.orcamento_items[item.item - 1].tempo = item.tempo;
+              this.orcamento.orcamento_items[item.item - 1].preco_hora =
+                +item.preco_hora;
+              this.orcamento.orcamento_items[item.item - 1].total_manual =
+                +item.total_manual;
+            } else {
+              const orcamento_item: OrcamentoItem = {
+                descricao: item.descricao,
+                produto: produto,
+                material_incluido: item.material_incluido === 'Sim',
+                processo: item.processo
+                  ?.split(',')
+                  .map((processo) => processo.trim()),
+                largura: +item.largura,
+                altura: +item.altura,
+                quantidade: +item.quantidade,
+                imposto: +item.imposto,
+                preco_quilo: +item.preco_quilo,
+                tempo: item.tempo,
+                preco_hora: +item.preco_hora,
+                total_manual: +item.total_manual,
+              };
+              this.orcamento.orcamento_items.push(orcamento_item);
+            }
+            this.orcamento.orcamento_items.forEach((item) => {
+              this.calculaPeso(item);
+              this.calculaHora(item);
+            });
           } else {
-            const orcamento_item: OrcamentoItem = {
-              descricao: item.descricao,
-              produto: produto,
-              material_incluido: item.material_incluido === 'Sim',
-              processo: item.processo
-                ?.split(',')
-                .map((processo) => processo.trim()),
-              largura: +item.largura,
-              altura: +item.altura,
-              quantidade: +item.quantidade,
-              imposto: +item.imposto,
-              preco_quilo: +item.preco_quilo,
-              tempo: item.tempo,
-              preco_hora: +item.preco_hora,
-              total_manual: +item.total_manual,
-            };
-            this.orcamento.orcamento_items.push(orcamento_item);
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Erro',
+              detail: `Produto ${item.produto} não encontrado no item ${item.item}.`,
+            });
           }
-          this.orcamento.orcamento_items.forEach((item) => {
-            this.calculaPeso(item);
-            this.calculaHora(item);
-          });
-        } else {
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Erro',
-            detail: `Produto ${item.produto} não encontrado no item ${item.item}.`,
-          });
-        }
-      });
+        });
+      }
       this.loadingImportar = false;
     };
     reader.readAsBinaryString(file);
@@ -969,5 +971,128 @@ export class OrcamentoComponent implements OnInit {
     }
 
     return listaProdutos;
+  }
+
+  validaXLSX(orcamento_items: OrcamentoItemXlSX[]) {
+    let valido = true;
+    orcamento_items.forEach((item) => {
+      if (!item.produto) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: `Produto não informado no item ${item.item}.`,
+        });
+        valido = false;
+      }
+      if (!item.processo) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: `Processo não informado no item ${item.item}.`,
+        });
+        valido = false;
+      }
+      if (!item.largura) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: `Largura não informada no item ${item.item}.`,
+        });
+        valido = false;
+      }
+      if (!isFinite(item.largura) && item.largura) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: `Largura não é um numero valido no item ${item.item}.`,
+        });
+        valido = false;
+      }
+      if (!item.altura) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: `Altura não informada no item ${item.item}.`,
+        });
+        valido = false;
+      }
+      if (!isFinite(item.altura) && item.altura) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: `Altura não é um numero valido no item ${item.item}.`,
+        });
+        valido = false;
+      }
+      if (!item.quantidade) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: `Quantidade não informada no item ${item.item}.`,
+        });
+        valido = false;
+      }
+      if (!isFinite(+item.quantidade) && item.quantidade) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: `Quantidade não é um numero valido no item ${item.item}.`,
+        });
+        valido = false;
+      }
+      if (!item.imposto && item.imposto !== 0) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: `Imposto não informado no item ${item.item}.`,
+        });
+        valido = false;
+      }
+      if (!isFinite(+item.imposto) && item.imposto) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: `Imposto não é um numero valido no item ${item.item}.`,
+        });
+        valido = false;
+      }
+      if (!isFinite(+item.preco_quilo) && item.preco_quilo) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: `Preço Quilo não é um numero valido no item ${item.item}.`,
+        });
+        valido = false;
+      }
+      if (
+        !/^([0-1][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$/.test(item.tempo) &&
+        item.tempo
+      ) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: `Tempo formato inválido (não corresponde ao formato de tempo) no item ${item.item}.`,
+        });
+        valido = false;
+      }
+      if (!isFinite(+item.preco_hora) && item.preco_hora) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: `Preço Hora não é um numero valido no item ${item.item}.`,
+        });
+        valido = false;
+      }
+      if (!isFinite(+item.total_manual) && item.total_manual) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: `Total Manual não é um numero valido no item ${item.item}.`,
+        });
+        valido = false;
+      }
+    });
+
+    return valido;
   }
 }
