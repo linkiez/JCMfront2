@@ -160,21 +160,50 @@
         </div>
         <div class="col d-print-flex">
           <label for="">Contato: </label>
-          <input
-            *ngIf="
-              orcamento.contato!.tipo === 'Telefone' ||
-              orcamento.contato!.tipo === 'WhatsApp'
+          <p-autoComplete
+          *ngIf="
+              orcamento.contato!.tipo == 'Telefone' ||
+              orcamento.contato!.tipo == 'WhatsApp'
             "
-            name="inpContatoTelefone"
-            id="inpContatoTelefone"
-            pInputText
-            class="p-inputtext"
-            type="text"
+            name="ContatoValor"
+            id="ContatoValor"
             [ngModel]="orcamento.contato?.valor | telefone"
             (ngModelChange)="onChangeWhatsapp($event)"
+            [contentEditable]="true"
+            (onSelect)="selectContato($event)"
+            [suggestions]="contatos"
+            (completeMethod)="searchContato($event, true)"
+            [style]="{ width: '100%' }"
+            [inputStyle]="{ width: '100%' }"
+            appendTo="body"
             [disabled]="orcamento.status !== 'Orçamento'"
             class="noprint"
-          />
+            ><ng-template let-contatoOption pTemplate="item">
+              <div>
+                <span>{{ contatoOption.nome }} - </span>
+                <span
+                  *ngIf="
+                    contatoOption.tipo === 'Telefone' ||
+                    contatoOption.tipo === 'WhatsApp'
+                  "
+                  >{{ contatoOption.valor | telefone }}</span
+                >
+                <span
+                  *ngIf="
+                    contatoOption.tipo !== 'Telefone' &&
+                    contatoOption.tipo !== 'WhatsApp'
+                  "
+                  >{{ contatoOption.valor }}</span
+                >
+              </div>
+            </ng-template>
+            <ng-template let-contatoSelected pTemplate="selectedItem">
+              <div>
+                {{ contatoSelected.nome }}
+              </div>
+            </ng-template></p-autoComplete
+          >
+
           <span
             *ngIf="
               orcamento.contato!.tipo === 'Telefone' ||
@@ -183,20 +212,48 @@
             class="noview"
             >{{ orcamento.contato?.valor | telefone }}</span
           >
-          <input
-            *ngIf="
+          <p-autoComplete
+          *ngIf="
               orcamento.contato!.tipo !== 'Telefone' &&
               orcamento.contato!.tipo !== 'WhatsApp'
             "
-            name="inpContatoEmail"
-            id="inpContatoEmail"
-            pInputText
-            class="p-inputtext"
-            type="text"
+            name="ContatoValor"
+            id="ContatoValor"
             [(ngModel)]="orcamento.contato!.valor"
+            [contentEditable]="true"
+            (onSelect)="selectContato($event)"
+            [suggestions]="contatos"
+            (completeMethod)="searchContato($event)"
+            [style]="{ width: '100%' }"
+            [inputStyle]="{ width: '100%' }"
+            appendTo="body"
             [disabled]="orcamento.status !== 'Orçamento'"
             class="noprint"
-          />
+            ><ng-template let-contatoOption pTemplate="item">
+              <div>
+                <span>{{ contatoOption.nome }} - </span>
+                <span
+                  *ngIf="
+                    contatoOption.tipo === 'Telefone' ||
+                    contatoOption.tipo === 'WhatsApp'
+                  "
+                  >{{ contatoOption.valor | telefone }}</span
+                >
+                <span
+                  *ngIf="
+                    contatoOption.tipo !== 'Telefone' &&
+                    contatoOption.tipo !== 'WhatsApp'
+                  "
+                  >{{ contatoOption.valor }}</span
+                >
+              </div>
+            </ng-template>
+            <ng-template let-contatoSelected pTemplate="selectedItem">
+              <div>
+                {{ contatoSelected.nome }}
+              </div>
+            </ng-template></p-autoComplete
+          >
           <small
             *ngIf="
               (orcamento.contato!.tipo === 'Email' ||
