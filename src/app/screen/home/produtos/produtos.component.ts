@@ -24,7 +24,7 @@ export class ProdutosComponent implements OnInit, OnDestroy {
 
   query: Query = {
     page: 0,
-    pageCount: 10,
+    pageCount: 25,
     searchValue: '',
     deleted: false,
   };
@@ -60,7 +60,7 @@ export class ProdutosComponent implements OnInit, OnDestroy {
           this.produtos = consulta.produtos.map((produto: any) => {
             if (produto.pedido_compra_items[0]) {
               produto.preco = produto.pedido_compra_items[0].precoComIpi;
-              produto.atualizacao = produto.pedido_compra_items[0].updatedAt
+              produto.atualizacao = produto.pedido_compra_items[0].pedido_compra.data_emissao;
             } else {
               produto.preco = 0;
               produto.atualizacao = '-'
@@ -70,6 +70,7 @@ export class ProdutosComponent implements OnInit, OnDestroy {
 
           this.totalRecords = consulta.totalRecords;
           if (!pageChange) this.paginator.changePageToFirst(new Event(''));
+          console.log(this.produtos);
         },
         error: (error) => {
           console.log(error);
