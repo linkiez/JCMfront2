@@ -22,6 +22,21 @@ button {
   display: none;
 }
 
+.statusGreen {
+  color: #155724;
+  background-color: #d4edda;
+}
+
+.statusYellow{
+  color: #856404;
+  background-color: #fff3cd;
+}
+
+.statusRed{
+  color: #9d1c24;
+  background-color: #f8d7da;
+}
+
 @media print {
   .wv-300,
   .wv-100 {

@@ -7,7 +7,8 @@
       <div class="col">
         <div class="row">
           <div class="col">
-            <h2>Proposta Comercial </h2> F-035 - Rev. 08 - Emissão: 01/10/2018 Revisão 26/04/2023
+            <h2>Proposta Comercial</h2>
+            F-035 - Rev. 08 - Emissão: 01/10/2018 Revisão 26/04/2023
           </div>
           <div class="col d-flex justify-content-end align-items-center">
             <caixaDeStatus
@@ -161,7 +162,7 @@
         <div class="col d-print-flex">
           <label for="">Contato: </label>
           <p-autoComplete
-          *ngIf="
+            *ngIf="
               orcamento.contato!.tipo == 'Telefone' ||
               orcamento.contato!.tipo == 'WhatsApp'
             "
@@ -213,7 +214,7 @@
             >{{ orcamento.contato?.valor | telefone }}</span
           >
           <p-autoComplete
-          *ngIf="
+            *ngIf="
               orcamento.contato!.tipo !== 'Telefone' &&
               orcamento.contato!.tipo !== 'WhatsApp'
             "
@@ -507,8 +508,8 @@
               </td>
               <td class="text-center">
                 <p-checkbox
-                  [name]="'chkMaterialIncluso'+index"
-                  [id]="'chkMaterialIncluso'+index"
+                  [name]="'chkMaterialIncluso' + index"
+                  [id]="'chkMaterialIncluso' + index"
                   [tabindex]="0"
                   [(ngModel)]="
                     orcamento.orcamento_items[index].material_incluido
@@ -652,6 +653,27 @@
                       [disabled]="orcamento.status !== 'Orçamento'"
                       (input)="calculaPeso(item)"
                     />
+                    <table style="width: 100%;">
+                      <tr *ngFor="let markup of markupOptions$ | async">
+                        <td>
+                          <div
+                            style="font-size: xx-small"
+                            [ngClass]="{
+                              statusGreen: markup.valor === 'Maior',
+                              statusYellow: markup.valor === 'Médio',
+                              statusRed: markup.valor === 'Menor',
+                            }"
+                          >
+                            {{ markup.valor }}:
+                            {{
+                              markup.valor2 *
+                                item.produto.pedido_compra_items[0].precoComIpi
+                                | currency : "BRL"
+                            }}
+                          </div>
+                        </td>
+                      </tr>
+                    </table>
                   </ng-template>
                   <ng-template pTemplate="output">
                     {{ item.preco_quilo | currency : "BRL" }}
@@ -806,7 +828,9 @@
                     class="p-button noprint"
                     type="button"
                     (click)="fileUpload.click()"
-                    [disabled]="orcamento.status !== 'Orçamento' || loadingImportar"
+                    [disabled]="
+                      orcamento.status !== 'Orçamento' || loadingImportar
+                    "
                   >
                     Importar
                     <p-progressSpinner
