@@ -1,3 +1,4 @@
+import { QueryService } from 'src/app/services/query.service';
 import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -21,15 +22,7 @@ export class PessoasComponent implements OnInit, OnDestroy {
 
   totalRecords: number = 0;
 
-  query: Query = {
-    page: 0,
-    pageCount: 10,
-    searchValue: '',
-    fornecedor: false,
-    operador: false,
-    vendedor: false,
-    deleted: false,
-  };
+  first = 0;
 
   private subscription: Subscription = new Subscription();
 
@@ -41,11 +34,13 @@ export class PessoasComponent implements OnInit, OnDestroy {
     private pessoaService: PessoaService,
     private messageService: MessageService,
     private router: Router,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    public queryService: QueryService
   ) {}
 
   ngOnInit(): void {
-    this.getPessoas();
+    this.getPessoas(true);
+    this.first = this.queryService.pessoas.page * this.queryService.pessoas.pageCount;
   }
 
   ngOnDestroy(): void {
@@ -53,10 +48,10 @@ export class PessoasComponent implements OnInit, OnDestroy {
   }
 
   getPessoas(pageChange?: boolean): void {
-    this.query.page = pageChange ? this.query.page : 0
+    this.queryService.pessoas.page = pageChange ? this.queryService.pessoas.page : 0
 
     this.subscription = this.pessoaService
-      .getPessoas(this.query)
+      .getPessoas(this.queryService.pessoas)
       // .pipe(
       //   debounceTime(1000), // espera um tempo antes de começar
       //   distinctUntilChanged() // recorda a ultima pesquisa
@@ -80,8 +75,8 @@ export class PessoasComponent implements OnInit, OnDestroy {
 
   search() {
     if (
-      this.query.searchValue?.length! > 3 ||
-      this.query.searchValue?.length! === 0
+      this.queryService.pessoas.searchValue?.length! > 3 ||
+      this.queryService.pessoas.searchValue?.length! === 0
     )
       this.getPessoas();
   }
@@ -100,13 +95,13 @@ export class PessoasComponent implements OnInit, OnDestroy {
   }
 
   pageChange(event: any) {
-    this.query.page = event.page;
-    this.query.pageCount = event.rows;
+    this.queryService.pessoas.page = event.page;
+    this.queryService.pessoas.pageCount = event.rows;
     this.getPessoas(true);
   }
 
   clickDeleted(id: number) {
-    if (!this.query.deleted) {
+    if (!this.queryService.pessoas.deleted) {
       this.router.navigate([`home/pessoas/${id}`]);
     }else{
       this.confirm(id)

@@ -7,7 +7,7 @@
         class="p-inputtext"
         type="text"
         placeholder="Search keyword"
-        [(ngModel)]="query.searchValue"
+        [(ngModel)]="queryService.ordemProducao.searchValue"
         (ngModelChange)="search()"
       />
     </span>
@@ -17,8 +17,8 @@
     <p-dropdown
       name="status"
       [options]="CaixaDeStatusOptions"
-      [ngModel]="query.status"
-      (ngModelChange)="query.status = $event.valor; search()"
+      [ngModel]="queryService.ordemProducao.status"
+      (ngModelChange)="queryService.ordemProducao.status = $event.valor; search()"
       optionLabel="valor"
       [editable]="true"
     ></p-dropdown>
@@ -26,7 +26,7 @@
       pButton
       type="button"
       icon="pi pi-times"
-      (click)="query.status = undefined; search()"
+      (click)="queryService.ordemProducao.status = undefined; search()"
       style="margin-left: 10px;"
     ></button>
   </div>
@@ -222,12 +222,13 @@
 <div class="">
   <p-paginator
     #paginator
-    [rows]="query.pageCount"
+    [rows]="queryService.ordemProducao.pageCount"
     [totalRecords]="totalRecords"
     [rowsPerPageOptions]="[25, 50, 100]"
     (onPageChange)="pageChange($event)"
     [showCurrentPageReport]="true"
     [currentPageReportTemplate]="totalRecords + ' resultados'"
+    [first]="first"
   ></p-paginator>
   <span>F-020 - Controle de Ordem de Produção - Emissão: 25/09/2018 Revisão: 26/4/2023</span>
 </div>

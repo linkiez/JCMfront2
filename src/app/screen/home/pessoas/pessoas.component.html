@@ -3,7 +3,7 @@
   [columns]="selectedColumns"
   [value]="pessoas"
   [paginator]="false"
-  [rows]="query.pageCount"
+  [rows]="queryService.pessoas.pageCount"
   [selection]="true"
   responsiveLayout="scroll"
 >
@@ -16,7 +16,7 @@
           class="p-inputtext"
           type="text"
           placeholder="Search keyword"
-          [(ngModel)]="query.searchValue"
+          [(ngModel)]="queryService.pessoas.searchValue"
           (ngModelChange)="search()"
         />
       </span>
@@ -26,28 +26,28 @@
       <p-checkbox
         name="chkFornecedor"
         label="Fornecedor"
-        [(ngModel)]="query.fornecedor"
+        [(ngModel)]="queryService.pessoas.fornecedor"
         [binary]="true"
         (ngModelChange)="getPessoas()"
       ></p-checkbox>
       <p-checkbox
         name="chkOperador"
         label="Operador"
-        [(ngModel)]="query.operador"
+        [(ngModel)]="queryService.pessoas.operador"
         [binary]="true"
         (ngModelChange)="getPessoas()"
       ></p-checkbox>
       <p-checkbox
         name="chkVendedor"
         label="Vendedor"
-        [(ngModel)]="query.vendedor"
+        [(ngModel)]="queryService.pessoas.vendedor"
         [binary]="true"
         (ngModelChange)="getPessoas()"
       ></p-checkbox>
       <p-checkbox
         name="chkDeleted"
         label="Deletados"
-        [(ngModel)]="query.deleted"
+        [(ngModel)]="queryService.pessoas.deleted"
         [binary]="true"
         (ngModelChange)="getPessoas()"
       ></p-checkbox>
@@ -55,7 +55,7 @@
   </ng-template>
 
   <ng-template pTemplate="header" let-columns>
-    <ng-container *ngIf="!query.fornecedor">
+    <ng-container *ngIf="!queryService.pessoas.fornecedor">
       <tr>
         <th>Id</th>
         <th>Nome</th>
@@ -65,7 +65,7 @@
         <th>Atualizado em</th>
       </tr>
     </ng-container>
-    <ng-container *ngIf="query.fornecedor">
+    <ng-container *ngIf="queryService.pessoas.fornecedor">
       <tr>
         <th>Id</th>
         <th>Nome</th>
@@ -78,7 +78,7 @@
     </ng-container>
   </ng-template>
   <ng-template pTemplate="body" let-pessoa>
-    <ng-container *ngIf="!query.fornecedor">
+    <ng-container *ngIf="!queryService.pessoas.fornecedor">
       <tr (click)="clickDeleted(pessoa.id)">
         <td>{{ pessoa.id }}</td>
         <td>{{ pessoa.nome }}</td>
@@ -88,7 +88,7 @@
         <td>{{ pessoa.updatedAt | date : "dd/MM/yyyy HH:mm" }}</td>
       </tr>
     </ng-container>
-    <ng-container *ngIf="query.fornecedor">
+    <ng-container *ngIf="queryService.pessoas.fornecedor">
       <tr
         [ngClass]="{
           statusRed: isBeforeToday(pessoa.fornecedor?.data_venc) && pessoa.fornecedor?.data_venc,
@@ -110,12 +110,13 @@
 <div class="">
   <p-paginator
     #paginator
-    [rows]="query.pageCount"
+    [rows]="queryService.pessoas.pageCount"
     [totalRecords]="totalRecords"
     [rowsPerPageOptions]="[10, 25, 50]"
     (onPageChange)="pageChange($event)"
     [showCurrentPageReport]="true"
     [currentPageReportTemplate]="totalRecords + ' resultados'"
+    [first]="first"
   ></p-paginator>
 </div>
 <p-confirmDialog

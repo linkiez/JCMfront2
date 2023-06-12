@@ -18,7 +18,7 @@
           pInputText
           class="p-inputtext"
           type="text"
-          [(ngModel)]="query.searchValue"
+          [(ngModel)]="queryService.contatos.searchValue"
           (input)="getContatos()"
           placeholder="Search keyword"
         />
@@ -49,11 +49,12 @@
 <div class="">
   <p-paginator
     #paginator
-    [rows]="query.pageCount"
+    [rows]="queryService.contatos.pageCount"
     [totalRecords]="totalRecords"
     [rowsPerPageOptions]="[25, 50, 100]"
     (onPageChange)="pageChange($event)"
     [showCurrentPageReport]="true"
     [currentPageReportTemplate]="totalRecords + ' resultados'"
+    [first]="first"
   ></p-paginator>
 </div>

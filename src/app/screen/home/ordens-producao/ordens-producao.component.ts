@@ -1,3 +1,4 @@
+import { QueryService } from 'src/app/services/query.service';
 import { CaixaDeStatusComponent } from './../../../components/caixaDeStatus/caixaDeStatus.component';
 import { Query } from 'src/app/models/query';
 import { OrdemProducao } from './../../../models/ordem-producao';
@@ -22,30 +23,25 @@ export class OrdensProducaoComponent implements OnInit {
 
   totalRecords: number = 0;
 
-  query: Query = {
-    page: 0,
-    pageCount: 25,
-    searchValue: '',
-    deleted: false,
-    status: '',
-  };
+  first = 0;
 
   constructor(
     private ordemProducaoService: OrdemProducaoService,
     private messageService: MessageService,
     private usuarioService: UsuarioService,
+    public queryService: QueryService
   ) {}
 
   ngOnInit() {
-    this.getOrdemProducao();
-
+    this.getOrdemProducao(true);
+    this.first = this.queryService.ordemProducao.page * this.queryService.ordemProducao.pageCount;
   }
 
   getOrdemProducao(pageChange?: boolean) {
-    this.query.page = pageChange ? this.query.page : 0;
+    this.queryService.ordemProducao.page = pageChange ? this.queryService.ordemProducao.page : 0;
 
     this.ordemProducaoService
-      .getOrdemProducoes(this.query)
+      .getOrdemProducoes(this.queryService.ordemProducao)
       // .pipe(
       //   debounceTime(1000), // espera um tempo antes de começar
       //   distinctUntilChanged() // recorda a ultima pesquisa
@@ -110,8 +106,8 @@ export class OrdensProducaoComponent implements OnInit {
 
   pageChange(event: any) {
     if (event) {
-      this.query.page = event.page;
-      this.query.pageCount = event.rows;
+      this.queryService.ordemProducao.page = event.page;
+      this.queryService.ordemProducao.pageCount = event.rows;
       this.getOrdemProducao(true);
     }
   }

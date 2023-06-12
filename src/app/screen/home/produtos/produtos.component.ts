@@ -8,6 +8,7 @@ import { debounceTime, distinctUntilChanged, Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { Query } from 'src/app/models/query';
 import { Paginator } from 'primeng/paginator';
+import { QueryService } from 'src/app/services/query.service';
 
 @Component({
   selector: 'app-produtos',
@@ -22,12 +23,7 @@ export class ProdutosComponent implements OnInit, OnDestroy {
 
   totalRecords: number = 0;
 
-  query: Query = {
-    page: 0,
-    pageCount: 25,
-    searchValue: '',
-    deleted: false,
-  };
+  first = 0;
 
   private subscription: Subscription = new Subscription();
 
@@ -35,11 +31,13 @@ export class ProdutosComponent implements OnInit, OnDestroy {
     private produtoService: ProdutoService,
     private messageService: MessageService,
     private router: Router,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    public queryService: QueryService
   ) {}
 
   ngOnInit(): void {
-    this.getProdutos();
+    this.getProdutos(true);
+    this.first = this.queryService.produtos.page * this.queryService.produtos.pageCount;
   }
 
   ngOnDestroy(): void {
@@ -47,10 +45,10 @@ export class ProdutosComponent implements OnInit, OnDestroy {
   }
 
   getProdutos(pageChange?: boolean): void {
-    this.query.page = pageChange ? this.query.page : 0;
+    this.queryService.produtos.page = pageChange ? this.queryService.produtos.page : 0;
 
     this.subscription = this.produtoService
-      .getProdutos(this.query)
+      .getProdutos(this.queryService.produtos)
       // .pipe(
       //   debounceTime(1000), // espera um tempo antes de começar
       //   distinctUntilChanged() // recorda a ultima pesquisa
@@ -70,7 +68,7 @@ export class ProdutosComponent implements OnInit, OnDestroy {
 
           this.totalRecords = consulta.totalRecords;
           if (!pageChange) this.paginator.changePageToFirst(new Event(''));
-          console.log(this.produtos);
+          // console.log(this.produtos);
         },
         error: (error) => {
           console.log(error);
@@ -88,13 +86,13 @@ export class ProdutosComponent implements OnInit, OnDestroy {
   }
 
   pageChange(event: any) {
-    this.query.page = event.page;
-    this.query.pageCount = event.rows;
+    this.queryService.produtos.page = event.page;
+    this.queryService.produtos.pageCount = event.rows;
     this.getProdutos(true);
   }
 
   clickDeleted(id: number) {
-    if (!this.query.deleted) {
+    if (!this.queryService.produtos.deleted) {
       this.router.navigate([`home/produtos/${id}`]);
     } else {
       this.confirm(id);
@@ -129,8 +127,8 @@ export class ProdutosComponent implements OnInit, OnDestroy {
 
   search() {
     if (
-      this.query.searchValue?.length! > 2 ||
-      this.query.searchValue?.length! === 0
+      this.queryService.produtos.searchValue?.length! > 2 ||
+      this.queryService.produtos.searchValue?.length! === 0
     )
       this.getProdutos();
   }

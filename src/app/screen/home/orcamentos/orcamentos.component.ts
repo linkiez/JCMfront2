@@ -1,6 +1,7 @@
+import { QueryService } from './../../../services/query.service';
 import { OrcamentoService } from './../../../services/orcamento.service';
 import { PedidoCompraService } from './../../../services/pedidocompra.service';
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { debounceTime, distinctUntilChanged, Subscription } from 'rxjs';
@@ -9,44 +10,46 @@ import { Query } from 'src/app/models/query';
 import { Paginator } from 'primeng/paginator';
 import { Orcamento } from 'src/app/models/orcamento';
 
-
 @Component({
   selector: 'app-orcamentos',
   templateUrl: './orcamentos.component.html',
   styleUrls: ['./orcamentos.component.css'],
   providers: [ConfirmationService],
 })
-export class OrcamentosComponent implements OnInit, OnDestroy {
+export class OrcamentosComponent implements OnInit, OnDestroy, AfterViewInit  {
   @ViewChild('paginator') paginator!: Paginator;
 
-  orcamentos: Orcamento[] = []
+  orcamentos: Orcamento[] = [];
 
   totalRecords: number = 0;
 
-  query: Query = {
-    page: 0,
-    pageCount: 25,
-    searchValue: '',
-    deleted: false,
-  };
+  first = 0;
 
   constructor(
     private messageService: MessageService,
     private router: Router,
     private confirmationService: ConfirmationService,
-    private orcamentoService: OrcamentoService) { }
+    private orcamentoService: OrcamentoService,
+    public queryService: QueryService
+  ) {}
 
-  ngOnDestroy(): void {
-  }
+  ngOnDestroy(): void {}
 
   ngOnInit() {
-    this.getOrcamentos();
+    this.getOrcamentos(true);
+    this.first = this.queryService.orcamento.page * this.queryService.orcamento.pageCount;
+  }
+
+  ngAfterViewInit() {
   }
 
   getOrcamentos(pageChange?: boolean) {
-    this.query.page = pageChange ? this.query.page : 0;
+    this.queryService.orcamento.page = pageChange
+      ? this.queryService.orcamento.page
+      : 0;
 
-    this.orcamentoService.getOrcamentos(this.query)
+    this.orcamentoService
+      .getOrcamentos(this.queryService.orcamento)
       .pipe(
         // debounceTime(1000), // espera um tempo antes de começar
         distinctUntilChanged() // recorda a ultima pesquisa
@@ -55,7 +58,7 @@ export class OrcamentosComponent implements OnInit, OnDestroy {
         next: (consulta) => {
           this.orcamentos = consulta.orcamento;
           this.totalRecords = consulta.totalRecords;
-          if (!pageChange) this.paginator.changePageToFirst(new Event(""));
+          if (!pageChange) this.paginator.changePageToFirst(new Event(''));
         },
         error: (error) => {
           this.messageService.add({
@@ -73,14 +76,14 @@ export class OrcamentosComponent implements OnInit, OnDestroy {
 
   pageChange(event: any) {
     if (event) {
-      this.query.page = event.page;
-      this.query.pageCount = event.rows;
+      this.queryService.orcamento.page = event.page;
+      this.queryService.orcamento.pageCount = event.rows;
       this.getOrcamentos(true);
     }
   }
 
   clickDeleted(id: number) {
-    if (!this.query.deleted) {
+    if (!this.queryService.orcamento.deleted) {
       this.router.navigate([`home/orcamentos/${id}`]);
     } else {
       this.confirm(id);
@@ -116,8 +119,8 @@ export class OrcamentosComponent implements OnInit, OnDestroy {
 
   search() {
     if (
-      this.query.searchValue?.length! > 2 ||
-      this.query.searchValue?.length! === 0
+      this.queryService.orcamento.searchValue?.length! > 2 ||
+      this.queryService.orcamento.searchValue?.length! === 0
     )
       this.getOrcamentos();
   }

@@ -1,3 +1,4 @@
+import { QueryService } from 'src/app/services/query.service';
 import { PedidoCompraService } from './../../../services/pedidocompra.service';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
@@ -20,12 +21,7 @@ export class PedidosComprasComponent implements OnInit, OnDestroy {
 
   totalRecords: number = 0;
 
-  query: Query = {
-    page: 0,
-    pageCount: 25,
-    searchValue: '',
-    deleted: false,
-  };
+  first = 0;
 
   private subscription: Subscription = new Subscription();
 
@@ -33,7 +29,8 @@ export class PedidosComprasComponent implements OnInit, OnDestroy {
     private messageService: MessageService,
     private router: Router,
     private confirmationService: ConfirmationService,
-    private pedidoCompraService: PedidoCompraService
+    private pedidoCompraService: PedidoCompraService,
+    public queryService: QueryService
   ) {}
 
   ngOnDestroy(): void {
@@ -41,14 +38,15 @@ export class PedidosComprasComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.getPedidosCompra();
+    this.getPedidosCompra(true);
+    this.first = this.queryService.pedidoCompra.page * this.queryService.pedidoCompra.pageCount;
   }
 
   getPedidosCompra(pageChange?: boolean) {
-    this.query.page = pageChange ? this.query.page : 0;
+    this.queryService.pedidoCompra.page = pageChange ? this.queryService.pedidoCompra.page : 0;
 
     this.subscription = this.pedidoCompraService
-      .getPedidoCompras(this.query)
+      .getPedidoCompras(this.queryService.pedidoCompra)
       // .pipe(
       //   debounceTime(1000), // espera um tempo antes de começar
       //   distinctUntilChanged() // recorda a ultima pesquisa
@@ -76,14 +74,14 @@ export class PedidosComprasComponent implements OnInit, OnDestroy {
 
   pageChange(event: any) {
     if (event) {
-      this.query.page = event.page;
-      this.query.pageCount = event.rows;
+      this.queryService.pedidoCompra.page = event.page;
+      this.queryService.pedidoCompra.pageCount = event.rows;
       this.getPedidosCompra(true);
     }
   }
 
   clickDeleted(id: number) {
-    if (!this.query.deleted) {
+    if (!this.queryService.pedidoCompra.deleted) {
       this.router.navigate([`home/pedidoscompras/${id}`]);
     } else {
       this.confirm(id);
@@ -119,8 +117,8 @@ export class PedidosComprasComponent implements OnInit, OnDestroy {
 
   search() {
     if (
-      this.query.searchValue?.length! > 2 ||
-      this.query.searchValue?.length! === 0
+      this.queryService.pedidoCompra.searchValue?.length! > 2 ||
+      this.queryService.pedidoCompra.searchValue?.length! === 0
     )
       this.getPedidosCompra();
   }

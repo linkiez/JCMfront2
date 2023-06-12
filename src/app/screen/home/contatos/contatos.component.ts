@@ -4,6 +4,7 @@ import { ContatoService } from '../../../services/contato.service';
 import { Table } from 'primeng/table';
 import { Router } from '@angular/router';
 import { Query } from 'src/app/models/query';
+import { QueryService } from 'src/app/services/query.service';
 
 @Component({
   selector: 'app-contatos',
@@ -15,24 +16,20 @@ export class ContatosComponent implements OnInit {
 
   contatos: Array<Contato> = [];
 
-  query: Query = {
-    page: 0,
-    pageCount: 25,
-    searchValue: '',
-    deleted: false,
-  };
+  first = 0;
 
   totalRecords: number = 0;
 
-  constructor(private contatoService: ContatoService, private router: Router) {}
+  constructor(private contatoService: ContatoService, private router: Router, public queryService: QueryService) {}
 
   ngOnInit(): void {
-    this.getContatos();
+    this.getContatos(true);
+    this.first = this.queryService.contatos.page * this.queryService.contatos.pageCount;
   }
 
   getContatos(pageChange?: boolean): void {
-    this.query.page = pageChange ? this.query.page : 0;
-    this.contatoService.getContatos(this.query).subscribe({
+    this.queryService.contatos.page = pageChange ? this.queryService.contatos.page : 0;
+    this.contatoService.getContatos(this.queryService.contatos).subscribe({
       next: (response) => {
         this.contatos = response.contatos;
         this.totalRecords = response.totalRecords;
@@ -43,8 +40,8 @@ export class ContatosComponent implements OnInit {
 
   pageChange(event: any) {
     if (event) {
-      this.query.page = event.page;
-      this.query.pageCount = event.rows;
+      this.queryService.contatos.page = event.page;
+      this.queryService.contatos.pageCount = event.rows;
       this.getContatos(true);
     }
   }

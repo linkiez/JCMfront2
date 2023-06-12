@@ -2,7 +2,7 @@
   #dt
   [value]="orcamentos"
   [paginator]="false"
-  [rows]="query.pageCount"
+  [rows]="queryService.orcamento.pageCount"
   [selection]="true"
   responsiveLayout="scroll"
 >
@@ -15,14 +15,14 @@
           class="p-inputtext"
           type="text"
           placeholder="Search keyword"
-          [(ngModel)]="query.searchValue"
+          [(ngModel)]="queryService.orcamento.searchValue"
           (ngModelChange)="search()"
         />
       </span>
       <p-checkbox
         name="chkDeleted"
         label="Deletados"
-        [(ngModel)]="query.deleted"
+        [(ngModel)]="queryService.orcamento.deleted"
         [binary]="true"
         (ngModelChange)="getOrcamentos()"
       ></p-checkbox>
@@ -60,12 +60,13 @@
 <div class="">
   <p-paginator
     #paginator
-    [rows]="query.pageCount"
+    [rows]="queryService.orcamento.pageCount"
     [totalRecords]="totalRecords"
     [rowsPerPageOptions]="[25, 50, 100]"
     (onPageChange)="pageChange($event)"
     [showCurrentPageReport]="true"
     [currentPageReportTemplate]="totalRecords + ' resultados'"
+    [first]="first"
   ></p-paginator>
 </div>
 <p-confirmDialog
