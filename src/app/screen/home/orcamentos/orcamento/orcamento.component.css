@@ -23,18 +23,18 @@ button {
 }
 
 .statusGreen {
-  color: #155724;
-  background-color: #d4edda;
+  color: lightgreen;
+  /* background-color: #d4edda; */
 }
 
 .statusYellow{
-  color: #856404;
-  background-color: #fff3cd;
+  color: gold;
+  /* background-color: #fff3cd; */
 }
 
 .statusRed{
-  color: #9d1c24;
-  background-color: #f8d7da;
+  color: lightcoral;
+  /* background-color: #f8d7da; */
 }
 
 @media print {
