@@ -261,7 +261,7 @@ export class OrcamentoComponent implements OnInit {
   searchProduto(event: any) {
     let query: Query = {
       page: 0,
-      pageCount: 10,
+      pageCount: 25,
       searchValue: event.query,
       deleted: false,
     };
