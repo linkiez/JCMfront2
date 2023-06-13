@@ -221,7 +221,7 @@ export class RirComponent implements OnInit {
 
   validacoes(): boolean {
     let valido = true;
-    if (!this.rir.produto) {
+    if (!this.rir.produto?.nome) {
       this.messageService.add({
         severity: 'error',
         summary: 'Erro',
@@ -229,7 +229,7 @@ export class RirComponent implements OnInit {
       });
       valido = false;
     }
-    if (!this.rir.pessoa) {
+    if (!this.rir.pessoa?.nome) {
       this.messageService.add({
         severity: 'error',
         summary: 'Erro',
@@ -245,7 +245,7 @@ export class RirComponent implements OnInit {
       });
       valido = false;
     }
-    if (!this.rir.operador) {
+    if (!this.rir.operador?.pessoa?.nome) {
       this.messageService.add({
         severity: 'error',
         summary: 'Erro',
