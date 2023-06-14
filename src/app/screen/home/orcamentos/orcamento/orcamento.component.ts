@@ -1,3 +1,4 @@
+import { RIRService } from 'src/app/services/rir.service';
 import { EmpresaService } from './../../../../services/empresa.service';
 import { ContatoService } from 'src/app/services/contato.service';
 import { PessoaService } from './../../../../services/pessoa.service';
@@ -24,6 +25,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { ArquivoService } from 'src/app/services/arquivo.service';
 import * as XLSX from 'xlsx';
+import { RIR } from 'src/app/models/rir';
 
 @Component({
   selector: 'app-orcamento',
@@ -76,6 +78,8 @@ export class OrcamentoComponent implements OnInit {
   vendedores: Vendedor[] = [];
 
   produtos: Produto[] = [];
+
+  rirs: RIR[] = [];
 
   loadingSalvar: boolean = false;
   loadingAprovar: boolean = false;
@@ -166,6 +170,7 @@ export class OrcamentoComponent implements OnInit {
     private vendedorService: VendedorService,
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
+    private RIRService: RIRService,
     private router: Router,
     private route: ActivatedRoute
   ) {}
@@ -488,7 +493,7 @@ export class OrcamentoComponent implements OnInit {
             item.uuid = uuidv4();
           });
           this.orcamento = response;
-          // console.log(this.orcamento);
+          console.log(this.orcamento);
         },
         error: (error) => {
           console.log(error);
@@ -1094,5 +1099,25 @@ export class OrcamentoComponent implements OnInit {
     });
 
     return valido;
+  }
+
+  searchRir(item: OrcamentoItem) {
+    if(this.orcamento.pessoa && item.produto)
+    this.RIRService
+      .getRIRsByPessoaAndProduto(this.orcamento.pessoa.id!, item.produto.id!)
+      .subscribe({
+        next: (response) => {
+          console.log(response);
+          this.rirs = response;
+        },
+        error: (error) => {
+          console.log(error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: 'Erro ao buscar RIRs',
+          });
+        }
+      });
   }
 }

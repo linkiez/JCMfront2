@@ -6,6 +6,7 @@ import { Produto } from '../models/produto';
 import { Query } from '../models/query';
 import { MessageService } from 'primeng/api';
 import { RIR } from '../models/rir';
+import { Orcamento } from '../models/orcamento';
 
 @Injectable({
   providedIn: 'root'
@@ -29,6 +30,18 @@ export class RIRService {
     }).pipe(
       catchError((error) => {
         console.log(error, query);
+        this.messageService.add({severity:'error', summary:'Erro', detail:'Erro ao buscar rirs'});
+        return throwError(()=> new Error('Erro ao buscar rirs'));
+      }));
+  }
+
+  getRIRsByPessoaAndProduto(id_pessoa: number, id_produto: number): Observable<any> {
+
+    return this.http.get<RIR[]>(environment.backendURL + 'rir/pessoa/' + id_pessoa + '/produto/' + id_produto , {
+      responseType: 'json',
+    }).pipe(
+      catchError((error) => {
+        console.log(error);
         this.messageService.add({severity:'error', summary:'Erro', detail:'Erro ao buscar rirs'});
         return throwError(()=> new Error('Erro ao buscar rirs'));
       }));

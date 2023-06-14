@@ -522,18 +522,26 @@
               <td class="noprint wv-100" pEditableColumn>
                 <p-cellEditor>
                   <ng-template pTemplate="input">
-                    <input
+                    <p-autoComplete
                       pInputText
-                      class="p-inputtext"
-                      name="inpItemRir"
-                      id="inpItemRir"
+                      class="p-autocomplete wv-100"
+                      [name]="'rir' + index"
+                      [id]="'rir' + index"
                       type="text"
-                      [(ngModel)]="item.rir"
+                      [(ngModel)]="item.registro_inspecao_recebimento"
+                      field="id"
+                      [suggestions]="rirs"
+                      (completeMethod)="searchRir(item)"
+                      [dropdown]="true"
+                      [style]="{ width: '100%' }"
+                      [inputStyle]="{ width: '100%' }"
+                      appendTo="body"
+                      [required]="true"
                       [disabled]="orcamento.status !== 'Orçamento'"
-                    />
+                    ></p-autoComplete>
                   </ng-template>
                   <ng-template pTemplate="output">
-                    {{ item.rir || "-" }}
+                    {{ item.registro_inspecao_recebimento?.id || "-" }}
                   </ng-template>
                 </p-cellEditor>
               </td>
