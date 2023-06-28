@@ -12,6 +12,7 @@ public orcamento: Query = {
   pageCount: 25,
   searchValue: '',
   deleted: false,
+  vendedor: undefined,
 };
 
 public contatos: Query = {

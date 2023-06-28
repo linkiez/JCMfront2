@@ -19,6 +19,25 @@
           (ngModelChange)="search()"
         />
       </span>
+      <div>
+        Vendedor:
+        <p-dropdown
+        name="status"
+        [options]="vendedores"
+        [ngModel]="queryService.orcamento.vendedor"
+        (ngModelChange)="queryService.orcamento.vendedor = $event; search()"
+        optionLabel="pessoa.nome"
+        [editable]="true"
+      ></p-dropdown>
+      <button
+      pButton
+      type="button"
+      icon="pi pi-times"
+      (click)="queryService.orcamento.vendedor = undefined; search()"
+      style="margin-left: 10px;"
+    ></button>
+      </div>
+
       <p-checkbox
         name="chkDeleted"
         label="Deletados"

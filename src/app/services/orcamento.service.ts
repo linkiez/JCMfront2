@@ -19,7 +19,7 @@ export class OrcamentoService {
 
     for (let i = 0; i < chaves.length; i++) {
       if (i > 0) queryString += '&';
-      queryString += chaves[i] + '=' + valores[i];
+      queryString += chaves[i] + '=' + JSON.stringify(valores[i]);
     }
 
     return this.http.get<Orcamento[]>(
@@ -94,16 +94,14 @@ export class OrcamentoService {
       }));
   }
 
-  aprovarOrcamento(id: number, aprovacao: string): Observable<Object> {
+  aprovarOrcamento(id: number, aprovacao: string): Observable<any> {
     return this.http.post(
       environment.backendURL + 'orcamento/' + id + '/aprovar/',
       { aprovacao: aprovacao },
       { responseType: 'json' }
     ).pipe(
       catchError((error) => {
-        console.error(error);
-        this.messageService.add({severity:'error', summary:'Erro', detail:'Erro ao aprovar orçamento'});
-        return throwError(()=> new Error('Erro ao aprovar orçamento'));
+        return error
       }));
   }
 }

@@ -819,7 +819,7 @@ export class OrcamentoComponent implements OnInit {
             console.log(response);
           },
           error: (error) => {
-            console.log(error);
+            console.error(error);
             this.messageService.add({
               severity: 'error',
               summary: 'Erro',

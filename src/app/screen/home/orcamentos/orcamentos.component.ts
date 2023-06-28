@@ -1,3 +1,4 @@
+import { VendedorService } from './../../../services/vendedor.service';
 import { QueryService } from './../../../services/query.service';
 import { OrcamentoService } from './../../../services/orcamento.service';
 import { PedidoCompraService } from './../../../services/pedidocompra.service';
@@ -9,6 +10,7 @@ import { PedidoCompra } from 'src/app/models/pedido-compra';
 import { Query } from 'src/app/models/query';
 import { Paginator } from 'primeng/paginator';
 import { Orcamento } from 'src/app/models/orcamento';
+import { Vendedor } from 'src/app/models/vendedor';
 
 @Component({
   selector: 'app-orcamentos',
@@ -25,12 +27,15 @@ export class OrcamentosComponent implements OnInit, OnDestroy, AfterViewInit  {
 
   first = 0;
 
+  vendedores: Vendedor[] = [];
+
   constructor(
     private messageService: MessageService,
     private router: Router,
     private confirmationService: ConfirmationService,
     private orcamentoService: OrcamentoService,
-    public queryService: QueryService
+    public queryService: QueryService,
+    private vendedorService: VendedorService
   ) {}
 
   ngOnDestroy(): void {}
@@ -38,6 +43,7 @@ export class OrcamentosComponent implements OnInit, OnDestroy, AfterViewInit  {
   ngOnInit() {
     this.getOrcamentos(true);
     this.first = this.queryService.orcamento.page * this.queryService.orcamento.pageCount;
+    this.searchVendedor("");
   }
 
   ngAfterViewInit() {
@@ -123,5 +129,29 @@ export class OrcamentosComponent implements OnInit, OnDestroy, AfterViewInit  {
       this.queryService.orcamento.searchValue?.length! === 0
     )
       this.getOrcamentos();
+  }
+
+  searchVendedor(searchTerm: any) {
+    let query: Query = {
+      page: 0,
+      pageCount: 10,
+      searchValue: searchTerm.query,
+      deleted: false,
+    };
+
+    this.vendedorService
+      .getVendedores(query)
+      // .pipe(debounceTime(1000), distinctUntilChanged())
+      .subscribe({
+        next: (consulta) => (this.vendedores = consulta.vendedores),
+        error: (error) => {
+          console.log(error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: error.message,
+          });
+        },
+      });
   }
 }
