@@ -46,7 +46,7 @@ export class OrdemProducaoComponent implements OnInit {
         this.ordemProducao.ordem_producao_items?.forEach((item) => {
           item.observacao = '<p>' + item.observacao + '<p>';
         });
-        console.log(ordemProducao);
+        // console.log(ordemProducao);
 
       },
       error: (error) => {

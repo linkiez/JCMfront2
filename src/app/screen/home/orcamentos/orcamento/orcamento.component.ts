@@ -493,7 +493,7 @@ export class OrcamentoComponent implements OnInit {
             item.uuid = uuidv4();
           });
           this.orcamento = response;
-          console.log(this.orcamento);
+          // console.log(this.orcamento);
         },
         error: (error) => {
           console.log(error);
