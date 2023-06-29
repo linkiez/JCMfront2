@@ -99,9 +99,10 @@ export class OrcamentoService {
       environment.backendURL + 'orcamento/' + id + '/aprovar/',
       { aprovacao: aprovacao },
       { responseType: 'json' }
-    ).pipe(
-      catchError((error) => {
-        return error
-      }));
+    )
+    // .pipe(
+    //   catchError((error) => {
+    //     return error
+    //   }));
   }
 }

@@ -823,7 +823,7 @@ export class OrcamentoComponent implements OnInit {
             this.messageService.add({
               severity: 'error',
               summary: 'Erro',
-              detail: `${error.message}`,
+              detail: `${error.error}`,
             });
             this.loadingAprovar = false;
           },
