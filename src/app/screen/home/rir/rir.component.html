@@ -1,5 +1,6 @@
 <div>
-  <h2>Registro de Inspeção e Recebimento</h2> F-005 - Rev.01 - Emissão: 12/09/2018 Revisão: 26/04/2023
+  <h2>Registro de Inspeção e Recebimento</h2>
+  F-005 - Rev.01 - Emissão: 12/09/2018 Revisão: 26/04/2023
   <form action="">
     <div class="row">
       <div class="col-1">
@@ -205,12 +206,7 @@
           class="p-button-success"
           (click)="createOrUpdate()"
         ></button>
-        <button
-          pButton
-          type="button"
-          label="Novo"
-          (click)="limpar()"
-        ></button>
+        <button pButton type="button" label="Novo" (click)="limpar()"></button>
       </div>
       <hr />
     </div>
@@ -250,18 +246,27 @@
         <th>Conferido</th>
         <th>Cliente</th>
         <th>Cliente/Fornecedor</th>
+        <th>PC/OP</th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-RirLista>
-      <tr (click)="rir=RirLista;log(rir)">
+      <tr (click)="rir = RirLista; log(rir)">
         <td>{{ RirLista.id }}</td>
-        <td>{{ RirLista.createdAt | date : 'dd/MM/yyyy HH:mm:ss'}}</td>
+        <td>{{ RirLista.createdAt | date : "dd/MM/yyyy HH:mm:ss" }}</td>
         <td>{{ RirLista.descricao }}</td>
         <td>{{ RirLista.produto.nome }}</td>
         <td>{{ RirLista.quantidade }}</td>
-        <td>{{ RirLista.conferido? "Sim" : "Não"}}</td>
+        <td>{{ RirLista.conferido ? "Sim" : "Não" }}</td>
         <td>{{ RirLista.cliente ? "Sim" : "Não" }}</td>
         <td>{{ RirLista.pessoa.nome }}</td>
+        <td>
+          <span *ngIf="RirLista.pedido_compra_item?.pedido_compra?.pedido">{{
+            RirLista.pedido_compra_item?.pedido_compra?.pedido
+          }}</span>
+          <span *ngIf="RirLista.ordem_producao_item?.id_ordem_producao">
+            {{RirLista.ordem_producao_item?.id_ordem_producao}}
+          </span>
+        </td>
       </tr>
     </ng-template>
   </p-table>

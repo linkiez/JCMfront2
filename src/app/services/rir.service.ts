@@ -27,12 +27,7 @@ export class RIRService {
 
     return this.http.get<RIR[]>(environment.backendURL + 'rir' + queryString, {
       responseType: 'json',
-    }).pipe(
-      catchError((error) => {
-        console.log(error, query);
-        this.messageService.add({severity:'error', summary:'Erro', detail:'Erro ao buscar rirs'});
-        return throwError(()=> new Error('Erro ao buscar rirs'));
-      }));
+    })
   }
 
   getRIRsByPessoaAndProduto(id_pessoa: number, id_produto: number): Observable<any> {
