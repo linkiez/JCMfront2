@@ -33,11 +33,21 @@ export class OrdemProducaoComponent implements OnInit {
     this.ordemProducaoService.getOrdemProducao(id).subscribe({
       next: (ordemProducao) => {
         ordemProducao.orcamento?.orcamento_items?.sort((a, b) => {
-          if(a.id && b.id){
-          if (a.id < b.id) {
+          if(a.descricao && b.descricao){
+          if (a.descricao < b.descricao) {
             return -1;
           }
-          if (a.id > b.id) {
+          if (a.descricao > b.descricao) {
+            return 1;
+          }}
+          return 0;
+        })
+        ordemProducao.ordem_producao_items?.sort((a, b) => {
+          if(a.descricao && b.descricao){
+          if (a.descricao < b.descricao) {
+            return -1;
+          }
+          if (a.descricao > b.descricao) {
             return 1;
           }}
           return 0;
@@ -46,7 +56,7 @@ export class OrdemProducaoComponent implements OnInit {
         this.ordemProducao.ordem_producao_items?.forEach((item) => {
           item.observacao = '<p>' + item.observacao + '<p>';
         });
-        // console.log(ordemProducao);
+        console.log(ordemProducao);
 
       },
       error: (error) => {
