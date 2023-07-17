@@ -420,6 +420,7 @@ export class OrcamentoComponent implements OnInit {
   }
 
   calculaHora(item: OrcamentoItem) {
+    this.calculaPeso(item);
     let [hours = '0', minutes = '0', seconds = '0'] =
       item.tempo?.split(':') ?? [];
 

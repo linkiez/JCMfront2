@@ -619,7 +619,7 @@
                       [ngModel]="item.quantidade | number : 'pt-BR'"
                       (ngModelChange)="item.quantidade = $event"
                       [disabled]="orcamento.status !== 'Orçamento'"
-                      (input)="calculaHora(item); calculaPeso(item)"
+                      (input)="calculaHora(item)"
                     />
                   </ng-template>
                   <ng-template pTemplate="output">
