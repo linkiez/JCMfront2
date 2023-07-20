@@ -320,7 +320,7 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   newItem() {
-    this.pedidoCompra.pedido_compra_items.push({ produto: {} });
+    this.pedidoCompra.pedido_compra_items.push({ produto: {}, prazo: new Date(), quantidade: 0, peso: 0, ipi: 0, preco: 0, total: 0 });
   }
 
   removeItem(index: number) {
