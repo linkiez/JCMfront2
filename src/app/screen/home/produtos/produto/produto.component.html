@@ -111,6 +111,7 @@
       <ng-template pTemplate="header">
         <tr>
           <th>Pedido de Compra</th>
+          <th>RIR</th>
           <th>Dimenção</th>
           <th>Quantidade</th>
           <th>Peso</th>
@@ -121,9 +122,10 @@
       <ng-template pTemplate="body" let-pedido let-i="rowIndex">
         <tr>
           <td (click)="goTo(pedido.pedido_compra.id)" class="link">{{pedido.pedido_compra.id}} - {{pedido.pedido_compra.pedido}}</td>
+          <td><span *ngFor="let rir of pedido.registro_inspecao_recebimentos">{{rir.id}} </span></td>
           <td>{{pedido.dimensao}}</td>
           <td>{{pedido.quantidade}}</td>
-          <td>{{pedido.peso}} Kg</td>
+          <td>{{pedido.peso.toFixed(1) | number}} Kg</td>
           <td>{{pedido.precoComIpi| currency : 'BRL'}}</td>
           <td>{{pedido.createdAt| date: "dd/MM/yyyy"}}</td>
         </tr>
