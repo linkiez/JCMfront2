@@ -17,6 +17,8 @@ import { CalendarModule } from 'primeng/calendar';
 import { ListboxModule } from 'primeng/listbox';
 import { InputTextModule } from 'primeng/inputtext';
 import { DropdownModule } from 'primeng/dropdown';
+import { AutoCompleteModule } from 'primeng/autocomplete';
+
 
 @NgModule({
   declarations: [OrdensProducaoComponent, OrdemProducaoComponent],
@@ -33,7 +35,8 @@ import { DropdownModule } from 'primeng/dropdown';
     CalendarModule,
     ListboxModule,
     InputTextModule,
-    DropdownModule
+    DropdownModule,
+    AutoCompleteModule
   ],
   providers: [ConfirmationService],
 })

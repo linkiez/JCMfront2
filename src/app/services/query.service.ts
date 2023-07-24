@@ -28,6 +28,9 @@ public ordemProducao: Query = {
   searchValue: '',
   deleted: false,
   status: '',
+  vendedor: undefined,
+  id_vendedor: undefined,
+  data_prazo: undefined,
 };
 
 public pedidoCompra: Query = {
