@@ -537,7 +537,7 @@
                       [inputStyle]="{ width: '100%' }"
                       appendTo="body"
                       [required]="true"
-                      [disabled]="orcamento.status !== 'Orçamento'"
+                      [disabled]="item.material_incluido"
                     ></p-autoComplete>
                   </ng-template>
                   <ng-template pTemplate="output">
@@ -976,7 +976,7 @@
       type="submit"
       name="btnSalvar"
       id="btnSalvar"
-      [disabled]="orcamento.status !== 'Orçamento' || loadingSalvar"
+      [disabled]="loadingSalvar"
     >
       Salvar
       <p-progressSpinner
