@@ -10,6 +10,7 @@ import { OperadorService } from 'src/app/services/operador.service';
 import { PedidoCompraService } from 'src/app/services/pedidocompra.service';
 import { PessoaService } from 'src/app/services/pessoa.service';
 import { ProdutoService } from 'src/app/services/produto.service';
+import { QueryService } from 'src/app/services/query.service';
 import { RIRService } from 'src/app/services/rir.service';
 
 @Component({
@@ -28,12 +29,8 @@ export class RirComponent implements OnInit {
 
   pedidos_compra_item: PedidoCompraItem[] = [];
 
-  query: Query = {
-    page: 0,
-    pageCount: 10,
-    searchValue: '',
-    deleted: false,
-  };
+  dialogVisible = false;
+
 
   totalRecords: number = 0;
 
@@ -46,7 +43,7 @@ export class RirComponent implements OnInit {
     private operadorService: OperadorService,
     private pedidoCompraService: PedidoCompraService,
     private RIRService: RIRService,
-    private confirmationService: ConfirmationService
+    public queryService: QueryService
   ) {}
   ngOnInit(): void {
     this.getRIRs();
@@ -136,15 +133,16 @@ export class RirComponent implements OnInit {
 
   update() {
     this.RIRService.updateRIR(this.rir).subscribe({
-      next: (rir) => {
+      next: (rir: RIR) => {
         this.messageService.add({
           severity: 'success',
           summary: 'Sucesso',
           detail: 'RIR atualizado',
         });
         this.rir = rir;
-        console.log(rir);
-      },
+        this.rir.recebido_data = new Date(rir.recebido_data!);
+        this.rir.nfe_data = new Date(rir.nfe_data!);
+              },
       error: (error) => {
         console.log(error);
         this.messageService.add({
@@ -153,7 +151,7 @@ export class RirComponent implements OnInit {
           detail: error.message,
         });
       },
-      complete: () => this.getRIRs(),
+      complete: () => this.getRIRs(true),
     });
   }
 
@@ -176,7 +174,7 @@ export class RirComponent implements OnInit {
           detail: error.message,
         });
       },
-      complete: () => this.getRIRs(),
+      complete: () => this.getRIRs(true),
     });
   }
 
@@ -261,15 +259,15 @@ export class RirComponent implements OnInit {
   }
 
   pageChange(event: any) {
-    this.query.page = event.page;
-    this.query.pageCount = event.rows;
+    this.queryService.rir.page = event.page;
+    this.queryService.rir.pageCount = event.rows;
     this.getRIRs(true);
   }
 
   getRIRs(pageChange?: boolean) {
-    this.query.page = pageChange ? this.query.page : 0;
+    this.queryService.rir.page = pageChange ? this.queryService.rir.page : 0;
 
-    this.RIRService.getRIRs(this.query).subscribe({
+    this.RIRService.getRIRs(this.queryService.rir).subscribe({
       next: (consulta) => {
         console.log(consulta);
         this.rirs = consulta.rirs;
@@ -285,7 +283,7 @@ export class RirComponent implements OnInit {
         this.totalRecords = consulta.totalRecords;
       },
       error: (error) => {
-        console.log(error, this.query);
+        console.log(error, this.queryService.rir);
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
@@ -298,5 +296,9 @@ export class RirComponent implements OnInit {
 
   log(item: any) {
     console.log(item);
+  }
+
+  onChangeQuantidade(event: any) {
+    this.rir.quantidade = Number(event.replace(/[^\d]/g, '')) / 100;
   }
 }

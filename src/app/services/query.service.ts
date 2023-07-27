@@ -57,6 +57,13 @@ public produtos: Query = {
   deleted: false,
 };
 
+public rir: Query = {
+  page: 0,
+  pageCount: 25,
+  searchValue: '',
+  deleted: false,
+};
+
 constructor() { }
 
 }

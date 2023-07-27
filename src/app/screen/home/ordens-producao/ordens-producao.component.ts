@@ -4,7 +4,7 @@ import { Query } from 'src/app/models/query';
 import { OrdemProducao } from './../../../models/ordem-producao';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { OrdemProducaoService } from 'src/app/services/ordem-producao.service';
-import { debounceTime, distinctUntilChanged, map } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map,  } from 'rxjs';
 import { Paginator } from 'primeng/paginator';
 import { MessageService } from 'primeng/api';
 import { UsuarioService } from 'src/app/authentication/usuario.service';

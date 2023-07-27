@@ -13,7 +13,7 @@ import { TableModule } from 'primeng/table';
 import {PaginatorModule} from 'primeng/paginator';
 import {ConfirmDialogModule} from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
-
+import { DialogModule } from 'primeng/dialog';
 
 
 @NgModule({
@@ -31,8 +31,9 @@ import { ConfirmationService } from 'primeng/api';
     ListaFilesModule,
     TableModule,
     PaginatorModule,
-    ConfirmDialogModule
+    ConfirmDialogModule,
+    DialogModule
   ],
-  providers: [ ConfirmationService ]  
+  providers: [ ConfirmationService ]
 })
 export class RirModule { }

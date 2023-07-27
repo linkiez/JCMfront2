@@ -61,5 +61,6 @@
   "engines": {
     "node": "18.x",
     "npm": "9.x"
-  }
+  },
+  "packageManager": "yarn@3.6.1"
 }

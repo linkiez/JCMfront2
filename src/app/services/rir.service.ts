@@ -65,7 +65,7 @@ export class RIRService {
       }));
   }
 
-  updateRIR(rir: RIR): Observable<Object> {
+  updateRIR(rir: RIR): Observable<RIR> {
     return this.http.put(
       environment.backendURL + 'rir/' + rir.id,
       rir,
