@@ -36,6 +36,10 @@ button {
   line-height: 1;
 }
 
+.dontBreakPage {
+  page-break-inside: avoid;
+}
+
 @media print {
   td {
     border: 2px solid #bbb !important;
