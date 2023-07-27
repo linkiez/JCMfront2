@@ -21,9 +21,22 @@ small {
 
 button {
   margin-right: 10px;
-  }
+}
 
-@media print{
+.materialCliente {
+  color: #9d1c24;
+  background-color: #f8d7da;
+  font-weight: bold;
+  font-size: small;
+  border: 0px solid #ccc;
+  padding: 0px;
+  margin: 0px;
+  width: 100%;
+  text-align: center;
+  line-height: 1;
+}
+
+@media print {
   td {
     border: 2px solid #bbb !important;
   }
@@ -38,5 +51,6 @@ button {
   hr {
     border-bottom: 2px solid #ccc !important;
   }
+
 
 }
