@@ -43,19 +43,22 @@
         <small>Análise Crítica OK, conforme I-002 de vendas, item 6.1.2</small>
       </div>
       <div class="row">
-        <div class="col">
+        <div class="col-5 flex flex-column">
           <strong>Inspeção Final:</strong>
+          <span>🔲Aprovado, 🔲Reprovado</span>
         </div>
-        <div class="col">Visto:</div>
+        <div class="col">Nome:</div>
         <div class="col">Data:</div>
       </div>
     </div>
     <div class="row">
       <div class="col">
         <hr />
-        <div class="dontBreakPage"
+        <div
+          class="dontBreakPage"
           *ngFor="
-            let itemProducao of ordemProducao.ordem_producao_items;let indexItemProducao = index
+            let itemProducao of ordemProducao.ordem_producao_items;
+            let indexItemProducao = index;
             let index = index
           "
         >
@@ -66,16 +69,47 @@
                 <th>Descrição</th>
                 <th>Material</th>
                 <th>Qtd.</th>
-                <th style="width: 100px;">RIR</th>
+                <th style="width: 100px">RIR</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td>{{ index + 1 }}</td>
                 <td>{{ itemProducao.descricao }}</td>
-                <td>{{ itemProducao.produto?.nome }} - {{ordemProducao.orcamento!.orcamento_items[index].largura | number}}x{{ordemProducao.orcamento!.orcamento_items[index].altura | number}}mm</td>
+                <td>
+                  {{ itemProducao.produto?.nome }} -
+                  {{
+                    ordemProducao.orcamento!.orcamento_items[index].largura
+                      | number
+                  }}x{{
+                    ordemProducao.orcamento!.orcamento_items[index].altura
+                      | number
+                  }}mm
+                </td>
                 <td>{{ itemProducao.quantidade }}</td>
-                <td>{{itemProducao.id_rir}}</td>
+                <td class="col-1">
+                  <div class="noprint">
+                    <p-autoComplete
+                      pInputText
+                      class="p-autocomplete wv-100"
+                      [name]="'rir' + index"
+                      [id]="'rir' + index"
+                      type="text"
+                      [(ngModel)]="itemProducao.registro_inspecao_recebimento"
+                      (onSelect)="itemProducao.id_rir = $event.id"
+                      field="id"
+                      [suggestions]="rirs"
+                      (completeMethod)="searchRir(itemProducao)"
+                      [dropdown]="true"
+                      [style]="{ width: '100%' }"
+                      [inputStyle]="{ width: '100%' }"
+                      appendTo="body"
+                      [required]="true"
+                    ></p-autoComplete>
+                  </div>
+
+                  <span class="noview">{{ itemProducao.id_rir }}</span>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -89,30 +123,37 @@
                       let processo of itemProducao.ordem_producao_item_processos
                     "
                   >
-                    <td style="width: 100px;">{{ processo.processo }}</td>
-                    <td style="width: 100px;">Data:</td>
+                    <td style="width: 100px">{{ processo.processo }}</td>
+                    <td style="width: 100px">Data:</td>
                     <td>Ass:</td>
                   </tr>
                 </tbody>
                 <tfoot *ngIf="itemProducao.id_rir">
                   <tr>
-                    <td class="materialCliente" colspan="3">Material do Cliente</td>
+                    <td class="materialCliente" colspan="3">
+                      Material do Cliente
+                    </td>
                   </tr>
                 </tfoot>
               </table>
             </div>
             <div class="col-6">
-              <p-editor #editor
+              <p-editor
+                #editor
                 (onInit)="editor.quill.pasteHTML(itemProducao.observacao)"
                 (onTextChange)="itemProducao.observacao = $event.htmlValue"
                 name="observacao"
                 id="observacao"
                 class="noprint"
-              ></p-editor
-              ><div class="noview" [innerHTML]="itemProducao.observacao"></div>
+              ></p-editor>
+              <div class="noview" [innerHTML]="itemProducao.observacao"></div>
             </div>
             <div class="col">
-              <listaFiles [compact]="true" (onChangeFiles)="itemProducao.files = $event" [files]="itemProducao.files!" ></listaFiles>
+              <listaFiles
+                [compact]="true"
+                (onChangeFiles)="itemProducao.files = $event"
+                [files]="itemProducao.files!"
+              ></listaFiles>
             </div>
           </div>
         </div>
@@ -146,7 +187,9 @@
         name="btnEtiquetas"
         id="btnEtiquetas"
         (click)="gerarEtiquetas()"
-      >Etiquetas</button>
+      >
+        Etiquetas
+      </button>
       <button
         pButton
         class="p-button"

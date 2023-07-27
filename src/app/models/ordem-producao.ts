@@ -3,6 +3,7 @@ import { Empresa } from "./empresa";
 import { Operador } from "./operador";
 import { Orcamento } from "./orcamento";
 import { Produto } from "./produto";
+import { RIR } from "./rir";
 import { Usuario } from "./usuario";
 import { Vendedor } from "./vendedor";
 
@@ -43,6 +44,7 @@ export interface OrdemProducaoItem {
   id_rir?: number;
   files?: Arquivo[];
   ordem_producao_item_processos?: OrdemProducaoItemProcesso[];
+  registro_inspecao_recebimento?: RIR;
 }
 
 export interface OrdemProducaoItemProcesso {

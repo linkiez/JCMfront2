@@ -3,11 +3,16 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   OrdemProducao,
+  OrdemProducaoItem,
   OrdemProducaoItemProcesso,
 } from 'src/app/models/ordem-producao';
 import { OrdemProducaoService } from 'src/app/services/ordem-producao.service';
 import { Quill } from 'quill';
 import * as xlsx from 'xlsx';
+import { RIRService } from 'src/app/services/rir.service';
+import { RIR } from 'src/app/models/rir';
+
+
 
 @Component({
   selector: 'app-ordem-producao',
@@ -17,11 +22,14 @@ import * as xlsx from 'xlsx';
 export class OrdemProducaoComponent implements OnInit {
   ordemProducao: OrdemProducao = {};
 
+  rirs: RIR[] = [];
+
   constructor(
     private ordemProducaoService: OrdemProducaoService,
     private route: ActivatedRoute,
     private messageService: MessageService,
-    private router: Router
+    private router: Router,
+    private RIRService: RIRService
   ) {}
 
   ngOnInit() {
@@ -151,6 +159,26 @@ export class OrdemProducaoComponent implements OnInit {
       processosString = processosString + item.processo + ', ';
     });
     return processosString.slice(0, -2);
+  }
+
+  searchRir(item: OrdemProducaoItem) {
+    if(this.ordemProducao.orcamento?.pessoa && item.produto)
+    this.RIRService
+      .getRIRsByPessoaAndProduto(this.ordemProducao.orcamento?.pessoa.id!, item.produto.id!)
+      .subscribe({
+        next: (response) => {
+          console.log(response);
+          this.rirs = response;
+        },
+        error: (error) => {
+          console.log(error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: 'Erro ao buscar RIRs',
+          });
+        }
+      });
   }
 
 }

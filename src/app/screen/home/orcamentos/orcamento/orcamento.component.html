@@ -90,8 +90,9 @@
     </div>
     <div class="row noprint" *ngIf="orcamento.vendastinies!.length > 0">
       <div class="col" *ngFor="let venda of orcamento.vendastinies">
-        <span>Venda: {{ venda.venda }} </span>
-        <span>Aprovação: {{ venda.aprovacao }}</span>
+        <span> Venda: {{ venda.venda }} </span>
+        <span> Aprovação: {{ venda.aprovacao }}</span>
+        <span> Data: {{venda.createdAt | date : 'dd/MM/yyyy HH:mm:ss' }}</span>
       </div>
     </div>
     <div [ngClass]="{ noprint: orcamento.contato?.valor == '' }">
