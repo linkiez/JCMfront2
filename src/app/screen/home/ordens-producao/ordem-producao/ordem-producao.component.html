@@ -20,7 +20,7 @@
             </tr>
             <tr>
               <td>Orçamento:</td>
-              <td>{{ ordemProducao.orcamento?.id }}</td>
+              <td class="link" [routerLink]="['/home/orcamentos/'+ordemProducao.orcamento?.id]">{{ ordemProducao.orcamento?.id }}</td>
               <td>Prazo de entrega:</td>
               <td>{{ ordemProducao.data_prazo | date : "dd/MM/yyyy" }}</td>
             </tr>

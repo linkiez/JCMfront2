@@ -103,7 +103,7 @@
           ></caixaDeStatus>
           <span
             >OP: <strong>{{ op.id }}</strong> Orçamento:
-            {{ op.orcamento?.id }}</span
+            <span class="link" [routerLink]="['/home/orcamentos/'+ op.orcamento?.id]">{{ op.orcamento?.id }}</span></span
           >
         </ng-template>
         <p>Cliente: {{ op.orcamento?.pessoa?.nome }}</p>

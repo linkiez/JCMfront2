@@ -90,7 +90,7 @@
     </div>
     <div class="row noprint" *ngIf="orcamento.vendastinies!.length > 0">
       <div class="col" *ngFor="let venda of orcamento.vendastinies">
-        <span> Venda: {{ venda.venda }} </span>
+        <span> Venda: <span class="link" [routerLink]="['/home/ordensproducao/'+venda.venda]">{{ venda.venda }}</span> </span>
         <span> Aprovação: {{ venda.aprovacao }}</span>
         <span> Data: {{venda.createdAt | date : 'dd/MM/yyyy HH:mm:ss' }}</span>
       </div>

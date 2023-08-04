@@ -56,7 +56,7 @@
             id="quantidade"
             name="quantidade"
             placeholder=""
-            [ngModel]="rir.quantidade | number: '1.2-2'"
+            [ngModel]="rir.quantidade | number : '1.2-2'"
             (ngModelChange)="onChangeQuantidade($event)"
           />
         </div>
@@ -269,20 +269,37 @@
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-RirLista>
-      <tr (click)="rir = RirLista; dialogVisible=true">
+      <tr (click)="rir = RirLista; dialogVisible = true">
         <td>{{ RirLista.id }}</td>
         <td>{{ RirLista.createdAt | date : "dd/MM/yyyy HH:mm:ss" }}</td>
         <td>{{ RirLista.descricao }}</td>
-        <td>{{ RirLista.produto.nome }}</td>
-        <td>{{ RirLista.quantidade | number}}</td>
+        <td>
+          {{ RirLista.produto.nome }}
+        </td>
+        <td>{{ RirLista.quantidade | number }}</td>
         <td>{{ RirLista.conferido ? "Sim" : "Não" }}</td>
         <td>{{ RirLista.cliente ? "Sim" : "Não" }}</td>
-        <td>{{ RirLista.pessoa.nome }}</td>
         <td>
-          <span *ngIf="RirLista.pedido_compra_item?.pedido_compra?.pedido">{{
-            RirLista.pedido_compra_item?.pedido_compra?.pedido
-          }}</span>
-          <span *ngIf="RirLista.ordem_producao_item?.id_ordem_producao">
+          {{ RirLista.pessoa.nome }}
+        </td>
+        <td>
+          <span
+            class="link"
+            [routerLink]="[
+              '/home/pedidoscompras/' +
+                RirLista.pedido_compra_item?.pedido_compra?.id
+            ]"
+            *ngIf="RirLista.pedido_compra_item?.pedido_compra?.pedido"
+            >{{ RirLista.pedido_compra_item?.pedido_compra?.pedido }}</span
+          >
+          <span
+            class="link"
+            [routerLink]="[
+              '/home/ordensproducao/' +
+                RirLista.ordem_producao_item?.id_ordem_producao
+            ]"
+            *ngIf="RirLista.ordem_producao_item?.id_ordem_producao"
+          >
             {{ RirLista.ordem_producao_item?.id_ordem_producao }}
           </span>
         </td>
