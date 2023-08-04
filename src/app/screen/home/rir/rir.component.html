@@ -232,6 +232,7 @@
     [rows]="queryService.rir.pageCount"
     [selection]="true"
     responsiveLayout="scroll"
+    styleClass="p-datatable-striped"
   >
     <ng-template pTemplate="caption">
       <div class="d-flex justify-content-between">
@@ -292,16 +293,19 @@
             *ngIf="RirLista.pedido_compra_item?.pedido_compra?.pedido"
             >{{ RirLista.pedido_compra_item?.pedido_compra?.pedido }}</span
           >
-          <span
+          <span *ngFor="let op_item of setOfOrdemProducaoItem(RirLista.ordem_producao_items)">
+            <p
             class="link"
             [routerLink]="[
               '/home/ordensproducao/' +
-                RirLista.ordem_producao_item?.id_ordem_producao
+                op_item
             ]"
-            *ngIf="RirLista.ordem_producao_item?.id_ordem_producao"
+            *ngIf="op_item"
           >
-            {{ RirLista.ordem_producao_item?.id_ordem_producao }}
+            {{ op_item }}
+          </p>
           </span>
+
         </td>
       </tr>
     </ng-template>

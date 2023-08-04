@@ -45,6 +45,7 @@ export interface OrdemProducaoItem {
   files?: Arquivo[];
   ordem_producao_item_processos?: OrdemProducaoItemProcesso[];
   registro_inspecao_recebimento?: RIR;
+  id_ordem_producao?: number;
 }
 
 export interface OrdemProducaoItemProcesso {

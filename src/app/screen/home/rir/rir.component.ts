@@ -1,3 +1,4 @@
+import { OrdemProducaoItem } from './../../../models/ordem-producao';
 import { Component, OnInit } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Operador } from 'src/app/models/operador';
@@ -30,7 +31,6 @@ export class RirComponent implements OnInit {
   pedidos_compra_item: PedidoCompraItem[] = [];
 
   dialogVisible = false;
-
 
   totalRecords: number = 0;
 
@@ -142,7 +142,7 @@ export class RirComponent implements OnInit {
         this.rir = rir;
         this.rir.recebido_data = new Date(rir.recebido_data!);
         this.rir.nfe_data = new Date(rir.nfe_data!);
-              },
+      },
       error: (error) => {
         console.log(error);
         this.messageService.add({
@@ -179,7 +179,7 @@ export class RirComponent implements OnInit {
   }
 
   createOrUpdate() {
-    console.log(this.rir)
+    console.log(this.rir);
     if (this.validacoes()) {
       if (this.rir.id) {
         this.update();
@@ -254,9 +254,7 @@ export class RirComponent implements OnInit {
     return valido;
   }
 
-  searchRIRs() {
-
-  }
+  searchRIRs() {}
 
   pageChange(event: any) {
     this.queryService.rir.page = event.page;
@@ -291,7 +289,6 @@ export class RirComponent implements OnInit {
         });
       },
     });
-
   }
 
   log(item: any) {
@@ -300,5 +297,13 @@ export class RirComponent implements OnInit {
 
   onChangeQuantidade(event: any) {
     this.rir.quantidade = Number(event.replace(/[^\d]/g, '')) / 100;
+  }
+
+  setOfOrdemProducaoItem(op_items: OrdemProducaoItem[]) {
+    const setOPs = new Set();
+    for (const op_item of op_items) {
+      if (op_item.id_ordem_producao) setOPs.add(op_item.id_ordem_producao);
+    }
+    return setOPs;
   }
 }
