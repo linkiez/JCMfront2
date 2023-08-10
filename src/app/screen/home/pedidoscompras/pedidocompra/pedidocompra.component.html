@@ -1,9 +1,10 @@
-<h2>Pedido de Compra </h2><span>F-035 - Rev.01 - Emissão: 12/09/2018 Revisão: 26/4/2023</span>
+<h2>Pedido de Compra</h2>
+<span>F-035 - Rev.01 - Emissão: 12/09/2018 Revisão: 26/4/2023</span>
 <caixaDeStatus
-[status]="pedidoCompra.status"
-[options]="status"
-[editable]=true
-(statusChange)="pedidoCompra.status=$event"
+  [status]="pedidoCompra.status"
+  [options]="status"
+  [editable]="false"
+  (statusChange)="pedidoCompra.status = $event"
 ></caixaDeStatus>
 <form class="">
   <div class="row">
@@ -36,7 +37,7 @@
         name="inpDataEmissao"
         type="text"
         disabled
-        value="{{ pedidoCompra.data_emissao | date: 'dd/MM/yyyy' }}"
+        value="{{ pedidoCompra.data_emissao | date : 'dd/MM/yyyy' }}"
       />
     </div>
   </div>
@@ -191,13 +192,13 @@
                 class="p-inputtext"
                 name="inpItemPeso"
                 type="text"
-                [ngModel]="item.peso | number: '1.0-2':'pt-BR'"
+                [ngModel]="item.peso | number : '1.0-2' : 'pt-BR'"
                 (ngModelChange)="itemPeso($event, item)"
                 (input)="calculaTotal()"
               />
             </ng-template>
             <ng-template pTemplate="output">
-              {{ item.peso | number: '1.0-2':'pt-BR' }}
+              {{ item.peso | number : "1.0-2" : "pt-BR" }}
             </ng-template>
           </p-cellEditor>
         </td>
@@ -209,13 +210,13 @@
                 class="p-inputtext"
                 name="inpItemPreco"
                 type="text"
-                [ngModel]="item.preco | currency: 'BRL'"
+                [ngModel]="item.preco | currency : 'BRL'"
                 (ngModelChange)="itemPreco($event, item)"
                 (input)="calculaTotal()"
               />
             </ng-template>
             <ng-template pTemplate="output">
-              {{ item.preco | currency: "BRL" }}
+              {{ item.preco | currency : "BRL" }}
             </ng-template>
           </p-cellEditor>
         </td>
@@ -227,18 +228,18 @@
                 class="p-inputtext"
                 name="inpItemIpi"
                 type="text"
-                [ngModel]="item.ipi | percent: '1.2-2':'PT-BR'"
+                [ngModel]="item.ipi | percent : '1.2-2' : 'PT-BR'"
                 (ngModelChange)="itemIpi($event, item)"
                 (input)="calculaTotal()"
               />
             </ng-template>
             <ng-template pTemplate="output">
-              {{ item.ipi | percent: "1.2-2":"PT-BR" }}
+              {{ item.ipi | percent : "1.2-2" : "PT-BR" }}
             </ng-template>
           </p-cellEditor>
         </td>
         <td>
-          {{ item.total | currency: "BRL" }}
+          {{ item.total | currency : "BRL" }}
         </td>
         <td pEditableColumn>
           <p-cellEditor>
@@ -252,7 +253,7 @@
               ></p-calendar>
             </ng-template>
             <ng-template pTemplate="output">
-              {{ item.prazo | date: "dd/MM/yyyy" }}
+              {{ item.prazo | date : "dd/MM/yyyy" }}
             </ng-template>
           </p-cellEditor>
         </td>
@@ -296,25 +297,29 @@
                 class="p-inputtext"
                 name="inpItemIpi"
                 type="text"
-                [ngModel]="pedidoCompra.frete | currency: 'BRL'"
+                [ngModel]="pedidoCompra.frete | currency : 'BRL'"
                 (ngModelChange)="frete($event)"
                 (input)="calculaTotal()"
               />
             </ng-template>
             <ng-template pTemplate="output">
-              {{ pedidoCompra.frete | currency: "BRL" }}
+              {{ pedidoCompra.frete | currency : "BRL" }}
             </ng-template>
           </p-cellEditor>
         </td>
         <td>Total</td>
-        <td>{{ pedidoCompra.total | currency: "BRL" }}</td>
+        <td>{{ pedidoCompra.total | currency : "BRL" }}</td>
         <td></td>
       </tr>
     </ng-template>
   </p-table>
   <div>
     <h4>Observações</h4>
-    <textarea pInputTextarea name="txtObs" [(ngModel)]="pedidoCompra.observacao"></textarea>
+    <textarea
+      pInputTextarea
+      name="txtObs"
+      [(ngModel)]="pedidoCompra.observacao"
+    ></textarea>
     <h4>Normas de fornecimento do pedido</h4>
     <p>
       1. Horário de Recebimento: de Segunda à Quinta das 7:00h às 11:00h e das
@@ -355,7 +360,11 @@
       provedores externos (fornecedores).
     </p>
   </div>
-  <listaFiles class="noprint" [files]="pedidoCompra.files!" (onChangeFiles)="pedidoCompra.files = $event"></listaFiles>
+  <listaFiles
+    class="noprint"
+    [files]="pedidoCompra.files!"
+    (onChangeFiles)="pedidoCompra.files = $event"
+  ></listaFiles>
 </form>
 <div class="noprint">
   <button pButton class="p-button p-button-danger" (click)="confirm()">
@@ -364,7 +373,16 @@
   <button pButton class="p-button p-button-success" (click)="createOrUpdate()">
     Salvar
   </button>
+  <button
+    pButton
+    class="p-button p-button-success"
+    (click)="aprovarPedidoCompra()"
+    [disabled]="pedidoCompra.status !== 'Orçamento'"
+  >
+    Aprovar
+  </button>
   <button pButton class="p-button" (click)="getBackPedidos()">Voltar</button>
+
   <p-confirmDialog
     header="Confirmação"
     acceptLabel="Sim"

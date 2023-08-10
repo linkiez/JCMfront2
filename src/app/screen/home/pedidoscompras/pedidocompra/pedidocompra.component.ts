@@ -116,10 +116,6 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
 
     this.subscription = this.fornecedorService
       .getFornecedores(query)
-      // .pipe(
-      //   distinctUntilChanged(), // recorda a ultima pesquisa
-      //   debounceTime(1000) // espera um tempo antes de começar
-      // )
       .subscribe({
         next: (fornecedores) => {
           this.fornecedores = fornecedores.fornecedores;
@@ -145,10 +141,6 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
 
     this.produtoService
       .getProdutos(query)
-      // .pipe(
-      //   distinctUntilChanged(), // recorda a ultima pesquisa
-      //   debounceTime(1000) // espera um tempo antes de começar
-      // )
       .subscribe({
         next: (consulta) => (this.produtos = consulta.produtos),
         error: (error) => {
@@ -237,7 +229,6 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
   deletePedido() {
     this.pedidoCompraService
       .deletePedidoCompra(this.pedidoCompra)
-      // .pipe(debounceTime(1000))
       .subscribe({
         error: (error) => {
           console.log(error);
@@ -268,7 +259,6 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
   createPedido() {
     this.pedidoCompraService
       .addPedidoCompra(this.pedidoCompra)
-      // .pipe(debounceTime(1000))
       .subscribe({
         next: (response) => {
           this.pedidoCompra = response;
@@ -296,10 +286,9 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
   updatePedido() {
     this.pedidoCompraService
       .updatePedidoCompra(this.pedidoCompra)
-      // .pipe(debounceTime(1000))
       .subscribe({
         next: (response) => {
-          // this.pedidoCompra = response;
+          this.pedidoCompra = response;
         },
         error: (error) => {
           console.log(error);
@@ -325,5 +314,10 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
 
   removeItem(index: number) {
     this.pedidoCompra.pedido_compra_items.splice(index, 1);
+  }
+
+  aprovarPedidoCompra(){
+    this.pedidoCompra.status = 'Aprovado';
+    this.updatePedido();
   }
 }
