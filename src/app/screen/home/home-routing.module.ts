@@ -100,6 +100,14 @@ const routes: Routes = [
           canLoad: [LoginGuard],
       },
       {
+        path: 'iqf',
+        loadChildren: () =>
+          import('./iqf/iqf.module').then(
+            (module) => module.IqfModule
+          ),
+          canLoad: [LoginGuard],
+      },
+      {
         path: '*',
         redirectTo: 'dashboard',
       },

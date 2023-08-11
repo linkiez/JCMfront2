@@ -48,6 +48,15 @@ export class HomeComponent implements OnInit {
       ],
     },
     {
+      label: 'Indicadores',
+      items: [
+        {
+          label: 'Indice Qualidade Fornecedor',
+          routerLink: 'iqf',
+        }
+      ],
+    },
+    {
       label: 'Configurações',
       items: [
         {
