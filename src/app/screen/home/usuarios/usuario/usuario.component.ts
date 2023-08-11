@@ -192,7 +192,7 @@ export class UsuarioComponent implements OnInit {
   }
 
   getBack() {
-    this.router.navigate(['home/usuarios']);
+    window.history.back();
   }
 
   createUsuario() {

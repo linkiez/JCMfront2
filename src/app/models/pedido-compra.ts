@@ -36,4 +36,6 @@ export interface PedidoCompraItem {
   id_pedido?: number;
   id_produto?: number;
   produto?: Produto;
+  peso_entregue: number;
+  status: string;
 }

@@ -146,7 +146,7 @@ export class ProdutoComponent implements OnInit, OnDestroy {
   }
 
   getBackProdutos() {
-    this.router.navigate(['/home/produtos']);
+    window.history.back();
   }
 
   toNumber(event: any): number {

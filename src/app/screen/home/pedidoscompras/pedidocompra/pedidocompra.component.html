@@ -119,7 +119,9 @@
       <th>Preço Unit.</th>
       <th>Ipi</th>
       <th>Total</th>
-      <th>Entrega</th>
+      <th>Data Entrega</th>
+      <th *ngIf="pedidoCompra.status !== 'Orçamento'">Status</th>
+      <th *ngIf="pedidoCompra.status !== 'Orçamento'">Total Entregue</th>
       <th class="noprint">Ação</th>
     </ng-template>
     <ng-template pTemplate="body" let-item let-index="rowIndex">
@@ -256,6 +258,18 @@
               {{ item.prazo | date : "dd/MM/yyyy" }}
             </ng-template>
           </p-cellEditor>
+        </td>
+        <td *ngIf="pedidoCompra.status !== 'Orçamento'">
+          <caixaDeStatus
+            [status]="item.status"
+            [options]="status"
+            [editable]="false"
+            (statusChange)="pedidoCompra.status = $event"
+          ></caixaDeStatus>
+        </td>
+        <td class="text-center" *ngIf="pedidoCompra.status !== 'Orçamento'">
+          <p-knob [size]="75" [name]="'peso_entregue'+item.id" [ngModel]="calculatePesoEntreguePercentage(item)" [disabled]="true" [max]="100" [min]="0" [valueTemplate]="'{value}%' "></p-knob>
+           <small>{{ item.peso_entregue  }}Kg</small>
         </td>
         <td class="noprint">
           <i class="pi pi-trash trash" (click)="removeItem(index)"></i>

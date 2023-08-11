@@ -368,7 +368,7 @@ export class PessoaComponent implements OnInit {
   }
 
   getBackPessoas() {
-    this.router.navigate(['/home/pessoas']);
+    window.history.back();;
   }
 
   confirm() {

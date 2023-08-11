@@ -478,7 +478,7 @@ export class OrcamentoComponent implements OnInit {
   }
 
   getBackOrcamentos() {
-    this.router.navigate(['home/orcamentos']);
+    window.history.back();
   }
 
   getOrcamento() {

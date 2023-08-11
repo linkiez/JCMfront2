@@ -214,7 +214,7 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   getBackPedidos() {
-    this.router.navigate(['/home/pedidoscompras']);
+    window.history.back();
   }
 
   confirm() {
@@ -309,7 +309,7 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   newItem() {
-    this.pedidoCompra.pedido_compra_items.push({ produto: {}, prazo: new Date(), quantidade: 0, peso: 0, ipi: 0, preco: 0, total: 0 });
+    this.pedidoCompra.pedido_compra_items.push({ produto: {}, prazo: new Date(), quantidade: 0, peso: 0, ipi: 0, preco: 0, total: 0, peso_entregue: 0, status: 'Aguardando' });
   }
 
   removeItem(index: number) {
@@ -320,4 +320,13 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
     this.pedidoCompra.status = 'Aprovado';
     this.updatePedido();
   }
+
+  calculatePesoEntreguePercentage(item: PedidoCompraItem){
+        let percentage = ((item.peso_entregue || 0) / (item.peso || 1) as number * 100);
+        if(percentage > 100){
+          percentage = 100
+        }
+    return +percentage.toFixed(0);
+  }
+
 }

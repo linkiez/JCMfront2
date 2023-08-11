@@ -15,7 +15,7 @@ import { CalendarModule } from 'primeng/calendar';
 import {InputTextareaModule} from 'primeng/inputtextarea';
 import { ListaFilesModule } from 'src/app/components/listaFiles/listaFiles.module';
 import { CaixaDeStatusModule } from 'src/app/components/caixaDeStatus/caixaDeStatus.module';
-
+import { KnobModule } from 'primeng/knob';
 
 
 
@@ -37,7 +37,8 @@ import { CaixaDeStatusModule } from 'src/app/components/caixaDeStatus/caixaDeSta
     CalendarModule,
     InputTextareaModule,
     ListaFilesModule,
-    CaixaDeStatusModule
+    CaixaDeStatusModule,
+    KnobModule
   ]
 })
 export class PedidosComprasModule { }
