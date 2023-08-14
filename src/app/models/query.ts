@@ -9,8 +9,9 @@ export interface Query {
   operador?: boolean;
   vendedor?: boolean | Vendedor;
   id_vendedor?: number;
-  deleted: boolean;
+  deleted?: boolean;
   status?: string;
   produto?: number;
   data_prazo?: Date;
+  ano?: number;
 }

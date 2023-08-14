@@ -2,9 +2,98 @@
   <div>
     <h2>Indice de Qualidade de Fornecedor</h2>
     <p>F-032 - Rev. 04 - Emissão: 18/09/2018 Revisão 11/08/2023</p>
-    <div>
+    <div class="d-flex flex-row align-items-baseline">
+      <span for="inpFornecedor">Fornecedor: </span>
+      <div class="flex-grow-1">
+        <p-autoComplete
+          name="inpFornecedor"
+          type="text"
+          [(ngModel)]="selectedFornecedor"
+          field="pessoa.nome"
+          [suggestions]="fornecedores"
+          (completeMethod)="searchFornecedor($event)"
+          (onSelect)="onSelectFornecedor($event)"
+          [dropdown]="true"
+          [style]="{ width: '100%' }"
+          [inputStyle]="{ width: '100%' }"
+          appendTo="body"
+        ></p-autoComplete>
+      </div>
+      <button
+        pButton
+        type="button"
+        icon="pi pi-times"
+        (click)="
+          queryService.iqf.fornecedor = undefined;
+          selectedFornecedor = undefined;
+          getPedidosComprasIQF()
+        "
+        style="margin-left: 10px"
+      ></button>
+      <div class="col-1">
+        <span style="padding-left: 10px">Ano: </span>
+        <input
+          pInputText
+          name="ano"
+          id="ano"
+          type="number"
+          lang="pt-BR"
+          [(ngModel)]="queryService.iqf.ano"
+          style="width: auto"
+          (change)="getPedidosComprasIQF()"
+        />
+      </div>
+    </div>
+
+    <div style="padding: 0px 120px">
       <canvas id="IQFChart"></canvas>
     </div>
-  </div>
 
+    <div>
+      <p-table
+        [value]="iqfData.data"
+        sortField="mes"
+        sortMode="single"
+        rowGroupMode="subheader"
+        groupRowsBy="mes"
+        styleClass="p-datatable-striped"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Pedido Compra</th>
+            <th>Solicitado(Kg)</th>
+            <th>Recebido(Kg)</th>
+            <th>Recebido(%)</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="groupheader" let-mese let-rowIndex="rowIndex">
+          <tr pRowGroupHeader>
+            <td colspan="4">
+              <h4>{{ meses[rowIndex] }}</h4>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-tableMes>
+          <tr *ngFor="let pedido_compra of tableMes.pedidosCompra">
+            <td>
+              <span
+                class="link"
+                [routerLink]="['/home/pedidoscompras/' + pedido_compra.id]"
+                >{{ pedido_compra.pedido }}</span
+              >
+            </td>
+            <td>{{ pedido_compra.peso | number : "1.0-2" }} Kg</td>
+            <td>{{ pedido_compra.peso_entregue | number : "1.0-2" }} Kg</td>
+            <td>
+              {{
+                (pedido_compra.peso_entregue / pedido_compra.peso) * 100
+                  | number : "1.0-2"
+              }}
+              %
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
 </div>

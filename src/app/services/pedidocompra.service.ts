@@ -34,6 +34,22 @@ export class PedidoCompraService {
       }));
   }
 
+  getPedidoComprasIQF(query: { fornecedor: number | undefined; ano: number }): Observable<any> {
+    let chaves = Object.keys(query)
+      let valores = Object.values(query);
+      let queryString = '?';
+
+      for(let i=0;i<chaves.length;i++){
+        if(i>0) queryString += '&'
+        queryString += chaves[i]+'='+valores[i]
+      }
+
+
+    return this.http.get<PedidoCompra[]>(environment.backendURL + 'pedidocompra/iqf' + queryString, {
+      responseType: 'json',
+    })
+  }
+
   getPedidoCompraItem(query: Query): Observable<any> {
     let chaves = Object.keys(query)
       let valores = Object.values(query);
