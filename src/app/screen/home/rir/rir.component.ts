@@ -179,7 +179,6 @@ export class RirComponent implements OnInit {
   }
 
   createOrUpdate() {
-    console.log(this.rir);
     if (this.validacoes()) {
       if (this.rir.id) {
         this.update();
@@ -267,7 +266,6 @@ export class RirComponent implements OnInit {
 
     this.RIRService.getRIRs(this.queryService.rir).subscribe({
       next: (consulta) => {
-        console.log(consulta);
         this.rirs = consulta.rirs;
         this.rirs = this.rirs.map((rir) => {
           if (rir.recebido_data !== undefined) {
@@ -281,11 +279,11 @@ export class RirComponent implements OnInit {
         this.totalRecords = consulta.totalRecords;
       },
       error: (error) => {
-        console.log(error, this.queryService.rir);
+        console.error(error, this.queryService.rir);
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'Erro ao buscar rirs',
+          detail: 'Erro ao buscar rirs - '+error.error,
         });
       },
     });
@@ -305,5 +303,26 @@ export class RirComponent implements OnInit {
       if (op_item.id_ordem_producao) setOPs.add(op_item.id_ordem_producao);
     }
     return setOPs;
+  }
+
+  delete(rir: RIR){
+    this.RIRService.deleteRIR(rir).subscribe({
+      next: () => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Sucesso',
+          detail: 'RIR apagado',
+        });
+      },
+      error: (error) => {
+        console.error(error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: error.error,
+        });
+      },
+      complete: () => this.getRIRs(true),
+    })
   }
 }

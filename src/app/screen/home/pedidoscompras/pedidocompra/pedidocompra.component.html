@@ -381,21 +381,27 @@
   ></listaFiles>
 </form>
 <div class="noprint">
-  <button pButton class="p-button p-button-danger" (click)="confirm()">
-    Excluir
-  </button>
-  <button pButton class="p-button p-button-success" (click)="createOrUpdate()">
-    Salvar
-  </button>
-  <button
-    pButton
-    class="p-button p-button-success"
-    (click)="aprovarPedidoCompra()"
-    [disabled]="pedidoCompra.status !== 'Orçamento'"
-  >
-    Aprovar
-  </button>
-  <button pButton class="p-button" (click)="getBackPedidos()">Voltar</button>
+  <div class="d-flex flex-row">
+    <div class="flex-grow-1 justify-content-start">
+      <button pButton class="p-button p-button-danger" (click)="confirm()">
+        Excluir
+      </button>
+    </div>
+    <button pButton class="p-button p-button-success" (click)="createOrUpdate()">
+      Salvar
+    </button>
+    <button
+      pButton
+      class="p-button p-button-success"
+      (click)="aprovarPedidoCompra()"
+      [disabled]="pedidoCompra.status !== 'Orçamento'"
+    >
+      Aprovar
+    </button>
+    <button pButton class="p-button" (click)="getBackPedidos()">Voltar</button>
+  </div>
+
+
 
   <p-confirmDialog
     header="Confirmação"

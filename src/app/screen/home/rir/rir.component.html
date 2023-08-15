@@ -204,23 +204,28 @@
       </div>
       <div class="row">
         <hr />
-        <div class="col">
+        <div class="col d-flex flex-row">
+
+          <div class="flex-grow-1 d-flex justify-content-start">
+            <button pButton class="p-button p-button-danger" (click)="delete(rir); dialogVisible = false" [disabled]="!rir.id">
+              Excluir
+            </button>
+          </div>
           <button
-            pButton
-            type="button"
-            label="Salvar"
-            class="p-button-success"
-            (click)="createOrUpdate()"
-          ></button>
-          <button
-            pButton
-            type="button"
-            label="Fechar"
-            class="p-button-secondary"
-            (click)="dialogVisible = false"
-          ></button>
+          pButton
+          type="button"
+          label="Salvar"
+          class="p-button-success"
+          (click)="createOrUpdate()"
+        ></button>
+        <button
+          pButton
+          type="button"
+          label="Fechar"
+          class=""
+          (click)="dialogVisible = false"
+        ></button>
         </div>
-        <hr />
       </div>
     </form>
   </p-dialog>

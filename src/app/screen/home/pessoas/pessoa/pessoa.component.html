@@ -60,7 +60,7 @@
           pInputText
           [ngModel]="pessoa.cnpj_cpf | cpfCnpj"
           [ngClass]="{ 'ng-erro': cnpj_cpfInvalido.length }"
-          (ngModelChange)="pessoa.cnpj_cpf = $event;cleanPessoa(pessoa)"
+          (ngModelChange)="pessoa.cnpj_cpf = $event; cleanPessoa(pessoa)"
           (change)="validaCpfCnpj()"
           [ngClass]="{ cnpjLoading: cnpjLoading }"
           maxlength="18"
@@ -455,7 +455,12 @@
               />
             </div>
             <div class="col-1 d-flex flex-column justify-content-end">
-              <button pButton type="button" icon="pi pi-trash" (click)="deleteFornecedor()"></button>
+              <button
+                pButton
+                type="button"
+                icon="pi pi-trash"
+                (click)="deleteFornecedor()"
+              ></button>
             </div>
           </div></form
       ></ng-template>
@@ -511,7 +516,12 @@
               />
             </div>
             <div class="col-1 d-flex flex-column justify-content-end">
-              <button pButton type="button" icon="pi pi-trash" (click)="deleteOperador()"></button>
+              <button
+                pButton
+                type="button"
+                icon="pi pi-trash"
+                (click)="deleteOperador()"
+              ></button>
             </div>
           </div></form
       ></ng-template>
@@ -577,7 +587,12 @@
               />
             </div>
             <div class="col-1 d-flex flex-column justify-content-end">
-              <button pButton type="button" icon="pi pi-trash" (click)="deleteEmpresa()"></button>
+              <button
+                pButton
+                type="button"
+                icon="pi pi-trash"
+                (click)="deleteEmpresa()"
+              ></button>
             </div>
           </div>
           <div class="row">
@@ -605,7 +620,7 @@
                   animationDuration="1s"
                 ></p-progressSpinner>
               </button>
-              <img #logotipo [src]="logtipoUrl" alt="Logotipo">
+              <img #logotipo [src]="logtipoUrl" alt="Logotipo" />
             </div>
           </div></form
       ></ng-template>
@@ -662,21 +677,30 @@
               />
             </div>
             <div class="col-1 d-flex flex-column justify-content-end">
-              <button pButton type="button" icon="pi pi-trash" (click)="deleteVendedor()"></button>
+              <button
+                pButton
+                type="button"
+                icon="pi pi-trash"
+                (click)="deleteVendedor()"
+              ></button>
             </div>
-
           </div></form
       ></ng-template>
     </p-accordionTab>
   </p-accordion>
 </div>
-<button pButton class="p-button p-button-danger" (click)="confirm()">
-  Excluir
-</button>
-<button pButton class="p-button p-button-success" (click)="createOrUpdate()">
-  Salvar
-</button>
-<button pButton class="p-button" (click)="getBackPessoas()">Voltar</button>
+<div class="d-flex flex-row">
+  <div class="flex-grow-1 justify-content-start">
+    <button pButton class="p-button p-button-danger" (click)="confirm()">
+      Excluir
+    </button>
+  </div>
+  <button pButton class="p-button p-button-success" (click)="createOrUpdate()">
+    Salvar
+  </button>
+  <button pButton class="p-button" (click)="getBackPessoas()">Voltar</button>
+</div>
+
 <p-confirmDialog
   header="Confirmação"
   acceptLabel="Sim"
