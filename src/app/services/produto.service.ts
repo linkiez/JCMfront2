@@ -1,17 +1,16 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, catchError, throwError } from 'rxjs';
+import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Produto } from '../models/produto';
 import { Query } from '../models/query';
-import { MessageService } from 'primeng/api';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProdutoService {
 
-  constructor(private http: HttpClient, private messageService: MessageService) { }
+  constructor(private http: HttpClient) { }
 
   getProdutos(query: Query): Observable<any> {
     let chaves = Object.keys(query)
@@ -25,48 +24,27 @@ export class ProdutoService {
 
     return this.http.get<Produto[]>(environment.backendURL + 'produto' + queryString, {
       responseType: 'json',
-    }).pipe(
-      catchError((error) => {
-        console.log(error, query);
-        this.messageService.add({severity:'error', summary:'Erro', detail:'Erro ao buscar produtos'});
-        return throwError(()=> new Error('Erro ao buscar produtos'));
-      }));
+    })
   }
 
   getProduto(id: number): Observable<Produto> {
     return this.http.get<Produto>(
       environment.backendURL + 'produto/' + id,
       { responseType: 'json' }
-    ).pipe(
-      catchError((error) => {
-        console.error(error);
-        this.messageService.add({severity:'error', summary:'Erro', detail:'Erro ao buscar produto'});
-        return throwError(()=> new Error('Erro ao buscar produto'));
-      }));
+    )
   }
 
   getProdutoByName(nome: string): Observable<Produto> {
     return this.http.post<Produto>(
       environment.backendURL + 'produto/nome', {nome: nome},
       { responseType: 'json' }
-    ).pipe(
-      catchError((error) => {
-        console.error(error);
-        this.messageService.add({severity:'error', summary:'Erro', detail:'Erro ao buscar produto por nome'});
-        return throwError(()=> new Error('Erro ao buscar produto por nome'));
-      }
-    ));
+    )
   }
 
   addProduto(produto: Produto): Observable<Object> {
     return this.http.post(environment.backendURL + 'produto', produto, {
       responseType: 'json',
-    }).pipe(
-      catchError((error) => {
-        console.log(error, produto);
-        this.messageService.add({severity:'error', summary:'Erro', detail:'Erro ao adicionar produto'});
-        return throwError(()=> new Error('Erro ao adicionar produto'));
-      }));
+    })
   }
 
   updateProduto(produto: Produto): Observable<Object> {
@@ -74,35 +52,20 @@ export class ProdutoService {
       environment.backendURL + 'produto/' + produto.id,
       produto,
       { responseType: 'json' }
-    ).pipe(
-      catchError((error) => {
-        console.log(error, produto);
-        this.messageService.add({severity:'error', summary:'Erro', detail:'Erro ao alterar produto'});
-        return throwError(()=> new Error('Erro ao alterar produto'));
-      }));
+    )
   }
 
   deleteProduto(produto: Produto): Observable<Object> {
     return this.http.delete(
       environment.backendURL + 'produto/' + produto.id,
       { responseType: 'json' }
-    ).pipe(
-      catchError((error) => {
-        console.log(error, produto);
-        this.messageService.add({severity:'error', summary:'Erro', detail:'Erro ao apagar produto'});
-        return throwError(()=> new Error('Erro ao apagar produto'));
-      }));
+    )
   }
 
   restoreProduto(id: number): Observable<Object>{
     return this.http.post(
       environment.backendURL + 'produto/restore/' + id,
       { responseType: 'json' }
-    ).pipe(
-      catchError((error) => {
-        console.error(error);
-        this.messageService.add({severity:'error', summary:'Erro', detail:'Erro ao restaurar produto'});
-        return throwError(()=> new Error('Erro ao restaurar produto'));
-      }));
+    )
   }
 }

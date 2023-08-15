@@ -1,9 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, catchError, throwError } from 'rxjs';
+import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Query } from '../models/query';
-import { MessageService } from 'primeng/api';
 import { Vendedor } from '../models/vendedor';
 
 @Injectable({
@@ -11,7 +10,7 @@ import { Vendedor } from '../models/vendedor';
 })
 export class VendedorService {
 
-constructor(private http: HttpClient, private messageService: MessageService) { }
+constructor(private http: HttpClient) { }
 
 getVendedores(query: Query): Observable<any> {
   let chaves = Object.keys(query)
@@ -25,23 +24,13 @@ getVendedores(query: Query): Observable<any> {
 
   return this.http.get(environment.backendURL + 'vendedor'+ queryString, {
     responseType: 'json',
-  }).pipe(
-    catchError((error) => {
-      console.log(error, query);
-      this.messageService.add({severity:'error', summary:'Erro', detail:'Erro ao buscar vendedores'});
-      return throwError(()=> new Error('Erro ao buscar vendedores'));
-    }));
+  });
 }
 
 deleteVendedor(vendedor: Vendedor): Observable<Object> {
   return this.http.delete(
     environment.backendURL + 'vendedor/' + vendedor.id,
     { responseType: 'json' }
-  ).pipe(
-    catchError((error) => {
-      console.log(error, vendedor);
-      this.messageService.add({severity:'error', summary:'Erro', detail:'Erro ao apagar vendedor'});
-      return throwError(()=> new Error('Erro ao apagar vendedor'));
-    }));
+  );
 }
 }

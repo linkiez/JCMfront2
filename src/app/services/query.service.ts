@@ -1,4 +1,3 @@
-import { OrdemProducao } from './../models/ordem-producao';
 import { Injectable } from '@angular/core';
 import { Query } from '../models/query';
 

@@ -1,17 +1,16 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, catchError, throwError } from 'rxjs';
+import { Observable} from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Empresa } from '../models/empresa';
 import { Query } from '../models/query';
-import { MessageService } from 'primeng/api';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EmpresaService {
 
-  constructor(private http: HttpClient, private messageService: MessageService) { }
+  constructor(private http: HttpClient) { }
 
   getEmpresas(query: Query): Observable<any> {
     let chaves = Object.keys(query)
@@ -25,23 +24,13 @@ export class EmpresaService {
 
     return this.http.get<Empresa[]>(environment.backendURL + 'empresa' + queryString, {
       responseType: 'json',
-    }).pipe(
-      catchError((error) => {
-        console.log(error, query);
-        this.messageService.add({severity:'error', summary:'Erro', detail:'Erro ao buscar empresas'});
-        return throwError(()=> new Error('Erro ao buscar empresas'));
-      }));
+    })
   }
 
   deleteEmpresa(empresa: Empresa): Observable<Object> {
     return this.http.delete(
       environment.backendURL + 'empresa/' + empresa.id,
       { responseType: 'json' }
-    ).pipe(
-      catchError((error) => {
-        console.log(error, empresa);
-        this.messageService.add({severity:'error', summary:'Erro', detail:'Erro ao apagar empresa'});
-        return throwError(()=> new Error('Erro ao apagar empresa'));
-      }));
+    )
   }
 }
