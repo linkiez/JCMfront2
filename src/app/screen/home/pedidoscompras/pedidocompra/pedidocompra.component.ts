@@ -364,7 +364,7 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
 
   aprovarPedidoCompra() {
     this.pedidoCompra.status = 'Aprovado';
-    this.updatePedido();
+    this.createOrUpdate();
   }
 
   calculatePesoEntreguePercentage(item: PedidoCompraItem) {
