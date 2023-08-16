@@ -2,7 +2,13 @@ import { ListaGenericaItem } from './../../../../models/lista-generica';
 import { Component, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { debounceTime, distinctUntilChanged, map, Subscription } from 'rxjs';
+import {
+  catchError,
+  debounceTime,
+  distinctUntilChanged,
+  map,
+  Subscription,
+} from 'rxjs';
 import { PedidoCompra, PedidoCompraItem } from 'src/app/models/pedido-compra';
 import { Pessoa } from 'src/app/models/pessoa';
 import { Produto } from 'src/app/models/produto';
@@ -36,7 +42,7 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
     pedido_compra_items: [],
     cond_pagamento: 'AVISTA',
     frete: 0,
-    status: 'Orçamento'
+    status: 'Orçamento',
   };
 
   fornecedores: Pessoa[] = [];
@@ -45,11 +51,35 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
 
   dimensoes$ = this.listaGenericaService
     .getByNameListaGenerica('produtoDimensoes')
-    .pipe(map((listaGenerica: any) => listaGenerica.lista_generica_items));
+    .pipe(
+      map((listaGenerica: any) => listaGenerica.lista_generica_items),
+      catchError((error) => {
+        console.error(error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail:
+            'Erro ao carregar as dimensões dos produtos. - ' + error.error,
+        });
+        return [];
+      })
+    );
 
   condicaoPagamento$ = this.listaGenericaService
     .getByNameListaGenerica('condicaoPagamento')
-    .pipe(map((listaGenerica: any) => listaGenerica.lista_generica_items));
+    .pipe(
+      map((listaGenerica: any) => listaGenerica.lista_generica_items),
+      catchError((error) => {
+        console.error(error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail:
+            'Erro ao carregar as condições de pagamento. - ' + error.error,
+        });
+        return [];
+      })
+    );
 
   status: string[] = [];
 
@@ -59,7 +89,7 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
 
   ngOnInit(): void {
     this.getPedidoCompra();
-    this.getStatus()
+    this.getStatus();
   }
 
   ngOnDestroy(): void {
@@ -85,11 +115,11 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
             this.pedidoCompra = pedido;
           },
           error: (error) => {
-            console.log(error);
+            console.error(error);
             this.messageService.add({
               severity: 'error',
               summary: 'Erro',
-              detail: `${error.status} - ${error.statusText} - ${error.error}`,
+              detail: 'Erro ao carregar o pedido de compra. - ' + error.error,
             });
           },
           complete: () => {
@@ -100,10 +130,22 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   getStatus() {
-    this.listaGenericaService.getByNameListaGenerica('statusPedidoCompra').pipe(
-      map((listaGenerica: any) => listaGenerica.lista_generica_items)
-    ).subscribe({next: (response)=> {
-      this.status=response}});
+    this.listaGenericaService
+      .getByNameListaGenerica('statusPedidoCompra')
+      .pipe(map((listaGenerica: any) => listaGenerica.lista_generica_items))
+      .subscribe({
+        next: (response) => {
+          this.status = response;
+        },
+        error: (error) => {
+          console.error(error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: 'Erro ao carregar os status. - ' + error.error,
+          });
+        },
+      });
   }
 
   searchFornecedor(event: any) {
@@ -116,16 +158,17 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
 
     this.subscription = this.fornecedorService
       .getFornecedores(query)
+      .pipe(distinctUntilChanged(), debounceTime(500))
       .subscribe({
         next: (fornecedores) => {
           this.fornecedores = fornecedores.fornecedores;
         },
         error: (error) => {
-          console.log(error);
+          console.error(error);
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: error.message,
+            detail: 'Erro ao carregar os fornecedores. - ' + error.error,
           });
         },
       });
@@ -141,14 +184,15 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
 
     this.produtoService
       .getProdutos(query)
+      .pipe(distinctUntilChanged(), debounceTime(500))
       .subscribe({
         next: (consulta) => (this.produtos = consulta.produtos),
         error: (error) => {
-          console.log(error);
+          console.error(error);
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: error.message,
+            detail: 'Erro ao carregar os produtos. - ' + error.error,
           });
         },
       });
@@ -159,7 +203,7 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   itemPeso(event: any, item: PedidoCompraItem) {
-    item.peso = event.replace(',','.');
+    item.peso = event.replace(',', '.');
   }
 
   itemIpi(event: any, item: PedidoCompraItem) {
@@ -227,26 +271,24 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   deletePedido() {
-    this.pedidoCompraService
-      .deletePedidoCompra(this.pedidoCompra)
-      .subscribe({
-        error: (error) => {
-          console.log(error);
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Erro',
-            detail: `${error.status} - ${error.statusText} - ${error.error}`,
-          });
-        },
-        complete: () => {
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Sucesso',
-            detail: 'O pedido de compra foi exluido.',
-          });
-          this.router.navigate(['/home/pedidoscompras']);
-        },
-      });
+    this.pedidoCompraService.deletePedidoCompra(this.pedidoCompra).subscribe({
+      error: (error) => {
+        console.error(error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: 'Erro ao excluir o pedido de compra. - ' + error.error,
+        });
+      },
+      complete: () => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Sucesso',
+          detail: 'O pedido de compra foi excluido.',
+        });
+        this.router.navigate(['/home/pedidoscompras']);
+      },
+    });
   }
 
   createOrUpdate() {
@@ -257,76 +299,80 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
     }
   }
   createPedido() {
-    this.pedidoCompraService
-      .addPedidoCompra(this.pedidoCompra)
-      .subscribe({
-        next: (response) => {
-          this.pedidoCompra = response;
-        },
-        error: (error) => {
-          console.log(error);
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Erro',
-            detail: `${error.status} - ${error.statusText} - ${error.error}`,
-          });
-        },
-        complete: () => {
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Sucesso',
-            detail: 'O pedido foi criado.',
-          });
-          this.router.navigate([
-            `/home/pedidoscompras/${this.pedidoCompra.id}`,
-          ]);
-        },
-      });
+    this.pedidoCompraService.addPedidoCompra(this.pedidoCompra).subscribe({
+      next: (response) => {
+        this.pedidoCompra = response;
+      },
+      error: (error) => {
+        console.error(error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: 'Erro ao criar o pedido de compra. - ' + error.error,
+        });
+      },
+      complete: () => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Sucesso',
+          detail: 'O pedido foi criado.',
+        });
+        this.router.navigate([`/home/pedidoscompras/${this.pedidoCompra.id}`]);
+      },
+    });
   }
   updatePedido() {
-    this.pedidoCompraService
-      .updatePedidoCompra(this.pedidoCompra)
-      .subscribe({
-        next: (response) => {
-          this.pedidoCompra = response;
-        },
-        error: (error) => {
-          console.log(error);
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Erro',
-            detail: `${error.status} - ${error.statusText} - ${error.error}`,
-          });
-        },
-        complete: () => {
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Sucesso',
-            detail: 'O pedido foi atualizado.',
-          });
-        },
-      });
+    this.pedidoCompraService.updatePedidoCompra(this.pedidoCompra).subscribe({
+      next: (response) => {
+        this.pedidoCompra = response;
+      },
+      error: (error) => {
+        console.error(error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: 'Erro ao atualizar o pedido de compra. - ' + error.error,
+        });
+      },
+      complete: () => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Sucesso',
+          detail: 'O pedido foi atualizado.',
+        });
+      },
+    });
   }
 
   newItem() {
-    this.pedidoCompra.pedido_compra_items.push({ produto: {}, prazo: new Date(), quantidade: 0, peso: 0, ipi: 0, preco: 0, total: 0, peso_entregue: 0, status: 'Aguardando' });
+    this.pedidoCompra.pedido_compra_items.push({
+      produto: {},
+      prazo: new Date(),
+      quantidade: 0,
+      peso: 0,
+      ipi: 0,
+      preco: 0,
+      total: 0,
+      peso_entregue: 0,
+      status: 'Aguardando',
+    });
   }
 
   removeItem(index: number) {
     this.pedidoCompra.pedido_compra_items.splice(index, 1);
   }
 
-  aprovarPedidoCompra(){
+  aprovarPedidoCompra() {
     this.pedidoCompra.status = 'Aprovado';
     this.updatePedido();
   }
 
-  calculatePesoEntreguePercentage(item: PedidoCompraItem){
-        let percentage = ((item.peso_entregue || 0) / (item.peso || 1) as number * 100);
-        if(percentage > 100){
-          percentage = 100
-        }
+  calculatePesoEntreguePercentage(item: PedidoCompraItem) {
+    let percentage =
+      (((item.peso_entregue || 0) / (item.peso || 1)) as number) * 100;
+    if (percentage > 100) {
+      percentage = 100;
+    }
     return +percentage.toFixed(0);
   }
-
 }

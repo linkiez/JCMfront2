@@ -16,7 +16,7 @@ import { QueryService } from 'src/app/services/query.service';
   styleUrls: ['./produtos.component.scss'],
   providers: [ConfirmationService],
 })
-export class ProdutosComponent implements OnInit, OnDestroy {
+export class ProdutosComponent implements OnInit {
   @ViewChild('paginator') paginator!: Paginator;
 
   produtos: Array<Produto> = [];
@@ -24,8 +24,6 @@ export class ProdutosComponent implements OnInit, OnDestroy {
   totalRecords: number = 0;
 
   first = 0;
-
-  private subscription: Subscription = new Subscription();
 
   constructor(
     private produtoService: ProdutoService,
@@ -37,45 +35,40 @@ export class ProdutosComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.getProdutos(true);
-    this.first = this.queryService.produtos.page * this.queryService.produtos.pageCount;
-  }
-
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    this.first =
+      this.queryService.produtos.page * this.queryService.produtos.pageCount;
   }
 
   getProdutos(pageChange?: boolean): void {
-    this.queryService.produtos.page = pageChange ? this.queryService.produtos.page : 0;
+    this.queryService.produtos.page = pageChange
+      ? this.queryService.produtos.page
+      : 0;
 
-    this.subscription = this.produtoService
+    this.produtoService
       .getProdutos(this.queryService.produtos)
-      // .pipe(
-      //   debounceTime(1000), // espera um tempo antes de começar
-      //   distinctUntilChanged() // recorda a ultima pesquisa
-      // )
       .subscribe({
         next: (consulta) => {
           this.produtos = consulta.produtos.map((produto: any) => {
             if (produto.pedido_compra_items[0]) {
               produto.preco = produto.pedido_compra_items[0].precoComIpi;
-              produto.atualizacao = produto.pedido_compra_items[0].pedido_compra.data_emissao;
+              produto.atualizacao =
+                produto.pedido_compra_items[0].pedido_compra.data_emissao;
             } else {
               produto.preco = 0;
-              produto.atualizacao = '-'
+              produto.atualizacao = '-';
             }
             return produto;
           });
 
           this.totalRecords = consulta.totalRecords;
           if (!pageChange) this.paginator.changePageToFirst(new Event(''));
-          // console.log(this.produtos);
         },
         error: (error) => {
-          console.log(error);
+          console.error(error);
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: error.message,
+            detail: 'Erro ao carregar os produtos. - ' + error.error,
           });
         },
       });
@@ -105,11 +98,11 @@ export class ProdutosComponent implements OnInit, OnDestroy {
       accept: () => {
         this.produtoService.restoreProduto(id).subscribe({
           error: (error: any) => {
-            console.log(error);
+            console.error(error);
             this.messageService.add({
               severity: 'error',
               summary: 'Erro',
-              detail: error.message,
+              detail: 'Erro ao restaurar o produto. - ' + error.error,
             });
           },
           complete: () => {

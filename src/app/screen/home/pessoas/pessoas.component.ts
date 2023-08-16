@@ -15,7 +15,7 @@ import { PessoaService } from 'src/app/services/pessoa.service';
   styleUrls: ['./pessoas.component.scss'],
   providers: [ConfirmationService],
 })
-export class PessoasComponent implements OnInit, OnDestroy {
+export class PessoasComponent implements OnInit {
   @ViewChild('paginator') paginator!: Paginator;
 
   pessoas: Array<Pessoa> = [];
@@ -23,8 +23,6 @@ export class PessoasComponent implements OnInit, OnDestroy {
   totalRecords: number = 0;
 
   first = 0;
-
-  private subscription: Subscription = new Subscription();
 
   cols: any[] = [];
 
@@ -40,37 +38,30 @@ export class PessoasComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.getPessoas(true);
-    this.first = this.queryService.pessoas.page * this.queryService.pessoas.pageCount;
-  }
-
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    this.first =
+      this.queryService.pessoas.page * this.queryService.pessoas.pageCount;
   }
 
   getPessoas(pageChange?: boolean): void {
-    this.queryService.pessoas.page = pageChange ? this.queryService.pessoas.page : 0
+    this.queryService.pessoas.page = pageChange
+      ? this.queryService.pessoas.page
+      : 0;
 
-    this.subscription = this.pessoaService
-      .getPessoas(this.queryService.pessoas)
-      // .pipe(
-      //   debounceTime(1000), // espera um tempo antes de começar
-      //   distinctUntilChanged() // recorda a ultima pesquisa
-      // )
-      .subscribe({
-        next: (consulta) => {
-          this.pessoas = consulta.pessoas;
-          this.totalRecords = consulta.totalRecords;
-          if (!pageChange) this.paginator.changePageToFirst(new Event(""));
-        },
-        error: (error) => {
-          console.log(error);
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Erro',
-            detail: error.message,
-          });
-        }
-      });
+    this.pessoaService.getPessoas(this.queryService.pessoas).subscribe({
+      next: (consulta) => {
+        this.pessoas = consulta.pessoas;
+        this.totalRecords = consulta.totalRecords;
+        if (!pageChange) this.paginator.changePageToFirst(new Event(''));
+      },
+      error: (error) => {
+        console.error(error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: 'Erro ao carregar pessoas. - ' + error.error,
+        });
+      },
+    });
   }
 
   search() {
@@ -85,15 +76,6 @@ export class PessoasComponent implements OnInit, OnDestroy {
     this.router.navigate(['/home/pessoas/0']);
   }
 
-  @Input() get selectedColumns(): any[] {
-    return this._selectedColumns;
-  }
-
-  set selectedColumns(val: any[]) {
-    //restore original order
-    this._selectedColumns = this.cols.filter((col) => val.includes(col));
-  }
-
   pageChange(event: any) {
     this.queryService.pessoas.page = event.page;
     this.queryService.pessoas.pageCount = event.rows;
@@ -103,53 +85,48 @@ export class PessoasComponent implements OnInit, OnDestroy {
   clickDeleted(id: number) {
     if (!this.queryService.pessoas.deleted) {
       this.router.navigate([`home/pessoas/${id}`]);
-    }else{
-      this.confirm(id)
+    } else {
+      this.confirm(id);
     }
   }
 
   confirm(id: number) {
     this.confirmationService.confirm({
-        message: 'Deseja restaurar essa pessoa?',
-        accept: () => {
-            this.pessoaService.restorePessoa(id).subscribe(
-              {next: (pessoa) => {
-
-              },
-            error: (error) => {
-              console.log(error);
-              this.messageService.add({
-                severity: 'error',
-                summary: 'Erro',
-                detail: error.message,
-              });
-            },
-            complete: () => {
-              this.messageService.add({
-                severity: 'success',
-                summary: 'Sucesso',
-                detail: 'A pessoa foi restaurada.',
-              });
-              this.getPessoas();
-            }
-        }
-    )}
+      message: 'Deseja restaurar essa pessoa?',
+      accept: () => {
+        this.pessoaService.restorePessoa(id).subscribe({
+          error: (error) => {
+            console.error(error);
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Erro',
+              detail: 'Erro ao restaurar pessoa. - ' + error.error,
+            });
+          },
+          complete: () => {
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Sucesso',
+              detail: 'A pessoa foi restaurada.',
+            });
+            this.getPessoas();
+          },
+        });
+      },
     });
   }
 
   isBeforeToday(date: string | Date) {
-    date = new Date(date)
-    if(!date) return false
+    date = new Date(date);
+    if (!date) return false;
     const today = new Date();
     return date < today;
   }
 
   isAfterToday(date: string | Date) {
-    date = new Date(date)
-    if(!date) return false
+    date = new Date(date);
+    if (!date) return false;
     const today = new Date();
     return date > today;
   }
-
 }
-

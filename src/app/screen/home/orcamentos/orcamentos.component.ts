@@ -67,10 +67,11 @@ export class OrcamentosComponent implements OnInit, OnDestroy, AfterViewInit  {
           if (!pageChange) this.paginator.changePageToFirst(new Event(''));
         },
         error: (error) => {
+          console.error(error);
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: error.message,
+            detail: 'Erro ao carregar os orçamentos - '+error.error,
           });
         },
       });
@@ -102,12 +103,12 @@ export class OrcamentosComponent implements OnInit, OnDestroy, AfterViewInit  {
       accept: () => {
         this.orcamentoService.restoreOrcamento(id).subscribe({
           error: (error: any) => {
-            console.log(error);
+            console.error(error);
             this.messageService.clear;
             this.messageService.add({
               severity: 'error',
               summary: 'Erro',
-              detail: error.message,
+              detail: 'Erro ao restaurar o orçamento - '+error.error,
             });
           },
           complete: () => {
@@ -141,15 +142,15 @@ export class OrcamentosComponent implements OnInit, OnDestroy, AfterViewInit  {
 
     this.vendedorService
       .getVendedores(query)
-      // .pipe(debounceTime(1000), distinctUntilChanged())
+      .pipe(debounceTime(500), distinctUntilChanged())
       .subscribe({
         next: (consulta) => (this.vendedores = consulta.vendedores),
         error: (error) => {
-          console.log(error);
+          console.error(error);
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: error.message,
+            detail: 'Erro ao carregar os vendedores - '+error.error,
           });
         },
       });

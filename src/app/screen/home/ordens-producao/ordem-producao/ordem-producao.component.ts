@@ -11,6 +11,7 @@ import { Quill } from 'quill';
 import * as xlsx from 'xlsx';
 import { RIRService } from 'src/app/services/rir.service';
 import { RIR } from 'src/app/models/rir';
+import { debounce, debounceTime, distinctUntilChanged } from 'rxjs';
 
 
 
@@ -67,11 +68,11 @@ export class OrdemProducaoComponent implements OnInit {
 
       },
       error: (error) => {
-        console.log(error);
+        console.error(error);
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: `${error.status} - ${error.statusText} - ${error.error}`,
+          detail: 'Erro ao buscar ordem de produção - '+error.error,
         });
       },
       complete: () => {},
@@ -90,11 +91,11 @@ export class OrdemProducaoComponent implements OnInit {
           this.ordemProducao = ordemProducao;
         },
         error: (error) => {
-          console.log(error);
+          console.error(error);
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: `${error.status} - ${error.statusText} - ${error.error}`,
+            detail: 'Erro ao atualizar ordem de produção - '+error.error,
           });
         },
         complete: () => {
@@ -164,17 +165,18 @@ export class OrdemProducaoComponent implements OnInit {
     if(this.ordemProducao.orcamento?.pessoa && item.produto)
     this.RIRService
       .getRIRsByPessoaAndProduto(this.ordemProducao.orcamento?.pessoa.id!, item.produto.id!)
+      .pipe(debounceTime(500), distinctUntilChanged())
       .subscribe({
         next: (response) => {
           console.log(response);
           this.rirs = response;
         },
         error: (error) => {
-          console.log(error);
+          console.error(error);
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Erro ao buscar RIRs',
+            detail: 'Erro ao buscar RIRs - '+error.error,
           });
         }
       });

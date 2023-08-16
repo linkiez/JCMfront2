@@ -1,6 +1,7 @@
 import { OrdemProducaoItem } from './../../../models/ordem-producao';
 import { Component, OnInit } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { Operador } from 'src/app/models/operador';
 import { PedidoCompraItem } from 'src/app/models/pedido-compra';
 import { Pessoa } from 'src/app/models/pessoa';
@@ -59,18 +60,18 @@ export class RirComponent implements OnInit {
 
     this.produtoService
       .getProdutos(query)
-      // .pipe(
-      //   distinctUntilChanged(), // recorda a ultima pesquisa
-      //   debounceTime(1000) // espera um tempo antes de começar
-      // )
+      .pipe(
+        distinctUntilChanged(),
+        debounceTime(500)
+      )
       .subscribe({
         next: (consulta) => (this.produtos = consulta.produtos),
         error: (error) => {
-          console.log(error);
+          console.error(error);
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: error.message,
+            detail: 'Erro ao buscar produtos - '+error.error,
           });
         },
       });
@@ -87,18 +88,18 @@ export class RirComponent implements OnInit {
 
     this.pessoaService
       .getPessoas(query)
-      // .pipe(
-      //   distinctUntilChanged(), // recorda a ultima pesquisa
-      //   debounceTime(1000) // espera um tempo antes de começar
-      // )
+      .pipe(
+        distinctUntilChanged(), // recorda a ultima pesquisa
+        debounceTime(500) // espera um tempo antes de começar
+      )
       .subscribe({
         next: (consulta) => (this.pessoas = consulta.pessoas),
         error: (error) => {
-          console.log(error);
+          console.error(error);
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: error.message,
+            detail: 'Erro ao buscar pessoas - '+error.error,
           });
         },
       });
@@ -114,18 +115,18 @@ export class RirComponent implements OnInit {
 
     this.operadorService
       .getOperadores(query)
-      // .pipe(
-      //   distinctUntilChanged(), // recorda a ultima pesquisa
-      //   debounceTime(1000) // espera um tempo antes de começar
-      // )
+      .pipe(
+        distinctUntilChanged(),
+        debounceTime(500)
+      )
       .subscribe({
         next: (consulta) => (this.operadores = consulta.operadores),
         error: (error) => {
-          console.log(error);
+          console.error(error);
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: error.message,
+            detail: 'Erro ao buscar operadores - '+error.error,
           });
         },
       });
@@ -144,11 +145,11 @@ export class RirComponent implements OnInit {
         this.rir.nfe_data = new Date(rir.nfe_data!);
       },
       error: (error) => {
-        console.log(error);
+        console.error(error);
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: error.message,
+          detail: 'Erro ao atualizar rir. - '+error.error,
         });
       },
       complete: () => this.getRIRs(true),
@@ -164,14 +165,13 @@ export class RirComponent implements OnInit {
           detail: 'RIR adicionado',
         });
         this.rir = rir;
-        console.log(rir);
       },
       error: (error) => {
-        console.log(error);
+        console.error(error);
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: error.message,
+          detail: 'Erro ao adicionar rir. - '+error.error,
         });
       },
       complete: () => this.getRIRs(true),
@@ -202,15 +202,15 @@ export class RirComponent implements OnInit {
       deleted: false,
     };
 
-    this.pedidoCompraService.getPedidoCompraItem(query).subscribe({
+    this.pedidoCompraService.getPedidoCompraItem(query).pipe(distinctUntilChanged(), debounceTime(500)).subscribe({
       next: (consulta) =>
         (this.pedidos_compra_item = consulta.pedidosCompraItem),
       error: (error) => {
-        console.log(error);
+        console.error(error);
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: error.message,
+          detail: 'Erro ao buscar pedidos de compra - '+error.error,
         });
       },
     });
@@ -252,8 +252,6 @@ export class RirComponent implements OnInit {
     }
     return valido;
   }
-
-  searchRIRs() {}
 
   pageChange(event: any) {
     this.queryService.rir.page = event.page;
@@ -319,7 +317,7 @@ export class RirComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: error.error,
+          detail: 'Erro ao apagar rir. - '+error.error,
         });
       },
       complete: () => this.getRIRs(true),

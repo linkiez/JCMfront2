@@ -5,6 +5,7 @@ import { Table } from 'primeng/table';
 import { Router } from '@angular/router';
 import { Query } from 'src/app/models/query';
 import { QueryService } from 'src/app/services/query.service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-contatos',
@@ -20,21 +21,36 @@ export class ContatosComponent implements OnInit {
 
   totalRecords: number = 0;
 
-  constructor(private contatoService: ContatoService, private router: Router, public queryService: QueryService) {}
+  constructor(
+    private contatoService: ContatoService,
+    private router: Router,
+    public queryService: QueryService,
+    private messageSerivice: MessageService
+  ) {}
 
   ngOnInit(): void {
     this.getContatos(true);
-    this.first = this.queryService.contatos.page * this.queryService.contatos.pageCount;
+    this.first =
+      this.queryService.contatos.page * this.queryService.contatos.pageCount;
   }
 
   getContatos(pageChange?: boolean): void {
-    this.queryService.contatos.page = pageChange ? this.queryService.contatos.page : 0;
+    this.queryService.contatos.page = pageChange
+      ? this.queryService.contatos.page
+      : 0;
     this.contatoService.getContatos(this.queryService.contatos).subscribe({
       next: (response) => {
         this.contatos = response.contatos;
         this.totalRecords = response.totalRecords;
       },
-      error: (error) => console.log(error),
+      error: (error) => {
+        console.log(error);
+        this.messageSerivice.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: 'Erro ao carregar contatos - ' + error.error,
+        });
+      },
     });
   }
 

@@ -44,7 +44,7 @@ export class ArquivosComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: error.message,
+          detail: 'Erro ao carregar arquivos. - '+error.error,
         });
       },
     });
@@ -57,7 +57,7 @@ export class ArquivosComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: error.message,
+          detail: 'Erro ao apagar arquivo. - '+error.error,
         });
       },
       complete: () => {

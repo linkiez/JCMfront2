@@ -7,6 +7,7 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { Fornecedor } from 'src/app/models/fornecedor';
 import { FornecedorService } from 'src/app/services/fornecedor.service';
 import { Query } from 'src/app/models/query';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Component({
   selector: 'app-iqf',
@@ -28,12 +29,13 @@ export class IqfComponent implements OnInit {
     getPercentage: function () {
       return this.data.map((item: any) => {
         const total = item.total * 100;
-        return total>100 ? 100 : total;      });
+        return total > 100 ? 100 : total;
+      });
     },
   };
 
-  selectedFornecedor: Fornecedor | undefined = {}
-  fornecedores: Fornecedor[] = []
+  selectedFornecedor: Fornecedor | undefined = {};
+  fornecedores: Fornecedor[] = [];
 
   chart: Chart | undefined;
 
@@ -49,7 +51,7 @@ export class IqfComponent implements OnInit {
     'Outubro',
     'Novembro',
     'Dezembro',
-  ]
+  ];
 
   ngOnInit(): void {
     this.getPedidosComprasIQF();
@@ -124,21 +126,19 @@ export class IqfComponent implements OnInit {
       deleted: false,
     };
 
-    this.fornecedorService
-      .getFornecedores(query)
-      .subscribe({
-        next: (fornecedores) => {
-          this.fornecedores = fornecedores.fornecedores;
-        },
-        error: (error) => {
-          console.log(error);
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Erro',
-            detail: error.message,
-          });
-        },
-      });
+    this.fornecedorService.getFornecedores(query).pipe(distinctUntilChanged(), debounceTime(500)).subscribe({
+      next: (fornecedores) => {
+        this.fornecedores = fornecedores.fornecedores;
+      },
+      error: (error) => {
+        console.log(error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: 'Erro ao buscar fornecedores - ' + error.error,
+        });
+      },
+    });
   }
 
   onSelectFornecedor(event: any) {

@@ -40,21 +40,17 @@ export class UsuariosComponent implements OnInit {
     this.query.page = pageChange ? this.query.page : 0;
     this.usuarioServiceDB
       .getUsuarios(this.query)
-      // .pipe(
-      //   debounceTime(1000),
-      //   distinctUntilChanged()
-      // )
       .subscribe({
         next: (consulta) => {
           this.usuarios = consulta.usuarios;
           this.totalRecords = consulta.totalRecords;
         },
         error: (error) => {
-          console.log(error);
+          console.error(error);
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: error.message,
+            detail: 'Erro ao carregar os usuários - ' + error.error,
           });
         },
       });

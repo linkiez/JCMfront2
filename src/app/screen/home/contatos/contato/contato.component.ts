@@ -51,7 +51,7 @@ export class ContatoComponent implements OnInit, OnDestroy {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: error.message,
+            detail: 'Não foi possível carregar o contato. - ' + error.error,
           })
         },
       });
@@ -65,17 +65,16 @@ export class ContatoComponent implements OnInit, OnDestroy {
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: error.message,
+          detail: 'Não foi possível atualizar o contato. - ' + error.error,
         })
       },
       complete: () =>
         this.messageService.add({
           severity: 'success',
           summary: 'Sucesso',
-          detail: 'O produto foi atualizado.',
+          detail: 'O contato foi atualizado.',
         }),
     });
-    //this.router.navigate(['/home/produtos']);
   }
 
   createContato(){
@@ -86,14 +85,14 @@ export class ContatoComponent implements OnInit, OnDestroy {
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: error.message,
+          detail: 'Não foi possível criar o contato. - ' + error.error,
         })
       },
       complete: () =>
         this.messageService.add({
           severity: 'success',
           summary: 'Sucesso',
-          detail: 'O produto foi criado.',
+          detail: 'O contato foi criado.',
         }),
     });
   }
@@ -107,7 +106,16 @@ export class ContatoComponent implements OnInit, OnDestroy {
   }
 
   deleteContato() {
-    this.contatoService.deleteContato(this.contato).subscribe();
+    this.contatoService.deleteContato(this.contato).subscribe({
+      error: (error) => {
+        console.error(error)
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: 'Não foi possível excluir o contato. - ' + error.error,
+        })
+      }
+    });
     this.router.navigate(['/home/contatos']);
   }
 

@@ -1,8 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Table } from 'primeng/table';
-import { ListaGenerica, ListaGenericaItem } from '../../../models/lista-generica';
+import {
+  ListaGenerica,
+  ListaGenericaItem,
+} from '../../../models/lista-generica';
 import { ListaGenericaService } from '../../../services/lista-generica.service';
 import { isEqual } from 'lodash';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-lista-generica',
@@ -28,7 +32,10 @@ export class ListaGenericaComponent implements OnInit {
 
   @ViewChild('dt2') dt2: Table | undefined;
 
-  constructor(private listaGenericaService: ListaGenericaService) {}
+  constructor(
+    private listaGenericaService: ListaGenericaService,
+    private messageService: MessageService
+  ) {}
 
   ngOnInit(): void {
     this.getListas();
@@ -37,16 +44,31 @@ export class ListaGenericaComponent implements OnInit {
   getListas() {
     this.listaGenericaService.getListaGenericas().subscribe({
       next: (listas) => {
-        console.log(listas)
-        this.listas = listas},
-      error: (error) => console.log(error),
+        console.log(listas);
+        this.listas = listas;
+      },
+      error: (error) => {
+        console.error(error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: 'Erro ao buscar listas genéricas - '+error.error,
+        });
+      },
     });
   }
 
   createListaGenerica() {
     this.listaGenericaService
       .addListaGenerica({ nome: this.novaLista, lista_generica_items: [] })
-      .subscribe({ complete: () => this.getListas() });
+      .subscribe({ complete: () => this.getListas(), error: (error) => {
+        console.error(error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: 'Erro ao criar lista genérica - '+error.error,
+        });
+      } });
   }
 
   selectLista(lista: ListaGenerica) {
@@ -60,7 +82,10 @@ export class ListaGenericaComponent implements OnInit {
   addItem() {
     if (!this.selectedLista.lista_generica_items)
       this.selectedLista.lista_generica_items = [];
-    this.selectedLista.lista_generica_items.push({ valor: this.novoItem, valor2: this.novoValor });
+    this.selectedLista.lista_generica_items.push({
+      valor: this.novoItem,
+      valor2: this.novoValor,
+    });
   }
 
   removeItem(item: ListaGenericaItem) {
@@ -74,8 +99,16 @@ export class ListaGenericaComponent implements OnInit {
       .subscribe({
         next: (updatedLista: any) => {
           this.selectedLista = updatedLista;
-          this.getListas()
+          this.getListas();
         },
+        error: (error) => {
+          console.error(error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: 'Erro ao salvar lista genérica - '+error.error,
+          });
+        }
       });
   }
 

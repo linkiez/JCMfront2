@@ -1,5 +1,4 @@
 import { EmpresaService } from './../../../../services/empresa.service';
-import { Vendedor } from 'src/app/models/vendedor';
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -31,7 +30,6 @@ export class PessoaComponent implements OnInit {
     private messageService: MessageService,
     private arquivoService: ArquivoService,
     private confirmationService: ConfirmationService,
-    @Inject(DOCUMENT) private document: Document,
     private listaGenericaService: ListaGenericaService,
     private vendedorService: VendedorService,
     private empresaService: EmpresaService,
@@ -44,8 +42,6 @@ export class PessoaComponent implements OnInit {
   cnpj_cpfInvalido: Validação[] = [];
 
   emailInvalido: any = {};
-
-  private subscription: Subscription = new Subscription();
 
   categorias: any = [];
 
@@ -70,15 +66,22 @@ export class PessoaComponent implements OnInit {
         next: (categorias) => {
           this.categorias = categorias;
         },
+        error: (error) => {
+          console.error(error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: 'Não foi possível carregar as categorias. - ' + error.error,
+          });
+        }
       });
   }
 
   getPessoa() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     if (id != 0 && isFinite(id)) {
-      this.subscription = this.pessoaService
+      this.pessoaService
         .getPessoa(id)
-        // .pipe(debounceTime(1000))
         .subscribe({
           next: async(pessoa) => {
             if (pessoa.data_nasc)
@@ -91,7 +94,6 @@ export class PessoaComponent implements OnInit {
               pessoa.fornecedor.data_venc = new Date(
                 pessoa.fornecedor.data_venc.toString()
               );
-              console.log(pessoa);
             this.pessoa = pessoa;
             if (pessoa.empresa?.file?.id) {
               const url: any = await firstValueFrom(this.arquivoService.getUrlArquivo(pessoa.empresa?.file?.id))
@@ -99,11 +101,11 @@ export class PessoaComponent implements OnInit {
             }
           },
           error: (error) => {
-            console.log(error);
+            console.error(error);
             this.messageService.add({
               severity: 'error',
               summary: 'Erro',
-              detail: `${error.status} - ${error.statusText} - ${error.error}`,
+              detail: 'Não foi possível carregar a pessoa. - ' + error.error,
             });
           },
         });
@@ -115,7 +117,6 @@ export class PessoaComponent implements OnInit {
 
     this.pessoaService
       .addPessoa(pessoaClean)
-      // .pipe(debounceTime(1000))
       .subscribe({
         next: (pessoa) => {
           pessoa.data_nasc = new Date(pessoa.data_nasc!.toString());
@@ -130,11 +131,11 @@ export class PessoaComponent implements OnInit {
           this.pessoa = pessoa;
         },
         error: (error) => {
-          console.log(error);
+          console.error(error);
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: `${error.status} - ${error.statusText} - ${error.error}`,
+            detail: 'Não foi possível criar a pessoa. - ' + error.error,
           });
         },
         complete: () => {
@@ -152,7 +153,6 @@ export class PessoaComponent implements OnInit {
     let pessoaClean = this.cleanPessoa(this.pessoa);
     this.pessoaService
       .updatePessoa(pessoaClean)
-      // .pipe(debounceTime(1000))
       .subscribe({
         next: (pessoa) => {
           pessoa.data_nasc = new Date(pessoa.data_nasc!.toString());
@@ -167,11 +167,11 @@ export class PessoaComponent implements OnInit {
           this.pessoa = pessoa;
         },
         error: (error) => {
-          console.log(error);
+          console.error(error);
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: `${error.status} - ${error.statusText} - ${error.error}`,
+            detail: 'Não foi possível atualizar a pessoa. - ' + error.error,
           });
         },
         complete: () =>
@@ -223,11 +223,11 @@ export class PessoaComponent implements OnInit {
       // .pipe(debounceTime(1000))
       .subscribe({
         error: (error) => {
-          console.log(error);
+          console.error(error);
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: `${error.status} - ${error.statusText} - ${error.error}`,
+            detail: 'Não foi possível excluir a pessoa. - ' + error.error,
           });
         },
         complete: () => {
@@ -245,11 +245,11 @@ export class PessoaComponent implements OnInit {
     if(this.pessoa.vendedor?.id){
       this.vendedorService.deleteVendedor(this.pessoa.vendedor).subscribe({
         error: (error) => {
-          console.log(error);
+          console.error(error);
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: `${error.status} - ${error.statusText} - ${error.error}`,
+            detail: 'Não foi possível excluir o vendedor. - ' + error.error,
           });
         },
         complete: () => {
@@ -270,11 +270,11 @@ export class PessoaComponent implements OnInit {
     if(this.pessoa.empresa?.id){
       this.empresaService.deleteEmpresa(this.pessoa.empresa).subscribe({
         error: (error) => {
-          console.log(error);
+          console.error(error);
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: `${error.status} - ${error.statusText} - ${error.error}`,
+            detail: 'Não foi possível excluir a empresa. - ' + error.error,
           });
         },
         complete: () => {
@@ -295,11 +295,11 @@ export class PessoaComponent implements OnInit {
     if(this.pessoa.operador?.id){
       this.operadorService.deleteOperador(this.pessoa.operador).subscribe({
         error: (error: any) => {
-          console.log(error);
+          console.error(error);
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: `${error.status} - ${error.statusText} - ${error.error}`,
+            detail: 'Não foi possível excluir o operador. - ' + error.error,
           });
         },
         complete: () => {
@@ -324,7 +324,7 @@ export class PessoaComponent implements OnInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: `${error.status} - ${error.statusText} - ${error.error}`,
+            detail: 'Não foi possível excluir o fornecedor. - ' + error.error,
           });
         },
         complete: () => {

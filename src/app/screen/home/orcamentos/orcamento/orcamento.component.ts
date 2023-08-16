@@ -4,7 +4,13 @@ import { ContatoService } from 'src/app/services/contato.service';
 import { PessoaService } from './../../../../services/pessoa.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { debounceTime, distinctUntilChanged, firstValueFrom, map } from 'rxjs';
+import {
+  catchError,
+  debounceTime,
+  distinctUntilChanged,
+  firstValueFrom,
+  map,
+} from 'rxjs';
 import { Contato } from 'src/app/models/contato';
 import {
   Orcamento,
@@ -92,16 +98,47 @@ export class OrcamentoComponent implements OnInit {
         listaGenerica.lista_generica_items.map(
           (item: { valor: string }) => item.valor
         )
-      )
+      ),
+      catchError((error) => {
+        console.error(error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: 'Error ao buscar processos - ' + error.error,
+        });
+        return [];
+      })
     );
 
   status$ = this.listaGenericaService
     .getByNameListaGenerica('statusOrcamento')
-    .pipe(map((listaGenerica: any) => listaGenerica.lista_generica_items));
+    .pipe(
+      map((listaGenerica: any) => listaGenerica.lista_generica_items),
+      catchError((error) => {
+        console.error(error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: 'Error ao buscar status - ' + error.error,
+        });
+        return [];
+      })
+    );
 
   contatoCategorias$ = this.listaGenericaService
     .getByNameListaGenerica('categoriaContato')
-    .pipe(map((listaGenerica: any) => listaGenerica.lista_generica_items));
+    .pipe(
+      map((listaGenerica: any) => listaGenerica.lista_generica_items),
+      catchError((error) => {
+        console.error(error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: 'Error ao buscar categorias de contato - ' + error.error,
+        });
+        return [];
+      })
+    );
 
   condicaoPagamento$ = this.listaGenericaService
     .getByNameListaGenerica('condicaoPagamento')
@@ -110,7 +147,16 @@ export class OrcamentoComponent implements OnInit {
         listaGenerica.lista_generica_items.map(
           (item: { valor: string }) => item.valor
         )
-      )
+      ),
+      catchError((error) => {
+        console.error(error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: 'Error ao buscar condições de pagamento - ' + error.error,
+        });
+        return [];
+      })
     );
 
   condicaoOrcamento$ = this.listaGenericaService
@@ -120,12 +166,32 @@ export class OrcamentoComponent implements OnInit {
         listaGenerica.lista_generica_items.map(
           (item: { valor: string }) => item.valor
         )
-      )
+      ),
+      catchError((error) => {
+        console.error(error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: 'Error ao buscar condições de orçamento - ' + error.error,
+        });
+        return [];
+      })
     );
 
   contatoEmpresas$ = this.empresaService
     .getEmpresas({ page: 0, pageCount: 10, searchValue: '', deleted: false })
-    .pipe(map((empresas: any) => empresas.empresas));
+    .pipe(
+      map((empresas: any) => empresas.empresas),
+      catchError((error) => {
+        console.error(error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: 'Error ao buscar empresas - ' + error.error,
+        });
+        return [];
+      })
+    );
 
   aprovacaoOrcamento$ = this.listaGenericaService
     .getByNameListaGenerica('aprovadoOrcamento')
@@ -134,12 +200,33 @@ export class OrcamentoComponent implements OnInit {
         listaGenerica.lista_generica_items.map(
           (item: { valor: string }) => item.valor
         )
-      )
+      ),
+      catchError((error) => {
+        console.error(error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail:
+            'Error ao buscar opções de aprovação de orçamento - ' + error.error,
+        });
+        return [];
+      })
     );
 
   markupOptions$ = this.listaGenericaService
     .getByNameListaGenerica('markup')
-    .pipe(map((listaGenerica: any) => listaGenerica.lista_generica_items));
+    .pipe(
+      map((listaGenerica: any) => listaGenerica.lista_generica_items),
+      catchError((error) => {
+        console.error(error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: 'Error ao buscar opções de markup - ' + error.error,
+        });
+        return [];
+      })
+    );
 
   embalagensOptions = [
     'Por conta do Fornecedor(nosso padrão)',
@@ -193,7 +280,7 @@ export class OrcamentoComponent implements OnInit {
 
     this.contatoService
       .getContatos(query)
-      .pipe(distinctUntilChanged())
+      .pipe(distinctUntilChanged(), debounceTime(500))
       .subscribe({
         next: (consulta) => {
           this.contatos = consulta.contatos;
@@ -202,11 +289,11 @@ export class OrcamentoComponent implements OnInit {
           }
         },
         error: (error) => {
-          console.log(error);
+          console.error(error);
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: error.message,
+            detail: 'Error ao buscar contatos - ' + error.error,
           });
         },
       });
@@ -225,15 +312,15 @@ export class OrcamentoComponent implements OnInit {
 
     this.pessoaService
       .getPessoas(query)
-      // .pipe(debounceTime(1000), distinctUntilChanged())
+      .pipe(debounceTime(500), distinctUntilChanged())
       .subscribe({
         next: (consulta) => (this.pessoas = consulta.pessoas),
         error: (error) => {
-          console.log(error);
+          console.error(error);
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: error.message,
+            detail: 'Error ao buscar pessoas - ' + error.error,
           });
         },
       });
@@ -249,15 +336,15 @@ export class OrcamentoComponent implements OnInit {
 
     this.vendedorService
       .getVendedores(query)
-      // .pipe(debounceTime(1000), distinctUntilChanged())
+      .pipe(debounceTime(500), distinctUntilChanged())
       .subscribe({
         next: (consulta) => (this.vendedores = consulta.vendedores),
         error: (error) => {
-          console.log(error);
+          console.error(error);
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: error.message,
+            detail: 'Error ao buscar vendedores - ' + error.error,
           });
         },
       });
@@ -275,16 +362,16 @@ export class OrcamentoComponent implements OnInit {
       .getProdutos(query)
       .pipe(
         distinctUntilChanged(), // recorda a ultima pesquisa
-        debounceTime(1000) // espera um tempo antes de começar
+        debounceTime(500) // espera um tempo antes de começar
       )
       .subscribe({
         next: (consulta) => (this.produtos = consulta.produtos),
         error: (error) => {
-          console.log(error);
+          console.error(error);
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: error.message,
+            detail: 'Error ao buscar produtos - ' + error.error,
           });
         },
       });
@@ -497,11 +584,11 @@ export class OrcamentoComponent implements OnInit {
           // console.log(this.orcamento);
         },
         error: (error) => {
-          console.log(error);
+          console.error(error);
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: `${error.status} - ${error.statusText} - ${error.error}`,
+            detail: 'Error ao buscar orçamento - ' + error.error,
           });
         },
         complete: () => {
@@ -541,11 +628,11 @@ export class OrcamentoComponent implements OnInit {
           this.orcamento = response;
         },
         error: (error) => {
-          console.log(error);
+          console.error(error);
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: `${error.status} - ${error.statusText} - ${error.error}`,
+            detail: `Error ao ${clonar ? 'clonar' : 'criar'} orçamento - ` + error.error
           });
           this.loadingSalvar = false;
         },
@@ -579,11 +666,11 @@ export class OrcamentoComponent implements OnInit {
           this.orcamento = response;
         },
         error: (error) => {
-          console.log(error);
+          console.error(error);
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: `${error.status} - ${error.statusText} - ${error.error}`,
+            detail: 'Error ao atualizar orçamento - ' + error.error,
           });
           this.loadingSalvar = false;
         },
@@ -611,11 +698,11 @@ export class OrcamentoComponent implements OnInit {
   delete() {
     this.orcamentoService.deleteOrcamento(this.orcamento).subscribe({
       error: (error) => {
-        console.log(error);
+        console.error(error);
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: `${error.status} - ${error.statusText} - ${error.error}`,
+          detail: 'Error ao apagar orçamento - ' + error.error,
         });
       },
       complete: () => {
@@ -824,7 +911,7 @@ export class OrcamentoComponent implements OnInit {
             this.messageService.add({
               severity: 'error',
               summary: 'Erro',
-              detail: `${error.error}`,
+              detail: `Erro ao aprovar o orçamento - ${error.error}`,
             });
             this.loadingAprovar = false;
           },
@@ -971,7 +1058,7 @@ export class OrcamentoComponent implements OnInit {
           } else listaProdutos.push(produto);
         } catch (error) {
           // Handle any errors that may occur
-          console.log(error);
+          console.error(error);
         }
       }
     }
@@ -1103,22 +1190,25 @@ export class OrcamentoComponent implements OnInit {
   }
 
   searchRir(item: OrcamentoItem) {
-    if(this.orcamento.pessoa && item.produto)
-    this.RIRService
-      .getRIRsByPessoaAndProduto(this.orcamento.pessoa.id!, item.produto.id!)
-      .subscribe({
+    if (this.orcamento.pessoa && item.produto)
+      this.RIRService.getRIRsByPessoaAndProduto(
+        this.orcamento.pessoa.id!,
+        item.produto.id!
+      ).pipe(
+        debounceTime(500),
+        distinctUntilChanged()
+      ).subscribe({
         next: (response) => {
-          console.log(response);
           this.rirs = response;
         },
         error: (error) => {
-          console.log(error);
+          console.error(error);
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Erro ao buscar RIRs',
+            detail: 'Erro ao buscar RIRs - ' + error.error,
           });
-        }
+        },
       });
   }
 }

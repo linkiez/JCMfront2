@@ -47,10 +47,6 @@ export class PedidosComprasComponent implements OnInit, OnDestroy {
 
     this.subscription = this.pedidoCompraService
       .getPedidoCompras(this.queryService.pedidoCompra)
-      // .pipe(
-      //   debounceTime(1000), // espera um tempo antes de começar
-      //   distinctUntilChanged() // recorda a ultima pesquisa
-      // )
       .subscribe({
         next: (consulta) => {
           this.pedidosCompra = consulta.pedidosCompra;
@@ -58,11 +54,11 @@ export class PedidosComprasComponent implements OnInit, OnDestroy {
           if (!pageChange) this.paginator.changePageToFirst(new Event(""));
         },
         error: (error) => {
-          console.log(error);
+          console.error(error);
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: error.message,
+            detail: 'Erro ao carregar os pedidos de compra. - '+error.error,
           });
         },
       });
@@ -94,12 +90,11 @@ export class PedidosComprasComponent implements OnInit, OnDestroy {
       accept: () => {
         this.pedidoCompraService.restorePedidoCompra(id).subscribe({
           error: (error: any) => {
-            console.log(error);
-            this.messageService.clear;
+            console.error(error);
             this.messageService.add({
               severity: 'error',
               summary: 'Erro',
-              detail: error.message,
+              detail: 'Erro ao restaurar o pedido de compra. - '+error.error,
             });
           },
           complete: () => {

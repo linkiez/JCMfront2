@@ -4,7 +4,7 @@ import { Query } from 'src/app/models/query';
 import { OrdemProducao } from './../../../models/ordem-producao';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { OrdemProducaoService } from 'src/app/services/ordem-producao.service';
-import { debounceTime, distinctUntilChanged, map,  } from 'rxjs';
+import { catchError, debounceTime, distinctUntilChanged, map } from 'rxjs';
 import { Paginator } from 'primeng/paginator';
 import { MessageService } from 'primeng/api';
 import { UsuarioService } from 'src/app/authentication/usuario.service';
@@ -24,8 +24,7 @@ export class OrdensProducaoComponent implements OnInit {
     private messageService: MessageService,
     private usuarioService: UsuarioService,
     public queryService: QueryService,
-    private vendedorService: VendedorService,
-    private pessoaService: PessoaService
+    private vendedorService: VendedorService
   ) {}
 
   ordemProducao: OrdemProducao[] = [];
@@ -51,9 +50,20 @@ export class OrdensProducaoComponent implements OnInit {
       searchValue: '',
       deleted: false,
     })
-    .pipe(map((consulta) => consulta.vendedores));
+    .pipe(
+      map((consulta) => consulta.vendedores),
+      catchError((error) => {
+        console.error(error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: 'Erro ao carregar os vendedores. - ' + error.error,
+        });
+        return [];
+      })
+    );
 
-  pessoas: Pessoa[] = []
+  pessoas: Pessoa[] = [];
 
   ngOnInit() {
     this.getOrdemProducao(true);
@@ -87,10 +97,11 @@ export class OrdensProducaoComponent implements OnInit {
           });
         },
         error: (error) => {
+          console.error(error);
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: error.message,
+            detail: 'Erro ao carregar as ordens de produção. - ' + error.error,
           });
         },
       });
@@ -124,10 +135,11 @@ export class OrdensProducaoComponent implements OnInit {
         });
       },
       error: (error) => {
+        console.error(error);
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: error.message,
+          detail: 'Erro ao atualizar a ordem de produção. - ' + error.error,
         });
       },
     });
@@ -208,6 +220,4 @@ export class OrdensProducaoComponent implements OnInit {
   onChangeStatus(event: any, index: number) {
     this.ordemProducao[index].new!.status = event;
   }
-
-
 }

@@ -1,6 +1,5 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { environment } from 'src/environments/environment.prod';
 import { Produto } from '../../../../models/produto';
 import { ProdutoService } from '../../../../services/produto.service';
 import { ConfirmationService } from 'primeng/api';
@@ -8,15 +7,13 @@ import { MessageService } from 'primeng/api';
 import { map, Subscription, tap } from 'rxjs';
 import { ListaGenericaService } from '../../../../services/lista-generica.service';
 
-const API = environment.backendURL;
-
 @Component({
   selector: 'app-produto',
   templateUrl: './produto.component.html',
   styleUrls: ['./produto.component.scss'],
   providers: [ConfirmationService],
 })
-export class ProdutoComponent implements OnInit, OnDestroy {
+export class ProdutoComponent implements OnInit {
   constructor(
     private produtoService: ProdutoService,
     private route: ActivatedRoute,
@@ -30,30 +27,24 @@ export class ProdutoComponent implements OnInit, OnDestroy {
 
   categorias$ = this.listaGenericaService.getByNameListaGenerica('categoriaProduto').pipe(map((listaGenerica: any)=> listaGenerica.lista_generica_items))
 
-  private subscription: Subscription = new Subscription;
 
   ngOnInit(): void {
     this.getProduto();
   }
 
-  ngOnDestroy(): void {
-      this.subscription.unsubscribe();
-  }
-
   getProduto() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     if (id != 0) {
-      this.subscription = this.produtoService.getProduto(id).subscribe({
+      this.produtoService.getProduto(id).subscribe({
         next: (produto) => {
           this.produto = produto;
-          console.log(this.produto)
         },
         error: (error) => {
-          console.log(error)
+          console.error(error)
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: `${error.status} - ${error.statusText} - ${error.error}`,
+            detail: 'Não foi possível carregar o produto. - ' + error.error,
           })
         },
       });
@@ -63,11 +54,11 @@ export class ProdutoComponent implements OnInit, OnDestroy {
   updateProduto() {
     this.produtoService.updateProduto(this.produto).subscribe({
       error: (error) => {
-        console.log(error)
+        console.error(error)
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: error.message,
+          detail: 'Não foi possível atualizar o produto. - ' + error.error,
         })
       },
       complete: () =>
@@ -84,11 +75,11 @@ export class ProdutoComponent implements OnInit, OnDestroy {
     this.produtoService.addProduto(this.produto).subscribe({
       next: (produto) => this.produto=produto,
       error: (error) => {
-        console.log(error)
+        console.error(error)
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: error.message,
+          detail: 'Não foi possível criar o produto. - ' + error.error,
         })
       },
       complete: () =>
@@ -116,11 +107,11 @@ export class ProdutoComponent implements OnInit, OnDestroy {
     this.produtoService.deleteProduto(this.produto).subscribe(
       {
         error: (error) => {
-          console.log(error)
+          console.error(error)
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: error.message,
+            detail: 'Não foi possível excluir o produto. - ' + error.error,
           })
         },
         complete: () =>
