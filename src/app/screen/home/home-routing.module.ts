@@ -108,6 +108,14 @@ const routes: Routes = [
           canLoad: [LoginGuard],
       },
       {
+        path: 'rnc',
+        loadChildren: () =>
+          import('./rncs/rncs.module').then(
+            (module) => module.RNCsModule
+          ),
+          canLoad: [LoginGuard],
+      },
+      {
         path: '*',
         redirectTo: 'dashboard',
       },

@@ -1,0 +1,48 @@
+<div>
+  <h2>Relatório de não conformidade</h2>
+  <p>F-024 - Rev. 01 - Emissão: 25/09/2018 Revisão 17/08/2023</p>
+  <form action="">
+    <caixaDeStatus
+      [status]="rnc.status"
+      [options]="status"
+      [editable]="false"
+      (statusChange)="rnc.status = $event"
+    ></caixaDeStatus>
+    
+    <div class="row">
+      <div class="col">
+        <label for="ID">Id: </label>
+        <input
+          pInputText
+          type="text"
+          id="ID"
+          class=""
+          [(ngModel)]="rnc.id"
+          disabled
+        />
+      </div>
+      <div class="col">
+        <label for="createdAt">Data de Abertura: </label>
+        <input
+          pInputText
+          type="text"
+          id="createdAt"
+          class=""
+          [(ngModel)]="rnc.createdAt"
+          disabled
+        />
+      </div>
+      <div class="col">
+        <label for="status">Data Fechamento: </label>
+        <input
+          pInputText
+          type="text"
+          id="data_fechamento"
+          class=""
+          [(ngModel)]="rnc.data_fechamento"
+          disabled
+        />
+      </div>
+    </div>
+  </form>
+</div>
