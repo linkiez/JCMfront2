@@ -30,11 +30,11 @@ export class OrdensProducaoComponent implements OnInit {
   ordemProducao: OrdemProducao[] = [];
 
   CaixaDeStatusOptions = [
-    { valor: 'Aguardando' },
-    { valor: 'Em produção' },
-    { valor: 'Finalizado' },
-    { valor: 'Entregue' },
-    { valor: 'Cancelado' },
+    'Aguardando',
+    'Em produção',
+    'Finalizado',
+    'Entregue',
+    'Cancelado',
   ];
 
   totalRecords: number = 0;

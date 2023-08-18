@@ -24,8 +24,8 @@
     }"
   >
     <select #standardselect name="standard-select" id="standard-select" [ngModel]="status" (ngModelChange)="onChangeStatus($event)">
-      <option *ngFor="let option of options" [ngValue]="option.valor">
-        {{ option.valor }}
+      <option *ngFor="let option of options" [ngValue]="option">
+        {{ option }}
       </option>
     </select>
     <i class="pi pi-angle-down" (click)="standardselect.click()"></i>

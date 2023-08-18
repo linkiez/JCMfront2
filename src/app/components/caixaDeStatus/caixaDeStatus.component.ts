@@ -9,7 +9,7 @@ export class CaixaDeStatusComponent implements OnInit {
 
   @Input() status: any = '';
   @Input() editable? = false
-  @Input() options: any[] = [];
+  @Input() options: string[] = [];
   @Output() statusChange = new EventEmitter<string>()
 
   constructor() { }
