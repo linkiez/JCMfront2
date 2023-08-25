@@ -1,7 +1,7 @@
 import { Arquivo } from "./arquivo";
 import { Empresa } from "./empresa";
 import { Operador } from "./operador";
-import { Orcamento } from "./orcamento";
+import { Orcamento, OrcamentoItem } from "./orcamento";
 import { Produto } from "./produto";
 import { RIR } from "./rir";
 import { Usuario } from "./usuario";
@@ -45,7 +45,11 @@ export interface OrdemProducaoItem {
   files?: Arquivo[];
   ordem_producao_item_processos?: OrdemProducaoItemProcesso[];
   registro_inspecao_recebimento?: RIR;
+  id_orcamento_item?: number;
+  orcamento_item?: OrcamentoItem;
   id_ordem_producao?: number;
+  key?: string;
+
 }
 
 export interface OrdemProducaoItemProcesso {

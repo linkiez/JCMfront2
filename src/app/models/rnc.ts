@@ -1,4 +1,5 @@
 import { OrdemProducaoItem } from "./ordem-producao";
+import { Produto } from "./produto";
 import { Usuario } from "./usuario";
 
 export interface RNC {
@@ -23,5 +24,18 @@ export interface RNC {
   responsavel_analise?: Usuario;
   responsavel_analise_id?: number;
   reclamacao_cliente?: boolean;
-  ordem_producao_item?: OrdemProducaoItem[];
+  rnc_item?: RNCItem[];
+}
+
+export interface RNCItem {
+  id?: number;
+  id_rnc?: number;
+  id_produto: number;
+  produto: Produto;
+  quantidade: number;
+  largura: number;
+  altura?: number;
+  id_ordem_producao_item: number;
+  ordem_producao_item: OrdemProducaoItem;
+  observacao?: string;
 }

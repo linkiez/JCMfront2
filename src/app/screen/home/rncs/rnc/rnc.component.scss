@@ -1,0 +1,59 @@
+td {
+  border: 0px solid #ccc;
+  padding: 8px;
+}
+
+th {
+  border: 0px solid #ccc;
+  font-weight: bold;
+  background-color: #c8ffc8;
+  color: black;
+}
+
+table {
+  width: 100%;
+  font-size: small;
+}
+
+small {
+  font-size: xx-small;
+  line-height: 1;
+}
+
+button {
+  margin-right: 10px;
+}
+
+.materialCliente {
+  color: #9d1c24;
+  background-color: #f8d7da;
+  font-weight: bold;
+  font-size: small;
+  border: 0px solid #ccc;
+  padding: 0px;
+  margin: 0px;
+  width: 100%;
+  text-align: center;
+  line-height: 1;
+}
+
+
+
+@media print {
+  td {
+    border: 2px solid #bbb !important;
+  }
+
+  th {
+    border: 2px solid #bbb !important;
+    font-weight: bold;
+    background-color: #c8ffc8;
+    color: black;
+  }
+
+  hr {
+    border-bottom: 2px solid #ccc !important;
+  }
+
+
+}

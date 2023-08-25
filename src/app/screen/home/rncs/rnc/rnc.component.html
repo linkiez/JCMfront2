@@ -3,46 +3,299 @@
   <p>F-024 - Rev. 01 - Emissão: 25/09/2018 Revisão 17/08/2023</p>
   <form action="">
     <caixaDeStatus
+      id="status"
+      name="status"
       [status]="rnc.status"
       [options]="status"
       [editable]="false"
       (statusChange)="rnc.status = $event"
     ></caixaDeStatus>
-    
+
     <div class="row">
       <div class="col">
         <label for="ID">Id: </label>
-        <input
-          pInputText
-          type="text"
-          id="ID"
-          class=""
-          [(ngModel)]="rnc.id"
-          disabled
-        />
+        <div class="noprint">
+          <input
+            pInputText
+            type="text"
+            id="id"
+            name="id"
+            class=""
+            [(ngModel)]="rnc.id"
+          />
+        </div>
+        <div class="noview">
+          {{ rnc.id }}
+        </div>
       </div>
       <div class="col">
         <label for="createdAt">Data de Abertura: </label>
-        <input
-          pInputText
-          type="text"
-          id="createdAt"
-          class=""
-          [(ngModel)]="rnc.createdAt"
-          disabled
-        />
+        <div class="noprint">
+          <input
+            pInputText
+            type="text"
+            id="createdAt"
+            name="createdAt"
+            class=""
+            [(ngModel)]="rnc.createdAt"
+            disabled
+          />
+        </div>
+        <div class="noview">
+          {{ rnc.createdAt }}
+        </div>
       </div>
       <div class="col">
         <label for="status">Data Fechamento: </label>
-        <input
-          pInputText
-          type="text"
-          id="data_fechamento"
-          class=""
-          [(ngModel)]="rnc.data_fechamento"
-          disabled
-        />
+        <div class="noprint">
+          <input
+            pInputText
+            type="text"
+            id="data_fechamento"
+            name="data_fechamento"
+            class=""
+            [(ngModel)]="rnc.data_fechamento"
+            disabled
+          />
+        </div>
+        <div class="noview">
+          {{ rnc.data_fechamento }}
+        </div>
+      </div>
+    </div>
+    <div class="row noprint" style="margin-top: 10px;">
+      <div class="col">
+        <button
+          pButton
+          class="p-button"
+          style="margin-left: 0px"
+          (click)="incluirOPToggle = !incluirOPToggle"
+        >
+          Adicionar OP
+        </button>
+      </div>
+    </div>
+    <p-dialog
+      class="noprint"
+      header="Header"
+      [(visible)]="incluirOPToggle"
+      [style]="{ width: '75vw' }"
+    >
+      <div class="">
+        <div class="">
+          <label for="op">OP: </label>
+          <p-autoComplete
+            name="OrdemProducao"
+            id="OrdemProducao"
+            [(ngModel)]="selectedOrdemProducao"
+            [suggestions]="ordensProducao"
+            (completeMethod)="searchOrdemProducao($event)"
+            [dropdown]="true"
+            [minLength]="2"
+            field="id"
+            [forceSelection]="true"
+            [style]="{ width: '100%' }"
+            [inputStyle]="{ width: '100%' }"
+            (onSelect)="selectOrdemProducao($event.id)"
+          >
+            <ng-template let-op pTemplate="item">
+              <div class="flex align-items-center gap-2">
+                <div>{{ op.id }} - {{ op.orcamento?.pessoa?.nome }}</div>
+              </div>
+            </ng-template>
+          </p-autoComplete>
+          <p>Orçamento: {{ selectedOrdemProducao?.orcamento?.id }}</p>
+          <p>Cliente: {{ selectedOrdemProducao?.orcamento?.pessoa?.nome }}</p>
+        </div>
+        <div class="">
+          <p-table
+            *ngIf="selectedOrdemProducao"
+            [value]="selectedOrdemProducao.ordem_producao_items!"
+            dataKey="key"
+            [(selection)]="selectedOrdemProducaoItem"
+          >
+            <ng-template pTemplate="header">
+              <tr>
+                <th style="width: 4rem">
+                  <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th>Descrição</th>
+                <th>Produto</th>
+                <th>Largura</th>
+                <th>Altura</th>
+                <th>Quantidade</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-ordem_producao_item>
+              <tr>
+                <td>
+                  <p-tableCheckbox
+                    [value]="ordem_producao_item"
+                  ></p-tableCheckbox>
+                </td>
+                <td>{{ ordem_producao_item.descricao }}</td>
+                <td>{{ ordem_producao_item.produto.nome }}</td>
+                <td>
+                  {{ ordem_producao_item.orcamento_item.largura | number }}
+                </td>
+                <td>
+                  {{ ordem_producao_item.orcamento_item.altura | number }}
+                </td>
+                <td>{{ ordem_producao_item.quantidade }}</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
+      <ng-template pTemplate="footer">
+        <p-button
+          (click)="includeRNCItems()"
+          label="Incluir"
+          styleClass="p-button-success"
+        ></p-button>
+        <p-button
+          (click)="incluirOPToggle = !incluirOPToggle"
+          label="Cancelar"
+        ></p-button>
+      </ng-template>
+    </p-dialog>
+    <div
+      class="dontBreakPage"
+      *ngFor="let rnc_item of rnc.rnc_item; let index = index"
+    >
+      <h4>
+        {{ index + 1 }}. Cliente:
+        {{
+          rnc_item.ordem_producao_item.orcamento_item?.orcamento?.pessoa?.nome
+        }}
+        OP: {{ rnc_item.ordem_producao_item.id_ordem_producao }}
+      </h4>
+      <table>
+        <thead>
+          <tr>
+            <th>Descrição</th>
+            <th>Material</th>
+            <th>Largura</th>
+            <th>Altura</th>
+            <th>Quantidade</th>
+            <th style="width: 100px">RIR</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              {{ rnc_item.ordem_producao_item.descricao }}
+            </td>
+            <td>
+              <div class="noview">
+                {{ rnc_item.produto.nome }}
+              </div>
+              <div class="noprint">
+                <p-autoComplete
+                  name="Material"
+                  id="Material"
+                  [(ngModel)]="rnc_item.produto"
+                  [suggestions]="produtos"
+                  (completeMethod)="searchProduto($event)"
+                  [dropdown]="true"
+                  [minLength]="2"
+                  field="nome"
+                  [forceSelection]="true"
+                  [style]="{ width: '100%' }"
+                  [inputStyle]="{ width: '100%' }"
+                ></p-autoComplete>
+              </div>
+            </td>
+            <td>
+              <div class="noview">
+                {{ rnc_item.largura | number }}
+              </div>
+              <div class="noprint">
+                <input
+                  pInputText
+                  type="text"
+                  id="largura"
+                  name="largura"
+                  class=""
+                  [(ngModel)]="rnc_item.largura"
+                />
+              </div>
+            </td>
+            <td>
+              <div class="noview">
+                {{ rnc_item.altura | number }}
+              </div>
+              <div class="noprint">
+                <input
+                  pInputText
+                  type="text"
+                  id="altura"
+                  name="altura"
+                  class=""
+                  [(ngModel)]="rnc_item.altura"
+                />
+              </div>
+            </td>
+            <td>
+              <div class="noview">
+                {{ rnc_item.quantidade | number }}
+              </div>
+              <div class="noprint">
+                <input
+                  pInputText
+                  type="text"
+                  id="quantidade"
+                  name="quantidade"
+                  class=""
+                  [(ngModel)]="rnc_item.quantidade"
+                />
+              </div>
+            </td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="row">
+        <div class="col-6">
+          <table>
+            <tbody>
+              <tr
+                *ngFor="
+                  let processo of rnc_item.ordem_producao_item
+                    .ordem_producao_item_processos
+                "
+              >
+                <td style="width: 100px">{{ processo.processo }}</td>
+                <td style="width: 100px">Data:</td>
+                <td>Ass:</td>
+              </tr>
+            </tbody>
+            <tfoot *ngIf="rnc_item.ordem_producao_item.id_rir">
+              <tr>
+                <td class="materialCliente" colspan="3">Material do Cliente</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+        <div class="col-6">
+          <p-editor
+            #editor
+            (onInit)="editor.quill.pasteHTML(rnc_item.observacao)"
+            (onTextChange)="rnc_item.observacao = $event.htmlValue"
+            name="observacao"
+            id="observacao"
+            class="noprint"
+          ></p-editor>
+          <div class="noview" [innerHTML]="rnc_item.observacao"></div>
+        </div>
       </div>
     </div>
   </form>
+  <div class="d-flex flex-row" style="margin-top: 10px">
+    <div class="flex-grow-1"></div>
+    <div class="noprint">
+      <button pButton class="p-button p-button-success">Aprovar</button>
+      <button pButton class="p-button" routerLink="..">Voltar</button>
+    </div>
+  </div>
 </div>

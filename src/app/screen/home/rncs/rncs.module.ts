@@ -7,6 +7,11 @@ import { RNCsComponent } from '../rncs/rncs.component';
 import { RNCComponent } from './rnc/rnc.component';
 import { InputTextModule } from 'primeng/inputtext';
 import { CaixaDeStatusModule } from 'src/app/components/caixaDeStatus/caixaDeStatus.module';
+import { ButtonModule } from 'primeng/button';
+import { AutoCompleteModule } from 'primeng/autocomplete';
+import { TableModule } from 'primeng/table';
+import { DialogModule } from 'primeng/dialog';
+import { EditorModule } from 'primeng/editor';
 
 
 @NgModule({
@@ -19,7 +24,12 @@ import { CaixaDeStatusModule } from 'src/app/components/caixaDeStatus/caixaDeSta
     RNCsRoutingModule,
     FormsModule,
     InputTextModule,
-    CaixaDeStatusModule
+    CaixaDeStatusModule,
+    ButtonModule,
+    AutoCompleteModule,
+    TableModule,
+    DialogModule,
+    EditorModule
   ]
 })
 export class RNCsModule { }
