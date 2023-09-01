@@ -21,6 +21,15 @@ export class RNCComponent {
   rnc: RNC = {
     status: 'Aberto',
     rnc_item: [],
+    descricao: '',
+    causa: '',
+    acao_disposicao: null,
+    acao_corretiva: '',
+    acao_preventiva: '',
+    acao_contencao: '',
+    reclamacao_cliente: false,
+    responsavel_analise_id: 1,
+    responsavel_analise: {},
   };
 
   ordensProducao: OrdemProducao[] = [];
@@ -32,6 +41,31 @@ export class RNCComponent {
   status: { valor: string }[] = [{ valor: 'Aberto' }, { valor: 'Fechado' }];
 
   produtos: Produto[] = [];
+
+  classificacoes: string[] = [
+    'Auditoria Externa',
+    'Auditoria Interna',
+    'Reclamação de Cliente',
+    'Problema com Fornecedor',
+    'Problema Interno',
+    'Melhorias/Observações/OPMs das auditorias do SGQ',
+  ]
+
+  acoes_disposicao: [
+    'Refugar',
+    'Retrabalhar',
+    'Reclassificar',
+    'Aprovação Condicional',
+    'Outros',
+    null
+  ] = [
+    'Refugar',
+    'Retrabalhar',
+    'Reclassificar',
+    'Aprovação Condicional',
+    'Outros',
+    null,
+  ];
 
   constructor(
     private ordemProducaoService: OrdemProducaoService,

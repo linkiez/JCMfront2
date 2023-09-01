@@ -5,6 +5,7 @@ import { Usuario } from "./usuario";
 export interface RNC {
   id?: number;
   status?: string;
+  classificacao?: string;
   createdAt?: Date;
   updatedAt?: Date;
   deletedAt?: Date;
@@ -18,13 +19,18 @@ export interface RNC {
     | 'Aprovação Condicional'
     | 'Outros'
     | null;
+  acao_contencao?: string;
   acao_corretiva?: string;
   acao_preventiva?: string;
-  acao_imediata?: string;
   responsavel_analise?: Usuario;
   responsavel_analise_id?: number;
   reclamacao_cliente?: boolean;
   rnc_item?: RNCItem[];
+  eficacia?: "Sim" | "Não" | null;
+  eficacia_motivo?: string;
+  eficacia_descricao?: string;
+  eficacia_observacao?: string;
+  risco?: string;
 }
 
 export interface RNCItem {

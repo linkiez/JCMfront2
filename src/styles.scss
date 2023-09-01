@@ -3,12 +3,20 @@
 /* Importing Bootstrap SCSS file. */
 @import "bootstrap/scss/bootstrap";
 
+@font-face {
+  font-family: 'Roboto';
+  src: url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+}
+
+* {
+  font-family: 'Roboto', sans-serif;
+}
+
 body {
   background-color: #20262e;
   color: white;
   height: 100%;
   min-height: 100%;
-
 }
 html {
   height: 100%;
@@ -21,11 +29,13 @@ label {
 }
 
 button {
-margin-right: 10px;
+  margin-right: 10px;
 }
 
-input, p, textarea {
-  width: 100%
+input,
+p,
+textarea {
+  width: 100%;
 }
 
 h4 {
@@ -53,7 +63,7 @@ p {
   cursor: pointer;
 }
 
-.p-datatable{
+.p-datatable {
   margin-top: 15px;
   margin-bottom: 15px;
 }
@@ -65,7 +75,6 @@ p {
 @page {
   size: A4;
   margin: 0;
-
 }
 
 .noview {
@@ -80,14 +89,15 @@ p {
 }
 
 @media print {
-
-  html, body {
+  html,
+  body {
     width: 210mm;
   }
 
   h4 {
     margin: 1px;
     font-size: medium;
+    font-weight: bold;
   }
 
   h2 {
@@ -95,7 +105,10 @@ p {
     font-size: large;
   }
 
-  label, small, p, span {
+  label,
+  small,
+  p,
+  span {
     font-size: xx-small;
     margin: 1px;
     width: auto;
@@ -106,15 +119,14 @@ p {
     margin: 0;
   }
 
-  .page{
-
+  .page {
     padding: 0.5cm;
     margin: 1.5cm;
 
     padding-right: 0;
     margin-right: 0;
 
-    box-shadow: none
+    box-shadow: none;
   }
 
   .row {
@@ -130,19 +142,26 @@ p {
   }
 
   .p-datatable .p-datatable-tbody > tr > td,
-.p-datatable .p-datatable-thead > tr > th {
-  font-size: x-small;
-}
+  .p-datatable .p-datatable-thead > tr > th {
+    font-size: x-small;
+  }
 
-.p-datatable {
-  margin-bottom: 75px;
-}
+  .p-datatable {
+    margin-bottom: 75px;
+  }
 
-.h-12{
-  height: 12px;
-}
+  .h-12 {
+    height: 12px;
+  }
 
-.dontBreakPage {
-  page-break-inside: avoid;
-}
+  .dontBreakPage {
+    page-break-inside: avoid;
+  }
+  .page-break-after {
+    page-break-after: always;
+  }
+
+  .page-break-before {
+    page-break-before: always;
+  }
 }

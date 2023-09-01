@@ -12,8 +12,10 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
 import { TableModule } from 'primeng/table';
 import { DialogModule } from 'primeng/dialog';
 import { EditorModule } from 'primeng/editor';
-
-
+import { DropdownModule } from 'primeng/dropdown';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import { IshikawaModule } from 'src/app/components/ishikawa/ishikawa.module';
+import { RadioButtonModule } from 'primeng/radiobutton';
 @NgModule({
   declarations: [
     RNCsComponent,
@@ -29,7 +31,12 @@ import { EditorModule } from 'primeng/editor';
     AutoCompleteModule,
     TableModule,
     DialogModule,
-    EditorModule
+    EditorModule,
+    DropdownModule,
+    InputTextareaModule,
+    IshikawaModule,
+    RadioButtonModule
+
   ]
 })
 export class RNCsModule { }
