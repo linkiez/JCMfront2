@@ -120,10 +120,10 @@
           </div>
         </div>
 
-        <p-carousel [value]="products" [numVisible]="3" [numScroll]="1">
+        <p-carousel [value]="products" [numVisible]="3" [numScroll]="1" [responsiveOptions]="responsiveOptions">
           <ng-template let-product pTemplate="item">
             <div
-              class="rounded-lg shadow-lg shadow-gray m-8 flex flex-col w-fit hover:-translate-y-1 hover:scale-100 duration-700"
+              class="rounded-lg shadow-lg shadow-gray flex flex-col w-fit m-1 hover:-translate-y-1 hover:scale-100 duration-700"
             >
               <a [routerLink]="['/produtos']">
                 <img
@@ -156,10 +156,12 @@
   <section class="px-6 m-auto bg-[#F4F5F6] pt-24 pb-20 md:pb-0 md:mb-20">
     <div class="container m-auto">
       <div class="max-w-7xl m-auto">
+        <!-- Main flex container -->
         <div
-          class="flex flex-wrap lg:flex-nowrap items-center place-content-center py-34 m-auto gap-10"
+          class="flex flex-wrap md:flex-nowrap items-center place-content-center py-34 m-auto gap-10"
         >
-          <div class="w-full md:-mb-20">
+          <!-- Left side image container -->
+          <div class="md:flex-1 md:mb-20">
             <div class="relative max-w-[500px] hover:-translate-y-4 transition">
               <img
                 alt="Corte a Laser"
@@ -170,42 +172,52 @@
                 class="absolute h-full w-full top-0 left-0 bg-zinc-700 bg-opacity-30 hover:bg-opacity-0 transition rounded-md"
               ></span>
 
+              <!-- ISO certification badge -->
               <div
                 class="absolute bottom-2 right-2 z-10 w-[200px] p-2 bg-white cursor-pointer"
-                onClick="{openModal}"
+                (click)="openModal()"
               >
                 <img
                   src="../../../../../assets/img/Selo/ISO_9001-UKAS.jpg"
                   width="100%"
                   height="58%"
                   layout="responsive"
+                  alt="Certificado ISO 9001:2015"
                 />
               </div>
             </div>
           </div>
-          <div class="w-full md:text-justify sm:pt-28 md:pt-18 lg:pt-0">
+
+          <!-- Right side text content -->
+          <div
+            class="md:flex-1 md:mb-20 md:text-justify sm:pt-28 md:pt-18 lg:pt-0"
+          >
             <h3 class="text-3xl font-bold pb-10 text-left text-black m-auto">
               Qualidade e Eficiência para o seu projeto!
             </h3>
             <p class="m-auto w-full">
-              <span class="text-blue1 font-semibold pr-2">
-                Selo ISO 9001:2015
-              </span>
+              <span class="text-blue1 font-semibold pr-2"
+                >Selo ISO 9001:2015</span
+              >
               é um atestado de reconhecimento nacional e internacional, que
               garante que nossa empresa está sempre buscando inovar suas formas
               de trabalho, para proporcionar maior qualidade, desempenho,
               confiabilidade e satisfação em cada um de nossos serviços
               prestados.
             </p>
+
+            <!-- Buttons -->
             <div
               class="pt-10 flex flex-wrap gap-4 flex-col-reverse sm:flex-row"
             >
-              <a href="https://api.whatsapp.com/send?phone=551934611720&text=Ol%C3%A1%2C%20vim%20atrav%C3%A9s%20do%20site!">
-                <button
-                class="border-2 border-red-600 text-red-600 hover:bg-red-600 hover:text-white w-fit py-3 px-10 font-semibold transition rounded mt-5"
+              <a
+                href="https://api.whatsapp.com/send?phone=551934611720&text=Ol%C3%A1%2C%20vim%20atrav%C3%A9s%20do%20site!"
               >
-                Realizar um orçamento
-              </button>
+                <button
+                  class="border-2 border-red-600 text-red-600 hover:bg-red-600 hover:text-white w-fit py-3 px-10 font-semibold transition rounded mt-5"
+                >
+                  Realizar um orçamento
+                </button>
               </a>
               <button
                 (click)="openModal()"
@@ -218,6 +230,8 @@
         </div>
       </div>
     </div>
+
+    <!-- Modal for ISO certification -->
     <p-dialog
       header="Certificado"
       [(visible)]="displayModal"
@@ -228,7 +242,51 @@
         src="../../../../../assets/img/Selo/novo-certificado.jpg"
         width="100%"
         height="100%"
+        alt="Certificado ISO 9001:2015"
       />
     </p-dialog>
+  </section>
+  <!-- Serviços -->
+  <section class="">
+    <div class="px-6 py-24 bg-gray">
+      <div class="container m-auto">
+        <div class="max-w-7xl m-auto">
+          <div class="mx-auto pb-5 flex flex-row place-content-center sm:px-8">
+            <div class="max-w-xl text-center">
+              <h3 class="text-4xl font-bold pb-2 text-black">
+                Nossos Serviços
+              </h3>
+              <div class="flex gap-2 place-content-center">
+                <span class="flex w-20 h-1 bg-red-600"></span>
+                <span class="flex w-4 h-1 bg-red-600"></span>
+              </div>
+              <p class="py-10">
+                Oferecemos serviços que atendem a diversas demandas e tipos de
+                metais, proporcionando qualidade, eficiência e rapidez em todos
+                os nossos processos de trabalho.
+              </p>
+            </div>
+          </div>
+
+          <p-carousel [value]="services" [numVisible]="3" [numScroll]="1" [responsiveOptions]="responsiveOptions">
+            <ng-template let-item pTemplate="item">
+              <div [class]="item.class">
+                <div class="flex items-center">
+                  <p class="text-2xl font-bold text-white text-center h-fit">
+                    {{ item.label }}
+                  </p>
+                </div>
+              </div>
+            </ng-template>
+          </p-carousel>
+
+          <div class="flex place-content-center pt-10">
+            <button class="border-2 border-red-600 text-red-600 hover:bg-red-600 hover:text-white w-fit py-3 px-10 font-semibold transition rounded mt-5" routerLink="/servicos">
+              Saiba Mais
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </section>
 </div>

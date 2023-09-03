@@ -68,7 +68,7 @@
       </div>
     </div>
     <!-- Mobile Menu -->
-    <div [@toggleMenu]="isOpen ? 'open' : 'closed'" id="mobile-menu" class="md:hidden">
+    <div [@toggleMenu]="isOpen ? 'open' : 'closed'" [ngClass]="{'hidden': !isOpen}" id="mobile-menu" class="md:hidden">
       <div class="bg-gradient-to-t from-zinc-900 via-stone-900 to-zinc-800 px-2 space-y-1 sm:px-3 py-10">
         <ng-container *ngFor="let item of navigation">
           <a [routerLink]="item.href"

@@ -7,7 +7,7 @@
 
 body {
   background-color: #20262e;
-  
+
   height: 100%;
   min-height: 100%;
 
@@ -87,6 +87,15 @@ p {
   margin-top: 10px;
   margin-left: 10px;
   padding: 10px;
+}
+
+.p-carousel .p-carousel-content .p-carousel-prev, .p-carousel .p-carousel-content .p-carousel-next {
+  color: rgba(255, 0, 0, 0.87);
+}
+
+.p-carousel .p-carousel-indicators .p-carousel-indicator.p-highlight button {
+  background: rgba(255, 0, 0, 0.87);
+  color: #151515;
 }
 
 @media print {

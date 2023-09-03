@@ -51,8 +51,63 @@ export class HomeComponent {
       title: 'Pézinho 3,00mm 40X40mm',
       altText: 'Pézinho 3,00mm 40X40mm',
     },
-
   ];
+
+  services = [
+    {
+      label: 'Corte a Laser',
+      class:
+        'card-services1 transition-all duration-1000 h-64 rounded-lg shadow-md shadow-gray mx-1 flex place-content-center align-items-center hover:-translate-y-1 hover:scale-100 hover:bg-cover mt-4',
+    },
+    {
+      label: 'Calandra de tubos',
+      class:
+        'card-services2 transition-all duration-1000 h-64 rounded-lg shadow-md shadow-gray mx-1 flex place-content-center align-items-center hover:-translate-y-1 hover:scale-100 hover:bg-cover mt-4',
+    },
+    {
+      label: 'Dobra de chapas',
+      class:
+        'card-services4 transition-all duration-1000 h-64 rounded-lg shadow-md shadow-gray mx-1 flex place-content-center align-items-center hover:-translate-y-1 hover:scale-100 hover:bg-cover mt-4',
+    },
+    {
+      label: 'Conformação de Peças e Estampa',
+      class:
+        'card-services5 transition-all duration-1000 h-64 rounded-lg shadow-md shadow-gray mx-1 flex place-content-center align-items-center hover:-translate-y-1 hover:scale-100 hover:bg-cover mt-4',
+    },
+    {
+      label: 'Dobradeira de Tubo até 2',
+      class:
+        'card-services6 transition-all duration-1000 h-64 rounded-lg shadow-md shadow-gray mx-1 flex place-content-center align-items-center hover:-translate-y-1 hover:scale-100 hover:bg-cover mt-4',
+    },
+    {
+      label: 'Calandra de Chapa',
+      class:
+        'card-services7 transition-all duration-1000 h-64 rounded-lg shadow-md shadow-gray mx-1 flex place-content-center align-items-center hover:-translate-y-1 hover:scale-100 mt-4 hover:bg-cover',
+    },
+    {
+      label: 'Corte a Plasma',
+      class:
+        'card-services3 transition-all duration-1000 h-64 rounded-lg shadow-md shadow-gray mx-1 flex place-content-center align-items-center hover:-translate-y-1 hover:scale-100 hover:bg-cover mt-4',
+    },
+    {
+      label: 'Puncionadeira',
+      class:
+        'card-services8 transition-all duration-1000 h-64 rounded-lg shadow-md shadow-gray mx-1 flex place-content-center align-items-center hover:-translate-y-1 hover:scale-100 hover:bg-cover mt-4',
+    },
+  ];
+
+  responsiveOptions = [
+    {
+        breakpoint: '768px',
+        numVisible: 2,
+        numScroll: 1
+    },
+    {
+        breakpoint: '640px',
+        numVisible: 1,
+        numScroll: 1
+    },
+];
 
   displayModal: boolean = false;
 

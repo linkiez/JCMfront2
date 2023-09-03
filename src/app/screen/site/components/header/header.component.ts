@@ -1,6 +1,7 @@
 import { Component, OnInit, HostListener, OnDestroy } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { trigger, state, style, animate, transition } from '@angular/animations';
+import { navigation } from '../../navigation';
 
 @Component({
   selector: 'app-header',
@@ -25,15 +26,7 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 export class HeaderComponent implements OnInit, OnDestroy {
   isOpen: boolean = false;
   navbar: boolean = false;
-  navigation = [
-    { name: 'Home', href: '/' },
-    { name: 'Quem Somos', href: '/quem-somos' },
-    { name: 'Produtos', href: '/produtos' },
-    { name: 'Serviços', href: '/servicos' },
-    { name: "Trabalhe Conosco", href: '/trabalhe.html' },
-    { name: 'Blog', href: '/blog' },
-    { name: 'Contato', href: '/contato' }
-  ];
+  navigation = navigation;
 
   constructor(private router: Router) { }
 
