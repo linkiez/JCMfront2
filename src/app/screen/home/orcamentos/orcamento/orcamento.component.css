@@ -1,3 +1,5 @@
+*{ color: white; }
+
 .wv-300 {
   min-width: 300px;
 }
@@ -36,6 +38,8 @@ button {
   color: lightcoral;
   /* background-color: #f8d7da; */
 }
+
+
 
 @media print {
   .wv-300,

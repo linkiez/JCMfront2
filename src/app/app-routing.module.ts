@@ -6,8 +6,7 @@ import { LoginComponent } from './screen/login/login.component';
 const routes: Routes = [
   {
     path: '',
-    pathMatch: 'full',
-    redirectTo: 'home',
+    loadChildren: () => import('./screen/site/site.module').then((module) => module.SiteModule)
   },
   {
     path: 'home',

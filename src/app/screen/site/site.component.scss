@@ -1,0 +1,151 @@
+
+
+a {
+	color: inherit;
+	text-decoration: none;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+.swiper-button-prev,
+.swiper-button-next {
+	color: rgb(220, 38, 38) !important;
+}
+
+.swiper-pagination-bullet-active {
+	background-color: rgb(220, 38, 38) !important;
+}
+
+.swiper-horizontal > .swiper-pagination-bullets,
+.swiper-pagination-bullets.swiper-pagination-horizontal,
+.swiper-pagination-custom,
+.swiper-pagination-fraction {
+	bottom: 0 !important;
+}
+
+.swiper-button-prev {
+	left: 0 !important;
+}
+
+.swiper-button-next {
+	right: 0 !important;
+}
+
+.card-services1 {
+	background: linear-gradient(
+			0deg,
+			rgba(0, 0, 0, 0.644),
+			rgba(0, 0, 0, 0.637)
+		),
+		url('../../../assets/img/Services/corte-laser.jpg');
+	&:hover {
+		background: url('../../../assets/img/Services/corte-laser.jpg');
+	}
+	background-size: cover;
+}
+.card-services2 {
+	background: linear-gradient(
+			0deg,
+			rgba(0, 0, 0, 0.644),
+			rgba(0, 0, 0, 0.637)
+		),
+		url('../../../assets/img/Services/Calandra de Tubos.webp');
+	&:hover {
+		background: url('../../../assets/img/Services/Calandra de Tubos.webp');
+	}
+	background-size: cover;
+}
+.card-services3 {
+	background: linear-gradient(
+			0deg,
+			rgba(0, 0, 0, 0.644),
+			rgba(0, 0, 0, 0.637)
+		),
+		url('../../../assets/img/Services/corte-plasma.png');
+	&:hover {
+		background: url('../../../assets/img/Services/corte-plasma.png');
+	}
+	background-size: cover;
+}
+.card-services4 {
+	background: linear-gradient(
+			0deg,
+			rgba(0, 0, 0, 0.644),
+			rgba(0, 0, 0, 0.637)
+		),
+		url('../../../assets/img/Services/Dobra de Chapas.webp');
+	&:hover {
+		background: url('../../../assets/img/Services/Dobra de Chapas.webp');
+		background-size: cover;
+	}
+	background-size: cover;
+}
+.card-services5 {
+	background: linear-gradient(
+			0deg,
+			rgba(0, 0, 0, 0.644),
+			rgba(0, 0, 0, 0.637)
+		),
+		url('../../../assets/img/Services/Conformacao de Pecas e Estampa.webp');
+	&:hover {
+		background: url('../../../assets/img/Services/Conformacao de Pecas e Estampa.webp');
+	}
+	background-size: cover;
+}
+.card-services6 {
+	background: linear-gradient(
+			0deg,
+			rgba(0, 0, 0, 0.644),
+			rgba(0, 0, 0, 0.637)
+		),
+		url('../../../assets/img/Services/Dobradeira de Tubo ate 2.webp');
+	&:hover {
+		background: url('../../../assets/img/Services/Dobradeira de Tubo ate 2.webp');
+	}
+	background-size: cover;
+}
+.card-services7 {
+	background: linear-gradient(
+			0deg,
+			rgba(0, 0, 0, 0.644),
+			rgba(0, 0, 0, 0.637)
+		),
+		url('../../../assets/img/Services/Calandra de Chapa.webp');
+	&:hover {
+		background: url('../../../assets/img/Services/Calandra de Chapa.webp');
+		background-size: cover;
+	}
+	background-size: cover;
+}
+.card-services8 {
+	background: linear-gradient(
+			0deg,
+			rgba(0, 0, 0, 0.644),
+			rgba(0, 0, 0, 0.637)
+		),
+		url('../../../assets/img/Services/Puncionadeira.webp');
+	&:hover {
+		background: url('../../../assets/img/Services/Puncionadeira.webp');
+		background-size: cover;
+	}
+	background-size: cover;
+}
+.directionRtl {
+	direction: rtl;
+}
+.directionInit {
+	direction: initial;
+}
+@keyframes pulse-animation {
+	0% {
+		box-shadow: 0 0 0 0px rgba(0, 0, 0, 0.2);
+	}
+	100% {
+		box-shadow: 0 0 0 20px rgba(0, 0, 0, 0);
+	}
+}
+.pulse {
+	animation: pulse-animation 2s infinite;
+}
