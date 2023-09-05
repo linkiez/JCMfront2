@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  backendURL: 'https://linkiez.ddns.net:2487/',
+  backendURL: 'https://api.jcmmetais.com.br/',
   accessTokenExpirein: 480 /*in minutes*/,
   refreshTokenExpireIn: 5 /*in days*/
 };
