@@ -6,6 +6,7 @@ import { ContatoComponent } from './contato.component';
 
 import { RecaptchaFormsModule } from "ng-recaptcha";
 import { RECAPTCHA_V3_SITE_KEY, RecaptchaV3Module } from "ng-recaptcha";
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,8 @@ import { RECAPTCHA_V3_SITE_KEY, RecaptchaV3Module } from "ng-recaptcha";
     CommonModule,
     ContatoRoutingModule,
     RecaptchaFormsModule,
-    RecaptchaV3Module
+    RecaptchaV3Module,
+    FormsModule
   ],
   providers: [{
     provide: RECAPTCHA_V3_SITE_KEY, useValue: '6Le9dPsnAAAAAPsFcPNY231FdKPgQcQmk0FFyb1U'
