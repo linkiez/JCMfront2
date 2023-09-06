@@ -20,7 +20,7 @@ import { FormsModule } from '@angular/forms';
     FormsModule
   ],
   providers: [{
-    provide: RECAPTCHA_V3_SITE_KEY, useValue: '6Le9dPsnAAAAAPsFcPNY231FdKPgQcQmk0FFyb1U'
+    provide: RECAPTCHA_V3_SITE_KEY, useValue: '6LcKIQQoAAAAAAkPSJmIpBLBKp8_IUmwcwD_ZnJH'
   },
 ]
 })
