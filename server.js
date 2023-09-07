@@ -7,11 +7,11 @@ const staticFilesDir = path.join(__dirname, "dist", "jcmfront2");
 app.use(express.static(staticFilesDir));
 
 app.get("/robots.txt", function (req, res) {
-  res.sendFile("robots.txt", { root: staticFilesDir });
+  res.sendFile("robots.txt");
 });
 
 app.get("/sitemap.xml", function (req, res) {
-  res.sendFile("sitemap.xml", { root: staticFilesDir });
+  res.sendFile("sitemap.xml");
 });
 
 app.get("/*", function (req, res) {
