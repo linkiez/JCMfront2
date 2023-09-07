@@ -6,13 +6,21 @@ const staticFilesDir = path.join(__dirname, "dist", "jcmfront2");
 
 app.use(express.static(staticFilesDir));
 
-app.get('/robots.txt', (req, res) => {
-  res.sendFile(path.join(__dirname, 'robots.txt'));
+app.get("/robots.txt", function (req, res) {
+  res.sendFile("robots.txt", { root: staticFilesDir });
 });
-
 
 app.get("/sitemap.xml", function (req, res) {
   res.sendFile("sitemap.xml", { root: staticFilesDir });
+});
+
+app.get('/list-files', (req, res) => {
+  fs.readdir(staticFilesDir, (err, files) => {
+      if (err) {
+          return res.status(500).json({ error: err.message });
+      }
+      res.json(files);
+  });
 });
 
 app.get("/*", function (req, res) {
