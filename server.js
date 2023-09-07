@@ -7,11 +7,11 @@ const staticFilesDir = path.join(__dirname, "dist", "jcmfront2");
 app.use(express.static(staticFilesDir));
 
 app.get("/robots.txt", function (req, res) {
-  res.sendFile(path.join(staticFilesDir, "robots.txt"));
+  res.sendFile("robots.txt", { root: staticFilesDir });
 });
 
 app.get("/sitemap.xml", function (req, res) {
-  res.sendFile(path.join(staticFilesDir, "sitemap.xml"));
+  res.sendFile("sitemap.xml", { root: staticFilesDir });
 });
 
 app.get("/*", function (req, res) {
@@ -20,7 +20,7 @@ app.get("/*", function (req, res) {
 
 app.use(function (err, req, res, next) {
   console.error(err.stack);
-  res.status(500).send("Internal Server Error");
+  res.status(500).send(`<h1>Internal Server Error</h1><p>${err}</p>`);
 });
 
 const port = process.env.PORT || 8080;
