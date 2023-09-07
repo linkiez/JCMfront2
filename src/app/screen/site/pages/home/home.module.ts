@@ -6,6 +6,7 @@ import { HomeComponent } from './home.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { CarouselModule } from 'primeng/carousel';
 import { DialogModule } from 'primeng/dialog';
+import { ButtonSaibaMaisModule } from '../../components/button-saiba-mais/button-saiba-mais.module';
 @NgModule({
   declarations: [
     HomeComponent
@@ -15,7 +16,8 @@ import { DialogModule } from 'primeng/dialog';
     HomeRoutingModule,
     FontAwesomeModule,
     CarouselModule,
-    DialogModule
+    DialogModule,
+    ButtonSaibaMaisModule
   ]
 })
 export class HomeModule { }

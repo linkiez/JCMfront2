@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CardComponent } from './card.component';
+import { ButtonSaibaMaisModule } from '../button-saiba-mais/button-saiba-mais.module';
 
 
 
@@ -9,7 +10,8 @@ import { CardComponent } from './card.component';
     CardComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    ButtonSaibaMaisModule
   ],
   exports: [
     CardComponent

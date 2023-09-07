@@ -142,12 +142,7 @@
         </p-carousel>
 
         <div class="flex place-content-center">
-          <button
-            class="border-2 border-red-600 text-red-600 hover:bg-red-600 hover:text-white w-fit py-3 px-10 font-semibold transition rounded mt-5"
-            routerLink="/produtos"
-          >
-            Saiba Mais
-          </button>
+          <app-button-saiba-mais link="/produtos"></app-button-saiba-mais>
         </div>
       </div>
     </div>
@@ -210,15 +205,7 @@
             <div
               class="pt-10 flex flex-wrap gap-4 flex-col-reverse sm:flex-row"
             >
-              <a
-                href="https://api.whatsapp.com/send?phone=551934611720&text=Ol%C3%A1%2C%20vim%20atrav%C3%A9s%20do%20site!"
-              >
-                <button
-                  class="border-2 border-red-600 text-red-600 hover:bg-red-600 hover:text-white w-fit py-3 px-10 font-semibold transition rounded mt-5"
-                >
-                  Realizar um orçamento
-                </button>
-              </a>
+                <app-button-saiba-mais label="Fazer Orçamento"></app-button-saiba-mais>
               <button
                 (click)="openModal()"
                 class="border-2 border-red-600 bg-red-600 text-white hover:bg-transparent hover:text-red-600 w-fit py-3 px-10 font-semibold transition rounded mt-5"
@@ -287,9 +274,7 @@
           </p-carousel>
 
           <div class="flex place-content-center pt-10">
-            <button class="border-2 border-red-600 text-red-600 hover:bg-red-600 hover:text-white w-fit py-3 px-10 font-semibold transition rounded mt-5" routerLink="/servicos">
-              Saiba Mais
-            </button>
+            <app-button-saiba-mais link="/servicos"></app-button-saiba-mais>
           </div>
         </div>
       </div>
