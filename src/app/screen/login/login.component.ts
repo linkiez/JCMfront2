@@ -36,8 +36,8 @@ export class LoginComponent implements OnInit {
 
         },
         error:(error) => {
-          this.messageService.add({severity:'error', summary:'Erro', detail:error.message})
-          console.log(error);
+          this.messageService.add({severity:'error', summary:'Erro', detail:"Erro ao fazer login - "+error.error})
+          console.error(error);
         },
         complete: () => this.router.navigate(['home'])
       }

@@ -27,9 +27,9 @@
         [options]="CaixaDeStatusOptions"
         [ngModel]="queryService.ordemProducao.status"
         (ngModelChange)="
-          queryService.ordemProducao.status = $event.valor; search()
+          queryService.ordemProducao.status = $event; search()
         "
-        optionLabel="valor"
+
         [editable]="true"
       ></p-dropdown>
       <button

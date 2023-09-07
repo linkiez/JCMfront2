@@ -1,0 +1,24 @@
+<div
+  [ngClass]="{
+    'md:flex-row-reverse': data.lado !== 0
+  }"
+  class="text-white md:flex md:flex-row"
+>
+  <div>
+    <div class="m-auto sm:w-auto">
+      <img [src]="data.img" [alt]="data.textLink" class="rounded-xl" />
+    </div>
+  </div>
+  <div class="m-auto flex flex-col place-content-center gap-10 py-6 directionInit">
+    <div
+      [@bounceInAnimation]="data.title ? 'in' : 'out'"
+    >
+      <h3 class="font-bold text-3xl">{{ data.title }}</h3>
+    </div>
+    <div>
+      <p *ngFor="let item of data.desc; let i = index">{{ item }}</p>
+    </div>
+    <app-button-saiba-mais [textLink]="data.textLink"></app-button-saiba-mais>
+
+  </div>
+</div>

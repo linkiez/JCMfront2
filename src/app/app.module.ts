@@ -7,6 +7,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
+import { NgOptimizedImage } from '@angular/common'
+
 
 import { LoginComponent } from './screen/login/login.component';
 
@@ -18,6 +20,7 @@ import { AuthenticationInterceptor } from './authentication/authentication.inter
 import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
 import { MessageService } from 'primeng/api';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
   declarations: [AppComponent, LoginComponent],
@@ -30,6 +33,8 @@ import { MessageService } from 'primeng/api';
     BrowserAnimationsModule,
     MessageModule,
     MessagesModule,
+    NgOptimizedImage,
+    FontAwesomeModule
   ],
   providers: [
     { provide: LOCALE_ID, useValue: 'pt-BR' },
