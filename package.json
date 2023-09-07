@@ -5,9 +5,10 @@
     "ng": "ng",
     "start": "node server.js",
     "serve": "ng serve",
-    "build": "ng build --configuration production & node generate-sitemap.mjs ",
+    "build": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "sitemap": "node generate-sitemap.js"
   },
   "private": true,
   "dependencies": {
