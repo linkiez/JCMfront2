@@ -7,7 +7,7 @@ const staticFilesDir = path.join(__dirname, "dist", "jcmfront2");
 
 app.use(express.static(staticFilesDir));
 
-app.get("/robots.txt", function (req, res) {
+app.get("/Robots.txt", function (req, res) {
   res.sendFile("robots.txt", { root: staticFilesDir });
 });
 
