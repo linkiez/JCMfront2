@@ -15,15 +15,6 @@ app.get("/sitemap.xml", function (req, res) {
   res.sendFile("sitemap.xml", { root: staticFilesDir });
 });
 
-app.get('/list-files', (req, res) => {
-  fs.readdir(staticFilesDir, (err, files) => {
-      if (err) {
-          return res.status(500).json({ error: err.message });
-      }
-      res.json(files);
-  });
-});
-
 app.get("/*", function (req, res) {
   res.sendFile(path.join(staticFilesDir, "index.html"));
 });
