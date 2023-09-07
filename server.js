@@ -1,17 +1,29 @@
 const express = require("express");
 const path = require("path");
+
 const app = express();
-app.use(express.static(__dirname + "/dist/jcmfront2"));
-app.get("/Robots.txt", function (req, res) {
-  res.sendFile(path.join(__dirname + "/dist/jcmfront2/robots.txt"));
-});
+const staticFilesDir = path.join(__dirname, "dist", "jcmfront2");
+
+app.use(express.static(staticFilesDir));
+
 app.get("/robots.txt", function (req, res) {
-  res.sendFile(path.join(__dirname + "/dist/jcmfront2/robots.txt"));
+  res.sendFile(path.join(staticFilesDir, "robots.txt"));
 });
+
 app.get("/sitemap.xml", function (req, res) {
-  res.sendFile(path.join(__dirname + "/dist/jcmfront2/sitemap.xml"));
+  res.sendFile(path.join(staticFilesDir, "sitemap.xml"));
 });
+
 app.get("/*", function (req, res) {
-  res.sendFile(path.join(__dirname + "/dist/jcmfront2/index.html"));
+  res.sendFile(path.join(staticFilesDir, "index.html"));
 });
-app.listen(process.env.PORT || 8080);
+
+app.use(function (err, req, res, next) {
+  console.error(err.stack);
+  res.status(500).send("Internal Server Error");
+});
+
+const port = process.env.PORT || 8080;
+app.listen(port, function () {
+  console.log(`Server listening on port ${port}`);
+});
