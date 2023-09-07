@@ -6,12 +6,13 @@ const staticFilesDir = path.join(__dirname, "dist", "jcmfront2");
 
 app.use(express.static(staticFilesDir));
 
-app.get("/robots.txt", function (req, res) {
-  res.sendFile("robots.txt");
+app.get('/robots.txt', (req, res) => {
+  res.sendFile(path.join(__dirname, 'robots.txt'));
 });
 
+
 app.get("/sitemap.xml", function (req, res) {
-  res.sendFile("sitemap.xml");
+  res.sendFile("sitemap.xml", { root: staticFilesDir });
 });
 
 app.get("/*", function (req, res) {
