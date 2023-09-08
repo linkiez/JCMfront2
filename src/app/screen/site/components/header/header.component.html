@@ -42,7 +42,7 @@
           <!-- Logo Section -->
           <div class="flex justify-center items-center flex-shrink-0 max-w-[100px] ml-5">
             <!-- Replace with your Image source -->
-            <img src="../../../../../assets/img/jcm logo.svg" alt="Logo" class="cursor-pointer">
+            <img src="../../../../../assets/img/jcm logo.svg" alt="Logo" class="cursor-pointer" [routerLink]="['/']">
           </div>
           <!-- Navigation Menu for Desktop -->
           <div class="hidden md:block">
@@ -59,7 +59,7 @@
         <!-- Mobile Menu Button -->
         <div class="mr-5 flex md:hidden">
           <button (click)="toggleMenu()" type="button"
-            class="inline-flex items-center justify-center p-2 rounded-md text-black focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-black shadow-md"
+            class="inline-flex items-center justify-center p-2 rounded-md text-white focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-black shadow-md bg-zinc-800"
             aria-controls="mobile-menu" aria-expanded="false">
             <i *ngIf="!isOpen" class="fa fa-bars"></i>
             <i *ngIf="isOpen" class="fa fa-times"></i>
@@ -71,7 +71,7 @@
     <div [@toggleMenu]="isOpen ? 'open' : 'closed'" [ngClass]="{'hidden': !isOpen}" id="mobile-menu" class="md:hidden">
       <div class="bg-gradient-to-t from-zinc-900 via-stone-900 to-zinc-800 px-2 space-y-1 sm:px-3 py-10">
         <ng-container *ngFor="let item of navigation">
-          <a [routerLink]="item.href"
+          <a [routerLink]="item.href" (click)="toggleMenu()"
             class="cursor-pointer hover:bg-redJCM text-white hover:text-white block px-3 py-2 rounded-md text-base font-medium tracking-wider">
             {{ item.name }}
           </a>

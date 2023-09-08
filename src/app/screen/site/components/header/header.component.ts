@@ -18,7 +18,7 @@ import { navigation } from '../../navigation';
         transform: 'scale(0.95)'
       })),
       transition('open <=> closed', [
-        animate('0.1s')
+        animate('0.2s')
       ])
     ])
   ]
