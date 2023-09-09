@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
+
 import { HomeRoutingModule } from './home-routing.module';
 import { HomeComponent } from './home.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -17,7 +18,7 @@ import { ButtonSaibaMaisModule } from '../../components/button-saiba-mais/button
     FontAwesomeModule,
     CarouselModule,
     DialogModule,
-    ButtonSaibaMaisModule
+    ButtonSaibaMaisModule,
   ]
 })
 export class HomeModule { }
