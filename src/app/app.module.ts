@@ -21,6 +21,8 @@ import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
 import { MessageService } from 'primeng/api';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { HeaderModule } from './screen/site/components/header/header.module';
+import { FooterModule } from './screen/site/components/footer/footer.module';
 
 @NgModule({
   declarations: [AppComponent, LoginComponent],
@@ -34,7 +36,9 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     MessageModule,
     MessagesModule,
     NgOptimizedImage,
-    FontAwesomeModule
+    FontAwesomeModule,
+    HeaderModule,
+    FooterModule
   ],
   providers: [
     { provide: LOCALE_ID, useValue: 'pt-BR' },
