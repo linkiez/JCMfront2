@@ -14,6 +14,8 @@ import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
 import { CaixaUsuarioComponent } from 'src/app/components/caixa-usuario/caixa-usuario.component';
 import {ToastModule} from 'primeng/toast';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthenticationInterceptor } from 'src/app/authentication/authentication.interceptor';
 
 
 @NgModule({
@@ -29,6 +31,11 @@ import {ToastModule} from 'primeng/toast';
     MessageModule,
     ToastModule
   ],
-  providers: [{ provide: LOCALE_ID, useValue: 'pt' }],
+  providers: [{ provide: LOCALE_ID, useValue: 'pt' },
+  {
+    provide: HTTP_INTERCEPTORS,
+    useClass: AuthenticationInterceptor,
+    multi: true,
+  }],
 })
 export class HomeModule {}
