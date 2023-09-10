@@ -11,6 +11,8 @@ import { MessageModule } from 'primeng/message';
 import { FormsModule } from '@angular/forms';
 import { PaginatorModule } from 'primeng/paginator';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthenticationInterceptor } from 'src/app/authentication/authentication.interceptor';
 
 @NgModule({
   declarations: [ContatosComponent, ContatoComponent],
@@ -25,5 +27,11 @@ import { SharedModule } from 'src/app/shared/shared.module';
     PaginatorModule,
     SharedModule
   ],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthenticationInterceptor,
+      multi: true,
+    }]
 })
 export class ContatosModule {}

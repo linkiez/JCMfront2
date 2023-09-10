@@ -18,6 +18,8 @@ import { ListboxModule } from 'primeng/listbox';
 import { InputTextModule } from 'primeng/inputtext';
 import { DropdownModule } from 'primeng/dropdown';
 import { AutoCompleteModule } from 'primeng/autocomplete';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthenticationInterceptor } from 'src/app/authentication/authentication.interceptor';
 
 
 @NgModule({
@@ -38,6 +40,11 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
     DropdownModule,
     AutoCompleteModule
   ],
-  providers: [ConfirmationService],
+  providers: [ConfirmationService,
+      {
+        provide: HTTP_INTERCEPTORS,
+        useClass: AuthenticationInterceptor,
+        multi: true,
+      }],
 })
 export class OrdensProducaoModule {}

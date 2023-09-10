@@ -10,16 +10,15 @@ import { CalendarModule } from 'primeng/calendar';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ListaFilesModule } from 'src/app/components/listaFiles/listaFiles.module';
 import { TableModule } from 'primeng/table';
-import {PaginatorModule} from 'primeng/paginator';
-import {ConfirmDialogModule} from 'primeng/confirmdialog';
+import { PaginatorModule } from 'primeng/paginator';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { DialogModule } from 'primeng/dialog';
-
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthenticationInterceptor } from 'src/app/authentication/authentication.interceptor';
 
 @NgModule({
-  declarations: [
-    RirComponent
-  ],
+  declarations: [RirComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -32,8 +31,15 @@ import { DialogModule } from 'primeng/dialog';
     TableModule,
     PaginatorModule,
     ConfirmDialogModule,
-    DialogModule
+    DialogModule,
   ],
-  providers: [ ConfirmationService ]
+  providers: [
+    ConfirmationService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthenticationInterceptor,
+      multi: true,
+    },
+  ],
 })
-export class RirModule { }
+export class RirModule {}

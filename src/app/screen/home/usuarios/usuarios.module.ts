@@ -11,14 +11,12 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { CheckboxModule } from 'primeng/checkbox';
 import { TableModule } from 'primeng/table';
-import {PaginatorModule} from 'primeng/paginator';
-
+import { PaginatorModule } from 'primeng/paginator';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthenticationInterceptor } from 'src/app/authentication/authentication.interceptor';
 
 @NgModule({
-  declarations: [
-    UsuariosComponent,
-    UsuarioComponent
-  ],
+  declarations: [UsuariosComponent, UsuarioComponent],
   imports: [
     CommonModule,
     UsuariosRoutingModule,
@@ -29,10 +27,15 @@ import {PaginatorModule} from 'primeng/paginator';
     ConfirmDialogModule,
     CheckboxModule,
     TableModule,
-    PaginatorModule
+    PaginatorModule,
   ],
   providers: [
-    ConfirmationService
+    ConfirmationService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthenticationInterceptor,
+      multi: true,
+    },
   ],
 })
-export class UsuariosModule { }
+export class UsuariosModule {}
