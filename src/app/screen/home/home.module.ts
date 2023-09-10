@@ -31,6 +31,11 @@ import { AuthenticationInterceptor } from 'src/app/authentication/authentication
     MessageModule,
     ToastModule
   ],
-  providers: [{ provide: LOCALE_ID, useValue: 'pt' }],
+  providers: [{ provide: LOCALE_ID, useValue: 'pt' },
+  {
+    provide: HTTP_INTERCEPTORS,
+    useClass: AuthenticationInterceptor,
+    multi: true,
+  }],
 })
 export class HomeModule {}

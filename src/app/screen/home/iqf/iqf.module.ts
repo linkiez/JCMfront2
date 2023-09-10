@@ -9,18 +9,10 @@ import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { AuthenticationInterceptor } from 'src/app/authentication/authentication.interceptor';
 
 
 @NgModule({
   declarations: [IqfComponent],
   imports: [CommonModule, IqfRoutingModule, ChartModule, AutoCompleteModule, FormsModule, ButtonModule, InputTextModule, TableModule],
-  providers: [
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: AuthenticationInterceptor,
-      multi: true,
-    }]
 })
 export class IqfModule {}

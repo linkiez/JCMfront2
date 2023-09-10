@@ -19,8 +19,6 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { PaginatorModule } from 'primeng/paginator';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { ListaFilesModule } from 'src/app/components/listaFiles/listaFiles.module';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { AuthenticationInterceptor } from 'src/app/authentication/authentication.interceptor';
 
 
 @NgModule({
@@ -42,12 +40,6 @@ import { AuthenticationInterceptor } from 'src/app/authentication/authentication
         PaginatorModule,
         SharedModule,
         ListaFilesModule,
-    ],
-    providers: [
-      {
-        provide: HTTP_INTERCEPTORS,
-        useClass: AuthenticationInterceptor,
-        multi: true,
-      }]
+    ]
 })
 export class PessoasModule {}

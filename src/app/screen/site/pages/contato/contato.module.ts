@@ -7,7 +7,6 @@ import { ContatoComponent } from './contato.component';
 import { RecaptchaFormsModule } from "ng-recaptcha";
 import { RECAPTCHA_V3_SITE_KEY, RecaptchaV3Module } from "ng-recaptcha";
 import { FormsModule } from '@angular/forms';
-import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -18,8 +17,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
     ContatoRoutingModule,
     RecaptchaFormsModule,
     RecaptchaV3Module,
-    FormsModule,
-    SharedModule
+    FormsModule
   ],
   providers: [{
     provide: RECAPTCHA_V3_SITE_KEY, useValue: '6LcKIQQoAAAAAAkPSJmIpBLBKp8_IUmwcwD_ZnJH'

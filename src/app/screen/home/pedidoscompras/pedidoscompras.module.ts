@@ -16,8 +16,6 @@ import {InputTextareaModule} from 'primeng/inputtextarea';
 import { ListaFilesModule } from 'src/app/components/listaFiles/listaFiles.module';
 import { CaixaDeStatusModule } from 'src/app/components/caixaDeStatus/caixaDeStatus.module';
 import { KnobModule } from 'primeng/knob';
-import { AuthenticationInterceptor } from 'src/app/authentication/authentication.interceptor';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
 
 
@@ -41,11 +39,6 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
     ListaFilesModule,
     CaixaDeStatusModule,
     KnobModule
-  ],providers: [
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: AuthenticationInterceptor,
-      multi: true,
-    }]
+  ]
 })
 export class PedidosComprasModule { }

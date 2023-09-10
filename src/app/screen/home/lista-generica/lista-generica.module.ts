@@ -8,8 +8,6 @@ import { ListaGenericaComponent } from './lista-generica.component';
 import { TableModule } from 'primeng/table';
 import {ButtonModule} from 'primeng/button';
 import {DropdownModule} from 'primeng/dropdown';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { AuthenticationInterceptor } from 'src/app/authentication/authentication.interceptor';
 
 
 
@@ -23,12 +21,6 @@ import { AuthenticationInterceptor } from 'src/app/authentication/authentication
     FormsModule,
     ButtonModule,
     DropdownModule,
-  ],
-  providers: [
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: AuthenticationInterceptor,
-      multi: true,
-    }]
+  ]
 })
 export class ListaGenericaModule { }

@@ -21,8 +21,6 @@ import { DialogModule } from 'primeng/dialog';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { InputTextModule } from 'primeng/inputtext';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { AuthenticationInterceptor } from 'src/app/authentication/authentication.interceptor';
 
 @NgModule({
   declarations: [OrcamentosComponent, OrcamentoComponent],
@@ -45,11 +43,6 @@ import { AuthenticationInterceptor } from 'src/app/authentication/authentication
     InputTextModule,
     ProgressSpinnerModule,
   ],
-  providers: [ConfirmationService, 
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: AuthenticationInterceptor,
-      multi: true,
-    }],
+  providers: [ConfirmationService],
 })
 export class OrcamentosModule {}
