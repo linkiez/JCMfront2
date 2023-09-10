@@ -39,7 +39,12 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
   providers: [
     { provide: LOCALE_ID, useValue: 'pt-BR' },
     { provide: DEFAULT_CURRENCY_CODE, useValue: 'BRL' },
-    MessageService
+    MessageService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthenticationInterceptor,
+      multi: true,
+    }
   ],
   bootstrap: [AppComponent],
 })
