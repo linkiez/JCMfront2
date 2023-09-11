@@ -23,7 +23,12 @@ app.get("/sitemap.xml", function (req, res) {
 app.use('/', expressStaticGzip(staticFilesDir, {
   enableBrotli: true,
   orderPreference: ['br', 'gzip'], // Prefer Brotli over Gzip
+
 }));
+
+app.get('*', (req, res) => {
+  res.sendFile('index.html', { root: staticFilesDir });
+});
 
 
 app.use(function (err, req, res, next) {
