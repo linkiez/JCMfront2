@@ -12,6 +12,10 @@ app.get("/Robots.txt", function (req, res) {
   res.sendFile("robots.txt", { root: staticFilesDir });
 });
 
+app.get("/robots.txt", function (req, res) {
+  res.sendFile("robots.txt", { root: staticFilesDir });
+});
+
 app.get("/sitemap.xml", function (req, res) {
   res.sendFile("sitemap.xml", { root: staticFilesDir });
 });
