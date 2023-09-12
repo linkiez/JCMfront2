@@ -31,10 +31,6 @@ label {
   font-size: small;
 }
 
-button {
-margin-right: 10px;
-}
-
 input, p, textarea {
   width: 100%
 }
@@ -45,6 +41,10 @@ h4 {
 
 p {
   margin-bottom: 5px;
+}
+
+.p-button {
+  background-color: #8dd0ff;
 }
 
 .page {
@@ -65,8 +65,8 @@ p {
 }
 
 .p-datatable{
-  margin-top: 15px;
-  margin-bottom: 15px;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 .p-datatable .p-datatable-tbody > tr > td,
@@ -85,9 +85,17 @@ p {
 
 .p-card {
   background: #343e4d;
-  margin-top: 10px;
-  margin-left: 10px;
   padding: 10px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.p-card-body {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .p-carousel .p-carousel-content .p-carousel-prev, .p-carousel .p-carousel-content .p-carousel-next {
@@ -152,10 +160,6 @@ p {
   .p-datatable .p-datatable-tbody > tr > td,
 .p-datatable .p-datatable-thead > tr > th {
   font-size: x-small;
-}
-
-.p-datatable {
-  margin-bottom: 75px;
 }
 
 .h-12{
