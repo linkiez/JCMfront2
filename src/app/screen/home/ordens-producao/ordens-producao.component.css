@@ -17,6 +17,7 @@ button {
   border-style: none none none solid;
   border-width: 5px;
   border-radius: 0px 5px 5px 0px;
+  border-color: #e4e6e8;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
   text-align: center;
   vertical-align: middle;
@@ -29,26 +30,31 @@ button {
 .statusGreen {
   color: #155724;
   background-color: #d4edda;
+  border-color: #155724;
 }
 
 .statusBlue{
   color: #004095;
   background-color: #cce5ff;
+  border-color: #004095
 }
 
 .statusYellow{
   color: #856404;
   background-color: #fff3cd;
+  border-color:#856404
 }
 
 .statusRed{
   color: #9d1c24;
   background-color: #f8d7da;
+  border-color:#9d1c24
 }
 
 .statusPurple{
   color: #2c1e30;
   background-color: #e1cfe7;
+  border-color:#2c1e30
 }
 
 

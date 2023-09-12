@@ -5,7 +5,6 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
 import { NgOptimizedImage } from '@angular/common'
 
@@ -23,13 +22,13 @@ import { MessageService } from 'primeng/api';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { HeaderModule } from './screen/site/components/header/header.module';
 import { FooterModule } from './screen/site/components/footer/footer.module';
+import { ButtonModule } from 'primeng/button';
 
 @NgModule({
   declarations: [AppComponent, LoginComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    NgbModule,
     FormsModule,
     HttpClientModule,
     BrowserAnimationsModule,
@@ -38,7 +37,8 @@ import { FooterModule } from './screen/site/components/footer/footer.module';
     NgOptimizedImage,
     FontAwesomeModule,
     HeaderModule,
-    FooterModule
+    FooterModule,
+    ButtonModule
   ],
   providers: [
     { provide: LOCALE_ID, useValue: 'pt-BR' },

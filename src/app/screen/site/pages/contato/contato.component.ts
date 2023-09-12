@@ -5,7 +5,7 @@ import e from 'express';
 import { ReCaptchaV3Service } from 'ng-recaptcha';
 import { Observable } from 'rxjs';
 import { iFormSite } from 'src/app/models/form-site';
-import { environment } from 'src/environments/environment';
+import { environment } from 'src/environments/environment.dev';
 
 @Component({
   selector: 'app-contato',
@@ -57,7 +57,7 @@ export class ContatoComponent {
 
   sendHttp(formData: iFormSite): Observable<iFormSite> {
     return this.http.post<iFormSite>(
-      environment.backendURL+'form-site',
+      environment.backendURL + 'form-site',
       formData
     );
   }

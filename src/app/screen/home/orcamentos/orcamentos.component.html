@@ -7,18 +7,18 @@
   responsiveLayout="scroll"
 >
   <ng-template pTemplate="caption">
-    <div class="d-flex justify-content-between">
-      <span class="p-input-icon-left ml-auto">
+    <div class="flex flex-row justify-between">
+      <div class="p-input-icon-left ml-auto">
         <i class="pi pi-search"></i>
         <input
           pInputText
           class="p-inputtext"
           type="text"
-          placeholder="Search keyword"
+          placeholder="Procurar"
           [(ngModel)]="queryService.orcamento.searchValue"
           (ngModelChange)="search()"
         />
-      </span>
+      </div>
       <div>
         Vendedor:
         <p-dropdown
@@ -35,6 +35,7 @@
       icon="pi pi-times"
       (click)="queryService.orcamento.vendedor = undefined; search()"
       style="margin-left: 10px;"
+      class="text-black"
     ></button>
       </div>
 
@@ -46,7 +47,7 @@
         (ngModelChange)="getOrcamentos()"
       ></p-checkbox>
       <button pButton class="button" (click)="new()">
-        <i class="pi pi-plus"></i>
+        <i class="pi pi-plus text-black"></i>
       </button>
     </div>
   </ng-template>

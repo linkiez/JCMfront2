@@ -24,26 +24,31 @@
 .statusGreen {
   color: #155724;
   background-color: #d4edda;
+  border-color: #155724;
 }
 
 .statusBlue{
   color: #004095;
   background-color: #cce5ff;
+  border-color:#004095;
 }
 
 .statusYellow{
   color: #856404;
   background-color: #fff3cd;
+  border-color:#856404;
 }
 
 .statusRed{
   color: #9d1c24;
   background-color: #f8d7da;
+  border-color:#9d1c24;
 }
 
 .statusPurple{
   color: #2c1e30;
   background-color: #e1cfe7;
+  border-color:#2c1e30;
 }
 
 select {

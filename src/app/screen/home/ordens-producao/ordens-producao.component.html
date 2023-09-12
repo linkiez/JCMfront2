@@ -84,7 +84,7 @@
 
   <div class="d-flex justify-content-between flex-wrap">
     <div
-      *ngFor="let op of ordemProducao; let index = index"
+      *ngFor="let op of ordemProducao; let index = index; trackBy: trackByFunction"
       style="max-width: 25%"
       class="flex-fill"
     >
@@ -155,10 +155,12 @@
                   isToday(op.data_negociado!) && !op.data_finalizacao,
                 statusRed:
                   isBeforeToday(op.data_negociado!) &&
-                  !isToday(op.data_negociado!),
+                  !isToday(op.data_negociado!) &&
+                  (!op.data_finalizacao ||
+                    isBeforeDate(op.data_negociado!, op.data_finalizacao!)),
                 statusGreen:
-                  isAfterDate(op.data_negociado!, op.data_finalizacao!) ||
-                  isEqualsDate(op.data_negociado!, op.data_finalizacao!)
+                 isBeforeDate(op.data_finalizacao!, op.data_negociado!) ||
+                  isEqualsDate(op.data_finalizacao!, op.data_negociado!)
               }"
               >{{ op.data_negociado | date : "dd/MM/yyyy" }}</span
             >
