@@ -86,7 +86,7 @@
             <td>{{ pedido_compra.peso_entregue | number : "1.0-2" }} Kg</td>
             <td>
               {{
-                (pedido_compra.peso_entregue / pedido_compra.peso) * 100
+                (pedido_compra.percentual_entregue)
                   | number : "1.0-2"
               }}
               %
