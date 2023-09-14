@@ -8,45 +8,48 @@
 ></caixaDeStatus>
 <form class="">
   <div class="row">
-    <div class="input col-2">
+    <div class="col-6 col-sm-2">
       <label name="lblId" for="inpId">Id: </label
       ><input
         pInputText
-        class="p-inputtext"
+        class="p-inputtext noprint"
         disabled
         name="inpId"
         type="text"
         [(ngModel)]="pedidoCompra.id"
       />
+      <span class="noview">{{pedidoCompra.id}}</span>
     </div>
-    <div class="input col-4">
+    <div class="col-6 col-sm-5">
       <label name="lblPedido" for="inpPedido">Pedido: </label
       ><input
         pInputText
-        class="p-inputtext"
+        class="p-inputtext noprint"
         name="inpPedido"
         type="text"
         [(ngModel)]="pedidoCompra.pedido"
       />
+      <span class="noview">{{pedidoCompra.pedido}}</span>
     </div>
-    <div class="input col-4">
+    <div class="col-12 col-sm-5">
       <label name="lblDataEmissao" for="inpDataEmissao">Data: </label
       ><input
         pInputText
-        class="p-inputtext"
+        class="noprint p-inputtext"
         name="inpDataEmissao"
         type="text"
         disabled
         value="{{ pedidoCompra.data_emissao | date : 'dd/MM/yyyy' }}"
       />
+      <span class="noview">{{ pedidoCompra.data_emissao | date : 'dd/MM/yyyy' }}</span>
     </div>
   </div>
   <div class="row">
-    <div class="input col-8">
+    <div class="col-12 col-sm-8">
       <label name="lblFornecedor" for="inpFornecedor">Fornecedor: </label
       ><p-autoComplete
         pInputText
-        class="p-autocomplete w-100"
+        class="noprint"
         name="inpFornecedor"
         type="text"
         [(ngModel)]="pedidoCompra.fornecedor"
@@ -58,20 +61,21 @@
         [inputStyle]="{ width: '100%' }"
         appendTo="body"
       ></p-autoComplete>
+      <span class="noview">{{ pedidoCompra.fornecedor?.pessoa?.nome }}</span>
     </div>
-    <div class="input col-4">
+    <div class="col-12 col-sm-4">
       <label name="lblContato" for="pContato">Contato:</label>
-      <p name="pContato" class="inputtext">{{ "-" }}</p>
+      <p name="pContato" >{{ "-" }}</p>
     </div>
   </div>
   <div class="row">
-    <div class="input col-8">
+    <div class="col-12 col-sm-8">
       <label name="lblEndereco" for="pEndereco">Endereço:</label>
       <p name="pEndereco">
         {{ pedidoCompra.fornecedor?.pessoa?.endereco || "-" }}
       </p>
     </div>
-    <div class="Input col-4">
+    <div class="col-12 col-sm-4">
       <label name="lblTelefone" for="pTelefone">Telefone</label>
       <p name="pTelefone">
         {{ pedidoCompra.fornecedor?.pessoa?.telefone || "-" | telefone }}
@@ -120,8 +124,8 @@
       <th>Ipi</th>
       <th>Total</th>
       <th>Data Entrega</th>
-      <th *ngIf="pedidoCompra.status !== 'Orçamento'">Status</th>
-      <th *ngIf="pedidoCompra.status !== 'Orçamento'">Total Entregue</th>
+      <th *ngIf="pedidoCompra.status !== 'Orçamento'" class="noprint">Status</th>
+      <th *ngIf="pedidoCompra.status !== 'Orçamento'" class="noprint">Total Entregue</th>
       <th class="noprint">Ação</th>
     </ng-template>
     <ng-template pTemplate="body" let-item let-index="rowIndex">
@@ -259,7 +263,7 @@
             </ng-template>
           </p-cellEditor>
         </td>
-        <td *ngIf="pedidoCompra.status !== 'Orçamento'">
+        <td *ngIf="pedidoCompra.status !== 'Orçamento'" class="noprint">
           <caixaDeStatus
             [status]="item.status"
             [options]="status"
@@ -267,7 +271,7 @@
             (statusChange)="pedidoCompra.status = $event"
           ></caixaDeStatus>
         </td>
-        <td class="text-center" *ngIf="pedidoCompra.status !== 'Orçamento'">
+        <td class="text-center" *ngIf="pedidoCompra.status !== 'Orçamento'" class="noprint">
           <p-knob [size]="75" [name]="'peso_entregue'+item.id" [ngModel]="calculatePesoEntreguePercentage(item)" [disabled]="true" [max]="100" [min]="0" [valueTemplate]="'{value}%' "></p-knob>
            <small>{{ item.peso_entregue  }}Kg</small>
         </td>
@@ -332,8 +336,10 @@
     <textarea
       pInputTextarea
       name="txtObs"
+      class="noprint"
       [(ngModel)]="pedidoCompra.observacao"
     ></textarea>
+    <span class="noview">{{pedidoCompra.observacao}}</span>
     <h4>Normas de fornecimento do pedido</h4>
     <p>
       1. Horário de Recebimento: de Segunda à Quinta das 7:00h às 11:00h e das
