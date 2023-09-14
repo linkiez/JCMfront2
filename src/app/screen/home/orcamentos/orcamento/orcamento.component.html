@@ -100,7 +100,7 @@
         <div><h4>Contato</h4></div>
       </div>
       <div class="row">
-        <div class="col d-print-flex">
+        <div class="col-12 col-sm-4 d-print-flex">
           <label for="ContatoNome">Nome: </label>
           <p-autoComplete
             name="ContatoNome"
@@ -144,7 +144,7 @@
             orcamento.contato?.nome || "-"
           }}</span>
         </div>
-        <div class="col d-print-flex">
+        <div class="col-12 col-sm-4 d-print-flex">
           <label for="inpContatoTipo">Tipo: </label>
           <p-dropdown
             [name]="'InpContatoTipo'"
@@ -160,7 +160,7 @@
           ></p-dropdown>
           <span class="noview">{{ orcamento.contato?.tipo || "-" }}</span>
         </div>
-        <div class="col d-print-flex">
+        <div class="col-12 col-sm-4 d-print-flex">
           <label for="">Contato: </label>
           <p-autoComplete
             *ngIf="
@@ -281,7 +281,7 @@
         <div><h4>Pessoa</h4></div>
       </div>
       <div class="row">
-        <div class="col-6 d-print-flex">
+        <div class="col-12 col-sm-6 d-print-flex">
           <label for="inpPessoaNome">Nome: </label>
           <p-autoComplete
             name="inpPessoaNome"
@@ -298,13 +298,13 @@
           ></p-autoComplete>
           <span class="noview">{{ orcamento.pessoa?.nome || "-" }}</span>
         </div>
-        <div class="col-3 d-print-flex">
+        <div class="col-6 col-sm-3 d-print-flex">
           <label for="">{{
             orcamento.pessoa?.pessoa_juridica ? "CNPJ: " : "CPF: "
           }}</label>
           <span>{{ (orcamento.pessoa?.cnpj_cpf | cpfCnpj) || "-" }}</span>
         </div>
-        <div class="col-3 d-print-flex">
+        <div class="col-6 col-sm-3 d-print-flex">
           <label for="">{{
             orcamento.pessoa?.pessoa_juridica ? "IE: " : "RG: "
           }}</label>
@@ -340,15 +340,15 @@
         </div>
       </div>
       <div class="row">
-        <div class="col d-print-flex">
+        <div class="col-12 col-sm-4 d-print-flex">
           <label for="">Telefone: </label>
           <span>{{ (orcamento.pessoa?.telefone | telefone) || "-" }}</span>
         </div>
-        <div class="col d-print-flex">
+        <div class="col-12 col-sm-4 d-print-flex">
           <label for="">Email: </label>
           <span>{{ orcamento.pessoa?.email || "-" }}</span>
         </div>
-        <div class="col d-print-flex">
+        <div class="col-12 col-sm-4 d-print-flex">
           <label for="">Email Nfe: </label>
           <span>{{ orcamento.pessoa?.email_nfe || "-" }}</span>
         </div>
@@ -356,7 +356,7 @@
     </div>
     <div class="row">
       <hr class="" />
-      <div class="col d-print-flex">
+      <div class="col-12 col-sm-4 d-print-flex">
         <label for="vendedor">Vendedor: </label>
         <p-autoComplete
           name="vendedor"
@@ -376,7 +376,7 @@
           orcamento.vendedor?.pessoa?.nome || "-"
         }}</span>
       </div>
-      <div class="col d-print-flex">
+      <div class="col-12 col-sm-4 d-print-flex">
         <label for="pc_cliente">Pedido de Compra</label>
         <input
           pInputText
@@ -390,7 +390,7 @@
         />
         <span class="noview">{{ orcamento.pc_cliente }}</span>
       </div>
-      <div class="col d-print-flex">
+      <div class="col-12 col-sm-4 d-print-flex">
         <label for="prazo_emdias">Prazo de entrega (Dias Úteis)</label>
         <input
           pInputText
@@ -806,7 +806,7 @@
                   class="noprint"
                   [disabled]="orcamento.status !== 'Orçamento'"
                 >
-                  <i class="pi pi-plus"></i>
+                  <i class="pi pi-plus text-black"></i>
                 </button>
               </td>
               <td>
@@ -946,7 +946,7 @@
                     <span class="noview">{{ orcamento.observacao }}</span>
                   </div>
                 </div>
-                <div class="row">
+                <div class="row noview">
                   <div class="col">
                     <p *ngFor="let obs of condicaoOrcamento$ | async">- {{ obs }}</p>
                   </div>
