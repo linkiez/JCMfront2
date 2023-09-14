@@ -29,6 +29,8 @@ export class OrcamentosComponent implements OnInit, OnDestroy, AfterViewInit  {
 
   vendedores: Vendedor[] = [];
 
+  toogleFiltros: boolean = false;
+
   constructor(
     private messageService: MessageService,
     private router: Router,

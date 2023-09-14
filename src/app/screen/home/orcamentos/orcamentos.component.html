@@ -7,8 +7,8 @@
   responsiveLayout="scroll"
 >
   <ng-template pTemplate="caption">
-    <div class="flex flex-row justify-between">
-      <div class="p-input-icon-left ml-auto">
+    <div class="flex flex-row gap-4">
+      <div class="p-input-icon-left">
         <i class="pi pi-search"></i>
         <input
           pInputText
@@ -19,24 +19,44 @@
           (ngModelChange)="search()"
         />
       </div>
-      <div>
-        Vendedor:
-        <p-dropdown
-        name="status"
-        [options]="vendedores"
-        [ngModel]="queryService.orcamento.vendedor"
-        (ngModelChange)="queryService.orcamento.vendedor = $event; search()"
-        optionLabel="pessoa.nome"
-        [editable]="true"
-      ></p-dropdown>
-      <button
-      pButton
-      type="button"
-      icon="pi pi-times"
-      (click)="queryService.orcamento.vendedor = undefined; search()"
-      style="margin-left: 10px;"
-      class="text-black"
-    ></button>
+      <button pButton class="text-black" (click)="toogleFiltros = !toogleFiltros" >
+        Filtros
+      </button>
+      <div class="flex-grow flex flex-row justify-end">
+        <button pButton class="" (click)="new()">
+          <i class="pi pi-plus text-black"></i>
+        </button>
+      </div>
+
+
+
+    </div>
+    <div *ngIf="toogleFiltros" class="row gap-4 mt-3">
+      <div class="col-12 flex flex-row items-end">
+        <div class="flex-grow">
+          <span>
+            Vendedor:
+          </span>
+          <p-dropdown
+            name="status"
+            [options]="vendedores"
+            [ngModel]="queryService.orcamento.vendedor"
+            (ngModelChange)="queryService.orcamento.vendedor = $event; search()"
+            optionLabel="pessoa.nome"
+            [editable]="true"
+            class=""
+          ></p-dropdown>
+        </div>
+
+        <button
+          pButton
+          type="button"
+          icon="pi pi-times"
+          (click)="queryService.orcamento.vendedor = undefined; search()"
+          style="margin-left: 10px; width: 42px;"
+          class="text-black w-[42px] h-[42px]"
+
+        ></button>
       </div>
 
       <p-checkbox
@@ -46,9 +66,6 @@
         [binary]="true"
         (ngModelChange)="getOrcamentos()"
       ></p-checkbox>
-      <button pButton class="button" (click)="new()">
-        <i class="pi pi-plus text-black"></i>
-      </button>
     </div>
   </ng-template>
 
@@ -68,12 +85,12 @@
     <tr (click)="clickDeleted(orcamento.id)">
       <td><caixaDeStatus [status]="orcamento.status"></caixaDeStatus></td>
       <td>{{ orcamento.id }}</td>
-      <td>{{ orcamento.venda||'' }}</td>
-      <td>{{orcamento.contato?.nome||''}}</td>
-      <td>{{ orcamento.pessoa?.nome||''}}</td>
-      <td>{{ orcamento.vendedor?.pessoa.nome||''}}</td>
-      <td>{{ orcamento.createdAt | date: "dd/MM/yyyy" }}</td>
-      <td>{{ orcamento.total||'' | currency : 'BRL'  }}</td>
+      <td>{{ orcamento.venda || "" }}</td>
+      <td>{{ orcamento.contato?.nome || "" }}</td>
+      <td>{{ orcamento.pessoa?.nome || "" }}</td>
+      <td>{{ orcamento.vendedor?.pessoa.nome || "" }}</td>
+      <td>{{ orcamento.createdAt | date : "dd/MM/yyyy" }}</td>
+      <td>{{ orcamento.total || "" | currency : "BRL" }}</td>
     </tr>
   </ng-template>
 </p-table>
