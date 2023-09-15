@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { MenuItem } from 'primeng/api/menuitem';
 import { MessageService } from 'primeng/api';
 
@@ -7,6 +7,7 @@ import { MessageService } from 'primeng/api';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
   providers: [MessageService],
+  encapsulation: ViewEncapsulation.None,
 })
 export class HomeComponent implements OnInit {
   public menuItems: MenuItem[] = [
