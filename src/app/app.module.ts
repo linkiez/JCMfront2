@@ -19,7 +19,6 @@ import { AuthenticationInterceptor } from './authentication/authentication.inter
 import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
 import { MessageService } from 'primeng/api';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { HeaderModule } from './screen/site/components/header/header.module';
 import { FooterModule } from './screen/site/components/footer/footer.module';
 import { ButtonModule } from 'primeng/button';
@@ -35,7 +34,6 @@ import { ButtonModule } from 'primeng/button';
     MessageModule,
     MessagesModule,
     NgOptimizedImage,
-    FontAwesomeModule,
     HeaderModule,
     FooterModule,
     ButtonModule

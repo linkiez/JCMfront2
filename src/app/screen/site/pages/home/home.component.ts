@@ -1,9 +1,4 @@
 import { Component } from '@angular/core';
-import {
-  faAward,
-  faHands,
-  faChartLine,
-} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-home',
@@ -11,9 +6,6 @@ import {
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent {
-  faAward = faAward;
-  faHands = faHands;
-  faChartLine = faChartLine;
 
   products = [
     {
