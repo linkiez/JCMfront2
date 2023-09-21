@@ -1,6 +1,4 @@
 import { QueryService } from 'src/app/services/query.service';
-import { CaixaDeStatusComponent } from './../../../components/caixaDeStatus/caixaDeStatus.component';
-import { Query } from 'src/app/models/query';
 import { OrdemProducao } from './../../../models/ordem-producao';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { OrdemProducaoService } from 'src/app/services/ordem-producao.service';
@@ -10,7 +8,8 @@ import { MessageService } from 'primeng/api';
 import { UsuarioService } from 'src/app/authentication/usuario.service';
 import { VendedorService } from 'src/app/services/vendedor.service';
 import { Pessoa } from 'src/app/models/pessoa';
-import { PessoaService } from 'src/app/services/pessoa.service';
+import { trackByFunction } from 'src/app/utils/trackByFunction';
+import { ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
   selector: 'app-ordens-producao',
@@ -65,6 +64,8 @@ export class OrdensProducaoComponent implements OnInit {
 
   pessoas: Pessoa[] = [];
 
+  trackByFunction = trackByFunction;
+
   ngOnInit() {
     this.getOrdemProducao(true);
     this.first =
@@ -82,10 +83,10 @@ export class OrdensProducaoComponent implements OnInit {
 
     this.ordemProducaoService
       .getOrdemProducoes(query)
-      // .pipe(
-      //   debounceTime(1000), // espera um tempo antes de começar
-      //   distinctUntilChanged() // recorda a ultima pesquisa
-      // )
+      .pipe(
+        debounceTime(500), // espera um tempo antes de começar
+        distinctUntilChanged() // recorda a ultima pesquisa
+      )
       .subscribe({
         next: (consulta) => {
           this.ordemProducao = consulta.ordemProducao;

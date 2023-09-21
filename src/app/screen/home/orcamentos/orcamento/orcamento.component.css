@@ -1,5 +1,9 @@
 *{ color: white; }
 
+.p-button, a{
+  color: black;
+}
+
 .wv-300 {
   min-width: 300px;
 }

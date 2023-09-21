@@ -1,31 +1,39 @@
-<div class="center-me">
-  <div class="caixa">
-    <p-messages></p-messages>
-    <form (ngSubmit)="login()">
-      <label for="email"
-        ><input
+<app-header></app-header>
+<div class="flex flex-col">
+  <p-messages></p-messages>
+  <div class="py-32">
+    <form (ngSubmit)="login()" class="flex flex-col space-y-4 page w-72 ">
+      <img src="../../../assets/img/jcm logo.svg" alt="JCM Metais Logo" class="w-64">
+      <input
         pInputText
         class="p-inputtext"
-          type="email"
-          id="email"
-          name="email"
-          placeholder="Email"
-          [(ngModel)]="email"
-          required
-      /></label>
-      <label for="senha"
-        ><input
+        type="email"
+        id="email"
+        name="email"
+        placeholder="Email"
+        [(ngModel)]="email"
+        required
+      />
+      <input
         pInputText
         class="p-inputtext"
-          type="password"
-          id="senha"
-          name="senha"
-          placeholder="Password"
-          [(ngModel)]="senha"
-          required
-      /></label>
-      <input pButton class="p-button" type="submit" id="submit" name="submit" />
+        type="password"
+        id="senha"
+        name="senha"
+        placeholder="Password"
+        [(ngModel)]="senha"
+        required
+      />
+      <button
+        pButton
+        class="w-100 text-white justify-center"
+        type="submit"
+        id="submit"
+        name="submit"
+      >
+        Logar
+      </button>
     </form>
   </div>
-
 </div>
+<app-footer></app-footer>

@@ -1,5 +1,8 @@
 *{ color: white; }
 
+.p-button, a{
+  color: black;
+}
 
 td {
   border: 0px solid #ccc;

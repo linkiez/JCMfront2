@@ -1,5 +1,5 @@
 import { AccessTokenService } from './accessToken.service';
-import { environment } from '../../environments/environment.prod';
+import { environment } from '../../environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { RefreshTokenService } from './refreshToken.service';
