@@ -1,6 +1,7 @@
+import { RNCService } from './../../../../services/rnc.service';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { OrdemProducaoService } from './../../../../services/ordem-producao.service';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   OrdemProducao,
   OrdemProducaoItem,
@@ -11,16 +12,20 @@ import { MessageService } from 'primeng/api';
 import { v4 as uuidv4 } from 'uuid';
 import { Produto } from 'src/app/models/produto';
 import { ProdutoService } from 'src/app/services/produto.service';
+import { Usuario } from 'src/app/models/usuario';
+import { UsuarioServiceDB } from 'src/app/services/usuario.service';
+import { trackByFunction } from 'src/app/utils/trackByFunction';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-rnc',
   templateUrl: './rnc.component.html',
   styleUrls: ['./rnc.component.scss'],
 })
-export class RNCComponent {
+export class RNCComponent implements OnInit {
   rnc: RNC = {
     status: 'Aberto',
-    rnc_item: [],
+    rnc_items: [],
     descricao: '',
     causa: '',
     acao_disposicao: null,
@@ -28,7 +33,6 @@ export class RNCComponent {
     acao_preventiva: '',
     acao_contencao: '',
     reclamacao_cliente: false,
-    responsavel_analise_id: 1,
     responsavel_analise: {},
   };
 
@@ -36,9 +40,11 @@ export class RNCComponent {
   selectedOrdemProducao: OrdemProducao | undefined;
   selectedOrdemProducaoItem: OrdemProducaoItem[] | undefined;
 
+  responsalveis_analise: Usuario[] = []
+
   incluirOPToggle: boolean = false;
 
-  status: { valor: string }[] = [{ valor: 'Aberto' }, { valor: 'Fechado' }];
+  status: string[] = ['Aberto','Fechado'];
 
   produtos: Produto[] = [];
 
@@ -67,11 +73,40 @@ export class RNCComponent {
     null,
   ];
 
+  trackByFunction = trackByFunction;
+
   constructor(
     private ordemProducaoService: OrdemProducaoService,
     private produtoService: ProdutoService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private usuarioService: UsuarioServiceDB,
+    private RNCService: RNCService,
+    private route: ActivatedRoute,
   ) {}
+
+  ngOnInit(): void {
+    this.getRNC();
+  }
+
+  getRNC(){
+    const id = Number(this.route.snapshot.paramMap.get('id'));
+    if(id!=0){
+      this.RNCService.getRNC(id).subscribe({
+        next: (rnc) => {
+          this.rnc = rnc;
+          console.log(rnc)
+        },
+        error: (error) => {
+          console.error(error)
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: 'Não foi possível carregar a RNC. - ' + error.error,
+          })
+        },
+      });
+    }
+  }
 
   searchOrdemProducao(event: any) {
     const query: Query = {
@@ -138,7 +173,7 @@ export class RNCComponent {
         observacao: ordemProducaoItem.observacao,
       };
 
-      this.rnc.rnc_item?.push(rncItem);
+      this.rnc.rnc_items?.push(rncItem);
     }
 
     this.incluirOPToggle = false;
@@ -170,5 +205,79 @@ export class RNCComponent {
           });
         },
       });
+  }
+
+  searchResponsavelAnalise(event: any) {
+    let query: Query = {
+      page: 0,
+      pageCount: 25,
+      searchValue: event.query,
+      deleted: false,
+    };
+
+    this.usuarioService
+      .getUsuarios(query)
+      .pipe(
+        distinctUntilChanged(), // recorda a ultima pesquisa
+        debounceTime(500) // espera um tempo antes de começar
+      )
+      .subscribe({
+        next: (consulta) => (this.responsalveis_analise = consulta.usuarios),
+        error: (error) => {
+          console.error(error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: 'Error ao buscar usuarios - ' + error.error,
+          });
+        },
+      });
+  }
+
+  log() {
+    console.log(this.rnc);
+  }
+
+  create(){
+    this.RNCService.addRNC(this.rnc).subscribe({
+      next: (rnc) => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Sucesso',
+          detail: 'RNC criada com sucesso!',
+        });
+        this.rnc = rnc;
+        console.log(rnc)
+      },
+      error: (error) => {
+        console.error(error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: 'Erro ao criar a RNC. - ' + error.error,
+        });
+      },
+    });
+  }
+
+  update(){
+    this.RNCService.updateRNC(this.rnc).subscribe({
+      next: (rnc) => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Sucesso',
+          detail: 'RNC atualizada com sucesso!',
+        });
+        this.rnc = rnc;
+      },
+      error: (error) => {
+        console.error(error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: 'Erro ao atualizar a RNC. - ' + error.error,
+        });
+      },
+    });
   }
 }

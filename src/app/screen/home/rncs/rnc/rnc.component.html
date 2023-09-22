@@ -37,7 +37,7 @@
             id="createdAt"
             name="createdAt"
             class=""
-            [(ngModel)]="rnc.createdAt"
+            value="{{ rnc.createdAt | date : 'dd/MM/yyyy HH:mm:ss' }}"
             disabled
           />
         </div>
@@ -303,10 +303,23 @@
           <textarea name="risco" id="risco" pInputTextarea [(ngModel)]="rnc.risco"></textarea>
         </div>
       </div>
-      <div class="d-flex flex-row">
+      <div class="d-flex flex-row space-x-4">
         <div class="flex-grow-1">
-          <h5 style="margin-bottom: 0px;">Responsável do encerramento da RNC (Qualidade/RD):</h5>
-
+          <label for="responsalvel_analise" style="margin-bottom: 0px;">Responsável do encerramento da RNC (Qualidade/RD):</label>
+          <p-autoComplete
+          name="responsalvel_analise"
+          id="responsalvel_analise"
+          [(ngModel)]="rnc.responsavel_analise"
+          [suggestions]="responsalveis_analise"
+          (completeMethod)="searchResponsavelAnalise($event)"
+          [dropdown]="true"
+          [minLength]="2"
+          field="pessoa.nome"
+          [forceSelection]="true"
+          [style]="{ width: '100%' }"
+          [inputStyle]="{ width: '100%' }"
+          (onSelect)="selectOrdemProducao($event.id)"
+        ></p-autoComplete>
         </div>
         <div>
           <label for="status">Data Fechamento: </label>
@@ -316,7 +329,7 @@
               id="data_fechamento"
               name="data_fechamento"
               class="noprint"
-              [(ngModel)]="rnc.data_fechamento"
+              value="{{ rnc.data_fechamento | date : 'dd/MM/yyyy HH:mm:ss' }}"
               disabled
             />
           <span class="noview">
@@ -345,8 +358,7 @@
     </div>
     <div
       class="dontBreakPage"
-      *ngFor="let rnc_item of rnc.rnc_item; let index = index"
-    >
+      *ngFor="let rnc_item of rnc.rnc_items; let index = index; ">
       <h4>
         {{ index + 1 }}. Cliente:
         {{
@@ -478,6 +490,7 @@
   <div class="d-flex flex-row" style="margin-top: 10px">
     <div class="flex-grow-1"></div>
     <div class="noprint">
+      <button pButton class="p-button p-button-success" (click)="create()">Salvar</button>
       <button pButton class="p-button p-button-success">Aprovar</button>
       <button pButton class="p-button" routerLink="..">Voltar</button>
     </div>
@@ -542,10 +555,10 @@
             <td>{{ ordem_producao_item.descricao }}</td>
             <td>{{ ordem_producao_item.produto.nome }}</td>
             <td>
-              {{ ordem_producao_item.orcamento_item.largura | number }}
+              {{ ordem_producao_item.orcamento_item?.largura | number }}
             </td>
             <td>
-              {{ ordem_producao_item.orcamento_item.altura | number }}
+              {{ ordem_producao_item.orcamento_item?.altura | number }}
             </td>
             <td>{{ ordem_producao_item.quantidade }}</td>
           </tr>

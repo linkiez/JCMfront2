@@ -25,7 +25,7 @@ export interface RNC {
   responsavel_analise?: Usuario;
   responsavel_analise_id?: number;
   reclamacao_cliente?: boolean;
-  rnc_item?: RNCItem[];
+  rnc_items?: RNCItem[];
   eficacia?: "Sim" | "Não" | null;
   eficacia_motivo?: string;
   eficacia_descricao?: string;
