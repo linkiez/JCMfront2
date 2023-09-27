@@ -110,4 +110,12 @@ export class HomeComponent {
   closeModal(): void {
     this.displayModal = false;
   }
+
+  getYearsSince(dateString: string): number {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diff = now.getTime() - date.getTime();
+    const yearInMillis = 1000 * 60 * 60 * 24 * 365.25;
+    return Math.floor(diff / yearInMillis);
+  }
 }
