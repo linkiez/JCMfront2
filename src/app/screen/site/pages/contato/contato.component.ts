@@ -5,7 +5,7 @@ import e from 'express';
 import { ReCaptchaV3Service } from 'ng-recaptcha';
 import { Observable } from 'rxjs';
 import { iFormSite } from 'src/app/models/form-site';
-import { environment } from 'src/environments/environment.dev';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-contato',
