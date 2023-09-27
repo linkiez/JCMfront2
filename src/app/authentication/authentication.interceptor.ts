@@ -27,7 +27,8 @@ export class AuthenticationInterceptor implements HttpInterceptor {
     if (
       !this.accessTokenService.possuiToken() &&
       !request.url.includes('refresh') &&
-      !request.url.includes('login')
+      !request.url.includes('login') &&
+      !request.url.includes('form-site')
     ) {
       this.authenticationService.verificaTokens();
     }
