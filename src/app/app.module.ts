@@ -19,8 +19,6 @@ import { AuthenticationInterceptor } from './authentication/authentication.inter
 import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
 import { MessageService } from 'primeng/api';
-import { HeaderModule } from './screen/site/components/header/header.module';
-import { FooterModule } from './screen/site/components/footer/footer.module';
 import { ButtonModule } from 'primeng/button';
 
 @NgModule({
@@ -34,8 +32,6 @@ import { ButtonModule } from 'primeng/button';
     MessageModule,
     MessagesModule,
     NgOptimizedImage,
-    HeaderModule,
-    FooterModule,
     ButtonModule
   ],
   providers: [
