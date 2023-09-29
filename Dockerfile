@@ -1,40 +1,26 @@
-# Stage 1: Compile and Build angular codebase
+# Use an official Node runtime as a parent image
+FROM node:18
 
-# Use official node image as the base image
-#FROM node:latest as build
+# Set the working directory to /app
+WORKDIR /app
 
-# Set the working directory
-#WORKDIR /usr/local/app
+# Copy the package.json and package-lock.json files to the container
+COPY package*.json ./
 
-# Add the source code to app
-#COPY ./ /usr/local/app/
+# Install dependencies
+RUN npm install
 
-# Install all the dependencies
-#RUN npm install
+# Copy the rest of the application code to the container
+COPY . .
 
-# Generate the build of the application
-#RUN npm run build
+# Build the Angular app
+RUN npm run build
 
-# Stage 2: Serve app with nginx server
+# Remove dev dependencies
+RUN npm prune --production
 
-# Use official nginx image as the base image
-FROM nginx:latest
+# Expose port 3000 for the Node server
+EXPOSE 3000
 
-# Create a directory to store the SSL certificate files
-RUN mkdir /etc/nginx/ssl
-
-# Copy the SSL certificate files to the container
-COPY ./ssl/linkiez_ddns_net.crt /etc/nginx/ssl/linkiez_ddns_net.crt
-COPY ./ssl/linkiez_ddns_net.key /etc/nginx/ssl/linkiez_ddns_net.key
-COPY ./ssl/DigiCertCA.crt /etc/nginx/ssl/DigiCertCA.crt
-COPY ./ssl/TrustedRoot.crt /etc/nginx/ssl/TrustedRoot.crt
-
-# Copy the nginx configuration file to the default nginx configuration path
-COPY ./nginx.conf /etc/nginx/conf.d/default.conf
-
-# Copy the build output to replace the default nginx contents.
-COPY ./dist/jcmfront2 /usr/share/nginx/html
-
-# Expose the HTTPS port
-EXPOSE 443
-EXPOSE 80
+# Start the Node server
+CMD ["npm", "start"]
