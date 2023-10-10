@@ -31,6 +31,7 @@ export interface RNC {
   eficacia_descricao?: string;
   eficacia_observacao?: string;
   risco?: string;
+  custo: number;
 }
 
 export interface RNCItem {

@@ -22,6 +22,7 @@
             name="id"
             class=""
             [(ngModel)]="rnc.id"
+            [disabled]="!isNewRNC()"
           />
         </div>
         <div class="noview">
@@ -42,10 +43,9 @@
           />
         </div>
         <div class="noview">
-          {{ rnc.createdAt }}
+          {{ rnc.createdAt | date : "dd/MM/yyyy HH:mm:ss" }}
         </div>
       </div>
-
     </div>
     <div class="row">
       <div>
@@ -59,6 +59,7 @@
           [editable]="false"
           [style]="{ width: '100%' }"
           class="noprint"
+          [disabled]="rnc.status !== 'Aberto'"
         ></p-dropdown>
         <span class="noview">
           {{ rnc.classificacao }}
@@ -72,6 +73,7 @@
           class="p-button"
           style="margin-left: 0px"
           (click)="incluirOPToggle = !incluirOPToggle"
+          [disabled]="rnc.status !== 'Aberto'"
         >
           Adicionar OP
         </button>
@@ -114,7 +116,14 @@
             name="descricao"
             id="descricao"
             class="noprint"
+            *ngIf="rnc.status === 'Aberto'"
           ></p-editor>
+          <div
+            class="noprint"
+            pInputTextarea
+            [innerHTML]="rnc.descricao"
+            *ngIf="rnc.status !== 'Aberto'"
+          ></div>
           <div class="noview" [innerHTML]="rnc.descricao"></div>
         </div>
       </div>
@@ -139,6 +148,7 @@
           name="acao_contencao"
           [(ngModel)]="rnc.acao_contencao"
           class="noprint"
+          [disabled]="rnc.status !== 'Aberto'"
         ></textarea>
         <p class="noview">{{ rnc.acao_contencao }}</p>
       </div>
@@ -178,6 +188,7 @@
           name="causa"
           [(ngModel)]="rnc.causa"
           class="noprint"
+          [disabled]="rnc.status !== 'Aberto'"
         ></textarea>
         <div class="noview" [innerHTML]="rnc.causa"></div>
       </div>
@@ -212,6 +223,7 @@
           [editable]="false"
           [style]="{ width: '100%' }"
           class="noprint"
+          [disabled]="rnc.status !== 'Aberto'"
         ></p-dropdown>
         <span class="noview">
           {{ rnc.acao_disposicao }}
@@ -222,6 +234,7 @@
           pInputTextarea
           [(ngModel)]="rnc.acao_corretiva"
           class="noprint"
+          [disabled]="rnc.status !== 'Aberto'"
         ></textarea>
         <span class="noview"> {{ rnc.acao_corretiva }} </span>
       </div>
@@ -246,6 +259,7 @@
           pInputTextarea
           [(ngModel)]="rnc.acao_preventiva"
           class="noprint"
+          [disabled]="rnc.status !== 'Aberto'"
         ></textarea>
         <span class="noview">
           {{ rnc.acao_preventiva }}
@@ -264,11 +278,12 @@
           pInputTextarea
           [(ngModel)]="rnc.eficacia_descricao"
           class="noprint"
+          [disabled]="rnc.status !== 'Aberto'"
         ></textarea>
         <span class="noview">
           {{ rnc.eficacia_descricao }}
         </span>
-        <div class="d-flex flex-row" style="margin-bottom: 5px;">
+        <div class="d-flex flex-row" style="margin-bottom: 5px">
           <div>
             <label for="eficacia">Ação Eficaz</label>
             <p-radioButton
@@ -278,6 +293,7 @@
               [(ngModel)]="rnc.eficacia"
               label="Sim"
               class=""
+              [disabled]="rnc.status !== 'Aberto'"
             ></p-radioButton>
             <p-radioButton
               id="eficacia"
@@ -286,57 +302,85 @@
               [(ngModel)]="rnc.eficacia"
               label="Não"
               class=""
+              [disabled]="rnc.status !== 'Aberto'"
             ></p-radioButton>
           </div>
-          <div class="flex-grow-1" *ngIf="rnc.eficacia==='Não'">
+          <div class="flex-grow-1" *ngIf="rnc.eficacia === 'Não'">
             <label for="motivo"
-              >Descreva o motivo e determine outro Prazo e
-              Plano de Ação.</label
+              >Descreva o motivo e determine outro Prazo e Plano de Ação.</label
             >
-            <textarea id="motivo" name="motivo" pInputTextarea [(ngModel)]="rnc.eficacia_motivo"></textarea>
+            <textarea
+              id="motivo"
+              name="motivo"
+              pInputTextarea
+              [(ngModel)]="rnc.eficacia_motivo"
+              class="noprint"
+              [disabled]="rnc.status !== 'Aberto'"
+            ></textarea>
+            <span class="noview">
+              {{ rnc.eficacia_motivo }}
+            </span>
           </div>
         </div>
         <div>
-          <h5 style="margin-bottom: 0px;">Há necessidade de atualizar riscos e oportunidades?</h5><p><small>
-            (Se Sim descrever Ação, se Não, justificar.)
-          </small></p>
-          <textarea name="risco" id="risco" pInputTextarea [(ngModel)]="rnc.risco"></textarea>
+          <h5 style="margin-bottom: 0px">
+            Há necessidade de atualizar riscos e oportunidades?
+          </h5>
+          <p><small> (Se Sim descrever Ação, se Não, justificar.) </small></p>
+          <textarea
+            name="risco"
+            id="risco"
+            pInputTextarea
+            [(ngModel)]="rnc.risco"
+            [disabled]="rnc.status !== 'Aberto'"
+          ></textarea>
         </div>
       </div>
       <div class="d-flex flex-row space-x-4">
         <div class="flex-grow-1">
-          <label for="responsalvel_analise" style="margin-bottom: 0px;">Responsável do encerramento da RNC (Qualidade/RD):</label>
+          <label for="responsalvel_analise" style="margin-bottom: 0px"
+            >Responsável do encerramento da RNC (Qualidade/RD):</label
+          >
           <p-autoComplete
-          name="responsalvel_analise"
-          id="responsalvel_analise"
-          [(ngModel)]="rnc.responsavel_analise"
-          [suggestions]="responsalveis_analise"
-          (completeMethod)="searchResponsavelAnalise($event)"
-          [dropdown]="true"
-          [minLength]="2"
-          field="pessoa.nome"
-          [forceSelection]="true"
-          [style]="{ width: '100%' }"
-          [inputStyle]="{ width: '100%' }"
-          (onSelect)="selectOrdemProducao($event.id)"
-        ></p-autoComplete>
+            name="responsalvel_analise"
+            id="responsalvel_analise"
+            [(ngModel)]="rnc.responsavel_analise"
+            [suggestions]="responsalveis_analise"
+            (completeMethod)="searchResponsavelAnalise($event)"
+            [dropdown]="true"
+            [minLength]="2"
+            field="pessoa.nome"
+            [forceSelection]="true"
+            [style]="{ width: '100%' }"
+            [inputStyle]="{ width: '100%' }"
+            (onSelect)="selectOrdemProducao($event.id)"
+            class="noprint"
+            [disabled]="rnc.status !== 'Aberto'"
+          ></p-autoComplete>
+          <h2 class="noview">
+            {{ rnc.responsavel_analise?.pessoa?.nome }}
+          </h2>
         </div>
         <div>
           <label for="status">Data Fechamento: </label>
-            <input
-              pInputText
-              type="text"
-              id="data_fechamento"
-              name="data_fechamento"
-              class="noprint"
-              value="{{ rnc.data_fechamento | date : 'dd/MM/yyyy HH:mm:ss' }}"
-              disabled
-            />
+          <input
+            pInputText
+            type="text"
+            id="data_fechamento"
+            name="data_fechamento"
+            class="noprint"
+            value="{{ rnc.data_fechamento | date : 'dd/MM/yyyy HH:mm:ss' }}"
+            disabled
+          />
           <span class="noview">
             {{ rnc.data_fechamento }}
           </span>
         </div>
       </div>
+    </div>
+    <div>
+      <h3>Custo: </h3>
+      <div pInputText>{{ rnc.custo  | currency : 'BRL'}}</div>
     </div>
     <hr />
     <div class="row">
@@ -358,7 +402,8 @@
     </div>
     <div
       class="dontBreakPage"
-      *ngFor="let rnc_item of rnc.rnc_items; let index = index; ">
+      *ngFor="let rnc_item of rnc.rnc_items; let index = index"
+    >
       <h4>
         {{ index + 1 }}. Cliente:
         {{
@@ -399,6 +444,7 @@
                   [forceSelection]="true"
                   [style]="{ width: '100%' }"
                   [inputStyle]="{ width: '100%' }"
+                  [disabled]="rnc.status !== 'Aberto'"
                 ></p-autoComplete>
               </div>
             </td>
@@ -414,6 +460,7 @@
                   name="largura"
                   class=""
                   [(ngModel)]="rnc_item.largura"
+                  [disabled]="rnc.status !== 'Aberto'"
                 />
               </div>
             </td>
@@ -429,6 +476,7 @@
                   name="altura"
                   class=""
                   [(ngModel)]="rnc_item.altura"
+                  [disabled]="rnc.status !== 'Aberto'"
                 />
               </div>
             </td>
@@ -444,6 +492,8 @@
                   name="quantidade"
                   class=""
                   [(ngModel)]="rnc_item.quantidade"
+                  (input)="total_custo()"
+                  [disabled]="rnc.status !== 'Aberto'"
                 />
               </div>
             </td>
@@ -452,7 +502,7 @@
         </tbody>
       </table>
       <div class="row">
-        <div class="col-6">
+        <div class="col">
           <table>
             <tbody>
               <tr
@@ -473,7 +523,7 @@
             </tfoot>
           </table>
         </div>
-        <div class="col-6">
+        <div class="col">
           <p-editor
             #editor
             (onInit)="editor.quill.pasteHTML(rnc_item.observacao)"
@@ -481,8 +531,15 @@
             name="observacao"
             id="observacao"
             class="noprint"
+            *ngIf="rnc.status === 'Aberto'"
           ></p-editor>
+          <div pInputText class="noprint" *ngIf="rnc.status !== 'Aberto'" [innerHTML]="rnc_item.observacao"></div>
           <div class="noview" [innerHTML]="rnc_item.observacao"></div>
+        </div>
+        <div class="col-1 flex noprint">
+          <button (click)="removeRNC_item(index)" [disabled]="rnc.status !== 'Aberto'">
+            <i class="pi pi-trash trash"></i>
+          </button>
         </div>
       </div>
     </div>
@@ -490,8 +547,30 @@
   <div class="d-flex flex-row" style="margin-top: 10px">
     <div class="flex-grow-1"></div>
     <div class="noprint">
-      <button pButton class="p-button p-button-success" (click)="create()">Salvar</button>
-      <button pButton class="p-button p-button-success">Aprovar</button>
+      <button
+        pButton
+        class="p-button p-button-success"
+        (click)="createOrUpdate()"
+      >
+        Salvar
+      </button>
+      <button
+        pButton
+        class="p-button p-button-success"
+        [disabled]="isNewRNC()"
+        (click)="aprovar()"
+      >
+        Finalizar
+      </button>
+      <button
+        pButton
+        class="p-button"
+        type="button"
+        name="btnImprimir"
+        id="btnImprimir"
+      >
+        <a href="javascript:window.print()"> Imprimir </a>
+      </button>
       <button pButton class="p-button" routerLink="..">Voltar</button>
     </div>
   </div>

@@ -12,7 +12,7 @@ export class RNCService {
 
   constructor(private http: HttpClient) { }
 
-  getRNCs(query: Query): Observable<RNC[]> {
+  getRNCs(query: Query): Observable<{ rncs: RNC[]; totalRecords: number }> {
     let chaves = Object.keys(query)
     let valores = Object.values(query);
     let queryString = '?';
@@ -22,7 +22,7 @@ export class RNCService {
       queryString += chaves[i]+'='+valores[i]
     }
 
-    return this.http.get<RNC[]>(environment.backendURL + 'rnc' + queryString, {
+    return this.http.get<{ rncs: RNC[]; totalRecords: number }>(environment.backendURL + 'rnc' + queryString, {
       responseType: 'json',
     })
   }

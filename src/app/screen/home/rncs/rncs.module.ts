@@ -16,6 +16,10 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { IshikawaModule } from 'src/app/components/ishikawa/ishikawa.module';
 import { RadioButtonModule } from 'primeng/radiobutton';
+import {PaginatorModule} from 'primeng/paginator';
+import { CheckboxModule } from 'primeng/checkbox';
+import {ConfirmDialogModule} from 'primeng/confirmdialog';
+
 @NgModule({
   declarations: [
     RNCsComponent,
@@ -35,7 +39,10 @@ import { RadioButtonModule } from 'primeng/radiobutton';
     DropdownModule,
     InputTextareaModule,
     IshikawaModule,
-    RadioButtonModule
+    RadioButtonModule,
+    PaginatorModule,
+    CheckboxModule,
+    ConfirmDialogModule
 
   ]
 })

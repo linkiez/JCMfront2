@@ -1,7 +1,7 @@
 import { RNCService } from './../../../../services/rnc.service';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { OrdemProducaoService } from './../../../../services/ordem-producao.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import {
   OrdemProducao,
   OrdemProducaoItem,
@@ -15,7 +15,7 @@ import { ProdutoService } from 'src/app/services/produto.service';
 import { Usuario } from 'src/app/models/usuario';
 import { UsuarioServiceDB } from 'src/app/services/usuario.service';
 import { trackByFunction } from 'src/app/utils/trackByFunction';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-rnc',
@@ -23,6 +23,8 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./rnc.component.scss'],
 })
 export class RNCComponent implements OnInit {
+  @ViewChild('editor') editor: any;
+
   rnc: RNC = {
     status: 'Aberto',
     rnc_items: [],
@@ -34,6 +36,7 @@ export class RNCComponent implements OnInit {
     acao_contencao: '',
     reclamacao_cliente: false,
     responsavel_analise: {},
+    custo: 0,
   };
 
   ordensProducao: OrdemProducao[] = [];
@@ -82,6 +85,7 @@ export class RNCComponent implements OnInit {
     private usuarioService: UsuarioServiceDB,
     private RNCService: RNCService,
     private route: ActivatedRoute,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -94,6 +98,7 @@ export class RNCComponent implements OnInit {
       this.RNCService.getRNC(id).subscribe({
         next: (rnc) => {
           this.rnc = rnc;
+          this.editor.quill.pasteHTML(rnc.descricao)
           console.log(rnc)
         },
         error: (error) => {
@@ -174,6 +179,7 @@ export class RNCComponent implements OnInit {
       };
 
       this.rnc.rnc_items?.push(rncItem);
+      this.total_custo();
     }
 
     this.incluirOPToggle = false;
@@ -247,7 +253,6 @@ export class RNCComponent implements OnInit {
           detail: 'RNC criada com sucesso!',
         });
         this.rnc = rnc;
-        console.log(rnc)
       },
       error: (error) => {
         console.error(error);
@@ -257,6 +262,9 @@ export class RNCComponent implements OnInit {
           detail: 'Erro ao criar a RNC. - ' + error.error,
         });
       },
+      complete: () => {
+        this.router.navigate(['/home/rnc/'+this.rnc.id]);
+      }
     });
   }
 
@@ -279,5 +287,38 @@ export class RNCComponent implements OnInit {
         });
       },
     });
+  }
+
+  createOrUpdate(){
+    const id = Number(this.route.snapshot.paramMap.get('id'));
+    if(id != 0){
+      this.update();
+    }else{
+      this.create();
+    }
+  }
+
+  aprovar(){
+    this.rnc.status = 'Fechado';
+    this.rnc.data_fechamento = new Date();
+    this.update();
+  }
+
+  isNewRNC(){
+    const id = Number(this.route.snapshot.paramMap.get('id'));
+    return id == 0;
+  }
+
+  removeRNC_item(index: number){
+    this.rnc.rnc_items?.splice(index,1);
+    this.total_custo();
+  }
+
+  total_custo(){
+    let total = 0;
+    for(let item of this.rnc.rnc_items ?? []){
+      total += ((item.ordem_producao_item.orcamento_item?.total??0)/(item.ordem_producao_item.orcamento_item?.quantidade??1))*item.quantidade;
+    }
+    this.rnc.custo = total;
   }
 }

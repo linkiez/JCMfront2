@@ -164,4 +164,9 @@ p {
 .h-12{
   height: 12px;
 }
+
+.dontBreakPage {
+  page-break-inside: avoid;
+}
+
 }
