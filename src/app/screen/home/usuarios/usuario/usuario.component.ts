@@ -241,7 +241,7 @@ export class UsuarioComponent implements OnInit {
   }
 
   createOrUpdateUsuario() {
-    if (this.usuario.id) {
+    if (Number(this.route.snapshot.paramMap.get('id')) > 0) {
       this.updateUsuario();
     } else {
       this.createUsuario();

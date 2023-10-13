@@ -1,19 +1,24 @@
-import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Inject,
+  Input,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { debounceTime } from 'rxjs';
 import { Arquivo } from 'src/app/models/arquivo';
 import { ArquivoService } from 'src/app/services/arquivo.service';
 import { DOCUMENT } from '@angular/common';
 
-
 @Component({
   selector: 'listaFiles',
   templateUrl: './listaFiles.component.html',
-  styleUrls: ['./listaFiles.component.css']
+  styleUrls: ['./listaFiles.component.css'],
 })
 export class ListaFilesComponent implements OnInit {
-
-  @Input() files: Array<Arquivo> = []
+  @Input() files: Array<Arquivo> = [];
 
   @Input() compact: boolean = false;
 
@@ -24,12 +29,10 @@ export class ListaFilesComponent implements OnInit {
   constructor(
     private messageService: MessageService,
     private arquivoService: ArquivoService,
-    @Inject(DOCUMENT) private document: Document,
+    @Inject(DOCUMENT) private document: Document
+  ) {}
 
-  ) { }
-
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   removeArquivo(rowIndex: number) {
     this.arquivoService
@@ -44,10 +47,11 @@ export class ListaFilesComponent implements OnInit {
             detail: `${error.status} - ${error.statusText} - ${error.error}`,
           });
         },
-        complete: () => {},
+        complete: () => {
+          this.files!.splice(rowIndex, 1);
+          this.emitFiles();
+        },
       });
-    this.files!.splice(rowIndex, 1);
-    this.emitFiles();
   }
 
   onFileSelected(event: Event) {
@@ -89,7 +93,7 @@ export class ListaFilesComponent implements OnInit {
       });
   }
 
-  emitFiles(){
+  emitFiles() {
     this.onChangeFiles.emit(this.files);
   }
 }

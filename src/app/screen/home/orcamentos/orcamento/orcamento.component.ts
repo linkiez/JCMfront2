@@ -687,7 +687,7 @@ export class OrcamentoComponent implements OnInit {
 
   async createOrUpdate() {
     if (await this.validacoes()) {
-      if (this.id === 0) {
+      if (Number(this.route.snapshot.paramMap.get('id')) === 0) {
         this.create();
       } else {
         this.update();

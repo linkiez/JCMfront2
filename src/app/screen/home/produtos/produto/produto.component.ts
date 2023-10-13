@@ -96,7 +96,7 @@ export class ProdutoComponent implements OnInit {
   }
 
   createOrUpdate(){
-    if(this.produto.id == undefined){
+    if(Number(this.route.snapshot.paramMap.get('id'))==0){
       this.createProduto()
     }else{
       this.updateProduto()
