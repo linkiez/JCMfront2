@@ -383,23 +383,26 @@
       <div pInputText>{{ rnc.custo  | currency : 'BRL'}}</div>
     </div>
     <hr />
-    <div class="row">
-      <div class="col-5 flex flex-column">
-        <strong>Inspeção Final:</strong>
-        <span>🔲Aprovado, 🔲Reprovado</span>
+    <div class="dontBreakPage">
+      <div class="row">
+        <div class="col-5 flex flex-column">
+          <strong>Inspeção Final:</strong>
+          <span>🔲Aprovado, 🔲Reprovado</span>
+        </div>
+        <div class="col">Nome:</div>
+        <div class="col">Data:</div>
       </div>
-      <div class="col">Nome:</div>
-      <div class="col">Data:</div>
+      <div class="row">
+        <small
+          >Observações: Tolerâncias não indicadas nos desenhos/amostras serão
+          utilizados as da norma NBR ISO2768-1 conforme determinado pelo cliente.
+          Setores: Caldeiraria (C) Grosso, Plasma/Dobra (C) Grosso. Baixo Carbono:
+          Aços 1006/1008/1010/1020.
+        </small>
+        <small>Análise Crítica OK, conforme I-002 de vendas, item 6.1.2</small>
+      </div>
     </div>
-    <div class="row">
-      <small
-        >Observações: Tolerâncias não indicadas nos desenhos/amostras serão
-        utilizados as da norma NBR ISO2768-1 conforme determinado pelo cliente.
-        Setores: Caldeiraria (C) Grosso, Plasma/Dobra (C) Grosso. Baixo Carbono:
-        Aços 1006/1008/1010/1020.
-      </small>
-      <small>Análise Crítica OK, conforme I-002 de vendas, item 6.1.2</small>
-    </div>
+
     <div
       class="dontBreakPage"
       *ngFor="let rnc_item of rnc.rnc_items; let index = index"
