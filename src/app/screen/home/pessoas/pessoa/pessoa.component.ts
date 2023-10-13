@@ -241,8 +241,8 @@ export class PessoaComponent implements OnInit {
       });
   }
 
-  deleteVendedor(){
-    if(this.pessoa.vendedor?.id){
+  deleteOrRestoreVendedor(){
+    if(this.pessoa.vendedor?.id && this.pessoa.vendedor?.deletedAt == null){
       this.vendedorService.deleteVendedor(this.pessoa.vendedor).subscribe({
         error: (error) => {
           console.error(error);
@@ -256,18 +256,37 @@ export class PessoaComponent implements OnInit {
           this.messageService.add({
             severity: 'success',
             summary: 'Sucesso',
-            detail: 'O vendedor foi exluido.',
+            detail: 'O vendedor foi excluido.',
           });
-          this.pessoa.vendedor = {};
+          this.getPessoa();
         },
       });
-    }else{
-      this.pessoa.vendedor = undefined;
+    }else if (this.pessoa.vendedor?.id && this.pessoa.vendedor?.deletedAt != null) {
+
+      this.vendedorService.restoreVendedor(this.pessoa.vendedor).subscribe({
+        error: (error) => {
+          console.error(error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: 'Não foi possível restaurar o vendedor. - ' + error.error,
+          });
+        },
+        complete: () => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Sucesso',
+            detail: 'O vendedor foi restaurado.',
+          });
+          this.getPessoa();
+        },
+      });
     }
+
   }
 
-  deleteEmpresa(){
-    if(this.pessoa.empresa?.id){
+  deleteOrRestoreEmpresa(){
+    if(this.pessoa.empresa?.id && this.pessoa.empresa?.deletedAt == null){
       this.empresaService.deleteEmpresa(this.pessoa.empresa).subscribe({
         error: (error) => {
           console.error(error);
@@ -283,16 +302,33 @@ export class PessoaComponent implements OnInit {
             summary: 'Sucesso',
             detail: 'A empresa foi exluida.',
           });
-          this.pessoa.empresa = {};
+          this.getPessoa();
         },
       });
-    }else{
-      this.pessoa.empresa = undefined;
+    }else if(this.pessoa.empresa?.id && this.pessoa.empresa?.deletedAt != null){
+      this.empresaService.restoreEmpresa(this.pessoa.empresa).subscribe({
+        error: (error) => {
+          console.error(error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: 'Não foi possível restaurar a empresa. - ' + error.error,
+          });
+        },
+        complete: () => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Sucesso',
+            detail: 'A empresa foi restaurada.',
+          });
+          this.getPessoa();
+        },
+      });
     }
   }
 
-  deleteOperador(){
-    if(this.pessoa.operador?.id){
+  deleteOrRestoreOperador(){
+    if(this.pessoa.operador?.id && this.pessoa.operador?.deletedAt == null){
       this.operadorService.deleteOperador(this.pessoa.operador).subscribe({
         error: (error: any) => {
           console.error(error);
@@ -308,16 +344,33 @@ export class PessoaComponent implements OnInit {
             summary: 'Sucesso',
             detail: 'O operador foi exluido.',
           });
-          this.pessoa.operador = undefined;
+          this.getPessoa()
         },
       });
-    }else{
-      this.pessoa.operador = undefined;
+    }else if(this.pessoa.operador?.id && this.pessoa.operador?.deletedAt != null){
+      this.operadorService.restoreOperador(this.pessoa.operador).subscribe({
+        error: (error: any) => {
+          console.error(error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: 'Não foi possível restaurar o operador. - ' + error.error,
+          });
+        },
+        complete: () => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Sucesso',
+            detail: 'O operador foi restaurado.',
+          });
+          this.getPessoa()
+        },
+      });
     }
   }
 
-  deleteFornecedor(){
-    if(this.pessoa.fornecedor?.id){
+  deleteOrRestoreFornecedor(){
+    if(this.pessoa.fornecedor?.id && this.pessoa.fornecedor?.deletedAt == null){
       this.fornecedorService.deleteFornecedor(this.pessoa.fornecedor).subscribe({
         error: (error: any) => {
           console.log(error);
@@ -333,11 +386,28 @@ export class PessoaComponent implements OnInit {
             summary: 'Sucesso',
             detail: 'O fornecedor foi exluido.',
           });
-          this.pessoa.fornecedor = undefined;
+          this.getPessoa()
         },
       });
-    }else{
-      this.pessoa.fornecedor = undefined;
+    }else if(this.pessoa.fornecedor?.id && this.pessoa.fornecedor?.deletedAt != null){
+      this.fornecedorService.restoreFornecedor(this.pessoa.fornecedor).subscribe({
+        error: (error: any) => {
+          console.log(error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: 'Não foi possível restaurar o fornecedor. - ' + error.error,
+          });
+        },
+        complete: () => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Sucesso',
+            detail: 'O fornecedor foi restaurado.',
+          });
+          this.getPessoa()
+        },
+      });
     }
   }
 

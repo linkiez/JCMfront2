@@ -34,4 +34,12 @@ export class FornecedorService {
       })
 
   }
+
+  restoreFornecedor(fornecedor: Fornecedor): Observable<Object> {
+    return this.http
+      .post(environment.backendURL + 'fornecedor/restore/' + fornecedor.id, {
+        responseType: 'json',
+      })
+
+  }
 }
