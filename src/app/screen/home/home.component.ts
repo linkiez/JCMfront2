@@ -24,15 +24,15 @@ export class HomeComponent implements OnInit {
         },
         {
           label: 'Orcamentos',
-          routerLink: 'orcamentos'
+          routerLink: 'orcamentos',
         },
         {
           label: 'Ordens de Produção',
-          routerLink: 'ordensproducao'
+          routerLink: 'ordensproducao',
         },
         {
           label: 'Pedidos de Compra',
-          routerLink: 'pedidoscompras'
+          routerLink: 'pedidoscompras',
         },
         {
           label: 'Pessoas',
@@ -54,7 +54,16 @@ export class HomeComponent implements OnInit {
         {
           label: 'Indice Qualidade Fornecedor',
           routerLink: 'iqf',
-        }
+        },
+      ],
+    },
+    {
+      label: 'Relatórios',
+      items: [
+        {
+          label: 'Relatório de não conformidade',
+          routerLink: 'rnc',
+        },
       ],
     },
     {
