@@ -30,7 +30,7 @@ export class AppComponent  {
         route = route.firstChild;
       }
       // Retrieve the current route's title and set it
-      const pageTitle = `${route.snapshot.data['title']?route.snapshot.data['title'] + " | ":""}JCM Metais | Corte e Dobra de Chapas | Americana, SP`;
+      const pageTitle = `${route.snapshot.data['title']?route.snapshot.data['title'] + " | ":""}Refilauq - Sistema de Gestão de Qualidade e Produção`;
       this.titleService.setTitle(pageTitle);
     });
   }
