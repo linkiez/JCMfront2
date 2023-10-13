@@ -904,7 +904,7 @@ export class OrcamentoComponent implements OnInit {
         .aprovarOrcamento(this.orcamento.id!, this.aprovacao)
         .subscribe({
           next: (response) => {
-            console.log(response);
+            // console.log(response);
           },
           error: (error) => {
             console.error(error);
