@@ -95,7 +95,7 @@
         }"
         (click)="clickDeleted(pessoa.id)"
       >
-        <td>{{ pessoa.id }}</td>
+        <td>{{ pessoa.fornecedor.id }}</td>
         <td>{{ pessoa.nome }}</td>
         <td>{{ pessoa.cnpj_cpf | cpfCnpj }}</td>
         <td>{{ pessoa.telefone | telefone }}</td>
