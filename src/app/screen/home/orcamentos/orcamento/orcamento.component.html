@@ -640,7 +640,7 @@
                       [ngModel]="item.imposto | percent : '1.2-2' : 'PT-BR'"
                       (ngModelChange)="onChangeItemImposto($event, item)"
                       [disabled]="orcamento.status !== 'Orçamento'"
-                      (input)="calculaTotal(item)"
+                      (input)="calculaPeso(item)"
                     />
                   </ng-template>
                   <ng-template pTemplate="output">

@@ -33,4 +33,10 @@ export class EmpresaService {
       { responseType: 'json' }
     )
   }
+
+  restoreEmpresa(empresa: Empresa): Observable<Object> {
+    return this.http.post(environment.backendURL + 'empresa/restore/' + empresa.id, {
+      responseType: 'json',
+    })
+  }
 }

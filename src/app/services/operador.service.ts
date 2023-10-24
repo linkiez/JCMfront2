@@ -38,4 +38,12 @@ export class OperadorService {
       })
 
   }
+
+  restoreOperador(operador: Operador): Observable<Object> {
+    return this.http
+      .post(environment.backendURL + 'operador/restore/' + operador.id, {
+        responseType: 'json',
+      })
+
+  }
 }

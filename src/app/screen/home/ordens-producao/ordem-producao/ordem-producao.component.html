@@ -20,7 +20,14 @@
             </tr>
             <tr>
               <td>Orçamento:</td>
-              <td class="link" [routerLink]="['/home/orcamentos/'+ordemProducao.orcamento?.id]">{{ ordemProducao.orcamento?.id }}</td>
+              <td
+                class="link"
+                [routerLink]="[
+                  '/home/orcamentos/' + ordemProducao.orcamento?.id
+                ]"
+              >
+                {{ ordemProducao.orcamento?.id }}
+              </td>
               <td>Prazo de entrega:</td>
               <td>{{ ordemProducao.data_prazo | date : "dd/MM/yyyy" }}</td>
             </tr>
@@ -79,11 +86,15 @@
                 <td>
                   {{ itemProducao.produto?.nome }} -
                   {{
-                    ordemProducao.orcamento!.orcamento_items[index].largura
-                      | number
+                    (itemProducao.orcamento_item?.largura
+                      ? itemProducao.orcamento_item?.largura
+                      : ordemProducao.orcamento!.orcamento_items[index].largura
+                    ) | number
                   }}x{{
-                    ordemProducao.orcamento!.orcamento_items[index].altura
-                      | number
+                    (itemProducao.orcamento_item?.altura
+                      ? itemProducao.orcamento_item?.altura
+                      : ordemProducao.orcamento!.orcamento_items[index].altura
+                    ) | number
                   }}mm
                 </td>
                 <td>{{ itemProducao.quantidade }}</td>

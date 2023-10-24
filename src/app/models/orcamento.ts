@@ -62,6 +62,7 @@ export interface OrcamentoItem {
   total_peso?: number;
   total_hora?: number;
   custo?: number;
+  orcamento?: Orcamento;
 }
 
 export interface OrcamentoItemXlSX {

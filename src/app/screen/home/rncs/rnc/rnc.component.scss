@@ -1,19 +1,10 @@
-*{ color: white; }
-
-.p-button, a{
-  color: black;
-}
-
 td {
   border: 0px solid #ccc;
-  padding: 8px;
 }
 
 th {
   border: 0px solid #ccc;
   font-weight: bold;
-  background-color: #c8ffc8;
-  color: black;
 }
 
 table {
@@ -29,6 +20,14 @@ small {
 button {
   margin-right: 10px;
 }
+
+div .noview p {
+  border: 1px solid black;
+  padding: 5px;
+  margin: 5px;
+}
+
+
 
 .materialCliente {
   color: #9d1c24;

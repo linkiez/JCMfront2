@@ -428,8 +428,8 @@
                 [(ngModel)]="pessoa.fornecedor.observacao"
               ></textarea>
             </div>
-            <div class="input col-6">
-              <label for="InpCreatedAtFornecedor">Criado em</label>
+            <div class="input col-4">
+              <label for="InpCreatedAtFornecedor">Criado em:</label>
               <input
                 name="InpCreatedAtFornecedor"
                 class="p-inputtext"
@@ -441,8 +441,8 @@
                 disabled
               />
             </div>
-            <div class="input col-5">
-              <label for="InpUpdatedAtFornecedor">Atualizado em</label>
+            <div class="input col-4">
+              <label for="InpUpdatedAtFornecedor">Atualizado em:</label>
               <input
                 name="InpUpdatedAtFornecedor"
                 class="p-inputtext"
@@ -454,13 +454,34 @@
                 disabled
               />
             </div>
+            <div class="input col-4" *ngIf="pessoa.fornecedor.deletedAt">
+              <label for="InpUpdatedAtFornecedor">Apagado em:</label>
+              <input
+                name="InpDeletedAtFornecedor"
+                class="p-inputtext"
+                type="text"
+                pInputText
+                value="{{
+                  pessoa.fornecedor.deletedAt| date : 'dd/MM/yyyy HH:mm:ss'
+                }}"
+                disabled
+              />
+            </div>
             <div class="col-1 d-flex flex-column justify-content-end">
               <button
                 pButton
                 type="button"
-                icon="pi pi-trash"
-                (click)="deleteFornecedor()"
-              ></button>
+                style="height: 42px; width: 42px;"
+                (click)="deleteOrRestoreFornecedor()"
+              >
+                <i
+                  class="pi"
+                  [ngClass]="{
+                    'pi-trash': !pessoa.fornecedor.deletedAt,
+                    'pi-history': pessoa.fornecedor.deletedAt
+                  }"
+                ></i>
+              </button>
             </div>
           </div></form
       ></ng-template>
@@ -476,9 +497,9 @@
           <i class="pi pi-plus"></i></button
       ></ng-template>
       <ng-template pTemplate="content"
-        ><form action="" class="d-flex flex-wrap" *ngIf="pessoa.operador">
+        ><form action="" class="" *ngIf="pessoa.operador">
           <div class="row">
-            <div class="input col-3">
+            <div class="input col-1">
               <label for="InpIdOperador">Id</label>
               <input
                 name="InpIdOperador"
@@ -489,8 +510,8 @@
                 [(ngModel)]="pessoa.operador.id"
               />
             </div>
-            <div class="input col-4">
-              <label for="InpCreatedAtOperador">Criado em</label>
+            <div class="input col-3">
+              <label for="InpCreatedAtOperador">Criado em:</label>
               <input
                 name="InpCreatedAtOperador"
                 class="p-inputtext"
@@ -502,8 +523,8 @@
                 disabled
               />
             </div>
-            <div class="input col-4">
-              <label for="InpUpdatedAtOperador">Atualizado em</label>
+            <div class="input col-3">
+              <label for="InpUpdatedAtOperador">Atualizado em:</label>
               <input
                 name="InpUpdatedAtOperador"
                 class="p-inputtext"
@@ -515,13 +536,34 @@
                 disabled
               />
             </div>
+            <div class="input col-3" *ngIf="pessoa.operador.deletedAt">
+              <label for="InpUpdatedAtOperador">Apagado em:</label>
+              <input
+                name="InpDeletedAtOperador"
+                class="p-inputtext"
+                type="text"
+                pInputText
+                value="{{
+                  pessoa.operador.deletedAt | date : 'dd/MM/yyyy HH:mm:ss'
+                }}"
+                disabled
+              />
+            </div>
             <div class="col-1 d-flex flex-column justify-content-end">
               <button
                 pButton
                 type="button"
-                icon="pi pi-trash"
-                (click)="deleteOperador()"
-              ></button>
+                style="height: 42px; width: 42px;"
+                (click)="deleteOrRestoreOperador()"
+              >
+                <i
+                  class="pi"
+                  [ngClass]="{
+                    'pi-trash': !pessoa.operador.deletedAt,
+                    'pi-history': pessoa.operador.deletedAt
+                  }"
+                ></i>
+              </button>
             </div>
           </div></form
       ></ng-template>
@@ -537,9 +579,9 @@
           <i class="pi pi-plus"></i></button
       ></ng-template>
       <ng-template pTemplate="content"
-        ><form action="" class="d-flex flex-wrap" *ngIf="pessoa.empresa">
+        ><form action="" class="" *ngIf="pessoa.empresa">
           <div class="row">
-            <div class="input col-2">
+            <div class="input col-1">
               <label for="InpIdEmpresa">Id</label>
               <input
                 name="InpIdEmpresa"
@@ -550,8 +592,8 @@
                 [(ngModel)]="pessoa.empresa.id"
               />
             </div>
-            <div class="input col-3">
-              <label for="InpCreatedAtEmpresa">Criado em</label>
+            <div class="input col-2">
+              <label for="InpCreatedAtEmpresa">Criado em:</label>
               <input
                 name="InpCreatedAtEmpresa"
                 class="p-inputtext"
@@ -563,8 +605,8 @@
                 disabled
               />
             </div>
-            <div class="input col-3">
-              <label for="InpUpdatedAtEmpresa">Atualizado em</label>
+            <div class="input col-2">
+              <label for="InpUpdatedAtEmpresa">Atualizado em:</label>
               <input
                 name="InpUpdatedAtEmpresa"
                 class="p-inputtext"
@@ -572,6 +614,19 @@
                 pInputText
                 value="{{
                   pessoa.empresa.updatedAt | date : 'dd/MM/yyyy HH:mm:ss'
+                }}"
+                disabled
+              />
+            </div>
+            <div class="input col-2" *ngIf="pessoa.empresa.deletedAt">
+              <label for="InpUpdatedAtEmpresa">Apagado em:</label>
+              <input
+                name="InpUpdatedAtEmpresa"
+                class="p-inputtext"
+                type="text"
+                pInputText
+                value="{{
+                  pessoa.empresa.deletedAt | date : 'dd/MM/yyyy HH:mm:ss'
                 }}"
                 disabled
               />
@@ -590,9 +645,17 @@
               <button
                 pButton
                 type="button"
-                icon="pi pi-trash"
-                (click)="deleteEmpresa()"
-              ></button>
+                style="height: 42px; width: 42px;"
+                (click)="deleteOrRestoreEmpresa()"
+              >
+                <i
+                  class="pi"
+                  [ngClass]="{
+                    'pi-trash': !pessoa.empresa.deletedAt,
+                    'pi-history': pessoa.empresa.deletedAt
+                  }"
+                ></i>
+              </button>
             </div>
           </div>
           <div class="row">
@@ -639,7 +702,7 @@
       <ng-template pTemplate="content"
         ><form action="" class="d-flex flex-wrap" *ngIf="pessoa.vendedor">
           <div class="row">
-            <div class="input col-4">
+            <div class="input col-2">
               <label for="InpIdVendedor">Id</label>
               <input
                 name="InpIdVendedor"
@@ -650,8 +713,8 @@
                 [(ngModel)]="pessoa.vendedor.id"
               />
             </div>
-            <div class="input col-4">
-              <label for="InpCreatedAtVendedor">Criado em</label>
+            <div class="input col-3">
+              <label for="InpCreatedAtVendedor">Criado em:</label>
               <input
                 name="InpCreatedAtVendedor"
                 class="p-inputtext"
@@ -664,7 +727,7 @@
               />
             </div>
             <div class="input col-3">
-              <label for="InpUpdatedAtVendedor">Atualizado em</label>
+              <label for="InpUpdatedAtVendedor">Atualizado em:</label>
               <input
                 name="InpUpdatedAtVendedor"
                 class="p-inputtext"
@@ -676,13 +739,34 @@
                 disabled
               />
             </div>
-            <div class="col-1 d-flex flex-column justify-content-end">
+            <div class="input col-3" *ngIf="pessoa.vendedor.deletedAt">
+              <label for="InpUpdatedAtVendedor">Apagado em:</label>
+              <input
+                name="InpUpdatedAtVendedor"
+                class="p-inputtext"
+                type="text"
+                pInputText
+                value="{{
+                  pessoa.vendedor.deletedAt | date : 'dd/MM/yyyy HH:mm:ss'
+                }}"
+                disabled
+              />
+            </div>
+            <div class="col-1 flex flex-column justify-content-end">
               <button
                 pButton
                 type="button"
-                icon="pi pi-trash"
-                (click)="deleteVendedor()"
-              ></button>
+                style="height: 42px; width: 42px;"
+                (click)="deleteOrRestoreVendedor()"
+              >
+                <i
+                  class="pi"
+                  [ngClass]="{
+                    'pi-trash': !pessoa.vendedor.deletedAt,
+                    'pi-history': pessoa.vendedor.deletedAt
+                  }"
+                ></i>
+              </button>
             </div>
           </div></form
       ></ng-template>

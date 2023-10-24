@@ -292,7 +292,7 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   createOrUpdate() {
-    if (this.pedidoCompra.id == undefined) {
+    if (Number(this.route.snapshot.paramMap.get('id')) == 0) {
       this.createPedido();
     } else {
       this.updatePedido();

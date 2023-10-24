@@ -687,7 +687,7 @@ export class OrcamentoComponent implements OnInit {
 
   async createOrUpdate() {
     if (await this.validacoes()) {
-      if (this.id === 0) {
+      if (Number(this.route.snapshot.paramMap.get('id')) === 0) {
         this.create();
       } else {
         this.update();
@@ -904,7 +904,7 @@ export class OrcamentoComponent implements OnInit {
         .aprovarOrcamento(this.orcamento.id!, this.aprovacao)
         .subscribe({
           next: (response) => {
-            console.log(response);
+            // console.log(response);
           },
           error: (error) => {
             console.error(error);

@@ -67,5 +67,12 @@ export class QueryService {
     ano: new Date().getFullYear(),
   };
 
+  public rncs: Query = {
+    page: 0,
+    pageCount: 25,
+    searchValue: '',
+    deleted: false,
+  };
+
   constructor() {}
 }
