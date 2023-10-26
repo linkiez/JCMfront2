@@ -60,7 +60,7 @@
         {{ cliente }}
       </p></td>
       <td>{{ rnc.createdAt | date : 'dd/MM/yyyy HH:mm:ss'}}</td>
-      <td>{{ rnc.responsavel_analise.pessoa.nome }}</td>
+      <td>{{ rnc.responsavel_analise?.pessoa.nome }}</td>
       <td>{{ rnc.data_fechamento | date : 'dd/MM/yyyy HH:mm:ss'}}</td>
       <td>{{ rnc.custo  | currency : 'BRL'}}</td>
     </tr>
