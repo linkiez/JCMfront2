@@ -1,9 +1,10 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'caixaDeStatus',
   templateUrl: './caixaDeStatus.component.html',
-  styleUrls: ['./caixaDeStatus.component.css']
+  styleUrls: ['./caixaDeStatus.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CaixaDeStatusComponent implements OnInit {
 

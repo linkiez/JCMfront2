@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
   selector: 'app-servicos',
   templateUrl: './servicos.component.html',
-  styleUrls: ['./servicos.component.scss']
+  styleUrls: ['./servicos.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ServicosComponent {
   data = [

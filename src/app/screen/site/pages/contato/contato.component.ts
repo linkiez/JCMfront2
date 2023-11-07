@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import e from 'express';
 import { ReCaptchaV3Service } from 'ng-recaptcha';
@@ -11,6 +11,7 @@ import { environment } from 'src/environments/environment';
   selector: 'app-contato',
   templateUrl: './contato.component.html',
   styleUrls: ['./contato.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContatoComponent {
   @ViewChild('form', { static: false }) signupForm!: NgForm;

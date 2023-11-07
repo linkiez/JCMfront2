@@ -1,9 +1,10 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
   selector: 'app-button-saiba-mais',
   templateUrl: './button-saiba-mais.component.html',
   styleUrls: ['./button-saiba-mais.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ButtonSaibaMaisComponent {
   @Input() label: string = 'Saiba mais';
