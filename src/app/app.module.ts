@@ -22,6 +22,8 @@ import { MessageService } from 'primeng/api';
 import { HeaderModule } from './screen/site/components/header/header.module';
 import { FooterModule } from './screen/site/components/footer/footer.module';
 import { ButtonModule } from 'primeng/button';
+import { GoogleTagManagerModule } from 'angular-google-tag-manager';
+
 
 @NgModule({
   declarations: [AppComponent, LoginComponent],
@@ -36,7 +38,10 @@ import { ButtonModule } from 'primeng/button';
     NgOptimizedImage,
     HeaderModule,
     FooterModule,
-    ButtonModule
+    ButtonModule,
+    GoogleTagManagerModule.forRoot({
+      id: 'GTM-PJF7RJ9'
+    })
   ],
   providers: [
     { provide: LOCALE_ID, useValue: 'pt-BR' },
