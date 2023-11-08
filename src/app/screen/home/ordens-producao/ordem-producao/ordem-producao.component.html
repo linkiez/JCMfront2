@@ -107,7 +107,7 @@
                       [id]="'rir' + index"
                       type="text"
                       [(ngModel)]="itemProducao.registro_inspecao_recebimento"
-                      (onSelect)="itemProducao.id_rir = $event.id"
+                      (onSelect)="itemProducao.id_rir = $event.value.id"
                       field="id"
                       [suggestions]="rirs"
                       (completeMethod)="searchRir(itemProducao)"
