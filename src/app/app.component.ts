@@ -4,8 +4,6 @@ import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { GoogleTagManagerService } from 'angular-google-tag-manager';
 import { filter } from 'rxjs/operators';
 
-declare var dataLayer: any;
-
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -17,7 +15,7 @@ export class AppComponent  {
     private titleService: Title,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    , private gtmService: GoogleTagManagerService
+    private gtmService: GoogleTagManagerService
   ) {
     this.changeTitleOnNavigation();
   }
