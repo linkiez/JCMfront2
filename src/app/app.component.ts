@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
-import { GoogleTagManagerService } from 'angular-google-tag-manager';
 import { filter } from 'rxjs/operators';
 
 @Component({
@@ -14,8 +13,7 @@ export class AppComponent  {
   constructor(
     private titleService: Title,
     private router: Router,
-    private activatedRoute: ActivatedRoute,
-    private gtmService: GoogleTagManagerService
+    private activatedRoute: ActivatedRoute
   ) {
     this.changeTitleOnNavigation();
   }
@@ -24,7 +22,7 @@ export class AppComponent  {
     this.router.events.pipe(
       // Filter out only NavigationEnd events
       filter(event => event instanceof NavigationEnd)
-    ).subscribe((event) => {
+    ).subscribe(() => {
       let route = this.activatedRoute;
       while (route.firstChild) {
         route = route.firstChild;
@@ -32,10 +30,6 @@ export class AppComponent  {
       // Retrieve the current route's title and set it
       const pageTitle = `${route.snapshot.data['title']?route.snapshot.data['title'] + " | ":""}JCM Metais | Corte e Dobra de Chapas | Americana, SP`;
       this.titleService.setTitle(pageTitle);
-
-      if (event instanceof NavigationEnd) {
-        this.gtmService.pushTag({ event: 'pageView', pagePath: event.urlAfterRedirects });
-      }
     });
   }
 }
