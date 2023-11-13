@@ -6,6 +6,28 @@ const expressStaticGzip = require('express-static-gzip');
 const app = express();
 const staticFilesDir = path.join(__dirname, "dist", "jcmfront2");
 
+// app.use(express.static(staticFilesDir));
+const robot =
+`User-agent: *
+Disallow: /login
+Disallow: /home`
+
+app.get("/Robots.txt", function (req, res) {
+  res.send(robot);
+});
+
+app.get("/robots.txt", function (req, res) {
+  res.send(robot);
+});
+
+app.get("/sitemap.xml", function (req, res) {
+  res.sendFile("sitemap.xml", { root: staticFilesDir });
+});
+
+// app.get("/*", function (req, res) {
+//   res.sendFile(path.join(staticFilesDir, "index.html"));
+// });
+
 app.use('/', expressStaticGzip(staticFilesDir, {
   enableBrotli: true,
   orderPreference: ['br', 'gzip'], // Prefer Brotli over Gzip
@@ -13,20 +35,7 @@ app.use('/', expressStaticGzip(staticFilesDir, {
 }));
 
 app.get('*', (req, res) => {
-  switch (req.url.pathname) {
-    case '/robots.txt':
-      res.sendFile('robots.txt', { root: staticFilesDir });
-      break;
-    case '/Robots.txt':
-      res.sendFile('robots.txt', { root: staticFilesDir });
-      break;
-    case '/sitemap.xml':
-      res.sendFile('sitemap.xml', { root: staticFilesDir });
-      break;
-    default:
-      res.sendFile('index.html', { root: staticFilesDir });
-      break;
-  }
+  res.sendFile('index.html', { root: staticFilesDir });
 });
 
 
