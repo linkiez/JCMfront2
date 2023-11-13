@@ -42,3 +42,6 @@ Allow: /contato
 Allow: /
 Disallow: /login
 Disallow: /home
+
+
+Sitemap: https://www.jcmmetais.com.br/sitemap.xml
