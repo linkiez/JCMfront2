@@ -7,17 +7,13 @@ const app = express();
 const staticFilesDir = path.join(__dirname, "dist", "jcmfront2");
 
 // app.use(express.static(staticFilesDir));
-const robot =
-`User-agent: *
-Disallow: /login
-Disallow: /home`
 
 app.get("/Robots.txt", function (req, res) {
-  res.send(robot);
+  res.sendFile("robots.txt", { root: staticFilesDir });
 });
 
 app.get("/robots.txt", function (req, res) {
-  res.send(robot);
+  res.sendFile("robots.txt", { root: staticFilesDir });
 });
 
 app.get("/sitemap.xml", function (req, res) {
