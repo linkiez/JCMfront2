@@ -425,10 +425,10 @@
               <th class="noprint">RIR</th>
               <th>Processos</th>
               <th>Largura (blank)</th>
-              <th>Altura (blank)</th>
+              <th>Comprimento (blank)</th>
               <th>Qtd.</th>
               <th>Imposto</th>
-              <th class="noprint">Preço (Quilo)</th>
+              <th class="noprint">Preço (KG/UN)</th>
               <th class="noprint">Tempo</th>
               <th class="noprint">Preço (Hora)</th>
               <th>Valor Uni.</th>
@@ -490,7 +490,7 @@
                       id="produto"
                       type="text"
                       [(ngModel)]="item.produto"
-                      (onSelect)="calculaPeso(item)"
+                      (onSelect)="calculaPeso(item); setPrecoPecaProduto(item)"
                       field="nome"
                       [suggestions]="produtos"
                       (completeMethod)="searchProduto($event)"
@@ -676,7 +676,7 @@
                             {{ markup.valor }}:
                             {{
                               markup.valor2 *
-                                item.produto.pedido_compra_items[0].precoComIpi
+                                item.produto.pedido_compra_items[0].precoComIpi||0
                                 | currency : "BRL"
                             }}
                           </div>

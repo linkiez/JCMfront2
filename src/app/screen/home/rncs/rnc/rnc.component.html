@@ -353,7 +353,7 @@
             [forceSelection]="true"
             [style]="{ width: '100%' }"
             [inputStyle]="{ width: '100%' }"
-            (onSelect)="selectOrdemProducao($event.id)"
+            (onSelect)="selectOrdemProducao($event.value.id)"
             class="noprint"
             [disabled]="rnc.status !== 'Aberto'"
           ></p-autoComplete>

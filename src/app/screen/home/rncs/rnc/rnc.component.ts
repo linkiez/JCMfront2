@@ -99,7 +99,6 @@ export class RNCComponent implements OnInit {
         next: (rnc) => {
           this.rnc = rnc;
           this.editor.quill.pasteHTML(rnc.descricao)
-          console.log(rnc)
         },
         error: (error) => {
           console.error(error)

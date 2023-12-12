@@ -1,7 +1,7 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   EventEmitter,
-  Inject,
   Input,
   OnInit,
   Output,
@@ -10,12 +10,12 @@ import { MessageService } from 'primeng/api';
 import { debounceTime } from 'rxjs';
 import { Arquivo } from 'src/app/models/arquivo';
 import { ArquivoService } from 'src/app/services/arquivo.service';
-import { DOCUMENT } from '@angular/common';
 
 @Component({
   selector: 'listaFiles',
   templateUrl: './listaFiles.component.html',
   styleUrls: ['./listaFiles.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ListaFilesComponent implements OnInit {
   @Input() files: Array<Arquivo> = [];
@@ -29,7 +29,6 @@ export class ListaFilesComponent implements OnInit {
   constructor(
     private messageService: MessageService,
     private arquivoService: ArquivoService,
-    @Inject(DOCUMENT) private document: Document
   ) {}
 
   ngOnInit() {}
@@ -40,7 +39,7 @@ export class ListaFilesComponent implements OnInit {
       .pipe(debounceTime(1000))
       .subscribe({
         error: (error) => {
-          console.log(error);
+          console.error(error);
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
@@ -67,7 +66,7 @@ export class ListaFilesComponent implements OnInit {
           },
           error: (error) => {
             this.fileLoading = false;
-            console.log(error);
+            console.error(error);
             this.messageService.add({
               severity: 'error',
               summary: 'Erro',
@@ -88,7 +87,7 @@ export class ListaFilesComponent implements OnInit {
       .pipe(debounceTime(1000))
       .subscribe({
         next: (url: any) => {
-          this.document.location.href = url.url;
+          document.location.href = url.url;
         },
       });
   }

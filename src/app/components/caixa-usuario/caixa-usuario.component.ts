@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { UsuarioService } from 'src/app/authentication/usuario.service';
 import { Usuario } from 'src/app/models/usuario';
@@ -6,7 +6,8 @@ import { Usuario } from 'src/app/models/usuario';
 @Component({
   selector: 'app-caixa-usuario',
   templateUrl: './caixa-usuario.component.html',
-  styleUrls: ['./caixa-usuario.component.scss']
+  styleUrls: ['./caixa-usuario.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CaixaUsuarioComponent implements OnInit {
 

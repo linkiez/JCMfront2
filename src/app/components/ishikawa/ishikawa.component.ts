@@ -1,9 +1,10 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-ishikawa',
   templateUrl: './ishikawa.component.html',
-  styleUrls: ['./ishikawa.component.scss']
+  styleUrls: ['./ishikawa.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IshikawaComponent implements OnInit {
   @ViewChild('ishikawaContainer', { read: ElementRef}) ishikawaContainer: ElementRef | undefined

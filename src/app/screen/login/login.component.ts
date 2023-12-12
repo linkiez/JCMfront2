@@ -1,5 +1,5 @@
 import { AccessTokenService } from 'src/app/authentication/accessToken.service';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthenticationService } from 'src/app/authentication/authentication.service';
 import { Login } from '../../models/login';
@@ -11,7 +11,8 @@ import {Message,MessageService} from 'primeng/api';
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
-  providers: [MessageService]
+  providers: [MessageService],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginComponent implements OnInit {
   email: string = '';

@@ -3,8 +3,6 @@ import { Title } from '@angular/platform-browser';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { filter } from 'rxjs/operators';
 
-declare var dataLayer: any;
-
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',

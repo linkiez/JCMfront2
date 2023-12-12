@@ -1,3 +1,47 @@
 User-agent: *
+Allow: /produtos
+Allow: /servicos
+Allow: /trabalhe
+Allow: /contato
+Allow: /
 Disallow: /login
 Disallow: /home
+
+User-agent: Googlebot
+Allow: /produtos
+Allow: /servicos
+Allow: /trabalhe
+Allow: /contato
+Allow: /
+Disallow: /login
+Disallow: /home
+
+User-agent: Googlebot-Image
+Allow: /produtos
+Allow: /servicos
+Allow: /trabalhe
+Allow: /contato
+Allow: /
+Disallow: /login
+Disallow: /home
+
+User-agent: Mediapartners-Google
+Allow: /produtos
+Allow: /servicos
+Allow: /trabalhe
+Allow: /contato
+Allow: /
+Disallow: /login
+Disallow: /home
+
+User-agent: Adsbot-Google
+Allow: /produtos
+Allow: /servicos
+Allow: /trabalhe
+Allow: /contato
+Allow: /
+Disallow: /login
+Disallow: /home
+
+
+Sitemap: https://www.jcmmetais.com.br/sitemap.xml
