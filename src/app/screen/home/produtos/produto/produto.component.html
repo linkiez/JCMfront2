@@ -41,7 +41,7 @@
           optionValue="valor"
         ></p-dropdown>
       </div>
-      <div class="col-4">
+      <div class="col-4" *ngIf="produto.categoria !== 'Peça'">
         <label for="espessura">Espessura:</label>
         <input
           pInputText
@@ -51,6 +51,18 @@
           placeholder="espessura"
           [ngModel]="produto.espessura | number"
           (ngModelChange)="produto.espessura = toNumber($event)"
+        />
+      </div>
+      <div class="col-4" *ngIf="produto.categoria === 'Peça'">
+        <label for="espessura">Preço Unitário:</label>
+        <input
+          pInputText
+          class="p-inputtext"
+          name="preco"
+          type="text"
+          placeholder="R$0,00"
+          [ngModel]="produto.preco | currency : 'BRL'"
+          (ngModelChange)="produto.preco = onChangeNumber($event)"
         />
       </div>
       <div class="col-4">

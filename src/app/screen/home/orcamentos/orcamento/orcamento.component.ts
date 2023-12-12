@@ -1211,4 +1211,11 @@ export class OrcamentoComponent implements OnInit {
         },
       });
   }
+
+  setPrecoPecaProduto(item: OrcamentoItem){
+    console.log(item);
+    if(item.produto?.categoria === 'Peça'){
+      item.preco_quilo = item.produto?.preco;
+    }
+  }
 }

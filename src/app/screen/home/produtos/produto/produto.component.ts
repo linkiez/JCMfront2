@@ -147,4 +147,8 @@ export class ProdutoComponent implements OnInit {
   goTo(id: number){
     this.router.navigate(['/home/pedidoscompras/'+ id])
   }
+
+  onChangeNumber(event: any) {
+    return Number(event.replace(/[^\d]/g, '')) / 100;
+  }
 }

@@ -11,5 +11,5 @@ export interface Produto {
   createdAt?: Date;
   deletedAt?: Date;
   files?: Array<Arquivo>;
-
+  preco?: number;
 }
