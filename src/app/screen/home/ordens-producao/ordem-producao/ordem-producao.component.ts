@@ -13,8 +13,6 @@ import { RIRService } from 'src/app/services/rir.service';
 import { RIR } from 'src/app/models/rir';
 import { debounce, debounceTime, distinctUntilChanged } from 'rxjs';
 
-
-
 @Component({
   selector: 'app-ordem-producao',
   templateUrl: './ordem-producao.component.html',
@@ -41,38 +39,18 @@ export class OrdemProducaoComponent implements OnInit {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     this.ordemProducaoService.getOrdemProducao(id).subscribe({
       next: (ordemProducao) => {
-        ordemProducao.orcamento?.orcamento_items?.sort((a, b) => {
-          if(a.descricao && b.descricao){
-          if (a.descricao < b.descricao) {
-            return -1;
-          }
-          if (a.descricao > b.descricao) {
-            return 1;
-          }}
-          return 0;
-        })
-        ordemProducao.ordem_producao_items?.sort((a, b) => {
-          if(a.descricao && b.descricao){
-          if (a.descricao < b.descricao) {
-            return -1;
-          }
-          if (a.descricao > b.descricao) {
-            return 1;
-          }}
-          return 0;
-        })
-        this.ordemProducao = ordemProducao;
-        this.ordemProducao.ordem_producao_items?.forEach((item) => {
-          item.observacao = '<p>' + item.observacao + '<p>';
-        });
-        // console.log(ordemProducao)
+        this.ordemProducao = this.sortOrdemProducaoItems(ordemProducao);
+        // this.ordemProducao.ordem_producao_items?.forEach((item) => {
+        //   item.observacao = '<p>' + item.observacao + '<p>';
+        // });
+        console.log(ordemProducao);
       },
       error: (error) => {
         console.error(error);
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'Erro ao buscar ordem de produção - '+error.error,
+          detail: 'Erro ao buscar ordem de produção - ' + error.error,
         });
       },
       complete: () => {},
@@ -88,14 +66,19 @@ export class OrdemProducaoComponent implements OnInit {
       .updateOrdemProducao(this.ordemProducao)
       .subscribe({
         next: (ordemProducao) => {
-          this.ordemProducao = ordemProducao;
+          this.ordemProducao = this.sortOrdemProducaoItems(ordemProducao);
+          this.ordemProducao.ordem_producao_items?.forEach((item) => {
+            const regex = /<p>(.*?)<\/p>/g;
+            if (item.observacao && regex.exec(item.observacao) == null)
+              item.observacao = '<p>' + item.observacao + '</p>';
+          });
         },
         error: (error) => {
           console.error(error);
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Erro ao atualizar ordem de produção - '+error.error,
+            detail: 'Erro ao atualizar ordem de produção - ' + error.error,
           });
         },
         complete: () => {
@@ -129,9 +112,9 @@ export class OrdemProducaoComponent implements OnInit {
           Item: index + 1,
           Quantidade: item.quantidade,
           Material: `${item.produto?.nome} - ${item.descricao} - ${Number(
-            this.ordemProducao.orcamento?.orcamento_items[index].largura
+            item.orcamento_item?.largura || 0
           ).toFixed(0)}x${Number(
-            this.ordemProducao.orcamento?.orcamento_items[index].altura
+            item.orcamento_item?.altura || 0
           ).toFixed(0)}mm ${item.quantidade}PC`,
           Data:
             this.ordemProducao.createdAt?.getDate() +
@@ -162,24 +145,52 @@ export class OrdemProducaoComponent implements OnInit {
   }
 
   searchRir(item: OrdemProducaoItem) {
-    if(this.ordemProducao.orcamento?.pessoa && item.produto)
-    this.RIRService
-      .getRIRsByPessoaAndProduto(this.ordemProducao.orcamento?.pessoa.id!, item.produto.id!)
-      .pipe(debounceTime(500), distinctUntilChanged())
-      .subscribe({
-        next: (response) => {
-          console.log(response);
-          this.rirs = response;
-        },
-        error: (error) => {
-          console.error(error);
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Erro',
-            detail: 'Erro ao buscar RIRs - '+error.error,
-          });
-        }
-      });
+    if (this.ordemProducao.orcamento?.pessoa && item.produto)
+      this.RIRService.getRIRsByPessoaAndProduto(
+        this.ordemProducao.orcamento?.pessoa.id!,
+        item.produto.id!
+      )
+        .pipe(debounceTime(500), distinctUntilChanged())
+        .subscribe({
+          next: (response) => {
+            console.log(response);
+            this.rirs = response;
+          },
+          error: (error) => {
+            console.error(error);
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Erro',
+              detail: 'Erro ao buscar RIRs - ' + error.error,
+            });
+          },
+        });
   }
 
+  sortOrdemProducaoItems(ordemProducao: OrdemProducao) {
+    ordemProducao.orcamento?.orcamento_items?.sort((a, b) => {
+      if (a.descricao && b.descricao) {
+        if (a.descricao < b.descricao) {
+          return -1;
+        }
+        if (a.descricao > b.descricao) {
+          return 1;
+        }
+      }
+      return 0;
+    });
+    ordemProducao.ordem_producao_items?.sort((a, b) => {
+      if (a.descricao && b.descricao) {
+        if (a.descricao < b.descricao) {
+          return -1;
+        }
+        if (a.descricao > b.descricao) {
+          return 1;
+        }
+      }
+      return 0;
+    });
+
+    return ordemProducao;
+  }
 }
