@@ -12,10 +12,6 @@ app.use('/', expressStaticGzip(staticFilesDir, {
   orderPreference: ['br', 'gzip'], // Prefer Brotli over Gzip
 }));
 
-app.get("/Robots.txt", function (req, res) {
-  res.sendFile("robots.txt", { root: staticFilesDir });
-});
-
 app.get("/robots.txt", function (req, res) {
   res.sendFile("robots.txt", { root: staticFilesDir });
 });
