@@ -68,7 +68,7 @@
     "tailwindcss": "^3"
   },
   "engines": {
-    "node": "18",
-    "npm": "10"
+    "node": "18.x",
+    "npm": "10.x"
   }
 }
