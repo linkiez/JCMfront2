@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  backendURL: 'http://localhost:3001/',
+  backendURL: 'http://jcmmetais.ddns.net:57338/',
   accessTokenExpirein: 480 /*in minutes*/,
   refreshTokenExpireIn: 5 /*in days*/
 
