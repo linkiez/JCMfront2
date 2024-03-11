@@ -3,7 +3,7 @@ import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 @Component({
   selector: 'app-button-saiba-mais',
   templateUrl: './button-saiba-mais.component.html',
-  styleUrls: ['./button-saiba-mais.component.scss'],
+  styleUrls: ['./button-saiba-mais.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ButtonSaibaMaisComponent {

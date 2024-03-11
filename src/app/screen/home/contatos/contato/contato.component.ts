@@ -9,7 +9,7 @@ import { ListaGenericaService } from 'src/app/services/lista-generica.service';
 @Component({
   selector: 'app-contato',
   templateUrl: './contato.component.html',
-  styleUrls: ['./contato.component.scss'],
+  styleUrls: ['./contato.component.css'],
   providers: [ConfirmationService],
 })
 export class ContatoComponent implements OnInit, OnDestroy {

@@ -1,4 +1,6 @@
-*{ color: white; }
+* {
+  color: white;
+}
 
 :host ::ng-deep .p-dropdown {
   width: 100% !important;
@@ -14,4 +16,5 @@ tr:hover:nth-child(n + 1) {
   color: #fff;
   text-decoration: none;
 }
+
 

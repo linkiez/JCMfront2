@@ -20,7 +20,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 @Component({
   selector: 'app-rnc',
   templateUrl: './rnc.component.html',
-  styleUrls: ['./rnc.component.scss'],
+  styleUrls: ['./rnc.component.css'],
 })
 export class RNCComponent implements OnInit {
   @ViewChild('editor') editor: any;

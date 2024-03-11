@@ -13,7 +13,7 @@ import { QueryService } from 'src/app/services/query.service';
 @Component({
   selector: 'app-produtos',
   templateUrl: './produtos.component.html',
-  styleUrls: ['./produtos.component.scss'],
+  styleUrls: ['./produtos.component.css'],
   providers: [ConfirmationService],
 })
 export class ProdutosComponent implements OnInit {

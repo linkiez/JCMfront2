@@ -5,7 +5,7 @@ import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss'],
+  styleUrls: ['./home.component.css'],
   providers: [MessageService],
   encapsulation: ViewEncapsulation.None,
 })

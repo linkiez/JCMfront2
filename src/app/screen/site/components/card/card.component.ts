@@ -10,7 +10,7 @@ import {
 @Component({
   selector: 'app-card',
   templateUrl: './card.component.html',
-  styleUrls: ['./card.component.scss'],
+  styleUrls: ['./card.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CardComponent implements OnInit {

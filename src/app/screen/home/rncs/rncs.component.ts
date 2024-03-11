@@ -9,7 +9,7 @@ import { RNCService } from 'src/app/services/rnc.service';
 @Component({
   selector: 'app-rncs',
   templateUrl: './rncs.component.html',
-  styleUrls: ['./rncs.component.scss'],
+  styleUrls: ['./rncs.component.css'],
   providers: [ConfirmationService]
 })
 export class RNCsComponent implements OnInit {
@@ -113,5 +113,5 @@ export class RNCsComponent implements OnInit {
     return new Set(rnc.rnc_items?.map((item) => item.ordem_producao_item?.orcamento_item?.orcamento?.pessoa?.nome))
   }
 
-  
+
 }
