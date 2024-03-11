@@ -22,7 +22,7 @@ import { FornecedorService } from 'src/app/services/fornecedor.service';
 @Component({
   selector: 'app-pedidocompra',
   templateUrl: './pedidocompra.component.html',
-  styleUrls: ['./pedidocompra.component.scss'],
+  styleUrls: ['./pedidocompra.component.css'],
   providers: [ConfirmationService],
 })
 export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {

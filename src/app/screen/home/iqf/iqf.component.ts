@@ -12,7 +12,7 @@ import { debounceTime, distinctUntilChanged } from 'rxjs';
 @Component({
   selector: 'app-iqf',
   templateUrl: './iqf.component.html',
-  styleUrls: ['./iqf.component.scss'],
+  styleUrls: ['./iqf.component.css'],
 })
 export class IqfComponent implements OnInit {
   ctx = document.getElementById('IQFChart') as HTMLCanvasElement;

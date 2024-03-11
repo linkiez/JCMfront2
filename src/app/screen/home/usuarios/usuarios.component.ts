@@ -10,7 +10,7 @@ import { Usuario } from 'src/app/models/usuario';
 @Component({
   selector: 'app-usuarios',
   templateUrl: './usuarios.component.html',
-  styleUrls: ['./usuarios.component.scss'],
+  styleUrls: ['./usuarios.component.css'],
 })
 export class UsuariosComponent implements OnInit {
   @ViewChild('paginator') paginator!: Paginator;

@@ -10,7 +10,7 @@ import { DOCUMENT } from '@angular/common';
 @Component({
   selector: 'app-arquivos',
   templateUrl: './arquivos.component.html',
-  styleUrls: ['./arquivos.component.scss'],
+  styleUrls: ['./arquivos.component.css'],
   providers: [ConfirmationService],
 })
 export class ArquivosComponent implements OnInit {

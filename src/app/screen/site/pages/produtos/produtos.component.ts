@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 @Component({
   selector: 'app-produtos',
   templateUrl: './produtos.component.html',
-  styleUrls: ['./produtos.component.scss'],
+  styleUrls: ['./produtos.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProdutosComponent {

@@ -10,7 +10,7 @@ import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-contato',
   templateUrl: './contato.component.html',
-  styleUrls: ['./contato.component.scss'],
+  styleUrls: ['./contato.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContatoComponent {

@@ -18,7 +18,7 @@ import { RIRService } from 'src/app/services/rir.service';
 @Component({
   selector: 'app-rir',
   templateUrl: './rir.component.html',
-  styleUrls: ['./rir.component.scss'],
+  styleUrls: ['./rir.component.css'],
 })
 export class RirComponent implements OnInit {
   rir: RIR = { cliente: false, recebido_data: new Date() };

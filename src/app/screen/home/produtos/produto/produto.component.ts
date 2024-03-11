@@ -10,7 +10,7 @@ import { ListaGenericaService } from '../../../../services/lista-generica.servic
 @Component({
   selector: 'app-produto',
   templateUrl: './produto.component.html',
-  styleUrls: ['./produto.component.scss'],
+  styleUrls: ['./produto.component.css'],
   providers: [ConfirmationService],
 })
 export class ProdutoComponent implements OnInit {

@@ -11,7 +11,7 @@ import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-lista-generica',
   templateUrl: './lista-generica.component.html',
-  styleUrls: ['./lista-generica.component.scss'],
+  styleUrls: ['./lista-generica.component.css'],
 })
 export class ListaGenericaComponent implements OnInit {
   listas: Array<ListaGenerica> = [];
