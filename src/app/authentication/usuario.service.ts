@@ -1,8 +1,8 @@
+import { jwtDecode } from "jwt-decode";
 import { AuthenticationService } from './authentication.service';
 import { Injectable } from '@angular/core';
 import { AccessTokenService } from './accessToken.service';
 import { RefreshTokenService } from './refreshToken.service';
-import jwt_decode from 'jwt-decode';
 import { Usuario } from '../models/usuario';
 
 @Injectable({
@@ -23,7 +23,7 @@ export class UsuarioService {
 
   private decodificaJWT() {
     const token = this.accessTokenService.retornaToken();
-    this.usuario = jwt_decode(token) as Usuario;
+    this.usuario = jwtDecode(token) as Usuario;
   }
 
   getUsuario() {
