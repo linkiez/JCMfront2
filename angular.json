@@ -85,10 +85,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "JCMfront2:build:production"
+              "buildTarget": "JCMfront2:build:production"
             },
             "development": {
-              "browserTarget": "JCMfront2:build:development"
+              "buildTarget": "JCMfront2:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -96,7 +96,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "JCMfront2:build"
+            "buildTarget": "JCMfront2:build"
           }
         },
         "test": {
