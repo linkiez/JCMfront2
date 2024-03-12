@@ -29,9 +29,9 @@ app.use(function (err, req, res, next) {
   res.status(500).send(`<h1>Internal Server Error</h1><p>${err}</p>`);
 });
 
-const port = process.env.PORT || 8080;
-app.listen(port, function () {
-  console.log(`Server listening on port ${port}`);
+
+app.listen(80, function () {
+  console.log(`Server listening on port 80`);
 });
 
 // SSL certificate files

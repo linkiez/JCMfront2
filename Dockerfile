@@ -20,7 +20,8 @@ RUN npm run build
 RUN npm prune --production
 
 # Expose port 3000 for the Node server
-EXPOSE 3000
+EXPOSE 80
+EXPOSE 443
 
 # Start the Node server
 CMD ["npm", "start"]
