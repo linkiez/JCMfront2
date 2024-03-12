@@ -14,4 +14,5 @@
 @import "node_modules/bootstrap/dist/css/bootstrap.css" layer(bootstrap);
 @import "node_modules/primeng/resources/primeng.css" layer(primeng);
 @import "node_modules/primeng/resources/themes/bootstrap4-dark-blue/theme.css" layer(primeng-dark-blue);
-@import "node_modules/primeicons/primeicons.css"
+@import "node_modules/primeicons/primeicons.css";
+@import "node_modules/@fortawesome/fontawesome-free/css/all.css";
