@@ -35,8 +35,8 @@ app.listen(80, function () {
 });
 
 // SSL certificate files
-const privateKey = fs.readFileSync('/ssl/jcmmetais.ddns.net-PrivateKey.key', 'utf8');
-const certificate = fs.readFileSync('/ssl/jcmmetais_ddns_net.crt', 'utf8');
+const privateKey = fs.readFileSync('ssl/jcmmetais.ddns.net-PrivateKey.key', 'utf8');
+const certificate = fs.readFileSync('ssl/jcmmetais_ddns_net.crt', 'utf8');
 
 const credentials = {key: privateKey, cert: certificate};
 
