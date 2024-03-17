@@ -7,7 +7,7 @@ WORKDIR /app
 # Copy the rest of the application code to the container
 COPY ./*.* ./
 COPY ./src/ ./src/
-COPY /home/linkiez/ssl ./ssl/
+COPY ./ssl/ ./ssl/
 
 # Install dependencies
 RUN npm install
