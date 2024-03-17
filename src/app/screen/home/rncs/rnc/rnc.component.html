@@ -346,6 +346,7 @@
             id="responsalvel_analise"
             [(ngModel)]="rnc.responsavel_analise"
             [suggestions]="responsalveis_analise"
+            placeholder="Selecione um responsavel"
             (completeMethod)="searchResponsavelAnalise($event)"
             [dropdown]="true"
             [minLength]="2"
