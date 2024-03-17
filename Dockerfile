@@ -5,7 +5,7 @@ FROM node:18
 WORKDIR /app
 
 # Copy the rest of the application code to the container
-COPY /*.* .
+COPY ./*.* ./
 COPY src/ ./src/
 COPY ssl/ ./ssl/
 
