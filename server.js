@@ -12,10 +12,6 @@ app.use('/', expressStaticGzip(staticFilesDir, {
   orderPreference: ['br', 'gzip'], // Prefer Brotli over Gzip
 }));
 
-app.get("/favicon.ico", function (req, res) {
-  res.sendFile("favicon.ico", { root: staticFilesDir });
-});
-
 app.get("/robots.txt", function (req, res) {
   res.sendFile("robots.txt", { root: staticFilesDir });
 });
