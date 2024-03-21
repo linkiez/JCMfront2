@@ -71,4 +71,7 @@
     "node": "18.x",
     "npm": "10.x"
   }
+  "overrides": {
+    "xlsx": "https://cdn.sheetjs.com/xlsx-latest/xlsx-latest.tgz"
+  }
 }
