@@ -7,7 +7,6 @@ WORKDIR /app
 # Copy the rest of the application code to the container
 COPY ./*.* ./
 COPY ./src/ ./src/
-COPY ./ssl/ ./ssl/
 
 # Install dependencies
 RUN npm install
