@@ -93,7 +93,7 @@ pipeline {
                     sh 'docker rm -f JCMFrontend || true'
                     // Proceed with deployment of the main container
                     withCredentials([string(credentialsId: 'SSL', variable: 'urlSSL')]) {
-                        docker.image("${BASE_IMAGE}:${LATEST_TAG}").run("--name JCMFrontend --volume ${urlSSL}:/app/ssl --network NW_JCMMETAIS --ip 172.19.0.4 -p 80:80 -p 443:443 --restart always")
+                        docker.image("${BASE_IMAGE}:${LATEST_TAG}").run("--name JCMFrontend --volume ${urlSSL}:/app/ssl --network NW_JCMMETAIS --ip 172.19.0.4 -p 40001:80 -p 40002:443 --restart always")
                     }
                 }
             }
