@@ -1,3 +1,4 @@
+import { ListaGenericaService } from './../../../../services/lista-generica.service';
 import { MessageService } from 'primeng/api';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -12,6 +13,11 @@ import * as xlsx from 'xlsx';
 import { RIRService } from 'src/app/services/rir.service';
 import { RIR } from 'src/app/models/rir';
 import { debounce, debounceTime, distinctUntilChanged } from 'rxjs';
+import {
+  ListaGenerica,
+  ListaGenericaItem,
+} from 'src/app/models/lista-generica';
+import { privateDecrypt } from 'crypto';
 
 @Component({
   selector: 'app-ordem-producao',
@@ -21,6 +27,14 @@ import { debounce, debounceTime, distinctUntilChanged } from 'rxjs';
 export class OrdemProducaoComponent implements OnInit {
   ordemProducao: OrdemProducao = {};
 
+  etiquetas: boolean = true;
+
+  impressoraDetalhes: boolean = false;
+
+  impressoras?: ListaGenericaItem[];
+
+  impressora?: ListaGenericaItem;
+
   rirs: RIR[] = [];
 
   constructor(
@@ -28,11 +42,13 @@ export class OrdemProducaoComponent implements OnInit {
     private route: ActivatedRoute,
     private messageService: MessageService,
     private router: Router,
-    private RIRService: RIRService
+    private RIRService: RIRService,
+    private ListaGenericaService: ListaGenericaService
   ) {}
 
   ngOnInit() {
     this.getOrdemProducao();
+    this.getImpressoras();
   }
 
   getOrdemProducao() {
@@ -43,7 +59,6 @@ export class OrdemProducaoComponent implements OnInit {
         // this.ordemProducao.ordem_producao_items?.forEach((item) => {
         //   item.observacao = '<p>' + item.observacao + '<p>';
         // });
-        console.log(ordemProducao);
       },
       error: (error) => {
         console.error(error);
@@ -54,6 +69,31 @@ export class OrdemProducaoComponent implements OnInit {
         });
       },
       complete: () => {},
+    });
+  }
+
+  getImpressoras() {
+    this.ListaGenericaService.getByNameListaGenerica(
+      'impressorasEtiquetas'
+    ).subscribe({
+      next: (impressoras) => {
+        this.impressoras = impressoras.lista_generica_items;
+
+        for (let impressora of this.impressoras) {
+          impressora.valor2 = (impressora.valor2 as string).replace(/'/g, "\"")
+          impressora.valor2 = JSON.parse(impressora.valor2 as string);
+        }
+        this.impressora = this.impressoras[0];
+
+      },
+      error: (error) => {
+        console.error(error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: 'Erro ao buscar impressoras - ' + error.error,
+        });
+      },
     });
   }
 
@@ -113,9 +153,9 @@ export class OrdemProducaoComponent implements OnInit {
           Quantidade: item.quantidade,
           Material: `${item.produto?.nome} - ${item.descricao} - ${Number(
             item.orcamento_item?.largura || 0
-          ).toFixed(0)}x${Number(
-            item.orcamento_item?.altura || 0
-          ).toFixed(0)}mm ${item.quantidade}PC`,
+          ).toFixed(0)}x${Number(item.orcamento_item?.altura || 0).toFixed(
+            0
+          )}mm ${item.quantidade}PC`,
           Data:
             this.ordemProducao.createdAt?.getDate() +
             '/' +
@@ -192,5 +232,13 @@ export class OrdemProducaoComponent implements OnInit {
     });
 
     return ordemProducao;
+  }
+
+  toggleEtiquetas() {
+    this.etiquetas = !this.etiquetas;
+  }
+
+  toggleImpressoraDetalhes(){
+    this.impressoraDetalhes =!this.impressoraDetalhes;
   }
 }

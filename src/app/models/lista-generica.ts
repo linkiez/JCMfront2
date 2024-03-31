@@ -10,7 +10,13 @@ export interface ListaGenerica {
 export interface ListaGenericaItem {
   id?: number;
   valor?: string;
-  valor2?: string;
+  valor2?:
+    | string
+    | {
+        width: number;
+        height: number;
+        margin: { left: number; right: number; top: number; bottom: number };
+      };
   deletedAt?: Date;
   updateAt?: Date;
   createAt?: Date;
