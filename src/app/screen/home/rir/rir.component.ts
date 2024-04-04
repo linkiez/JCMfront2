@@ -18,7 +18,7 @@ import { RIRService } from 'src/app/services/rir.service';
 @Component({
   selector: 'app-rir',
   templateUrl: './rir.component.html',
-  styleUrls: ['./rir.component.scss'],
+  styleUrls: ['./rir.component.css'],
 })
 export class RirComponent implements OnInit {
   rir: RIR = { cliente: false, recebido_data: new Date() };
@@ -60,10 +60,7 @@ export class RirComponent implements OnInit {
 
     this.produtoService
       .getProdutos(query)
-      .pipe(
-        distinctUntilChanged(),
-        debounceTime(500)
-      )
+      .pipe(distinctUntilChanged(), debounceTime(500))
       .subscribe({
         next: (consulta) => (this.produtos = consulta.produtos),
         error: (error) => {
@@ -71,7 +68,7 @@ export class RirComponent implements OnInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Erro ao buscar produtos - '+error.error,
+            detail: 'Erro ao buscar produtos - ' + error.error,
           });
         },
       });
@@ -99,7 +96,7 @@ export class RirComponent implements OnInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Erro ao buscar pessoas - '+error.error,
+            detail: 'Erro ao buscar pessoas - ' + error.error,
           });
         },
       });
@@ -115,10 +112,7 @@ export class RirComponent implements OnInit {
 
     this.operadorService
       .getOperadores(query)
-      .pipe(
-        distinctUntilChanged(),
-        debounceTime(500)
-      )
+      .pipe(distinctUntilChanged(), debounceTime(500))
       .subscribe({
         next: (consulta) => (this.operadores = consulta.operadores),
         error: (error) => {
@@ -126,7 +120,7 @@ export class RirComponent implements OnInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Erro ao buscar operadores - '+error.error,
+            detail: 'Erro ao buscar operadores - ' + error.error,
           });
         },
       });
@@ -149,7 +143,7 @@ export class RirComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'Erro ao atualizar rir. - '+error.error,
+          detail: 'Erro ao atualizar rir. - ' + error.error,
         });
       },
       complete: () => this.getRIRs(true),
@@ -171,7 +165,7 @@ export class RirComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'Erro ao adicionar rir. - '+error.error,
+          detail: 'Erro ao adicionar rir. - ' + error.error,
         });
       },
       complete: () => this.getRIRs(true),
@@ -202,18 +196,21 @@ export class RirComponent implements OnInit {
       deleted: false,
     };
 
-    this.pedidoCompraService.getPedidoCompraItem(query).pipe(distinctUntilChanged(), debounceTime(500)).subscribe({
-      next: (consulta) =>
-        (this.pedidos_compra_item = consulta.pedidosCompraItem),
-      error: (error) => {
-        console.error(error);
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Erro',
-          detail: 'Erro ao buscar pedidos de compra - '+error.error,
-        });
-      },
-    });
+    this.pedidoCompraService
+      .getPedidoCompraItem(query)
+      .pipe(distinctUntilChanged(), debounceTime(500))
+      .subscribe({
+        next: (consulta) =>
+          (this.pedidos_compra_item = consulta.pedidosCompraItem),
+        error: (error) => {
+          console.error(error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: 'Erro ao buscar pedidos de compra - ' + error.error,
+          });
+        },
+      });
   }
 
   validacoes(): boolean {
@@ -281,7 +278,7 @@ export class RirComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'Erro ao buscar rirs - '+error.error,
+          detail: 'Erro ao buscar rirs - ' + error.error,
         });
       },
     });
@@ -303,7 +300,7 @@ export class RirComponent implements OnInit {
     return setOPs;
   }
 
-  delete(rir: RIR){
+  delete(rir: RIR) {
     this.RIRService.deleteRIR(rir).subscribe({
       next: () => {
         this.messageService.add({
@@ -317,10 +314,10 @@ export class RirComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'Erro ao apagar rir. - '+error.error,
+          detail: 'Erro ao apagar rir. - ' + error.error,
         });
       },
       complete: () => this.getRIRs(true),
-    })
+    });
   }
 }

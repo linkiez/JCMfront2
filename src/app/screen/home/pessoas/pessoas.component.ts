@@ -12,7 +12,7 @@ import { PessoaService } from 'src/app/services/pessoa.service';
 @Component({
   selector: 'app-pessoas',
   templateUrl: './pessoas.component.html',
-  styleUrls: ['./pessoas.component.scss'],
+  styleUrls: ['./pessoas.component.css'],
   providers: [ConfirmationService],
 })
 export class PessoasComponent implements OnInit {

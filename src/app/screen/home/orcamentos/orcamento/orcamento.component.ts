@@ -48,7 +48,7 @@ export class OrcamentoComponent implements OnInit {
     orcamento_items: [
       {
         uuid: uuidv4(),
-        produto: {},
+      produto: {categoria: '', nome: '' },
         peso: 0,
         total: 0,
         total_hora: 0,
@@ -380,7 +380,7 @@ export class OrcamentoComponent implements OnInit {
   newItem() {
     this.orcamento.orcamento_items.push({
       uuid: uuidv4(),
-      produto: {},
+      produto: {categoria: '', nome: '' },
       material_incluido: false,
       peso: 0,
       total: 0,
@@ -444,7 +444,7 @@ export class OrcamentoComponent implements OnInit {
   }
 
   selectContato($event: any) {
-    this.orcamento.contato = $event;
+    this.orcamento.contato = $event.value;
   }
 
   onChangeEmpresa(event: any) {
@@ -632,7 +632,9 @@ export class OrcamentoComponent implements OnInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: `Error ao ${clonar ? 'clonar' : 'criar'} orçamento - ` + error.error
+            detail:
+              `Error ao ${clonar ? 'clonar' : 'criar'} orçamento - ` +
+              error.error,
           });
           this.loadingSalvar = false;
         },
@@ -1194,27 +1196,26 @@ export class OrcamentoComponent implements OnInit {
       this.RIRService.getRIRsByPessoaAndProduto(
         this.orcamento.pessoa.id!,
         item.produto.id!
-      ).pipe(
-        debounceTime(500),
-        distinctUntilChanged()
-      ).subscribe({
-        next: (response) => {
-          this.rirs = response;
-        },
-        error: (error) => {
-          console.error(error);
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Erro',
-            detail: 'Erro ao buscar RIRs - ' + error.error,
-          });
-        },
-      });
+      )
+        .pipe(debounceTime(500), distinctUntilChanged())
+        .subscribe({
+          next: (response) => {
+            this.rirs = response;
+          },
+          error: (error) => {
+            console.error(error);
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Erro',
+              detail: 'Erro ao buscar RIRs - ' + error.error,
+            });
+          },
+        });
   }
 
-  setPrecoPecaProduto(item: OrcamentoItem){
+  setPrecoPecaProduto(item: OrcamentoItem) {
     console.log(item);
-    if(item.produto?.categoria === 'Peça'){
+    if (item.produto?.categoria === 'Peça') {
       item.preco_quilo = item.produto?.preco;
     }
   }

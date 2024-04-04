@@ -11,7 +11,7 @@ import { Paginator } from 'primeng/paginator';
 @Component({
   selector: 'app-pedidoscompras',
   templateUrl: './pedidoscompras.component.html',
-  styleUrls: ['./pedidoscompras.component.scss'],
+  styleUrls: ['./pedidoscompras.component.css'],
   providers: [ConfirmationService],
 })
 export class PedidosComprasComponent implements OnInit, OnDestroy {

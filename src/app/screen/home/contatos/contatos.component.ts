@@ -10,7 +10,7 @@ import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-contatos',
   templateUrl: './contatos.component.html',
-  styleUrls: ['./contatos.component.scss'],
+  styleUrls: ['./contatos.component.css'],
 })
 export class ContatosComponent implements OnInit {
   @ViewChild('dt') dt: Table | undefined;

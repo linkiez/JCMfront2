@@ -20,7 +20,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 @Component({
   selector: 'app-rnc',
   templateUrl: './rnc.component.html',
-  styleUrls: ['./rnc.component.scss'],
+  styleUrls: ['./rnc.component.css'],
 })
 export class RNCComponent implements OnInit {
   @ViewChild('editor') editor: any;
@@ -30,12 +30,12 @@ export class RNCComponent implements OnInit {
     rnc_items: [],
     descricao: '',
     causa: '',
-    acao_disposicao: null,
+    acao_disposicao: undefined,
     acao_corretiva: '',
     acao_preventiva: '',
     acao_contencao: '',
     reclamacao_cliente: false,
-    responsavel_analise: {},
+    responsavel_analise: undefined,
     custo: 0,
   };
 
@@ -60,20 +60,12 @@ export class RNCComponent implements OnInit {
     'Melhorias/Observações/OPMs das auditorias do SGQ',
   ]
 
-  acoes_disposicao: [
+  acoes_disposicao: Array<string> = [
     'Refugar',
     'Retrabalhar',
     'Reclassificar',
     'Aprovação Condicional',
-    'Outros',
-    null
-  ] = [
-    'Refugar',
-    'Retrabalhar',
-    'Reclassificar',
-    'Aprovação Condicional',
-    'Outros',
-    null,
+    'Outros'
   ];
 
   trackByFunction = trackByFunction;

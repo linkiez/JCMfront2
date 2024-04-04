@@ -12,7 +12,7 @@ import passwordValidator from 'password-validator';
 @Component({
   selector: 'app-usuario',
   templateUrl: './usuario.component.html',
-  styleUrls: ['./usuario.component.scss'],
+  styleUrls: ['./usuario.component.css'],
 })
 export class UsuarioComponent implements OnInit {
   listaDeAcessos: { [key: string]: AcessoLista | boolean } = {

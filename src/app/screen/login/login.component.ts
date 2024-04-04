@@ -10,7 +10,7 @@ import {Message,MessageService} from 'primeng/api';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'],
+  styleUrls: ['./login.component.css'],
   providers: [MessageService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
