@@ -47,11 +47,14 @@ export class PessoaComponent implements OnInit {
 
   cnpjLoading: boolean = false;
 
-  fileLoading: boolean = false;
+  logoColorLoading: boolean = false;
+  logoBlackLoading: boolean = false;
 
-  logtipoUrl: string = '';
+  logoColorUrl: string = '';
+  logoBlackUrl: string = '';
 
-  @ViewChild('logotipo', { static: false }) logotipo?: HTMLImageElement;
+  @ViewChild('logoColor', { static: false }) logoColor?: HTMLImageElement;
+  @ViewChild('logoBlack', { static: false }) logoBlack?: HTMLImageElement;
 
   ngOnInit(): void {
     this.getCategoria();
@@ -73,114 +76,136 @@ export class PessoaComponent implements OnInit {
             summary: 'Erro',
             detail: 'Não foi possível carregar as categorias. - ' + error.error,
           });
-        }
+        },
       });
   }
 
   getPessoa() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     if (id != 0 && isFinite(id)) {
-      this.pessoaService
-        .getPessoa(id)
-        .subscribe({
-          next: async(pessoa) => {
-            if (pessoa.data_nasc)
-              pessoa.data_nasc = new Date(pessoa.data_nasc!.toString());
-            if (pessoa.fornecedor?.data_aprov)
-              pessoa.fornecedor.data_aprov = new Date(
-                pessoa.fornecedor.data_aprov.toString()
-              );
-            if (pessoa.fornecedor?.data_venc)
-              pessoa.fornecedor.data_venc = new Date(
-                pessoa.fornecedor.data_venc.toString()
-              );
-            this.pessoa = pessoa;
-            if (pessoa.empresa?.file?.id) {
-              const url: any = await firstValueFrom(this.arquivoService.getUrlArquivo(pessoa.empresa?.file?.id))
-              this.logtipoUrl = url.url;
-            }
-          },
-          error: (error) => {
-            console.error(error);
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Erro',
-              detail: 'Não foi possível carregar a pessoa. - ' + error.error,
-            });
-          },
-        });
+      this.pessoaService.getPessoa(id).subscribe({
+        next: async (pessoa) => {
+          if (pessoa.data_nasc)
+            pessoa.data_nasc = new Date(pessoa.data_nasc!.toString());
+          if (pessoa.fornecedor?.data_aprov)
+            pessoa.fornecedor.data_aprov = new Date(
+              pessoa.fornecedor.data_aprov.toString()
+            );
+          if (pessoa.fornecedor?.data_venc)
+            pessoa.fornecedor.data_venc = new Date(
+              pessoa.fornecedor.data_venc.toString()
+            );
+          if (pessoa.empresa?.logoColor?.id) {
+            this.logoColorUrl = await firstValueFrom(
+              this.arquivoService.getUrlArquivo(pessoa.empresa?.logoColor?.id)
+            );
+          }
+          if (pessoa.empresa?.logoBlack?.id) {
+            this.logoBlackUrl = await firstValueFrom(
+              this.arquivoService.getUrlArquivo(pessoa.empresa?.logoBlack?.id)
+            );
+          }
+          this.pessoa = pessoa;
+          console.log(this.pessoa);
+        },
+        error: (error) => {
+          console.error(error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: 'Não foi possível carregar a pessoa. - ' + error.error,
+          });
+        },
+      });
     }
   }
 
   createPessoa() {
     let pessoaClean = this.cleanPessoa(this.pessoa);
 
-    this.pessoaService
-      .addPessoa(pessoaClean)
-      .subscribe({
-        next: (pessoa) => {
-          pessoa.data_nasc = new Date(pessoa.data_nasc!.toString());
-          if (pessoa.fornecedor?.data_aprov)
-            pessoa.fornecedor.data_aprov = new Date(
-              pessoa.fornecedor.data_aprov.toString()
-            );
-          if (pessoa.fornecedor?.data_venc)
-            pessoa.fornecedor.data_venc = new Date(
-              pessoa.fornecedor.data_venc.toString()
-            );
-          this.pessoa = pessoa;
-        },
-        error: (error) => {
-          console.error(error);
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Erro',
-            detail: 'Não foi possível criar a pessoa. - ' + error.error,
-          });
-        },
-        complete: () => {
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Sucesso',
-            detail: 'A pessoa foi criada.',
-          });
-          this.router.navigate([`/home/pessoas/${this.pessoa.id}`]);
-        },
-      });
+    this.pessoaService.addPessoa(pessoaClean).subscribe({
+      next: async (pessoa) => {
+        pessoa.data_nasc = new Date(pessoa.data_nasc!.toString());
+        if (pessoa.fornecedor?.data_aprov)
+          pessoa.fornecedor.data_aprov = new Date(
+            pessoa.fornecedor.data_aprov.toString()
+          );
+        if (pessoa.fornecedor?.data_venc)
+          pessoa.fornecedor.data_venc = new Date(
+            pessoa.fornecedor.data_venc.toString()
+          );
+        if (pessoa.empresa?.logoColor?.id) {
+          this.logoColorUrl = await firstValueFrom(
+            this.arquivoService.getUrlArquivo(pessoa.empresa?.logoColor?.id)
+          );
+        }
+        if (pessoa.empresa?.logoBlack?.id) {
+          this.logoBlackUrl = await firstValueFrom(
+            this.arquivoService.getUrlArquivo(pessoa.empresa?.logoBlack?.id)
+          );
+        }
+        this.pessoa = pessoa;
+      },
+      error: (error) => {
+        console.error(error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: 'Não foi possível criar a pessoa. - ' + error.error,
+        });
+      },
+      complete: () => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Sucesso',
+          detail: 'A pessoa foi criada.',
+        });
+        this.router.navigate([`/home/pessoas/${this.pessoa.id}`]);
+      },
+    });
   }
 
   updatePessoa() {
     let pessoaClean = this.cleanPessoa(this.pessoa);
-    this.pessoaService
-      .updatePessoa(pessoaClean)
-      .subscribe({
-        next: (pessoa) => {
-          pessoa.data_nasc = new Date(pessoa.data_nasc!.toString());
-          if (pessoa.fornecedor?.data_aprov)
-            pessoa.fornecedor.data_aprov = new Date(
-              pessoa.fornecedor.data_aprov.toString()
-            );
-          if (pessoa.fornecedor?.data_venc)
-            pessoa.fornecedor.data_venc = new Date(
-              pessoa.fornecedor.data_venc.toString()
-            );
-          this.pessoa = pessoa;
-        },
-        error: (error) => {
-          console.error(error);
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Erro',
-            detail: 'Não foi possível atualizar a pessoa. - ' + error.error,
-          });
-        },
-        complete: () =>
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Sucesso',
-            detail: 'A pessoa foi atualizada.',
-          }),
-      });
+    this.pessoaService.updatePessoa(pessoaClean).subscribe({
+      next: async (pessoa) => {
+        pessoa.data_nasc = new Date(pessoa.data_nasc!.toString());
+        if (pessoa.fornecedor?.data_aprov)
+          pessoa.fornecedor.data_aprov = new Date(
+            pessoa.fornecedor.data_aprov.toString()
+          );
+        if (pessoa.fornecedor?.data_venc)
+          pessoa.fornecedor.data_venc = new Date(
+            pessoa.fornecedor.data_venc.toString()
+          );
+        if (pessoa.empresa?.logoColor?.id) {
+          this.logoColorUrl = await firstValueFrom(
+            this.arquivoService.getUrlArquivo(pessoa.empresa?.logoColor?.id)
+          );
+        }
+        if (pessoa.empresa?.logoBlack?.id) {
+          this.logoBlackUrl = await firstValueFrom(
+            this.arquivoService.getUrlArquivo(pessoa.empresa?.logoBlack?.id)
+          );
+        }
+        this.pessoa = pessoa;
+        console.log(this.pessoa);
+      },
+      error: (error) => {
+        console.error(error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: 'Não foi possível atualizar a pessoa. - ' + error.error,
+        });
+      },
+      complete: () =>
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Sucesso',
+          detail: 'A pessoa foi atualizada.',
+        }),
+    });
   }
 
   cleanPessoa(pessoa: Pessoa) {
@@ -191,7 +216,7 @@ export class PessoaComponent implements OnInit {
     if (pessoa.ie_rg) pessoa.ie_rg = pessoa.ie_rg.toString().replace(/\D/g, '');
     pessoa.contatos = pessoa.contatos?.map((contato: Contato) => {
       if (contato.tipo == 'Telefone' || contato.tipo == 'WhatsApp')
-        contato.valor = (contato.valor||'').toString().replace(/\D/g, '');
+        contato.valor = (contato.valor || '').toString().replace(/\D/g, '');
       return contato;
     });
     return pessoa;
@@ -241,8 +266,8 @@ export class PessoaComponent implements OnInit {
       });
   }
 
-  deleteOrRestoreVendedor(){
-    if(this.pessoa.vendedor?.id && this.pessoa.vendedor?.deletedAt == null){
+  deleteOrRestoreVendedor() {
+    if (this.pessoa.vendedor?.id && this.pessoa.vendedor?.deletedAt == null) {
       this.vendedorService.deleteVendedor(this.pessoa.vendedor).subscribe({
         error: (error) => {
           console.error(error);
@@ -261,8 +286,10 @@ export class PessoaComponent implements OnInit {
           this.getPessoa();
         },
       });
-    }else if (this.pessoa.vendedor?.id && this.pessoa.vendedor?.deletedAt != null) {
-
+    } else if (
+      this.pessoa.vendedor?.id &&
+      this.pessoa.vendedor?.deletedAt != null
+    ) {
       this.vendedorService.restoreVendedor(this.pessoa.vendedor).subscribe({
         error: (error) => {
           console.error(error);
@@ -282,11 +309,10 @@ export class PessoaComponent implements OnInit {
         },
       });
     }
-
   }
 
-  deleteOrRestoreEmpresa(){
-    if(this.pessoa.empresa?.id && this.pessoa.empresa?.deletedAt == null){
+  deleteOrRestoreEmpresa() {
+    if (this.pessoa.empresa?.id && this.pessoa.empresa?.deletedAt == null) {
       this.empresaService.deleteEmpresa(this.pessoa.empresa).subscribe({
         error: (error) => {
           console.error(error);
@@ -305,7 +331,10 @@ export class PessoaComponent implements OnInit {
           this.getPessoa();
         },
       });
-    }else if(this.pessoa.empresa?.id && this.pessoa.empresa?.deletedAt != null){
+    } else if (
+      this.pessoa.empresa?.id &&
+      this.pessoa.empresa?.deletedAt != null
+    ) {
       this.empresaService.restoreEmpresa(this.pessoa.empresa).subscribe({
         error: (error) => {
           console.error(error);
@@ -327,8 +356,8 @@ export class PessoaComponent implements OnInit {
     }
   }
 
-  deleteOrRestoreOperador(){
-    if(this.pessoa.operador?.id && this.pessoa.operador?.deletedAt == null){
+  deleteOrRestoreOperador() {
+    if (this.pessoa.operador?.id && this.pessoa.operador?.deletedAt == null) {
       this.operadorService.deleteOperador(this.pessoa.operador).subscribe({
         error: (error: any) => {
           console.error(error);
@@ -344,10 +373,13 @@ export class PessoaComponent implements OnInit {
             summary: 'Sucesso',
             detail: 'O operador foi exluido.',
           });
-          this.getPessoa()
+          this.getPessoa();
         },
       });
-    }else if(this.pessoa.operador?.id && this.pessoa.operador?.deletedAt != null){
+    } else if (
+      this.pessoa.operador?.id &&
+      this.pessoa.operador?.deletedAt != null
+    ) {
       this.operadorService.restoreOperador(this.pessoa.operador).subscribe({
         error: (error: any) => {
           console.error(error);
@@ -363,51 +395,62 @@ export class PessoaComponent implements OnInit {
             summary: 'Sucesso',
             detail: 'O operador foi restaurado.',
           });
-          this.getPessoa()
+          this.getPessoa();
         },
       });
     }
   }
 
-  deleteOrRestoreFornecedor(){
-    if(this.pessoa.fornecedor?.id && this.pessoa.fornecedor?.deletedAt == null){
-      this.fornecedorService.deleteFornecedor(this.pessoa.fornecedor).subscribe({
-        error: (error: any) => {
-          console.log(error);
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Erro',
-            detail: 'Não foi possível excluir o fornecedor. - ' + error.error,
-          });
-        },
-        complete: () => {
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Sucesso',
-            detail: 'O fornecedor foi exluido.',
-          });
-          this.getPessoa()
-        },
-      });
-    }else if(this.pessoa.fornecedor?.id && this.pessoa.fornecedor?.deletedAt != null){
-      this.fornecedorService.restoreFornecedor(this.pessoa.fornecedor).subscribe({
-        error: (error: any) => {
-          console.log(error);
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Erro',
-            detail: 'Não foi possível restaurar o fornecedor. - ' + error.error,
-          });
-        },
-        complete: () => {
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Sucesso',
-            detail: 'O fornecedor foi restaurado.',
-          });
-          this.getPessoa()
-        },
-      });
+  deleteOrRestoreFornecedor() {
+    if (
+      this.pessoa.fornecedor?.id &&
+      this.pessoa.fornecedor?.deletedAt == null
+    ) {
+      this.fornecedorService
+        .deleteFornecedor(this.pessoa.fornecedor)
+        .subscribe({
+          error: (error: any) => {
+            console.log(error);
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Erro',
+              detail: 'Não foi possível excluir o fornecedor. - ' + error.error,
+            });
+          },
+          complete: () => {
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Sucesso',
+              detail: 'O fornecedor foi exluido.',
+            });
+            this.getPessoa();
+          },
+        });
+    } else if (
+      this.pessoa.fornecedor?.id &&
+      this.pessoa.fornecedor?.deletedAt != null
+    ) {
+      this.fornecedorService
+        .restoreFornecedor(this.pessoa.fornecedor)
+        .subscribe({
+          error: (error: any) => {
+            console.log(error);
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Erro',
+              detail:
+                'Não foi possível restaurar o fornecedor. - ' + error.error,
+            });
+          },
+          complete: () => {
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Sucesso',
+              detail: 'O fornecedor foi restaurado.',
+            });
+            this.getPessoa();
+          },
+        });
     }
   }
 
@@ -438,7 +481,7 @@ export class PessoaComponent implements OnInit {
   }
 
   getBackPessoas() {
-    window.history.back();;
+    window.history.back();
   }
 
   confirm() {
@@ -485,9 +528,7 @@ export class PessoaComponent implements OnInit {
               this.pessoa.data_nasc = new Date(
                 consultaPJ.estabelecimento.data_inicio_atividade
               );
-              this.pessoa.endereco = `${
-                consultaPJ.estabelecimento.tipo_logradouro
-              } ${consultaPJ.estabelecimento.logradouro}`;
+              this.pessoa.endereco = `${consultaPJ.estabelecimento.tipo_logradouro} ${consultaPJ.estabelecimento.logradouro}`;
               this.pessoa.complemento = consultaPJ.estabelecimento.complemento;
               this.pessoa.numero = consultaPJ.estabelecimento.numero;
               this.pessoa.bairro = consultaPJ.estabelecimento.bairro;
@@ -545,44 +586,44 @@ export class PessoaComponent implements OnInit {
     }
   }
 
-  onFileSelected(event: Event) {
-    if (this.pessoa.empresa?.file?.id)
-    this.arquivoService.deleteArquivo(this.pessoa.empresa?.file?.id).subscribe()
+  onFileSelected(event: Event, tipo: 'logoColor' | 'logoBlack') {
+    if (this.pessoa.empresa?.[tipo]?.id)
+      this.arquivoService
+        .deleteArquivo(this.pessoa.empresa?.[tipo]?.id as number)
+        .subscribe();
     const file: File = (event.target as HTMLInputElement).files![0];
     if (file) {
-      this.fileLoading = true;
+      this[`${tipo}Loading`] = true;
       this.arquivoService
         .uploadArquivo(file)
         // .pipe(debounceTime(1000))
         .subscribe({
           next: (arquivo: Arquivo) => {
-            this.pessoa.empresa!.file = arquivo;
+            this.pessoa.empresa![tipo] = arquivo;
+            console.log(this.pessoa)
           },
           error: (error) => {
-            this.fileLoading = false;
+            this[`${tipo}Loading`] = false;
             console.log(error);
             this.messageService.add({
               severity: 'error',
               summary: 'Erro',
-              detail: `${error.status} - ${error.statusText} - ${error.error}`,
+              detail: `Nao foi possivel fazer o upload do arquivo. - ${error.error}`,
             });
           },
-          complete: async() => {
-            this.fileLoading = false;
-            if (this.pessoa.empresa?.file?.id) {
-              const url: any = await firstValueFrom(this.arquivoService.getUrlArquivo(this.pessoa.empresa?.file?.id))
-              this.logtipoUrl = url.url;
-            }
+          complete: async () => {
+            this[`${tipo}Loading`] = false;
+            this[`${tipo}Url`] = await firstValueFrom(
+              this.arquivoService.getUrlArquivo(
+                this.pessoa.empresa?.[tipo]?.id as number
+              )
+            );
           },
         });
     }
   }
 
-  async getLogo(id: any) {
-    id = Number(id)
-    if(Number.isFinite(id)){
-      const url: any = await firstValueFrom(this.arquivoService.getUrlArquivo(id))
-      return url.url;
-    }
+  async getLogo(id: number): Promise<string> {
+    return await firstValueFrom(this.arquivoService.getUrlArquivo(id));
   }
 }

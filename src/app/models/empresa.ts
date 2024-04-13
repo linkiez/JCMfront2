@@ -10,5 +10,6 @@ export interface Empresa {
   id_pessoa?: number;
   pessoa?: Pessoa;
   token_tiny?: string;
-  file?: Arquivo
+  logoColor?: Arquivo;
+  logoBlack?: Arquivo;
 }

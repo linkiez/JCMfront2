@@ -48,8 +48,8 @@ export class ArquivoService {
     )
   }
 
-  getUrlArquivo(id: number): Observable<Object> {
-    return this.http.get(
+  getUrlArquivo(id: number): Observable<string> {
+    return this.http.get<string>(
       environment.backendURL + 'file/url/' + id,
       { responseType: 'json' }
     )

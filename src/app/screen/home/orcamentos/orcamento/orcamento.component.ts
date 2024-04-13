@@ -599,9 +599,9 @@ export class OrcamentoComponent implements OnInit {
   }
 
   async getLogoUrl() {
-    if (this.orcamento.empresa?.file?.id) {
+    if (this.orcamento.empresa?.logoColor?.id) {
       const url: any = await firstValueFrom(
-        this.arquivoService.getUrlArquivo(this.orcamento.empresa?.file?.id)
+        this.arquivoService.getUrlArquivo(this.orcamento.empresa?.logoColor?.id)
       );
       this.logotipoUrl = url.url;
     } else {
