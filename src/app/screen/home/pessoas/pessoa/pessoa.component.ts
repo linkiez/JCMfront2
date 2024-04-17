@@ -106,7 +106,6 @@ export class PessoaComponent implements OnInit {
             );
           }
           this.pessoa = pessoa;
-          console.log(this.pessoa);
         },
         error: (error) => {
           console.error(error);
@@ -189,7 +188,6 @@ export class PessoaComponent implements OnInit {
           );
         }
         this.pessoa = pessoa;
-        console.log(this.pessoa);
       },
       error: (error) => {
         console.error(error);
@@ -410,7 +408,7 @@ export class PessoaComponent implements OnInit {
         .deleteFornecedor(this.pessoa.fornecedor)
         .subscribe({
           error: (error: any) => {
-            console.log(error);
+            console.error(error);
             this.messageService.add({
               severity: 'error',
               summary: 'Erro',
@@ -434,7 +432,7 @@ export class PessoaComponent implements OnInit {
         .restoreFornecedor(this.pessoa.fornecedor)
         .subscribe({
           error: (error: any) => {
-            console.log(error);
+            console.error(error);
             this.messageService.add({
               severity: 'error',
               summary: 'Erro',
@@ -572,7 +570,6 @@ export class PessoaComponent implements OnInit {
         .pipe(debounceTime(1000))
         .subscribe({
           next: (cep: any) => {
-            console.log(cep);
             this.pessoa.endereco = cep.logradouro;
             this.pessoa.complemento = cep.complemento;
             this.pessoa.bairro = cep.bairro;
@@ -580,7 +577,7 @@ export class PessoaComponent implements OnInit {
             this.pessoa.uf = cep.uf;
           },
           error: (error: Error) => {
-            console.log(error);
+            console.error(error);
           },
         });
     }
@@ -600,11 +597,10 @@ export class PessoaComponent implements OnInit {
         .subscribe({
           next: (arquivo: Arquivo) => {
             this.pessoa.empresa![tipo] = arquivo;
-            console.log(this.pessoa)
           },
           error: (error) => {
             this[`${tipo}Loading`] = false;
-            console.log(error);
+            console.error(error);
             this.messageService.add({
               severity: 'error',
               summary: 'Erro',
