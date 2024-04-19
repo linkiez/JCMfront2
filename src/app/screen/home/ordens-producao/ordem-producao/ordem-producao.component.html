@@ -1,278 +1,297 @@
-<form action="">
-  <div class="conteiner">
-    <ng-container
-      [ngTemplateOutlet]="!etiquetas ? opView : etiquetaView"
-    ></ng-container>
-    <ng-template #opView>
+<div class="conteiner">
+  <ng-container
+    [ngTemplateOutlet]="!etiquetas ? opView : etiquetaView"
+  ></ng-container>
+  <ng-template #opView>
+    <div class="row">
+      <div class="col">
+        <span
+          >F-026 - Ordem de Produção Rev.07 Data Emissäo: 25/09/2019 Data
+          Revisäo: 30/01/2023</span
+        >
+        <table>
+          <tbody>
+            <tr>
+              <td>Cliente:</td>
+              <td>{{ ordemProducao.orcamento?.pessoa?.nome }}</td>
+              <td>Data de abertura:</td>
+              <td>
+                <strong>{{
+                  ordemProducao.createdAt | date : "dd/MM/yyyy HH:mm:ss"
+                }}</strong>
+              </td>
+            </tr>
+            <tr>
+              <td>Orçamento:</td>
+              <td
+                class="link"
+                [routerLink]="[
+                  '/home/orcamentos/' + ordemProducao.orcamento?.id
+                ]"
+              >
+                {{ ordemProducao.orcamento?.id }}
+              </td>
+              <td>Prazo de entrega:</td>
+              <td>{{ ordemProducao.data_prazo | date : "dd/MM/yyyy" }}</td>
+            </tr>
+            <tr>
+              <td>Vendedor:</td>
+              <td>{{ ordemProducao.vendedor?.pessoa?.nome }}</td>
+              <td>Ordem de Produção</td>
+              <td>
+                <strong> {{ ordemProducao.id }}</strong>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <small
+          >Observações: Tolerâncias não indicadas nos desenhos/amostras serão
+          utilizados as da norma NBR ISO2768-1 conforme determinado pelo
+          cliente. Setores: Caldeiraria (C) Grosso, Plasma/Dobra (C) Grosso.
+          Baixo Carbono: Aços 1006/1008/1010/1020.
+        </small>
+        <small>Análise Crítica OK, conforme I-002 de vendas, item 6.1.2</small>
+      </div>
       <div class="row">
-        <div class="col">
-          <span
-            >F-026 - Ordem de Produção Rev.07 Data Emissäo: 25/09/2019 Data
-            Revisäo: 30/01/2023</span
-          >
+        <div class="col-5 flex flex-column">
+          <strong>Inspeção Final:</strong>
+          <span>🔲Aprovado, 🔲Reprovado</span>
+        </div>
+        <div class="col">Nome:</div>
+        <div class="col">Data:</div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <hr />
+        <div
+          class="dontBreakPage"
+          *ngFor="
+            let itemProducao of ordemProducao.ordem_producao_items;
+            let indexItemProducao = index;
+            let index = index
+          "
+        >
           <table>
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Descrição</th>
+                <th>Material</th>
+                <th>Qtd.</th>
+                <th style="width: 100px">RIR</th>
+              </tr>
+            </thead>
             <tbody>
               <tr>
-                <td>Cliente:</td>
-                <td>{{ ordemProducao.orcamento?.pessoa?.nome }}</td>
-                <td>Data de abertura:</td>
+                <td>{{ index + 1 }}</td>
+                <td>{{ itemProducao.descricao }}</td>
                 <td>
-                  <strong>{{
-                    ordemProducao.createdAt | date : "dd/MM/yyyy HH:mm:ss"
-                  }}</strong>
+                  {{ itemProducao.produto?.nome }} -
+                  {{
+                    (itemProducao.orcamento_item?.largura
+                      ? itemProducao.orcamento_item?.largura
+                      : ordemProducao.orcamento!.orcamento_items[index].largura
+                    ) | number
+                  }}x{{
+                    (itemProducao.orcamento_item?.altura
+                      ? itemProducao.orcamento_item?.altura
+                      : ordemProducao.orcamento!.orcamento_items[index].altura
+                    ) | number
+                  }}mm
                 </td>
-              </tr>
-              <tr>
-                <td>Orçamento:</td>
-                <td
-                  class="link"
-                  [routerLink]="[
-                    '/home/orcamentos/' + ordemProducao.orcamento?.id
-                  ]"
-                >
-                  {{ ordemProducao.orcamento?.id }}
-                </td>
-                <td>Prazo de entrega:</td>
-                <td>{{ ordemProducao.data_prazo | date : "dd/MM/yyyy" }}</td>
-              </tr>
-              <tr>
-                <td>Vendedor:</td>
-                <td>{{ ordemProducao.vendedor?.pessoa?.nome }}</td>
-                <td>Ordem de Produção</td>
-                <td>
-                  <strong> {{ ordemProducao.id }}</strong>
+                <td>{{ itemProducao.quantidade }}</td>
+                <td class="col-1">
+                  <div class="noprint">
+                    <p-autoComplete
+                      pInputText
+                      class="p-autocomplete wv-100"
+                      [name]="'rir' + index"
+                      [id]="'rir' + index"
+                      type="text"
+                      [(ngModel)]="itemProducao.registro_inspecao_recebimento"
+                      (onSelect)="itemProducao.id_rir = $event.value.id"
+                      field="id"
+                      [suggestions]="rirs"
+                      (completeMethod)="searchRir(itemProducao)"
+                      [dropdown]="true"
+                      [style]="{ width: '100%' }"
+                      [inputStyle]="{ width: '100%' }"
+                      appendTo="body"
+                      [required]="true"
+                    ></p-autoComplete>
+                  </div>
+
+                  <span class="noview">{{ itemProducao.id_rir }}</span>
                 </td>
               </tr>
             </tbody>
           </table>
-          <small
-            >Observações: Tolerâncias não indicadas nos desenhos/amostras serão
-            utilizados as da norma NBR ISO2768-1 conforme determinado pelo
-            cliente. Setores: Caldeiraria (C) Grosso, Plasma/Dobra (C) Grosso.
-            Baixo Carbono: Aços 1006/1008/1010/1020.
-          </small>
-          <small
-            >Análise Crítica OK, conforme I-002 de vendas, item 6.1.2</small
-          >
-        </div>
-        <div class="row">
-          <div class="col-5 flex flex-column">
-            <strong>Inspeção Final:</strong>
-            <span>🔲Aprovado, 🔲Reprovado</span>
-          </div>
-          <div class="col">Nome:</div>
-          <div class="col">Data:</div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col">
-          <hr />
-          <div
-            class="dontBreakPage"
-            *ngFor="
-              let itemProducao of ordemProducao.ordem_producao_items;
-              let indexItemProducao = index;
-              let index = index
-            "
-          >
-            <table>
-              <thead>
-                <tr>
-                  <th>Item</th>
-                  <th>Descrição</th>
-                  <th>Material</th>
-                  <th>Qtd.</th>
-                  <th style="width: 100px">RIR</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>{{ index + 1 }}</td>
-                  <td>{{ itemProducao.descricao }}</td>
-                  <td>
-                    {{ itemProducao.produto?.nome }} -
-                    {{
-                      (itemProducao.orcamento_item?.largura
-                        ? itemProducao.orcamento_item?.largura
-                        : ordemProducao.orcamento!.orcamento_items[index]
-                            .largura
-                      ) | number
-                    }}x{{
-                      (itemProducao.orcamento_item?.altura
-                        ? itemProducao.orcamento_item?.altura
-                        : ordemProducao.orcamento!.orcamento_items[index].altura
-                      ) | number
-                    }}mm
-                  </td>
-                  <td>{{ itemProducao.quantidade }}</td>
-                  <td class="col-1">
-                    <div class="noprint">
-                      <p-autoComplete
-                        pInputText
-                        class="p-autocomplete wv-100"
-                        [name]="'rir' + index"
-                        [id]="'rir' + index"
-                        type="text"
-                        [(ngModel)]="itemProducao.registro_inspecao_recebimento"
-                        (onSelect)="itemProducao.id_rir = $event.value.id"
-                        field="id"
-                        [suggestions]="rirs"
-                        (completeMethod)="searchRir(itemProducao)"
-                        [dropdown]="true"
-                        [style]="{ width: '100%' }"
-                        [inputStyle]="{ width: '100%' }"
-                        appendTo="body"
-                        [required]="true"
-                      ></p-autoComplete>
-                    </div>
 
-                    <span class="noview">{{ itemProducao.id_rir }}</span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-
-            <div class="row">
-              <div class="col-6">
-                <table>
-                  <tbody>
-                    <tr
-                      *ngFor="
-                        let processo of itemProducao.ordem_producao_item_processos
-                      "
-                    >
-                      <td style="width: 100px">{{ processo.processo }}</td>
-                      <td style="width: 100px">Data:</td>
-                      <td>Ass:</td>
-                    </tr>
-                  </tbody>
-                  <tfoot *ngIf="itemProducao.id_rir">
-                    <tr>
-                      <td class="materialCliente" colspan="3">
-                        Material do Cliente
-                      </td>
-                    </tr>
-                  </tfoot>
-                </table>
-              </div>
-              <div class="col-6">
-                <p-editor
-                  #editor
-                  (onInit)="editor.quill.pasteHTML(itemProducao.observacao)"
-                  (onTextChange)="itemProducao.observacao = $event.htmlValue"
-                  name="observacao"
-                  id="observacao"
-                  class="noprint"
-                ></p-editor>
-                <div class="noview" [innerHTML]="itemProducao.observacao"></div>
-              </div>
-              <div class="col">
-                <listaFiles
-                  [compact]="true"
-                  (onChangeFiles)="itemProducao.files = $event"
-                  [files]="itemProducao.files!"
-                ></listaFiles>
-              </div>
+          <div class="row">
+            <div class="col-6">
+              <table>
+                <tbody>
+                  <tr
+                    *ngFor="
+                      let processo of itemProducao.ordem_producao_item_processos
+                    "
+                  >
+                    <td style="width: 100px">{{ processo.processo }}</td>
+                    <td style="width: 100px">Data:</td>
+                    <td>Ass:</td>
+                  </tr>
+                </tbody>
+                <tfoot *ngIf="itemProducao.id_rir">
+                  <tr>
+                    <td class="materialCliente" colspan="3">
+                      Material do Cliente
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+            <div class="col-6">
+              <p-editor
+                #editor
+                (onInit)="editor.quill.pasteHTML(itemProducao.observacao)"
+                (onTextChange)="itemProducao.observacao = $event.htmlValue"
+                name="observacao"
+                id="observacao"
+                class="noprint"
+              ></p-editor>
+              <div class="noview" [innerHTML]="itemProducao.observacao"></div>
+            </div>
+            <div class="col">
+              <listaFiles
+                [compact]="true"
+                (onChangeFiles)="itemProducao.files = $event"
+                [files]="itemProducao.files!"
+              ></listaFiles>
             </div>
           </div>
         </div>
       </div>
-    </ng-template>
-    <ng-template #etiquetaView>
-      <!-- Cabecalho -->
-      <div class="noprint my-2">
-        <!-- Seletor Impressora -->
-        <div class="flex flex-row gap-2 flex-wrap">
-          <div class="">Impressora:</div>
-          <div class="">
-            <p-dropdown
-              [options]="impressoras"
-              [(ngModel)]="impressora"
-              optionLabel="valor"
-              [showClear]="true"
-              placeholder="Selecione a Impressora"
-              name="impressoras"
-              id="impressoras"
-            ></p-dropdown>
-          </div>
-          <div>
-            <button
-              pButton
-              type="button"
-              name="btEditarImpressora"
-              id="btEditarImpressora"
-              (click)="toggleImpressoraDetalhes()"
-            >
-              Editar
-            </button>
-          </div>
-        </div>
-        <!-- Detalhes Impressora -->
-        <div class="flex flex-row gap-2 flex-wrap" *ngIf="impressoraDetalhes">
-          <div>
-            
-          </div>
-        </div>
-
-      </div>
-    </ng-template>
-    <div class="noprint">
-      <hr />
-      <button
-        pButton
-        class="p-button p-button-success"
-        type="submit"
-        name="btnSalvar"
-        id="btnSalvar"
-        (click)="salvar()"
-      >
-        Salvar
-      </button>
-      <button
-        pButton
-        class="p-button"
-        type="button"
-        name="btnImprimir"
-        id="btnImprimir"
-      >
-        <a href="javascript:window.print()"> Imprimir </a>
-      </button>
-      <button
-        pButton
-        class="p-button"
-        type="button"
-        name="btnEtiquetas"
-        id="btnEtiquetas"
-        (click)="toggleEtiquetas()"
-      >
-        Etiquetas
-      </button>
-      <button
-        pButton
-        class="p-button"
-        type="button"
-        name="btnExportar"
-        id="btnExportar"
-        (click)="gerarEtiquetas()"
-      >
-        Exportar (xlsx)
-      </button>
-      <button
-        pButton
-        class="p-button"
-        (click)="getBack()"
-        type="button"
-        name="btnVoltar"
-        id="btnVoltar"
-      >
-        Voltar
-      </button>
-      <p-confirmDialog
-        header="Confirmação"
-        acceptLabel="Sim"
-        rejectLabel="Não"
-        icon="pi pi-exclamation-triangle"
-      ></p-confirmDialog>
     </div>
+  </ng-template>
+  <ng-template #etiquetaView>
+    <!-- Cabecalho -->
+    <div class="noprint my-2">
+      <!-- Seletor Impressora -->
+      <div class="flex flex-row gap-2 flex-wrap">
+        <div class="">Impressora:</div>
+        <div class="">
+          <p-dropdown
+            [options]="impressoras"
+            [(ngModel)]="impressora"
+            optionLabel="valor"
+            [showClear]="false"
+            placeholder="Selecione a Impressora"
+            name="impressoras"
+            id="impressoras"
+          ></p-dropdown>
+        </div>
+        <div class="flex flex-row">
+          <button
+            pButton
+            type="button"
+            name="btEditarImpressora"
+            id="btEditarImpressora"
+            (click)="editImpressora()"
+            [disabled]="!impressora?.id"
+          >
+            Editar
+          </button>
+          <button
+            class="pi pi-plus"
+            type="button"
+            pButton
+            name="btNovoImpressora"
+            id="btNovoImpressora"
+            (click)="newImpressora()"
+          ></button>
+        </div>
+      </div>
+      <!-- Editar Impressora -->
+      <p-dialog
+        header="Impressora"
+        [(visible)]="impressoraDetalhes"
+        [style]="{ width: '50vw' }"
+        [modal]="true"
+      >
+        <form>
+          <div class="flex flex-row gap-2 flex-wrap">
+            <div class="">Nome:</div>
+            <div class="">
+              <input
+                type="text"
+                name="nome"
+                id="nome"
+                [(ngModel)]="impressoraEdit!.valor"
+                required
+              />
+            </div>
+          </div>
+        </form>
+      </p-dialog>
+    </div>
+  </ng-template>
+  <div class="noprint">
+    <hr />
+    <button
+      pButton
+      class="p-button p-button-success"
+      type="submit"
+      name="btnSalvar"
+      id="btnSalvar"
+      (click)="salvar()"
+    >
+      Salvar
+    </button>
+    <button
+      pButton
+      class="p-button"
+      type="button"
+      name="btnImprimir"
+      id="btnImprimir"
+    >
+      <a href="javascript:window.print()"> Imprimir </a>
+    </button>
+    <button
+      pButton
+      class="p-button"
+      type="button"
+      name="btnEtiquetas"
+      id="btnEtiquetas"
+      (click)="toggleEtiquetas()"
+    >
+      Etiquetas
+    </button>
+    <button
+      pButton
+      class="p-button"
+      type="button"
+      name="btnExportar"
+      id="btnExportar"
+      (click)="gerarEtiquetas()"
+    >
+      Exportar (xlsx)
+    </button>
+    <button
+      pButton
+      class="p-button"
+      (click)="getBack()"
+      type="button"
+      name="btnVoltar"
+      id="btnVoltar"
+    >
+      Voltar
+    </button>
+    <p-confirmDialog
+      header="Confirmação"
+      acceptLabel="Sim"
+      rejectLabel="Não"
+      icon="pi pi-exclamation-triangle"
+    ></p-confirmDialog>
   </div>
-</form>
+</div>

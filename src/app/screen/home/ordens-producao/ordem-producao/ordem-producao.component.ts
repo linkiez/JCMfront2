@@ -37,6 +37,8 @@ export class OrdemProducaoComponent implements OnInit {
 
   impressora?: IPrinterSettings;
 
+  impressoraEdit?: IPrinterSettings;
+
   impressoraIdListaGenerica?: number;
 
   rirs: IRIR[] = [];
@@ -111,22 +113,9 @@ export class OrdemProducaoComponent implements OnInit {
     });
   }
 
-  createImpressora(impressora: IPrinterSettings) {
-    if (!this.impressoraIdListaGenerica) {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Erro',
-        detail: 'Lista de Impressoras não encontrada',
-      });
-      return;
-    }
-    let impresoraListaGenericaItem: IListaGenericaItem = (() => {
-      return {
-        id_lista: this.impressoraIdListaGenerica,
-        valor: impressora.valor,
-        valor2: JSON.stringify(impressora.valor2),
-      } as IListaGenericaItem;
-    })();
+  createImpressora() {
+    let impresoraListaGenericaItem: IListaGenericaItem =
+      this.convertIPrinterSettingsToListaGenericaItem(this.impressoraEdit!);
 
     this.ListaGenericaService.addListaGenericaItem(
       impresoraListaGenericaItem
@@ -150,6 +139,90 @@ export class OrdemProducaoComponent implements OnInit {
         this.getImpressoras();
       },
     });
+  }
+
+  updateImpressora() {
+    let impresoraListaGenericaItem: IListaGenericaItem =
+      this.convertIPrinterSettingsToListaGenericaItem(this.impressoraEdit!);
+    this.ListaGenericaService.updateListaGenericaItem(
+      impresoraListaGenericaItem
+    ).subscribe({
+      next: (impressora) => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Sucesso',
+          detail: 'Impressora atualizada com sucesso',
+        });
+      },
+      error: (error: any) => {
+        console.error(error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: 'Erro ao atualizar impressora -' + error.error,
+        });
+      },
+      complete: () => {
+        this.getImpressoras();
+      }
+    });
+  }
+
+  createOrUpdateImpressora() {
+    if (!this.impressoraIdListaGenerica) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erro',
+        detail: 'Lista de Impressoras não encontrada',
+      });
+      return;
+    }
+    if (!this.impressoraEdit) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erro',
+        detail: 'Impressora não encontrada',
+      });
+      return;
+    }
+  }
+
+  newImpressora() {
+    this.impressoraEdit = {
+      id_lista: this.impressoraIdListaGenerica,
+      valor: 'Nova Impressora',
+      valor2: {
+        width: 100,
+        height: 50,
+        margin: {
+          left: 0,
+          right: 0,
+          top: 0,
+          bottom: 0,
+        },
+      },
+    };
+    this.toggleImpressoraDetalhes();
+  }
+
+  editImpressora(){
+    this.impressoraEdit = {...this.impressora} as IPrinterSettings;
+    this.toggleImpressoraDetalhes();
+  }
+
+  convertIPrinterSettingsToListaGenericaItem(
+    impressora: IPrinterSettings
+  ): IListaGenericaItem {
+    let lista = {
+      id_lista: this.impressoraIdListaGenerica,
+      valor: impressora.valor,
+      valor2: JSON.stringify(impressora.valor2),
+    } as IListaGenericaItem;
+
+    if (impressora.id) {
+      lista.id = impressora.id;
+    }
+    return lista;
   }
 
   getBack() {

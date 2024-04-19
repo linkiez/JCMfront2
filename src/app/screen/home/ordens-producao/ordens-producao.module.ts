@@ -18,6 +18,7 @@ import { ListboxModule } from 'primeng/listbox';
 import { InputTextModule } from 'primeng/inputtext';
 import { DropdownModule } from 'primeng/dropdown';
 import { AutoCompleteModule } from 'primeng/autocomplete';
+import { DialogModule } from 'primeng/dialog';
 
 
 @NgModule({
@@ -36,7 +37,8 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
     ListboxModule,
     InputTextModule,
     DropdownModule,
-    AutoCompleteModule
+    AutoCompleteModule,
+    DialogModule
   ],
   providers: [ConfirmationService],
 })
