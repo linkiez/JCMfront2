@@ -1,13 +1,13 @@
-import { OrdemProducaoItem } from './../../../models/ordem-producao';
+import { IOrdemProducaoItem } from './../../../models/ordem-producao';
 import { Component, OnInit } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
-import { Operador } from 'src/app/models/operador';
-import { PedidoCompraItem } from 'src/app/models/pedido-compra';
-import { Pessoa } from 'src/app/models/pessoa';
-import { Produto } from 'src/app/models/produto';
-import { Query } from 'src/app/models/query';
-import { RIR } from 'src/app/models/rir';
+import { IOperador } from 'src/app/models/operador';
+import { IPedidoCompraItem } from 'src/app/models/pedido-compra';
+import { IPessoa } from 'src/app/models/pessoa';
+import { IProduto } from 'src/app/models/produto';
+import { IQuery } from 'src/app/models/query';
+import { IRIR } from 'src/app/models/rir';
 import { OperadorService } from 'src/app/services/operador.service';
 import { PedidoCompraService } from 'src/app/services/pedidocompra.service';
 import { PessoaService } from 'src/app/services/pessoa.service';
@@ -21,21 +21,21 @@ import { RIRService } from 'src/app/services/rir.service';
   styleUrls: ['./rir.component.css'],
 })
 export class RirComponent implements OnInit {
-  rir: RIR = { cliente: false, recebido_data: new Date() };
+  rir: IRIR = { cliente: false, recebido_data: new Date() };
 
-  produtos: Produto[] = [];
+  produtos: IProduto[] = [];
 
-  pessoas: Pessoa[] = [];
+  pessoas: IPessoa[] = [];
 
-  operadores: Operador[] = [];
+  operadores: IOperador[] = [];
 
-  pedidos_compra_item: PedidoCompraItem[] = [];
+  pedidos_compra_item: IPedidoCompraItem[] = [];
 
   dialogVisible = false;
 
   totalRecords: number = 0;
 
-  rirs: RIR[] = [];
+  rirs: IRIR[] = [];
 
   constructor(
     private produtoService: ProdutoService,
@@ -51,7 +51,7 @@ export class RirComponent implements OnInit {
   }
 
   searchProduto(event: any) {
-    let query: Query = {
+    let query: IQuery = {
       page: 0,
       pageCount: 10,
       searchValue: event.query,
@@ -75,7 +75,7 @@ export class RirComponent implements OnInit {
   }
 
   searchPessoa(event: any) {
-    let query: Query = {
+    let query: IQuery = {
       page: 0,
       pageCount: 10,
       searchValue: event.query,
@@ -103,7 +103,7 @@ export class RirComponent implements OnInit {
   }
 
   searchOperador(event: any) {
-    let query: Query = {
+    let query: IQuery = {
       page: 0,
       pageCount: 10,
       searchValue: event.query,
@@ -128,7 +128,7 @@ export class RirComponent implements OnInit {
 
   update() {
     this.RIRService.updateRIR(this.rir).subscribe({
-      next: (rir: RIR) => {
+      next: (rir: IRIR) => {
         this.messageService.add({
           severity: 'success',
           summary: 'Sucesso',
@@ -187,7 +187,7 @@ export class RirComponent implements OnInit {
   }
 
   searchPedidoCompraItem() {
-    let query: Query = {
+    let query: IQuery = {
       page: 0,
       pageCount: 10,
       searchValue: '',
@@ -292,7 +292,7 @@ export class RirComponent implements OnInit {
     this.rir.quantidade = Number(event.replace(/[^\d]/g, '')) / 100;
   }
 
-  setOfOrdemProducaoItem(op_items: OrdemProducaoItem[]) {
+  setOfOrdemProducaoItem(op_items: IOrdemProducaoItem[]) {
     const setOPs = new Set();
     for (const op_item of op_items) {
       if (op_item.id_ordem_producao) setOPs.add(op_item.id_ordem_producao);
@@ -300,7 +300,7 @@ export class RirComponent implements OnInit {
     return setOPs;
   }
 
-  delete(rir: RIR) {
+  delete(rir: IRIR) {
     this.RIRService.deleteRIR(rir).subscribe({
       next: () => {
         this.messageService.add({

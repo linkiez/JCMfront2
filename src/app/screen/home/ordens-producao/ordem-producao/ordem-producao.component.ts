@@ -3,21 +3,23 @@ import { MessageService } from 'primeng/api';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
-  OrdemProducao,
-  OrdemProducaoItem,
-  OrdemProducaoItemProcesso,
+  IOrdemProducao,
+  IOrdemProducaoItem,
+  IOrdemProducaoItemProcesso,
 } from 'src/app/models/ordem-producao';
 import { OrdemProducaoService } from 'src/app/services/ordem-producao.service';
 import { Quill } from 'quill';
 import * as xlsx from 'xlsx';
 import { RIRService } from 'src/app/services/rir.service';
-import { RIR } from 'src/app/models/rir';
+import { IRIR } from 'src/app/models/rir';
 import { debounce, debounceTime, distinctUntilChanged } from 'rxjs';
 import {
-  ListaGenerica,
-  ListaGenericaItem,
+  IListaGenerica,
+  IListaGenericaItem,
+  IPrinterSettings,
 } from 'src/app/models/lista-generica';
 import { privateDecrypt } from 'crypto';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-ordem-producao',
@@ -25,17 +27,19 @@ import { privateDecrypt } from 'crypto';
   styleUrls: ['./ordem-producao.component.css'],
 })
 export class OrdemProducaoComponent implements OnInit {
-  ordemProducao: OrdemProducao = {};
+  ordemProducao: IOrdemProducao = {};
 
   etiquetas: boolean = true;
 
   impressoraDetalhes: boolean = false;
 
-  impressoras?: ListaGenericaItem[];
+  impressoras?: IPrinterSettings[];
 
-  impressora?: ListaGenericaItem;
+  impressora?: IPrinterSettings;
 
-  rirs: RIR[] = [];
+  impressoraIdListaGenerica?: number;
+
+  rirs: IRIR[] = [];
 
   constructor(
     private ordemProducaoService: OrdemProducaoService,
@@ -43,7 +47,8 @@ export class OrdemProducaoComponent implements OnInit {
     private messageService: MessageService,
     private router: Router,
     private RIRService: RIRService,
-    private ListaGenericaService: ListaGenericaService
+    private ListaGenericaService: ListaGenericaService,
+    private sanitizer: DomSanitizer
   ) {}
 
   ngOnInit() {
@@ -55,10 +60,14 @@ export class OrdemProducaoComponent implements OnInit {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     this.ordemProducaoService.getOrdemProducao(id).subscribe({
       next: (ordemProducao) => {
+        if (ordemProducao.ordem_producao_items)
+          for (let ordem_producao_item of ordemProducao.ordem_producao_items) {
+            if (ordem_producao_item.observacao)
+              ordem_producao_item.observacao = this.sanitizer
+                .bypassSecurityTrustHtml(ordem_producao_item.observacao)
+                .toString();
+          }
         this.ordemProducao = this.sortOrdemProducaoItems(ordemProducao);
-        // this.ordemProducao.ordem_producao_items?.forEach((item) => {
-        //   item.observacao = '<p>' + item.observacao + '<p>';
-        // });
       },
       error: (error) => {
         console.error(error);
@@ -77,14 +86,19 @@ export class OrdemProducaoComponent implements OnInit {
       'impressorasEtiquetas'
     ).subscribe({
       next: (impressoras) => {
-        this.impressoras = impressoras.lista_generica_items;
+        this.impressoraIdListaGenerica = impressoras.id;
+        this.impressoras = impressoras.lista_generica_items.map(
+          (impressora) => {
+            impressora.valor2 = (impressora.valor2 as string).replace(
+              /'/g,
+              '"'
+            );
+            impressora.valor2 = JSON.parse(impressora.valor2 as string);
+            return impressora;
+          }
+        ) as IPrinterSettings[];
 
-        for (let impressora of this.impressoras) {
-          impressora.valor2 = (impressora.valor2 as string).replace(/'/g, "\"")
-          impressora.valor2 = JSON.parse(impressora.valor2 as string);
-        }
         this.impressora = this.impressoras[0];
-
       },
       error: (error) => {
         console.error(error);
@@ -93,6 +107,47 @@ export class OrdemProducaoComponent implements OnInit {
           summary: 'Erro',
           detail: 'Erro ao buscar impressoras - ' + error.error,
         });
+      },
+    });
+  }
+
+  createImpressora(impressora: IPrinterSettings) {
+    if (!this.impressoraIdListaGenerica) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erro',
+        detail: 'Lista de Impressoras não encontrada',
+      });
+      return;
+    }
+    let impresoraListaGenericaItem: IListaGenericaItem = (() => {
+      return {
+        id_lista: this.impressoraIdListaGenerica,
+        valor: impressora.valor,
+        valor2: JSON.stringify(impressora.valor2),
+      } as IListaGenericaItem;
+    })();
+
+    this.ListaGenericaService.addListaGenericaItem(
+      impresoraListaGenericaItem
+    ).subscribe({
+      next: (impressora) => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Sucesso',
+          detail: 'Impressora adicionada com sucesso',
+        });
+      },
+      error: (error) => {
+        console.error(error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: 'Erro ao adicionar impressora -' + error.error,
+        });
+      },
+      complete: () => {
+        this.getImpressoras();
       },
     });
   }
@@ -106,7 +161,6 @@ export class OrdemProducaoComponent implements OnInit {
       .updateOrdemProducao(this.ordemProducao)
       .subscribe({
         next: (ordemProducao) => {
-          this.ordemProducao = this.sortOrdemProducaoItems(ordemProducao);
           this.ordemProducao.ordem_producao_items?.forEach((item) => {
             const regex = /<p>(.*?)<\/p>/g;
             if (item.observacao && regex.exec(item.observacao) == null)
@@ -176,7 +230,7 @@ export class OrdemProducaoComponent implements OnInit {
     xlsx.writeFile(wb, 'etiquetas.xlsx');
   }
 
-  concatenarProcessosString(processos: OrdemProducaoItemProcesso[]) {
+  concatenarProcessosString(processos: IOrdemProducaoItemProcesso[]) {
     let processosString = '';
     processos.forEach((item) => {
       processosString = processosString + item.processo + ', ';
@@ -184,7 +238,7 @@ export class OrdemProducaoComponent implements OnInit {
     return processosString.slice(0, -2);
   }
 
-  searchRir(item: OrdemProducaoItem) {
+  searchRir(item: IOrdemProducaoItem) {
     if (this.ordemProducao.orcamento?.pessoa && item.produto)
       this.RIRService.getRIRsByPessoaAndProduto(
         this.ordemProducao.orcamento?.pessoa.id!,
@@ -207,7 +261,7 @@ export class OrdemProducaoComponent implements OnInit {
         });
   }
 
-  sortOrdemProducaoItems(ordemProducao: OrdemProducao) {
+  sortOrdemProducaoItems(ordemProducao: IOrdemProducao) {
     ordemProducao.orcamento?.orcamento_items?.sort((a, b) => {
       if (a.descricao && b.descricao) {
         if (a.descricao < b.descricao) {
@@ -238,7 +292,7 @@ export class OrdemProducaoComponent implements OnInit {
     this.etiquetas = !this.etiquetas;
   }
 
-  toggleImpressoraDetalhes(){
-    this.impressoraDetalhes =!this.impressoraDetalhes;
+  toggleImpressoraDetalhes() {
+    this.impressoraDetalhes = !this.impressoraDetalhes;
   }
 }

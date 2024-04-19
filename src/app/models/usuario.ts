@@ -1,6 +1,6 @@
-import { Pessoa } from "./pessoa";
+import { IPessoa } from './pessoa';
 
-export interface Usuario {
+export interface IUsuario {
   id?: number;
   email?: string;
   senha?: string;
@@ -9,6 +9,6 @@ export interface Usuario {
   updatedAt?: Date;
   createdAt?: Date;
   id_pessoa?: number;
-  pessoa?: Pessoa;
-  acesso?: any
+  pessoa?: IPessoa;
+  acesso?: any;
 }

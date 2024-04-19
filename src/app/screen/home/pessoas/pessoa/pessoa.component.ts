@@ -3,15 +3,15 @@ import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { debounceTime, firstValueFrom, map, Subscription } from 'rxjs';
-import { Pessoa } from 'src/app/models/pessoa';
+import { IPessoa } from 'src/app/models/pessoa';
 import { PessoaService } from 'src/app/services/pessoa.service';
-import { Contato } from 'src/app/models/contato';
+import { IContato } from 'src/app/models/contato';
 import { DOCUMENT } from '@angular/common';
 import { ArquivoService } from 'src/app/services/arquivo.service';
-import { Validação } from 'src/app/models/validacao';
+import { IValidação } from 'src/app/models/validacao';
 import { ListaGenericaService } from 'src/app/services/lista-generica.service';
 import { validador } from 'src/app/utils/validadores';
-import { Arquivo } from 'src/app/models/arquivo';
+import { IArquivo } from 'src/app/models/arquivo';
 import { VendedorService } from 'src/app/services/vendedor.service';
 import { OperadorService } from 'src/app/services/operador.service';
 import { FornecedorService } from 'src/app/services/fornecedor.service';
@@ -36,10 +36,10 @@ export class PessoaComponent implements OnInit {
     private operadorService: OperadorService,
     private fornecedorService: FornecedorService
   ) {}
-  pessoa: Pessoa = { pessoa_juridica: false };
-  pessoaOld: Pessoa = {};
+  pessoa: IPessoa = { pessoa_juridica: false };
+  pessoaOld: IPessoa = {};
 
-  cnpj_cpfInvalido: Validação[] = [];
+  cnpj_cpfInvalido: IValidação[] = [];
 
   emailInvalido: any = {};
 
@@ -206,13 +206,13 @@ export class PessoaComponent implements OnInit {
     });
   }
 
-  cleanPessoa(pessoa: Pessoa) {
+  cleanPessoa(pessoa: IPessoa) {
     if (pessoa.telefone)
       pessoa.telefone = Number(pessoa.telefone.toString().replace(/\D/g, ''));
     if (pessoa.cnpj_cpf)
       pessoa.cnpj_cpf = pessoa.cnpj_cpf.toString().replace(/\D/g, '');
     if (pessoa.ie_rg) pessoa.ie_rg = pessoa.ie_rg.toString().replace(/\D/g, '');
-    pessoa.contatos = pessoa.contatos?.map((contato: Contato) => {
+    pessoa.contatos = pessoa.contatos?.map((contato: IContato) => {
       if (contato.tipo == 'Telefone' || contato.tipo == 'WhatsApp')
         contato.valor = (contato.valor || '').toString().replace(/\D/g, '');
       return contato;
@@ -469,7 +469,7 @@ export class PessoaComponent implements OnInit {
   }
 
   newContato() {
-    let contatos: Contato[] = [];
+    let contatos: IContato[] = [];
     if (!this.pessoa.contatos) this.pessoa.contatos = contatos;
     this.pessoa.contatos.push({});
   }
@@ -595,7 +595,7 @@ export class PessoaComponent implements OnInit {
         .uploadArquivo(file)
         // .pipe(debounceTime(1000))
         .subscribe({
-          next: (arquivo: Arquivo) => {
+          next: (arquivo: IArquivo) => {
             this.pessoa.empresa![tipo] = arquivo;
           },
           error: (error) => {

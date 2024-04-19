@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Table } from 'primeng/table';
 import {
-  ListaGenerica,
-  ListaGenericaItem,
+  IListaGenerica,
+  IListaGenericaItem,
 } from '../../../models/lista-generica';
 import { ListaGenericaService } from '../../../services/lista-generica.service';
 import { isEqual } from 'lodash';
@@ -14,7 +14,7 @@ import { MessageService } from 'primeng/api';
   styleUrls: ['./lista-generica.component.css'],
 })
 export class ListaGenericaComponent implements OnInit {
-  listas: Array<ListaGenerica> = [];
+  listas: Array<IListaGenerica> = [];
 
   novaLista: string = '';
 
@@ -22,7 +22,7 @@ export class ListaGenericaComponent implements OnInit {
 
   novoValor: string = '';
 
-  selectedLista: ListaGenerica = { lista_generica_items: [] };
+  selectedLista: IListaGenerica = { lista_generica_items: [] };
 
   first = 0;
 
@@ -52,7 +52,7 @@ export class ListaGenericaComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'Erro ao buscar listas genéricas - '+error.error,
+          detail: 'Erro ao buscar listas genéricas - ' + error.error,
         });
       },
     });
@@ -61,21 +61,24 @@ export class ListaGenericaComponent implements OnInit {
   createListaGenerica() {
     this.listaGenericaService
       .addListaGenerica({ nome: this.novaLista, lista_generica_items: [] })
-      .subscribe({ complete: () => this.getListas(), error: (error) => {
-        console.error(error);
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Erro',
-          detail: 'Erro ao criar lista genérica - '+error.error,
-        });
-      } });
+      .subscribe({
+        complete: () => this.getListas(),
+        error: (error) => {
+          console.error(error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: 'Erro ao criar lista genérica - ' + error.error,
+          });
+        },
+      });
   }
 
-  selectLista(lista: ListaGenerica) {
+  selectLista(lista: IListaGenerica) {
     this.selectedLista = lista;
   }
 
-  isEqualSelectedLista(lista: ListaGenerica) {
+  isEqualSelectedLista(lista: IListaGenerica) {
     return this.selectedLista.id === lista.id;
   }
 
@@ -88,7 +91,7 @@ export class ListaGenericaComponent implements OnInit {
     });
   }
 
-  removeItem(item: ListaGenericaItem) {
+  removeItem(item: IListaGenericaItem) {
     let index = this.selectedLista.lista_generica_items.indexOf(item);
     this.selectedLista.lista_generica_items.splice(index, 1);
   }
@@ -106,9 +109,9 @@ export class ListaGenericaComponent implements OnInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Erro ao salvar lista genérica - '+error.error,
+            detail: 'Erro ao salvar lista genérica - ' + error.error,
           });
-        }
+        },
       });
   }
 

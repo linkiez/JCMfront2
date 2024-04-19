@@ -4,7 +4,7 @@ import { NgForm } from '@angular/forms';
 import e from 'express';
 import { ReCaptchaV3Service } from 'ng-recaptcha';
 import { Observable } from 'rxjs';
-import { iFormSite } from 'src/app/models/form-site';
+import { IFormSite } from 'src/app/models/form-site';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -18,7 +18,7 @@ export class ContatoComponent {
 
   button: boolean = false;
 
-  formData: iFormSite = {
+  formData: IFormSite = {
     name: '',
     email: '',
     tel: '',
@@ -56,8 +56,8 @@ export class ContatoComponent {
     });
   }
 
-  sendHttp(formData: iFormSite): Observable<iFormSite> {
-    return this.http.post<iFormSite>(
+  sendHttp(formData: IFormSite): Observable<IFormSite> {
+    return this.http.post<IFormSite>(
       environment.backendURL + 'form-site',
       formData
     );

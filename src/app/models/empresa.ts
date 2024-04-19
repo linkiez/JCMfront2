@@ -1,15 +1,15 @@
-import { Arquivo } from "./arquivo";
-import { Pessoa } from "./pessoa";
+import { IArquivo } from './arquivo';
+import { IPessoa } from './pessoa';
 
-export interface Empresa {
+export interface IEmpresa {
   id?: number;
   senha?: string;
   deletedAt?: Date;
   updatedAt?: Date;
   createdAt?: Date;
   id_pessoa?: number;
-  pessoa?: Pessoa;
+  pessoa?: IPessoa;
   token_tiny?: string;
-  logoColor?: Arquivo;
-  logoBlack?: Arquivo;
+  logoColor?: IArquivo;
+  logoBlack?: IArquivo;
 }

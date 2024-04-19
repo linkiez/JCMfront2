@@ -1,5 +1,5 @@
-export interface Login {
- auth?: boolean,
- accessToken: string,
- refreshToken: string
+export interface ILogin {
+  auth?: boolean;
+  accessToken: string;
+  refreshToken: string;
 }
