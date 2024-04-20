@@ -12,4 +12,6 @@ export interface IEmpresa {
   token_tiny?: string;
   logoColor?: IArquivo;
   logoBlack?: IArquivo;
+  id_file_logoBlack?: number;
+  id_file_logoColor?: number;
 }

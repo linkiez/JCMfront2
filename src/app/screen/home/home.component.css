@@ -100,7 +100,24 @@ p {
   justify-content: space-between;
 }
 
+fieldset {
+  border: 1px solid #343e4d;
+  border-radius: 5px;
+  padding: 10px;
+  position: relative;
+  margin-top: 20px;
+}
 
+fieldset legend {
+  position: absolute;
+  top: -10px;
+  left: 10px;
+  background: #343e4d;
+  border-radius: 5px;
+  padding: 0 5px;
+  font-size: 1em;
+  width: auto
+}
 
 @media print {
 

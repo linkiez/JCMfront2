@@ -212,29 +212,21 @@
           ></button>
         </div>
       </div>
-      <!-- Editar Impressora -->
-      <p-dialog
-        header="Impressora"
-        [(visible)]="impressoraDetalhes"
-        [style]="{ width: '50vw' }"
-        [modal]="true"
-      >
-        <form>
-          <div class="flex flex-row gap-2 flex-wrap">
-            <div class="">Nome:</div>
-            <div class="">
-              <input
-                type="text"
-                name="nome"
-                id="nome"
-                [(ngModel)]="impressoraEdit!.valor"
-                required
-              />
-            </div>
-          </div>
-        </form>
-      </p-dialog>
     </div>
+    <!-- Etiqutas -->
+    <div class="flex flex-row flex-wrap gap-2">
+      <p-card *ngFor="let etiqueta of ordemProducao.ordem_producao_items" >
+        <div class="flex flex-row flex-wrap">
+          <img [src]="logoURL" alt="Logotipo Black" class="w-1/4">
+          <div class="flex-grow flex flex-col">
+              <div class="flex flex-row">
+                <span>Orcamento: {{ordemProducao.id_orcamento}}</span>
+              </div>
+          </div>
+        </div>
+      </p-card>
+    </div>
+
   </ng-template>
   <div class="noprint">
     <hr />
@@ -265,7 +257,7 @@
       id="btnEtiquetas"
       (click)="toggleEtiquetas()"
     >
-      Etiquetas
+      {{ etiquetas ? "Ordem de Produção" : "Etiquetas" }}
     </button>
     <button
       pButton
@@ -293,5 +285,133 @@
       rejectLabel="Não"
       icon="pi pi-exclamation-triangle"
     ></p-confirmDialog>
+    <!-- Editar Impressora -->
+    <p-dialog
+      header="Impressora"
+      [(visible)]="impressoraDetalhes"
+      [style]="{ width: '50vw' }"
+      [modal]="true"
+    >
+      <div class="w-full">
+        <form (ngSubmit)="createOrUpdateImpressora()" class="w-full">
+          <div class="flex flex-row gap-2">
+            <div class="flex flex-col">
+              <label for="impressora">Nome</label>
+              <input
+                pInputText
+                type="text"
+                name="inpImpressoraNome"
+                id="inpImpressoraNome"
+                [(ngModel)]="impressoraEdit.valor"
+                required
+                placeholder="Digite o nome da impressora"
+                maxlength="50"
+              />
+            </div>
+          </div>
+          <fieldset class="w-auto flex flex-col">
+            <legend>Dimensões(mm)</legend>
+            <div class="flex flex-row gap-2 flex-wrap">
+              <div class="flex flex-col flex-grow w-min[150px]">
+                <label for="impressora">Largura</label>
+                <input
+                  pInputText
+                  type="number"
+                  name="inpImpressoraLargura"
+                  id="inpImpressoraLargura"
+                  [(ngModel)]="impressoraEdit.valor2.width"
+                  required
+                />
+              </div>
+              <div class="flex flex-col flex-grow w-min[150px]">
+                <label for="impressora">Altura</label>
+                <input
+                  pInputText
+                  type="number"
+                  name="inpImpressoraAltura"
+                  id="inpImpressoraAltura"
+                  [(ngModel)]="impressoraEdit.valor2.height"
+                  required
+                />
+              </div>
+            </div>
+            <fieldset>
+              <legend>Margens</legend>
+              <div class="flex flex-col gap-2 flex-wrap">
+                <div class="flex flex-col mx-auto">
+                  <label for="inpImpressoraMargemSuperior">Superior</label>
+                  <input
+                  pInputText
+                  type="number"
+                  name="inpImpressoraMargemSuperior"
+                  id="inpImpressoraMargemsSuperior"
+                  [(ngModel)]="impressoraEdit.valor2.margin.top"
+                  required
+                  >
+                </div>
+                <div class="flex flex-row flex-wrap gap-2 justify-between">
+                  <div class="flex flex-col">
+                    <label for="inpImpressoraMargemEsquerda">Esquerda</label>
+                    <input
+                    pInputText
+                    type="number"
+                    name="inpImpressoraMargemEsquerda"
+                    id="inpImpressoraMargemsEsquerda"
+                    [(ngModel)]="impressoraEdit.valor2.margin.left"
+                    required
+                    >
+                  </div>
+                  <div class="flex flex-col">
+                    <label for="inpImpressoraMargemDireita">Direita</label>
+                    <input
+                    pInputText
+                    type="number"
+                    name="inpImpressoraMargemDireita"
+                    id="inpImpressoraMargemsDireita"
+                    [(ngModel)]="impressoraEdit.valor2.margin.right"
+                    required
+                    >
+                  </div>
+                </div>
+                <div class="flex flex-col mx-auto">
+                  <label for="inpImpressoraMargemInferior">Inferior</label>
+                  <input
+                  pInputText
+                  type="number"
+                  name="inpImpressoraMargemInferior"
+                  id="inpImpressoraMargemInferior"
+                  [(ngModel)]="impressoraEdit.valor2.margin.bottom"
+                  required
+                  >
+                </div>
+              </div>
+            </fieldset>
+          </fieldset>
+        </form>
+      </div>
+      <ng-template pTemplate="footer">
+        <div class="flex flex-row gap-2 justify-end">
+          <button
+            pButton
+            type="button"
+            name="btSalvarImpressora"
+            id="btSalvarImpressora"
+            (click)="createOrUpdateImpressora()"
+            class="p-button-success"
+          >
+            Salvar
+          </button>
+          <button
+            pButton
+            type="button"
+            name="btCancelarImpressora"
+            id="btCancelarImpressora"
+            (click)="toggleImpressoraDetalhes()"
+          >
+            Voltar
+          </button>
+        </div>
+      </ng-template>
+    </p-dialog>
   </div>
 </div>

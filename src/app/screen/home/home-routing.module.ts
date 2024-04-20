@@ -78,7 +78,7 @@ const routes: Routes = [
       {
         path: 'ordensproducao',
         loadChildren: () =>
-          import('./ordens-producao/ordens-producao.module').then(
+          import('./pedidoscompras/ordens-producao.module').then(
             (module) => module.OrdensProducaoModule
           ),
         canLoad: [LoginGuard],
@@ -94,26 +94,20 @@ const routes: Routes = [
       {
         path: 'rir',
         loadChildren: () =>
-          import('./rir/rir.module').then(
-            (module) => module.RirModule
-          ),
-          canLoad: [LoginGuard],
+          import('./rir/rir.module').then((module) => module.RirModule),
+        canLoad: [LoginGuard],
       },
       {
         path: 'iqf',
         loadChildren: () =>
-          import('./iqf/iqf.module').then(
-            (module) => module.IqfModule
-          ),
-          canLoad: [LoginGuard],
+          import('./iqf/iqf.module').then((module) => module.IqfModule),
+        canLoad: [LoginGuard],
       },
       {
         path: 'rnc',
         loadChildren: () =>
-          import('./rncs/rncs.module').then(
-            (module) => module.RNCsModule
-          ),
-          canLoad: [LoginGuard],
+          import('./rncs/rncs.module').then((module) => module.RNCsModule),
+        canLoad: [LoginGuard],
       },
       {
         path: '*',

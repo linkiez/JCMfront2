@@ -4,7 +4,7 @@ import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
 import { OrdensProducaoComponent } from './ordens-producao.component';
-import { OrdensProducaoModule } from './ordens-producao.module';
+import { OrdensProducaoModule } from '../pedidoscompras/ordens-producao.module';
 import { AppModule } from 'src/app/app.module';
 
 describe('OrdensProducaoComponent', () => {
@@ -13,9 +13,8 @@ describe('OrdensProducaoComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [AppModule, OrdensProducaoModule]
-    })
-    .compileComponents();
+      imports: [AppModule, OrdensProducaoModule],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

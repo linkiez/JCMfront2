@@ -1,3 +1,4 @@
+import { ArquivoService } from 'src/app/services/arquivo.service';
 import { ListaGenericaService } from './../../../../services/lista-generica.service';
 import { MessageService } from 'primeng/api';
 import { Component, OnInit } from '@angular/core';
@@ -12,7 +13,7 @@ import { Quill } from 'quill';
 import * as xlsx from 'xlsx';
 import { RIRService } from 'src/app/services/rir.service';
 import { IRIR } from 'src/app/models/rir';
-import { debounce, debounceTime, distinctUntilChanged } from 'rxjs';
+import { debounce, debounceTime, distinctUntilChanged, firstValueFrom } from 'rxjs';
 import {
   IListaGenerica,
   IListaGenericaItem,
@@ -37,11 +38,26 @@ export class OrdemProducaoComponent implements OnInit {
 
   impressora?: IPrinterSettings;
 
-  impressoraEdit?: IPrinterSettings;
+  impressoraEdit: IPrinterSettings = {
+    id_lista: this.impressoraIdListaGenerica,
+    valor: 'Nova Impressora',
+    valor2: {
+      width: 100,
+      height: 50,
+      margin: {
+        left: 0,
+        right: 0,
+        top: 0,
+        bottom: 0,
+      },
+    },
+  };
 
   impressoraIdListaGenerica?: number;
 
   rirs: IRIR[] = [];
+
+  logoURL?: string;
 
   constructor(
     private ordemProducaoService: OrdemProducaoService,
@@ -50,6 +66,7 @@ export class OrdemProducaoComponent implements OnInit {
     private router: Router,
     private RIRService: RIRService,
     private ListaGenericaService: ListaGenericaService,
+    private ArquivoService: ArquivoService,
     private sanitizer: DomSanitizer
   ) {}
 
@@ -70,6 +87,7 @@ export class OrdemProducaoComponent implements OnInit {
                 .toString();
           }
         this.ordemProducao = this.sortOrdemProducaoItems(ordemProducao);
+
       },
       error: (error) => {
         console.error(error);
@@ -79,7 +97,14 @@ export class OrdemProducaoComponent implements OnInit {
           detail: 'Erro ao buscar ordem de produção - ' + error.error,
         });
       },
-      complete: () => {},
+      complete: async() => {
+        if (this.ordemProducao?.orcamento?.empresa?.id_file_logoBlack)
+        this.logoURL = await firstValueFrom(this.ArquivoService.getUrlArquivo(
+          this.ordemProducao?.orcamento?.empresa?.id_file_logoBlack)
+        );
+        console.log(this.ordemProducao);
+        console.log(this.logoURL);
+      },
     });
   }
 
@@ -98,7 +123,7 @@ export class OrdemProducaoComponent implements OnInit {
             impressora.valor2 = JSON.parse(impressora.valor2 as string);
             return impressora;
           }
-        ) as IPrinterSettings[];
+        ) as unknown as IPrinterSettings[];
 
         this.impressora = this.impressoras[0];
       },
@@ -184,6 +209,11 @@ export class OrdemProducaoComponent implements OnInit {
         detail: 'Impressora não encontrada',
       });
       return;
+    }
+    if (this.impressoraEdit.id) {
+      this.updateImpressora();
+    } else {
+      this.createImpressora();
     }
   }
 

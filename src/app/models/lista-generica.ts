@@ -25,9 +25,7 @@ export interface IPrinterSettings {
   id?: number;
   id_lista?: number;
   valor: string;
-  valor2:
-    | string
-    | {
+  valor2: {
         width: number;
         height: number;
         margin: { left: number; right: number; top: number; bottom: number };
