@@ -214,7 +214,7 @@
       </div>
     </div>
     <!-- Etiqutas -->
-    <div class="flex flex-row flex-wrap gap-2">
+    <div class="flex flex-row flex-wrap gap-2 d-print-block ">
       <p-card
         *ngFor="
           let etiqueta of ordemProducao.ordem_producao_items;
@@ -234,7 +234,6 @@
           'page-break-inside': 'avoid'
         }"
 
-        class="print"
       >
         <div class="flex flex-row flex-wrap">
           <img [src]="logoURL" alt="Logotipo Black" class="w-1/4" />
