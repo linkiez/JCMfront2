@@ -1,7 +1,7 @@
 import { ArquivoService } from 'src/app/services/arquivo.service';
 import { ListaGenericaService } from './../../../../services/lista-generica.service';
 import { MessageService } from 'primeng/api';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   IOrdemProducao,
@@ -13,7 +13,15 @@ import { Quill } from 'quill';
 import * as xlsx from 'xlsx';
 import { RIRService } from 'src/app/services/rir.service';
 import { IRIR } from 'src/app/models/rir';
-import { debounce, debounceTime, distinctUntilChanged, firstValueFrom } from 'rxjs';
+import {
+  Observable,
+  Subscription,
+  debounce,
+  debounceTime,
+  distinctUntilChanged,
+  firstValueFrom,
+  of,
+} from 'rxjs';
 import {
   IListaGenerica,
   IListaGenericaItem,
@@ -27,7 +35,7 @@ import { DomSanitizer } from '@angular/platform-browser';
   templateUrl: './ordem-producao.component.html',
   styleUrls: ['./ordem-producao.component.css'],
 })
-export class OrdemProducaoComponent implements OnInit {
+export class OrdemProducaoComponent implements OnInit, OnDestroy {
   ordemProducao: IOrdemProducao = {};
 
   etiquetas: boolean = true;
@@ -37,6 +45,10 @@ export class OrdemProducaoComponent implements OnInit {
   impressoras?: IPrinterSettings[];
 
   impressora?: IPrinterSettings;
+
+  impressora$: Observable<IPrinterSettings | undefined> = of(this.impressora);
+
+  impressoraSubscription?: Subscription;
 
   impressoraEdit: IPrinterSettings = {
     id_lista: this.impressoraIdListaGenerica,
@@ -67,12 +79,32 @@ export class OrdemProducaoComponent implements OnInit {
     private RIRService: RIRService,
     private ListaGenericaService: ListaGenericaService,
     private ArquivoService: ArquivoService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private renderer: Renderer2
   ) {}
 
   ngOnInit() {
     this.getOrdemProducao();
     this.getImpressoras();
+
+    this.impressoraSubscription = this.impressora$.subscribe({
+      next: (impressora) => {
+        this.renderer.setStyle(
+          document.body,
+          'width',
+          impressora?.valor2.width + 'mm'
+        );
+        this.renderer.setStyle(document.body, 'print', {
+          width: '100%',
+        });
+      },
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.impressoraSubscription) {
+      this.impressoraSubscription.unsubscribe();
+    }
   }
 
   getOrdemProducao() {
@@ -87,7 +119,6 @@ export class OrdemProducaoComponent implements OnInit {
                 .toString();
           }
         this.ordemProducao = this.sortOrdemProducaoItems(ordemProducao);
-
       },
       error: (error) => {
         console.error(error);
@@ -97,13 +128,13 @@ export class OrdemProducaoComponent implements OnInit {
           detail: 'Erro ao buscar ordem de produção - ' + error.error,
         });
       },
-      complete: async() => {
+      complete: async () => {
         if (this.ordemProducao?.orcamento?.empresa?.id_file_logoBlack)
-        this.logoURL = await firstValueFrom(this.ArquivoService.getUrlArquivo(
-          this.ordemProducao?.orcamento?.empresa?.id_file_logoBlack)
-        );
-        console.log(this.ordemProducao);
-        console.log(this.logoURL);
+          this.logoURL = await firstValueFrom(
+            this.ArquivoService.getUrlArquivo(
+              this.ordemProducao?.orcamento?.empresa?.id_file_logoBlack
+            )
+          );
       },
     });
   }
@@ -135,6 +166,7 @@ export class OrdemProducaoComponent implements OnInit {
           detail: 'Erro ao buscar impressoras - ' + error.error,
         });
       },
+      complete: () => {},
     });
   }
 
@@ -189,7 +221,7 @@ export class OrdemProducaoComponent implements OnInit {
       },
       complete: () => {
         this.getImpressoras();
-      }
+      },
     });
   }
 
@@ -235,8 +267,8 @@ export class OrdemProducaoComponent implements OnInit {
     this.toggleImpressoraDetalhes();
   }
 
-  editImpressora(){
-    this.impressoraEdit = {...this.impressora} as IPrinterSettings;
+  editImpressora() {
+    this.impressoraEdit = { ...this.impressora } as IPrinterSettings;
     this.toggleImpressoraDetalhes();
   }
 

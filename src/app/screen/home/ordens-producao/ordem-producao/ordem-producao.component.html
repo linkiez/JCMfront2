@@ -215,18 +215,42 @@
     </div>
     <!-- Etiqutas -->
     <div class="flex flex-row flex-wrap gap-2">
-      <p-card *ngFor="let etiqueta of ordemProducao.ordem_producao_items" >
+      <p-card
+        *ngFor="
+          let etiqueta of ordemProducao.ordem_producao_items;
+          let index = index
+        "
+        [ngStyle]="{
+          'aspect-ratio':
+            (impressora?.valor2?.width || 1) /
+            (impressora?.valor2?.height || 1),
+          width: impressora?.valor2?.width + 'mm',
+          height: impressora?.valor2?.height + 'mm',
+          'margin-top': impressora?.valor2?.margin?.top + 'mm',
+          'margin-left': impressora?.valor2?.margin?.left + 'mm',
+          'margin-right': impressora?.valor2?.margin?.right + 'mm',
+          'margin-bottom': (impressora?.valor2?.margin?.bottom || 0) + 'mm',
+          'page-break-after': 'always',
+          'page-break-inside': 'avoid'
+        }"
+
+        class="print"
+      >
         <div class="flex flex-row flex-wrap">
-          <img [src]="logoURL" alt="Logotipo Black" class="w-1/4">
+          <img [src]="logoURL" alt="Logotipo Black" class="w-1/4" />
           <div class="flex-grow flex flex-col">
-              <div class="flex flex-row">
-                <span>Orcamento: {{ordemProducao.id_orcamento}}</span>
-              </div>
+            <div class="flex flex-row">
+              <span>Orcamento: {{ ordemProducao.id_orcamento }}</span>
+              <span>Ordem de Produção: {{ ordemProducao.id }}</span>
+            </div>
+            <span>Cliente: {{ ordemProducao.orcamento?.pessoa?.nome }}</span>
+            <div class="flex flex-row">
+              <span>Item: {{ index }}</span>
+            </div>
           </div>
         </div>
       </p-card>
     </div>
-
   </ng-template>
   <div class="noprint">
     <hr />
@@ -341,48 +365,48 @@
                 <div class="flex flex-col mx-auto">
                   <label for="inpImpressoraMargemSuperior">Superior</label>
                   <input
-                  pInputText
-                  type="number"
-                  name="inpImpressoraMargemSuperior"
-                  id="inpImpressoraMargemsSuperior"
-                  [(ngModel)]="impressoraEdit.valor2.margin.top"
-                  required
-                  >
+                    pInputText
+                    type="number"
+                    name="inpImpressoraMargemSuperior"
+                    id="inpImpressoraMargemsSuperior"
+                    [(ngModel)]="impressoraEdit.valor2.margin.top"
+                    required
+                  />
                 </div>
                 <div class="flex flex-row flex-wrap gap-2 justify-between">
                   <div class="flex flex-col">
                     <label for="inpImpressoraMargemEsquerda">Esquerda</label>
                     <input
-                    pInputText
-                    type="number"
-                    name="inpImpressoraMargemEsquerda"
-                    id="inpImpressoraMargemsEsquerda"
-                    [(ngModel)]="impressoraEdit.valor2.margin.left"
-                    required
-                    >
+                      pInputText
+                      type="number"
+                      name="inpImpressoraMargemEsquerda"
+                      id="inpImpressoraMargemsEsquerda"
+                      [(ngModel)]="impressoraEdit.valor2.margin.left"
+                      required
+                    />
                   </div>
                   <div class="flex flex-col">
                     <label for="inpImpressoraMargemDireita">Direita</label>
                     <input
-                    pInputText
-                    type="number"
-                    name="inpImpressoraMargemDireita"
-                    id="inpImpressoraMargemsDireita"
-                    [(ngModel)]="impressoraEdit.valor2.margin.right"
-                    required
-                    >
+                      pInputText
+                      type="number"
+                      name="inpImpressoraMargemDireita"
+                      id="inpImpressoraMargemsDireita"
+                      [(ngModel)]="impressoraEdit.valor2.margin.right"
+                      required
+                    />
                   </div>
                 </div>
                 <div class="flex flex-col mx-auto">
                   <label for="inpImpressoraMargemInferior">Inferior</label>
                   <input
-                  pInputText
-                  type="number"
-                  name="inpImpressoraMargemInferior"
-                  id="inpImpressoraMargemInferior"
-                  [(ngModel)]="impressoraEdit.valor2.margin.bottom"
-                  required
-                  >
+                    pInputText
+                    type="number"
+                    name="inpImpressoraMargemInferior"
+                    id="inpImpressoraMargemInferior"
+                    [(ngModel)]="impressoraEdit.valor2.margin.bottom"
+                    required
+                  />
                 </div>
               </div>
             </fieldset>

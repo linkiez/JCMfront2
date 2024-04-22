@@ -182,4 +182,8 @@ fieldset legend {
   page-break-inside: avoid;
 }
 
+.pageBreakAfter {
+  page-break-after: always;
+}
+
 }
