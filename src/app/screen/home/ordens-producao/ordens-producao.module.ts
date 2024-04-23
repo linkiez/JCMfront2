@@ -2,9 +2,9 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-import { OrdensProducaoRoutingModule } from '../ordens-producao/ordens-producao-routing.module';
-import { OrdensProducaoComponent } from '../ordens-producao/ordens-producao.component';
-import { OrdemProducaoComponent } from '../ordens-producao/ordem-producao/ordem-producao.component';
+import { OrdensProducaoRoutingModule } from './ordens-producao-routing.module';
+import { OrdensProducaoComponent } from './ordens-producao.component';
+import { OrdemProducaoComponent } from './ordem-producao/ordem-producao.component';
 import { ListaFilesModule } from 'src/app/components/listaFiles/listaFiles.module';
 import { EditorModule } from 'primeng/editor';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';

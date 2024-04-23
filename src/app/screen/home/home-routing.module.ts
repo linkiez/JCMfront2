@@ -78,7 +78,7 @@ const routes: Routes = [
       {
         path: 'ordensproducao',
         loadChildren: () =>
-          import('./pedidoscompras/ordens-producao.module').then(
+          import('./ordens-producao/ordens-producao.module').then(
             (module) => module.OrdensProducaoModule
           ),
         canLoad: [LoginGuard],

@@ -21,7 +21,7 @@ export class ContatoService {
       queryString += chaves[i] + '=' + valores[i];
     }
 
-    return this.http.get(environment.backendURL + 'contato' + queryString, {
+    return this.http.get<IContato[]>(environment.backendURL + 'contato' + queryString, {
       responseType: 'json',
     });
   }
@@ -38,7 +38,7 @@ export class ContatoService {
     });
   }
 
-  updateContato(contato: IContato): Observable<IContato> {
+  updateContato(contato: IContato): Observable<any> {
     return this.http.put(
       environment.backendURL + 'contato/' + contato.id,
       contato,

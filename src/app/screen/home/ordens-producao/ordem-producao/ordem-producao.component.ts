@@ -38,7 +38,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 export class OrdemProducaoComponent implements OnInit, OnDestroy {
   ordemProducao: IOrdemProducao = {};
 
-  etiquetas: boolean = true;
+  etiquetas: boolean = false;
 
   impressoraDetalhes: boolean = false;
 
@@ -119,6 +119,7 @@ export class OrdemProducaoComponent implements OnInit, OnDestroy {
                 .toString();
           }
         this.ordemProducao = this.sortOrdemProducaoItems(ordemProducao);
+        console.log(this.ordemProducao);
       },
       error: (error) => {
         console.error(error);
@@ -194,6 +195,7 @@ export class OrdemProducaoComponent implements OnInit, OnDestroy {
       },
       complete: () => {
         this.getImpressoras();
+        this.toggleImpressoraDetalhes();
       },
     });
   }
@@ -221,6 +223,7 @@ export class OrdemProducaoComponent implements OnInit, OnDestroy {
       },
       complete: () => {
         this.getImpressoras();
+        this.toggleImpressoraDetalhes();
       },
     });
   }
@@ -247,6 +250,51 @@ export class OrdemProducaoComponent implements OnInit, OnDestroy {
     } else {
       this.createImpressora();
     }
+  }
+
+  deleteImpressora() {
+    if (!this.impressoraIdListaGenerica) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erro',
+        detail: 'Lista de Impressoras não encontrada',
+      });
+      return;
+    }
+    if (!this.impressoraEdit) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erro',
+        detail: 'Impressora não encontrada',
+      });
+      return;
+    }
+    let impresoraListaGenericaItem: IListaGenericaItem =
+      this.convertIPrinterSettingsToListaGenericaItem(this.impressoraEdit!);
+
+    this.ListaGenericaService.deleteListaGenericaItem(
+      impresoraListaGenericaItem
+    ).subscribe({
+      next: (impressora) => {
+        this.messageService.add({
+          severity: 'info',
+          summary: 'Sucesso',
+          detail: 'Impressora excluída com sucesso',
+        });
+      },
+      error: (error) => {
+        console.error(error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: 'Erro ao excluir impressora -' + error.error,
+        });
+      },
+      complete: () => {
+        this.getImpressoras();
+        this.toggleImpressoraDetalhes();
+      },
+    });
   }
 
   newImpressora() {
@@ -323,11 +371,6 @@ export class OrdemProducaoComponent implements OnInit, OnDestroy {
   onEditorModelChange(editor: Quill, content: string, index: number) {
     const contents = editor.clipboard.convert({ html: content });
     editor.setContents(contents);
-  }
-
-  consolelog(content: any) {
-    console.log(content);
-    console.log(this.ordemProducao);
   }
 
   gerarEtiquetas() {

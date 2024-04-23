@@ -1,6 +1,9 @@
-*{ color: white; }
+* {
+  color: white;
+}
 
-.p-button, a{
+.p-button,
+a {
   color: black;
 }
 
@@ -43,7 +46,29 @@ button {
   line-height: 1;
 }
 
+.p-card-wrapper {
+  height: 100%;
+  margin-bottom: 10px;
+}
 
+:host ::ng-deep .p-card {
+  background: white;
+  color: black;
+}
+
+:host ::ng-deep .p-card-body {
+  padding: 0px;
+}
+
+:host ::ng-deep .p-card-content {
+  padding: 2mm;
+  font-size: 3.2mm;
+}
+
+p {
+  width: auto;
+  color: black;
+}
 
 @media print {
   td {
@@ -61,8 +86,8 @@ button {
     border-bottom: 2px solid #ccc !important;
   }
 
-  .p-card {
-    width: 100%;
+  .p-card-wrapper {
     height: 100%;
+    margin-bottom: 0px;
   }
 }

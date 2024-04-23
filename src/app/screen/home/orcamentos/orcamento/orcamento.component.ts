@@ -5,6 +5,7 @@ import { PessoaService } from './../../../../services/pessoa.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import {
+  Observable,
   catchError,
   debounceTime,
   distinctUntilChanged,
@@ -32,6 +33,7 @@ import { NgForm } from '@angular/forms';
 import { ArquivoService } from 'src/app/services/arquivo.service';
 import * as XLSX from 'xlsx';
 import { IRIR } from 'src/app/models/rir';
+import { IEmpresa } from 'src/app/models/empresa';
 
 @Component({
   selector: 'app-orcamento',
@@ -69,6 +71,7 @@ export class OrcamentoComponent implements OnInit {
     total: 0,
     desconto: 0,
     embalagem: 'Por conta do Fornecedor(nosso padrão)',
+    transporte: 'FOB - Por Conta do Cliente',
     cond_pag: 'AVISTA',
     prazo_emdias: 0,
     empresa: {},
@@ -178,20 +181,7 @@ export class OrcamentoComponent implements OnInit {
       })
     );
 
-  contatoEmpresas$ = this.empresaService
-    .getEmpresas({ page: 0, pageCount: 10, searchValue: '', deleted: false })
-    .pipe(
-      map((empresas: any) => empresas.empresas),
-      catchError((error) => {
-        console.error(error);
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Erro',
-          detail: 'Error ao buscar empresas - ' + error.error,
-        });
-        return [];
-      })
-    );
+  empresas: IEmpresa[] = [];
 
   aprovacaoOrcamento$ = this.listaGenericaService
     .getByNameListaGenerica('aprovadoOrcamento')
@@ -264,6 +254,7 @@ export class OrcamentoComponent implements OnInit {
 
   ngOnInit() {
     this.id = Number(this.route.snapshot.paramMap.get('id'));
+    this.getEmpresas();
     this.getOrcamento();
   }
 
@@ -581,7 +572,7 @@ export class OrcamentoComponent implements OnInit {
             item.uuid = uuidv4();
           });
           this.orcamento = response;
-          // console.log(this.orcamento);
+          console.log(this.orcamento);
         },
         error: (error) => {
           console.error(error);
@@ -600,13 +591,34 @@ export class OrcamentoComponent implements OnInit {
 
   async getLogoUrl() {
     if (this.orcamento.empresa?.logoColor?.id) {
-      const url: any = await firstValueFrom(
+      const url: string = await firstValueFrom(
         this.arquivoService.getUrlArquivo(this.orcamento.empresa?.logoColor?.id)
       );
-      this.logotipoUrl = url.url;
+      this.logotipoUrl = url;
     } else {
       this.logotipoUrl = '';
     }
+  }
+
+  getEmpresas() {
+    this.empresaService
+    .getEmpresas({ page: 0, pageCount: 10, searchValue: '', deleted: false })
+    .pipe(
+      map((empresas: any) => empresas.empresas)
+    ).subscribe({
+      next: (response: IEmpresa[]) => {
+        this.empresas = response;
+        console.log(this.empresas)
+      },
+      error: (error) => {
+        console.error(error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: 'Error ao buscar empresas -' + error.error,
+        });
+      },
+    });
   }
 
   create(clonar?: boolean) {

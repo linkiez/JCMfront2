@@ -4,7 +4,7 @@ import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
 import { OrdensProducaoComponent } from './ordens-producao.component';
-import { OrdensProducaoModule } from '../pedidoscompras/ordens-producao.module';
+import { OrdensProducaoModule } from './ordens-producao.module';
 import { AppModule } from 'src/app/app.module';
 
 describe('OrdensProducaoComponent', () => {
