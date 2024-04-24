@@ -1,4 +1,4 @@
-export interface iFormSite {
+export interface IFormSite {
   name: string;
   email: string;
   tel: string;

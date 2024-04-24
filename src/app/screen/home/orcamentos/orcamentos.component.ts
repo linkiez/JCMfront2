@@ -2,15 +2,21 @@ import { VendedorService } from './../../../services/vendedor.service';
 import { QueryService } from './../../../services/query.service';
 import { OrcamentoService } from './../../../services/orcamento.service';
 import { PedidoCompraService } from './../../../services/pedidocompra.service';
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { debounceTime, distinctUntilChanged, Subscription } from 'rxjs';
-import { PedidoCompra } from 'src/app/models/pedido-compra';
-import { Query } from 'src/app/models/query';
+import { IPedidoCompra } from 'src/app/models/pedido-compra';
+import { IQuery } from 'src/app/models/query';
 import { Paginator } from 'primeng/paginator';
-import { Orcamento } from 'src/app/models/orcamento';
-import { Vendedor } from 'src/app/models/vendedor';
+import { IOrcamento } from 'src/app/models/orcamento';
+import { IVendedor } from 'src/app/models/vendedor';
 
 @Component({
   selector: 'app-orcamentos',
@@ -18,16 +24,16 @@ import { Vendedor } from 'src/app/models/vendedor';
   styleUrls: ['./orcamentos.component.css'],
   providers: [ConfirmationService],
 })
-export class OrcamentosComponent implements OnInit, OnDestroy, AfterViewInit  {
+export class OrcamentosComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('paginator') paginator!: Paginator;
 
-  orcamentos: Orcamento[] = [];
+  orcamentos: IOrcamento[] = [];
 
   totalRecords: number = 0;
 
   first = 0;
 
-  vendedores: Vendedor[] = [];
+  vendedores: IVendedor[] = [];
 
   toogleFiltros: boolean = false;
 
@@ -44,12 +50,12 @@ export class OrcamentosComponent implements OnInit, OnDestroy, AfterViewInit  {
 
   ngOnInit() {
     this.getOrcamentos(true);
-    this.first = this.queryService.orcamento.page * this.queryService.orcamento.pageCount;
-    this.searchVendedor("");
+    this.first =
+      this.queryService.orcamento.page * this.queryService.orcamento.pageCount;
+    this.searchVendedor('');
   }
 
-  ngAfterViewInit() {
-  }
+  ngAfterViewInit() {}
 
   getOrcamentos(pageChange?: boolean) {
     this.queryService.orcamento.page = pageChange
@@ -73,7 +79,7 @@ export class OrcamentosComponent implements OnInit, OnDestroy, AfterViewInit  {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Erro ao carregar os orçamentos - '+error.error,
+            detail: 'Erro ao carregar os orçamentos - ' + error.error,
           });
         },
       });
@@ -110,7 +116,7 @@ export class OrcamentosComponent implements OnInit, OnDestroy, AfterViewInit  {
             this.messageService.add({
               severity: 'error',
               summary: 'Erro',
-              detail: 'Erro ao restaurar o orçamento - '+error.error,
+              detail: 'Erro ao restaurar o orçamento - ' + error.error,
             });
           },
           complete: () => {
@@ -135,7 +141,7 @@ export class OrcamentosComponent implements OnInit, OnDestroy, AfterViewInit  {
   }
 
   searchVendedor(searchTerm: any) {
-    let query: Query = {
+    let query: IQuery = {
       page: 0,
       pageCount: 10,
       searchValue: searchTerm.query,
@@ -152,7 +158,7 @@ export class OrcamentosComponent implements OnInit, OnDestroy, AfterViewInit  {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Erro ao carregar os vendedores - '+error.error,
+            detail: 'Erro ao carregar os vendedores - ' + error.error,
           });
         },
       });

@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Paginator } from 'primeng/paginator';
-import { RNC } from 'src/app/models/rnc';
+import { IRNC } from 'src/app/models/rnc';
 import { QueryService } from 'src/app/services/query.service';
 import { RNCService } from 'src/app/services/rnc.service';
 
@@ -10,25 +10,25 @@ import { RNCService } from 'src/app/services/rnc.service';
   selector: 'app-rncs',
   templateUrl: './rncs.component.html',
   styleUrls: ['./rncs.component.css'],
-  providers: [ConfirmationService]
+  providers: [ConfirmationService],
 })
 export class RNCsComponent implements OnInit {
   @ViewChild('paginator') paginator!: Paginator;
 
-  rncs: RNC[] = [];
+  rncs: IRNC[] = [];
 
   totalRecords: number = 0;
 
   first = 0;
 
-  status: string[] = ['Aberto','Fechado'];
+  status: string[] = ['Aberto', 'Fechado'];
 
   constructor(
     public queryService: QueryService,
     private rncService: RNCService,
     private messageService: MessageService,
     private router: Router,
-    private confirmationService: ConfirmationService,
+    private confirmationService: ConfirmationService
   ) {}
 
   ngOnInit(): void {
@@ -105,13 +105,18 @@ export class RNCsComponent implements OnInit {
       this.getRNCs();
   }
 
-  filterSetOP(rnc: RNC) {
-    return new Set(rnc.rnc_items?.map((item) => item.ordem_producao_item?.id_ordem_producao))
+  filterSetOP(rnc: IRNC) {
+    return new Set(
+      rnc.rnc_items?.map((item) => item.ordem_producao_item?.id_ordem_producao)
+    );
   }
 
-  filterSetCliente(rnc: RNC) {
-    return new Set(rnc.rnc_items?.map((item) => item.ordem_producao_item?.orcamento_item?.orcamento?.pessoa?.nome))
+  filterSetCliente(rnc: IRNC) {
+    return new Set(
+      rnc.rnc_items?.map(
+        (item) =>
+          item.ordem_producao_item?.orcamento_item?.orcamento?.pessoa?.nome
+      )
+    );
   }
-
-
 }

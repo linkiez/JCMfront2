@@ -5,8 +5,8 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { Paginator } from 'primeng/paginator';
 import { Table } from 'primeng/table';
 import { debounceTime, distinctUntilChanged, filter, Subscription } from 'rxjs';
-import { Pessoa } from 'src/app/models/pessoa';
-import { Query } from 'src/app/models/query';
+import { IPessoa } from 'src/app/models/pessoa';
+import { IQuery } from 'src/app/models/query';
 import { PessoaService } from 'src/app/services/pessoa.service';
 
 @Component({
@@ -18,7 +18,7 @@ import { PessoaService } from 'src/app/services/pessoa.service';
 export class PessoasComponent implements OnInit {
   @ViewChild('paginator') paginator!: Paginator;
 
-  pessoas: Array<Pessoa> = [];
+  pessoas: Array<IPessoa> = [];
 
   totalRecords: number = 0;
 

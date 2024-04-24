@@ -3,14 +3,13 @@ p-menubar img{
   height: 48px;
  }
 
- :host ::ng-deep {
-  .favicon-icon {
+ :host ::ng-deep .favicon-icon {
       width: 32px;
       height: 32px;
-      background-image: url("../../../favicon.ico");
+      background-image: url("/src/favicon.ico");
       background-size: 32px 32px;
   }
-}
+
 
 body {
   background-color: #20262e;
@@ -49,10 +48,6 @@ p {
   margin-bottom: 5px;
 }
 
-.p-button {
-  background-color: #8dd0ff;
-}
-
 .page {
   padding: 1cm;
   margin: auto;
@@ -79,11 +74,6 @@ p {
 .p-datatable .p-datatable-thead > tr > th {
   padding: 5px;
 }
-@page {
-  size: A4;
-  margin: 0;
-
-}
 
 .noview {
   display: none;
@@ -91,10 +81,9 @@ p {
 
 .p-card {
   background: #343e4d;
-  padding: 10px;
-  height: 100%;
   display: flex;
   flex-direction: column;
+  height: 100%
 }
 
 .p-card-body {
@@ -104,12 +93,29 @@ p {
   justify-content: space-between;
 }
 
+fieldset {
+  border: 1px solid #343e4d;
+  border-radius: 5px;
+  padding: 10px;
+  position: relative;
+  margin-top: 20px;
+}
 
+fieldset legend {
+  position: absolute;
+  top: -10px;
+  left: 10px;
+  background: #343e4d;
+  border-radius: 5px;
+  padding: 0 5px;
+  font-size: 1em;
+  width: auto
+}
 
 @media print {
-
-  html, body {
-    width: 210mm;
+  * {
+    color: black !important;
+    border-color: black !important;
   }
 
   h4 {
@@ -167,6 +173,29 @@ p {
 
 .dontBreakPage {
   page-break-inside: avoid;
+}
+
+.pageBreakAfter {
+  page-break-after: always;
+}
+
+.p-card {
+    width: 100%;
+    height: 100%;
+}
+
+.p-card-body {
+    height: 100%;
+    display: flex;
+    page-break-inside: avoid;
+}
+
+.page {
+  padding: 0cm;
+  margin: 0;
+  border-radius: 0px;
+  background: #2a323d;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
 }

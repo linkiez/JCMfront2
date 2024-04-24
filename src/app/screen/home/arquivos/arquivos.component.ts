@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { map, Subscription } from 'rxjs';
-import { Arquivo } from '../../../models/arquivo';
+import { IArquivo } from '../../../models/arquivo';
 import { ArquivoService } from '../../../services/arquivo.service';
 import { DOCUMENT } from '@angular/common';
 
@@ -16,7 +16,7 @@ import { DOCUMENT } from '@angular/common';
 export class ArquivosComponent implements OnInit {
   @ViewChild('dt') dt: Table | undefined;
 
-  arquivos: Arquivo[] = [];
+  arquivos: IArquivo[] = [];
 
   first = 0;
 
@@ -44,20 +44,20 @@ export class ArquivosComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'Erro ao carregar arquivos. - '+error.error,
+          detail: 'Erro ao carregar arquivos. - ' + error.error,
         });
       },
     });
   }
 
-  deleteArquivo(id : number){
+  deleteArquivo(id: number) {
     this.subscription = this.arquivoService.deleteArquivo(id).subscribe({
       error: (error) => {
         console.log(error);
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'Erro ao apagar arquivo. - '+error.error,
+          detail: 'Erro ao apagar arquivo. - ' + error.error,
         });
       },
       complete: () => {
@@ -65,9 +65,9 @@ export class ArquivosComponent implements OnInit {
         this.messageService.add({
           severity: 'success',
           summary: 'Sucesso',
-          detail: "Arquivo apagado.",
+          detail: 'Arquivo apagado.',
         });
-      }
+      },
     });
   }
 
@@ -105,7 +105,7 @@ export class ArquivosComponent implements OnInit {
     this.arquivoService.getUrlArquivo(id).subscribe({
       next: (url: any) => {
         console.log(url);
-        this.document.location.href = url.url
+        this.document.location.href = url.url;
       },
     });
   }
@@ -113,11 +113,11 @@ export class ArquivosComponent implements OnInit {
   confirm(event: Event, id: number) {
     this.confirmationService.confirm({
       target: event.target || undefined,
-      message: "Tem certeza que deseja apagar o arquivo?",
-      icon: "pi pi-exclamation-triangle",
+      message: 'Tem certeza que deseja apagar o arquivo?',
+      icon: 'pi pi-exclamation-triangle',
       accept: () => {
         this.deleteArquivo(id);
-      }
+      },
     });
   }
 }

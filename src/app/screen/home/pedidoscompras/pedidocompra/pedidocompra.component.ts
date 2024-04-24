@@ -1,4 +1,4 @@
-import { ListaGenericaItem } from './../../../../models/lista-generica';
+import { IListaGenericaItem } from './../../../../models/lista-generica';
 import { Component, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -9,10 +9,10 @@ import {
   map,
   Subscription,
 } from 'rxjs';
-import { PedidoCompra, PedidoCompraItem } from 'src/app/models/pedido-compra';
-import { Pessoa } from 'src/app/models/pessoa';
-import { Produto } from 'src/app/models/produto';
-import { Query } from 'src/app/models/query';
+import { IPedidoCompra, IPedidoCompraItem } from 'src/app/models/pedido-compra';
+import { IPessoa } from 'src/app/models/pessoa';
+import { IProduto } from 'src/app/models/produto';
+import { IQuery } from 'src/app/models/query';
 import { ListaGenericaService } from 'src/app/services/lista-generica.service';
 import { PedidoCompraService } from 'src/app/services/pedidocompra.service';
 import { ProdutoService } from 'src/app/services/produto.service';
@@ -37,7 +37,7 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
     private confirmationService: ConfirmationService
   ) {}
 
-  pedidoCompra: PedidoCompra = {
+  pedidoCompra: IPedidoCompra = {
     fornecedor: {},
     pedido_compra_items: [],
     cond_pagamento: 'AVISTA',
@@ -45,9 +45,9 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
     status: 'Orçamento',
   };
 
-  fornecedores: Pessoa[] = [];
+  fornecedores: IPessoa[] = [];
 
-  produtos: Produto[] = [];
+  produtos: IProduto[] = [];
 
   dimensoes$ = this.listaGenericaService
     .getByNameListaGenerica('produtoDimensoes')
@@ -83,7 +83,7 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
 
   status: string[] = [];
 
-  observacoes: ListaGenericaItem[] = [];
+  observacoes: IListaGenericaItem[] = [];
 
   private subscription: Subscription = new Subscription();
 
@@ -149,7 +149,7 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   searchFornecedor(event: any) {
-    let query: Query = {
+    let query: IQuery = {
       page: 0,
       pageCount: 10,
       searchValue: event.query,
@@ -175,7 +175,7 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   searchProduto(event: any) {
-    let query: Query = {
+    let query: IQuery = {
       page: 0,
       pageCount: 10,
       searchValue: event.query,
@@ -198,15 +198,15 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
       });
   }
 
-  itemPreco(event: any, item: PedidoCompraItem) {
+  itemPreco(event: any, item: IPedidoCompraItem) {
     item.preco = event.replace(/[^\d]/g, '') / 100;
   }
 
-  itemPeso(event: any, item: PedidoCompraItem) {
+  itemPeso(event: any, item: IPedidoCompraItem) {
     item.peso = event.replace(',', '.');
   }
 
-  itemIpi(event: any, item: PedidoCompraItem) {
+  itemIpi(event: any, item: IPedidoCompraItem) {
     item.ipi = event.replace(/[^\d]/g, '') / 10000;
   }
 
@@ -217,7 +217,7 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
   calculaTotal() {
     let total = 0;
     this.pedidoCompra.pedido_compra_items =
-      this.pedidoCompra.pedido_compra_items.map((item: PedidoCompraItem) => {
+      this.pedidoCompra.pedido_compra_items.map((item: IPedidoCompraItem) => {
         item.total =
           (item.peso || 0) * (item.preco || 0) * ((Number(item.ipi) || 0) + 1);
         total = total + item.total;
@@ -228,7 +228,7 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
     this.pedidoCompra.total = total;
   }
 
-  calculaPeso(item: PedidoCompraItem) {
+  calculaPeso(item: IPedidoCompraItem) {
     let dimensao: any = (item.dimensao || '')
       .split('x')
       .map((dimensao: string | number) => {
@@ -367,7 +367,7 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
     this.createOrUpdate();
   }
 
-  calculatePesoEntreguePercentage(item: PedidoCompraItem) {
+  calculatePesoEntreguePercentage(item: IPedidoCompraItem) {
     let percentage =
       (((item.peso_entregue || 0) / (item.peso || 1)) as number) * 100;
     if (percentage > 100) {

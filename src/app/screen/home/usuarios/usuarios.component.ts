@@ -4,8 +4,8 @@ import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { Paginator } from 'primeng/paginator';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
-import { Query } from 'src/app/models/query';
-import { Usuario } from 'src/app/models/usuario';
+import { IQuery } from 'src/app/models/query';
+import { IUsuario } from 'src/app/models/usuario';
 
 @Component({
   selector: 'app-usuarios',
@@ -15,11 +15,11 @@ import { Usuario } from 'src/app/models/usuario';
 export class UsuariosComponent implements OnInit {
   @ViewChild('paginator') paginator!: Paginator;
 
-  usuarios: Usuario[] = [];
+  usuarios: IUsuario[] = [];
 
   totalRecords: number = 0;
 
-  query: Query = {
+  query: IQuery = {
     page: 0,
     pageCount: 10,
     searchValue: '',
@@ -38,22 +38,20 @@ export class UsuariosComponent implements OnInit {
 
   getUsuarios(pageChange?: boolean): void {
     this.query.page = pageChange ? this.query.page : 0;
-    this.usuarioServiceDB
-      .getUsuarios(this.query)
-      .subscribe({
-        next: (consulta) => {
-          this.usuarios = consulta.usuarios;
-          this.totalRecords = consulta.totalRecords;
-        },
-        error: (error) => {
-          console.error(error);
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Erro',
-            detail: 'Erro ao carregar os usuários - ' + error.error,
-          });
-        },
-      });
+    this.usuarioServiceDB.getUsuarios(this.query).subscribe({
+      next: (consulta) => {
+        this.usuarios = consulta.usuarios;
+        this.totalRecords = consulta.totalRecords;
+      },
+      error: (error) => {
+        console.error(error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: 'Erro ao carregar os usuários - ' + error.error,
+        });
+      },
+    });
   }
 
   new() {
@@ -73,5 +71,4 @@ export class UsuariosComponent implements OnInit {
     )
       this.getUsuarios();
   }
-
 }

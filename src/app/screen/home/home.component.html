@@ -1,13 +1,7 @@
-<div class='bg'>
-  <div class="row">
-    <div class="page col">
-      <div class="menu noprint">
+
+      <div class="menu noprint page">
         <p-menubar [model]="menuItems"><app-caixa-usuario></app-caixa-usuario></p-menubar>
       </div>
-      <p-toast position="bottom-right" [preventDuplicates]=false></p-toast>
+      <p-toast position="bottom-right" [preventDuplicates]=false class="noprint"></p-toast>
       <router-outlet></router-outlet>
-    </div>
-  </div>
-</div>
-
 

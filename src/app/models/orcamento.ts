@@ -1,19 +1,19 @@
-import { Arquivo } from './arquivo';
-import { Contato } from './contato';
-import { Empresa } from './empresa';
-import { Pessoa } from './pessoa';
-import { Produto } from './produto';
-import { VendaTiny } from './vendatiny';
-import { Vendedor } from './vendedor';
+import { IArquivo } from './arquivo';
+import { IContato } from './contato';
+import { IEmpresa } from './empresa';
+import { IPessoa } from './pessoa';
+import { IProduto } from './produto';
+import { IVendaTiny } from './vendatiny';
+import { IVendedor } from './vendedor';
 
-export interface Orcamento {
+export interface IOrcamento {
   id?: number;
   status?: string;
-  contato?: Contato;
+  contato?: IContato;
   id_contato?: number;
-  pessoa?: Pessoa;
+  pessoa?: IPessoa;
   id_pessoa?: number;
-  vendedor?: Vendedor;
+  vendedor?: IVendedor;
   id_vendedor?: number;
   prazo_emdias?: number;
   prazo_data?: string;
@@ -30,18 +30,18 @@ export interface Orcamento {
   deletedAt?: Date;
   updatedAt?: Date;
   createdAt?: Date;
-  orcamento_items: OrcamentoItem[];
-  files?: Arquivo[];
-  empresa: Empresa;
-  vendastinies?: VendaTiny[];
+  orcamento_items: IOrcamentoItem[];
+  files?: IArquivo[];
+  empresa: IEmpresa;
+  vendastinies?: IVendaTiny[];
 }
 
-export interface OrcamentoItem {
+export interface IOrcamentoItem {
   uuid?: string;
   id?: number;
   id_orcamento?: number;
   descricao?: string;
-  produto?: Produto;
+  produto?: IProduto;
   id_produto?: number;
   material_incluido?: boolean;
   processo?: string | string[];
@@ -62,10 +62,10 @@ export interface OrcamentoItem {
   total_peso?: number;
   total_hora?: number;
   custo?: number;
-  orcamento?: Orcamento;
+  orcamento?: IOrcamento;
 }
 
-export interface OrcamentoItemXlSX {
+export interface IOrcamentoItemXlSX {
   item: number;
   descricao: string;
   produto: string;

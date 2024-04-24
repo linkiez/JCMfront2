@@ -1,7 +1,7 @@
-export interface Validação {
+export interface IValidação {
   nome: string;
   funcao: Function;
-  resultado?: boolean
+  resultado?: boolean;
   menssagem: string;
   campo: string;
 }

@@ -4,8 +4,8 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { debounceTime, distinctUntilChanged, Subscription } from 'rxjs';
-import { PedidoCompra } from 'src/app/models/pedido-compra';
-import { Query } from 'src/app/models/query';
+import { IPedidoCompra } from 'src/app/models/pedido-compra';
+import { IQuery } from 'src/app/models/query';
 import { Paginator } from 'primeng/paginator';
 
 @Component({
@@ -17,7 +17,7 @@ import { Paginator } from 'primeng/paginator';
 export class PedidosComprasComponent implements OnInit, OnDestroy {
   @ViewChild('paginator') paginator!: Paginator;
 
-  pedidosCompra: Array<PedidoCompra> = [];
+  pedidosCompra: Array<IPedidoCompra> = [];
 
   totalRecords: number = 0;
 
@@ -39,11 +39,15 @@ export class PedidosComprasComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.getPedidosCompra(true);
-    this.first = this.queryService.pedidoCompra.page * this.queryService.pedidoCompra.pageCount;
+    this.first =
+      this.queryService.pedidoCompra.page *
+      this.queryService.pedidoCompra.pageCount;
   }
 
   getPedidosCompra(pageChange?: boolean) {
-    this.queryService.pedidoCompra.page = pageChange ? this.queryService.pedidoCompra.page : 0;
+    this.queryService.pedidoCompra.page = pageChange
+      ? this.queryService.pedidoCompra.page
+      : 0;
 
     this.subscription = this.pedidoCompraService
       .getPedidoCompras(this.queryService.pedidoCompra)
@@ -51,14 +55,14 @@ export class PedidosComprasComponent implements OnInit, OnDestroy {
         next: (consulta) => {
           this.pedidosCompra = consulta.pedidosCompra;
           this.totalRecords = consulta.totalRecords;
-          if (!pageChange) this.paginator.changePageToFirst(new Event(""));
+          if (!pageChange) this.paginator.changePageToFirst(new Event(''));
         },
         error: (error) => {
           console.error(error);
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Erro ao carregar os pedidos de compra. - '+error.error,
+            detail: 'Erro ao carregar os pedidos de compra. - ' + error.error,
           });
         },
       });
@@ -94,7 +98,7 @@ export class PedidosComprasComponent implements OnInit, OnDestroy {
             this.messageService.add({
               severity: 'error',
               summary: 'Erro',
-              detail: 'Erro ao restaurar o pedido de compra. - '+error.error,
+              detail: 'Erro ao restaurar o pedido de compra. - ' + error.error,
             });
           },
           complete: () => {

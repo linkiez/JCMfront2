@@ -3,7 +3,7 @@ import { environment } from '../../environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { RefreshTokenService } from './refreshToken.service';
-import { Login } from '../models/login';
+import { ILogin } from '../models/login';
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 
@@ -46,19 +46,19 @@ export class AuthenticationService {
       return true;
     }
     if (refreshToken) {
-      try{
-        let response = await firstValueFrom(this.refresh())
-        let body = response.body as Login;
-        if(body){
+      try {
+        let response = await firstValueFrom(this.refresh());
+        let body = response.body as ILogin;
+        if (body) {
           this.accessTokenService.salvaToken(body!.accessToken);
           this.refreshTokenService.salvaToken(body!.refreshToken);
           return true;
         }
-      }catch(error: any){
-        console.log(error)
+      } catch (error: any) {
+        console.log(error);
       }
       this.router.navigate(['login']);
-      return false
+      return false;
     } else {
       this.router.navigate(['login']);
       return false;

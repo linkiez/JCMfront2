@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
-import { Pessoa } from 'src/app/models/pessoa';
-import { Query } from 'src/app/models/query';
-import { Usuario } from 'src/app/models/usuario';
+import { IPessoa } from 'src/app/models/pessoa';
+import { IQuery } from 'src/app/models/query';
+import { IUsuario } from 'src/app/models/usuario';
 import { PessoaService } from 'src/app/services/pessoa.service';
 import { UsuarioServiceDB } from 'src/app/services/usuario.service';
 import passwordValidator from 'password-validator';
@@ -147,13 +147,13 @@ export class UsuarioComponent implements OnInit {
     },
   };
 
-  usuario: Usuario = {
+  usuario: IUsuario = {
     email: '',
     senha: '',
     acesso: this.listaDeAcessos,
   };
 
-  pessoas: Pessoa[] = [];
+  pessoas: IPessoa[] = [];
 
   validacoes: Array<any> = [];
 
@@ -281,7 +281,7 @@ export class UsuarioComponent implements OnInit {
   }
 
   searchPessoa(searchTerm: any) {
-    let query: Query = {
+    let query: IQuery = {
       page: 0,
       pageCount: 10,
       searchValue: searchTerm.query,

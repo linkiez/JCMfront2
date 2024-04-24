@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-
 import { OrdensProducaoRoutingModule } from './ordens-producao-routing.module';
 import { OrdensProducaoComponent } from './ordens-producao.component';
 import { OrdemProducaoComponent } from './ordem-producao/ordem-producao.component';
@@ -18,7 +17,7 @@ import { ListboxModule } from 'primeng/listbox';
 import { InputTextModule } from 'primeng/inputtext';
 import { DropdownModule } from 'primeng/dropdown';
 import { AutoCompleteModule } from 'primeng/autocomplete';
-
+import { DialogModule } from 'primeng/dialog';
 
 @NgModule({
   declarations: [OrdensProducaoComponent, OrdemProducaoComponent],
@@ -36,7 +35,8 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
     ListboxModule,
     InputTextModule,
     DropdownModule,
-    AutoCompleteModule
+    AutoCompleteModule,
+    DialogModule,
   ],
   providers: [ConfirmationService],
 })
