@@ -34,7 +34,7 @@ export class IqfComponent implements OnInit {
     },
   };
 
-  selectedFornecedor: IFornecedor | undefined = {};
+  selectedFornecedor: IFornecedor | null = null;
   fornecedores: IFornecedor[] = [];
 
   chart: Chart | undefined;
