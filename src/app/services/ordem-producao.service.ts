@@ -1,11 +1,9 @@
-import { Query } from '../models/query';
+import { IQuery } from '../models/query';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable} from 'rxjs';
+import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { OrdemProducao } from '../models/ordem-producao';
-
-
+import { IOrdemProducao } from '../models/ordem-producao';
 
 @Injectable({
   providedIn: 'root',
@@ -13,7 +11,7 @@ import { OrdemProducao } from '../models/ordem-producao';
 export class OrdemProducaoService {
   constructor(private http: HttpClient) {}
 
-  getOrdemProducoes(query: Query): Observable<any> {
+  getOrdemProducoes(query: IQuery): Observable<any> {
     let chaves = Object.keys(query);
     let valores = Object.values(query);
     let queryString = '?';
@@ -23,47 +21,52 @@ export class OrdemProducaoService {
       queryString += chaves[i] + '=' + valores[i];
     }
 
-    return this.http.get<OrdemProducao[]>(
+    return this.http.get<IOrdemProducao[]>(
       environment.backendURL + 'ordemproducao' + queryString,
       {
         responseType: 'json',
       }
-    )
+    );
   }
 
-  getOrdemProducao(id: number): Observable<OrdemProducao> {
-    return this.http.get<OrdemProducao>(
+  getOrdemProducao(id: number): Observable<IOrdemProducao> {
+    return this.http.get<IOrdemProducao>(
       environment.backendURL + 'ordemproducao/' + id,
       { responseType: 'json' }
-    )
+    );
   }
 
-  addOrdemProducao(ordemproducao: OrdemProducao): Observable<any> {
-    return this.http.post(environment.backendURL + 'ordemproducao', ordemproducao, {
-      responseType: 'json',
-    })
+  addOrdemProducao(ordemproducao: IOrdemProducao): Observable<any> {
+    return this.http.post(
+      environment.backendURL + 'ordemproducao',
+      ordemproducao,
+      {
+        responseType: 'json',
+      }
+    );
   }
 
-  updateOrdemProducao(ordemproducao: OrdemProducao): Observable<any> {
+  updateOrdemProducao(ordemproducao: IOrdemProducao): Observable<any> {
     return this.http.put(
       environment.backendURL + 'ordemproducao/' + ordemproducao.id,
       ordemproducao,
       { responseType: 'json' }
-    )
+    );
   }
 
-  deleteOrdemProducao(ordemproducao: OrdemProducao): Observable<any> {
+  deleteOrdemProducao(ordemproducao: IOrdemProducao): Observable<any> {
     return this.http.delete(
       environment.backendURL + 'ordemproducao/' + ordemproducao.id,
       { responseType: 'json' }
-    )
+    );
   }
 
   restoreOrdemProducao(id: number): Observable<Object> {
-    return this.http.post(environment.backendURL + 'ordemproducao/restore/' + id, {
-      responseType: 'json',
-    })
+    return this.http.post(
+      environment.backendURL + 'ordemproducao/restore/' + id,
+      {
+        responseType: 'json',
+      }
+    );
   }
-
-
 }

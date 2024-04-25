@@ -13,9 +13,8 @@ describe('OrdensProducaoComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [AppModule, OrdensProducaoModule]
-    })
-    .compileComponents();
+      imports: [AppModule, OrdensProducaoModule],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

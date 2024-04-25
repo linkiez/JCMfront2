@@ -1,6 +1,6 @@
-import { Arquivo } from "./arquivo";
+import { IArquivo } from './arquivo';
 
-export interface Produto {
+export interface IProduto {
   pedido_compra_items?: any;
   id?: number;
   nome?: string;
@@ -10,6 +10,6 @@ export interface Produto {
   updatedAt?: Date;
   createdAt?: Date;
   deletedAt?: Date;
-  files?: Array<Arquivo>;
+  files?: Array<IArquivo>;
   preco?: number;
 }

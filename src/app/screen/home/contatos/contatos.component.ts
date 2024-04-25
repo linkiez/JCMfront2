@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Contato } from '../../../models/contato';
+import { IContato } from '../../../models/contato';
 import { ContatoService } from '../../../services/contato.service';
 import { Table } from 'primeng/table';
 import { Router } from '@angular/router';
-import { Query } from 'src/app/models/query';
+import { IQuery } from 'src/app/models/query';
 import { QueryService } from 'src/app/services/query.service';
 import { MessageService } from 'primeng/api';
 
@@ -15,7 +15,7 @@ import { MessageService } from 'primeng/api';
 export class ContatosComponent implements OnInit {
   @ViewChild('dt') dt: Table | undefined;
 
-  contatos: Array<Contato> = [];
+  contatos: Array<IContato> = [];
 
   first = 0;
 

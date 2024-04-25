@@ -1,418 +1,444 @@
-<h2>Pedido de Compra</h2>
-<span>F-035 - Rev.01 - Emissão: 12/09/2018 Revisão: 26/4/2023</span>
-<caixaDeStatus
-  [status]="pedidoCompra.status"
-  [options]="status"
-  [editable]="false"
-  (statusChange)="pedidoCompra.status = $event"
-></caixaDeStatus>
-<form class="">
-  <div class="row">
-    <div class="col-6 col-sm-2">
-      <label name="lblId" for="inpId">Id: </label
-      ><input
-        pInputText
-        class="p-inputtext noprint"
-        disabled
-        name="inpId"
-        type="text"
-        [(ngModel)]="pedidoCompra.id"
-      />
-      <span class="noview">{{pedidoCompra.id}}</span>
+<div class="page">
+  <h2>Pedido de Compra</h2>
+  <span>F-035 - Rev.01 - Emissão: 12/09/2018 Revisão: 26/4/2023</span>
+  <caixaDeStatus
+    [status]="pedidoCompra.status"
+    [options]="status"
+    [editable]="false"
+    (statusChange)="pedidoCompra.status = $event"
+  ></caixaDeStatus>
+  <form class="">
+    <div class="row">
+      <div class="col-6 col-sm-2">
+        <label name="lblId" for="inpId">Id: </label
+        ><input
+          pInputText
+          class="p-inputtext noprint"
+          disabled
+          name="inpId"
+          type="text"
+          [(ngModel)]="pedidoCompra.id"
+        />
+        <span class="noview">{{ pedidoCompra.id }}</span>
+      </div>
+      <div class="col-6 col-sm-5">
+        <label name="lblPedido" for="inpPedido">Pedido: </label
+        ><input
+          pInputText
+          class="p-inputtext noprint"
+          name="inpPedido"
+          type="text"
+          [(ngModel)]="pedidoCompra.pedido"
+        />
+        <span class="noview">{{ pedidoCompra.pedido }}</span>
+      </div>
+      <div class="col-12 col-sm-5">
+        <label name="lblDataEmissao" for="inpDataEmissao">Data: </label
+        ><input
+          pInputText
+          class="noprint p-inputtext"
+          name="inpDataEmissao"
+          type="text"
+          disabled
+          value="{{ pedidoCompra.data_emissao | date : 'dd/MM/yyyy' }}"
+        />
+        <span class="noview">{{
+          pedidoCompra.data_emissao | date : "dd/MM/yyyy"
+        }}</span>
+      </div>
     </div>
-    <div class="col-6 col-sm-5">
-      <label name="lblPedido" for="inpPedido">Pedido: </label
-      ><input
-        pInputText
-        class="p-inputtext noprint"
-        name="inpPedido"
-        type="text"
-        [(ngModel)]="pedidoCompra.pedido"
-      />
-      <span class="noview">{{pedidoCompra.pedido}}</span>
+    <div class="row">
+      <div class="col-12 col-sm-8">
+        <label name="lblFornecedor" for="inpFornecedor">Fornecedor: </label
+        ><p-autoComplete
+          pInputText
+          class="noprint"
+          name="inpFornecedor"
+          type="text"
+          [(ngModel)]="pedidoCompra.fornecedor"
+          field="pessoa.nome"
+          [suggestions]="fornecedores"
+          (completeMethod)="searchFornecedor($event)"
+          [dropdown]="true"
+          [style]="{ width: '100%' }"
+          [inputStyle]="{ width: '100%' }"
+          appendTo="body"
+        ></p-autoComplete>
+        <span class="noview">{{ pedidoCompra.fornecedor?.pessoa?.nome }}</span>
+      </div>
+      <div class="col-12 col-sm-4">
+        <label name="lblContato" for="pContato">Contato:</label>
+        <p name="pContato">{{ "-" }}</p>
+      </div>
     </div>
-    <div class="col-12 col-sm-5">
-      <label name="lblDataEmissao" for="inpDataEmissao">Data: </label
-      ><input
-        pInputText
-        class="noprint p-inputtext"
-        name="inpDataEmissao"
-        type="text"
-        disabled
-        value="{{ pedidoCompra.data_emissao | date : 'dd/MM/yyyy' }}"
-      />
-      <span class="noview">{{ pedidoCompra.data_emissao | date : 'dd/MM/yyyy' }}</span>
+    <div class="row">
+      <div class="col-12 col-sm-8">
+        <label name="lblEndereco" for="pEndereco">Endereço:</label>
+        <p name="pEndereco">
+          {{ pedidoCompra.fornecedor?.pessoa?.endereco || "-" }}
+        </p>
+      </div>
+      <div class="col-12 col-sm-4">
+        <label name="lblTelefone" for="pTelefone">Telefone</label>
+        <p name="pTelefone">
+          {{ pedidoCompra.fornecedor?.pessoa?.telefone || "-" | telefone }}
+        </p>
+      </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="col-12 col-sm-8">
-      <label name="lblFornecedor" for="inpFornecedor">Fornecedor: </label
-      ><p-autoComplete
-        pInputText
+    <div class="row">
+      <div class="input col-4">
+        <label name="lblCidade" for="pCidade">Cidade:</label>
+        <p name="pCidade">
+          {{ pedidoCompra.fornecedor?.pessoa?.municipio || "-" }}
+        </p>
+      </div>
+      <div class="input col-4">
+        <label name="lblUF" for="pUF">UF:</label>
+        <p name="pUF">{{ pedidoCompra.fornecedor?.pessoa?.uf || "-" }}</p>
+      </div>
+      <div class="input col-4">
+        <label name="lblCEP" for="pCEP">CEP:</label>
+        <p name="pCEP">
+          {{ pedidoCompra.fornecedor?.pessoa?.cep || "-" | cep }}
+        </p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="input col-8">
+        <label name="lblCnpj" for="pCnpj">CNPJ:</label>
+        <p name="pCnpj">
+          {{ pedidoCompra.fornecedor?.pessoa?.cnpj_cpf || "-" | cpfCnpj }}
+        </p>
+      </div>
+      <div class="Input col-4">
+        <label name="lblIe" for="pIe">I.E</label>
+        <p name="pIe">
+          {{ pedidoCompra.fornecedor?.pessoa?.ie_rg || "-" | ieRg }}
+        </p>
+      </div>
+    </div>
+    <p-table [value]="pedidoCompra.pedido_compra_items">
+      <ng-template pTemplate="caption"></ng-template>
+      <ng-template pTemplate="header">
+        <th>Item</th>
+        <th>Produto</th>
+        <th>Dimensão</th>
+        <th>Qtde</th>
+        <th>Peso(Kg)</th>
+        <th>Preço Unit.</th>
+        <th>Ipi</th>
+        <th>Total</th>
+        <th>Data Entrega</th>
+        <th *ngIf="pedidoCompra.status !== 'Orçamento'" class="noprint">
+          Status
+        </th>
+        <th *ngIf="pedidoCompra.status !== 'Orçamento'" class="noprint">
+          Total Entregue
+        </th>
+        <th class="noprint">Ação</th>
+      </ng-template>
+      <ng-template pTemplate="body" let-item let-index="rowIndex">
+        <tr>
+          <td>{{ index + 1 }}.</td>
+          <td pEditableColumn>
+            <p-cellEditor>
+              <ng-template pTemplate="input">
+                <p-autoComplete
+                  pInputText
+                  class="p-autocomplete w-100"
+                  name="inpProdutos"
+                  type="text"
+                  [(ngModel)]="item.produto"
+                  field="nome"
+                  [suggestions]="produtos"
+                  (completeMethod)="searchProduto($event)"
+                  [dropdown]="true"
+                  [style]="{ width: '100%' }"
+                  [inputStyle]="{ width: '100%' }"
+                  appendTo="body"
+                ></p-autoComplete>
+              </ng-template>
+              <ng-template pTemplate="output">
+                {{ item.produto.nome }}
+              </ng-template>
+            </p-cellEditor>
+          </td>
+          <td pEditableColumn>
+            <p-cellEditor>
+              <ng-template pTemplate="input">
+                <p-dropdown
+                  name="inpDimensao"
+                  [options]="dimensoes$ | async"
+                  [(ngModel)]="item.dimensao"
+                  optionLabel="valor"
+                  optionValue="valor"
+                  [editable]="true"
+                  (ngModelChange)="calculaPeso(item)"
+                  appendTo="body"
+                ></p-dropdown>
+              </ng-template>
+              <ng-template pTemplate="output">
+                {{ item.dimensao }}
+              </ng-template>
+            </p-cellEditor>
+          </td>
+          <td pEditableColumn>
+            <p-cellEditor>
+              <ng-template pTemplate="input">
+                <input
+                  pInputText
+                  class="p-inputtext"
+                  name="inpItemQuantidade"
+                  type="text"
+                  [(ngModel)]="item.quantidade"
+                  (input)="calculaPeso(item)"
+                />
+              </ng-template>
+              <ng-template pTemplate="output">
+                {{ item.quantidade }}
+              </ng-template>
+            </p-cellEditor>
+          </td>
+          <td pEditableColumn>
+            <p-cellEditor>
+              <ng-template pTemplate="input">
+                <input
+                  pInputText
+                  class="p-inputtext"
+                  name="inpItemPeso"
+                  type="text"
+                  [ngModel]="item.peso | number : '1.0-2' : 'pt-BR'"
+                  (ngModelChange)="itemPeso($event, item)"
+                  (input)="calculaTotal()"
+                />
+              </ng-template>
+              <ng-template pTemplate="output">
+                {{ item.peso | number : "1.0-2" : "pt-BR" }}
+              </ng-template>
+            </p-cellEditor>
+          </td>
+          <td pEditableColumn>
+            <p-cellEditor>
+              <ng-template pTemplate="input">
+                <input
+                  pInputText
+                  class="p-inputtext"
+                  name="inpItemPreco"
+                  type="text"
+                  [ngModel]="item.preco | currency : 'BRL'"
+                  (ngModelChange)="itemPreco($event, item)"
+                  (input)="calculaTotal()"
+                />
+              </ng-template>
+              <ng-template pTemplate="output">
+                {{ item.preco | currency : "BRL" }}
+              </ng-template>
+            </p-cellEditor>
+          </td>
+          <td pEditableColumn>
+            <p-cellEditor>
+              <ng-template pTemplate="input">
+                <input
+                  pInputText
+                  class="p-inputtext"
+                  name="inpItemIpi"
+                  type="text"
+                  [ngModel]="item.ipi | percent : '1.2-2' : 'PT-BR'"
+                  (ngModelChange)="itemIpi($event, item)"
+                  (input)="calculaTotal()"
+                />
+              </ng-template>
+              <ng-template pTemplate="output">
+                {{ item.ipi | percent : "1.2-2" : "PT-BR" }}
+              </ng-template>
+            </p-cellEditor>
+          </td>
+          <td>
+            {{ item.total | currency : "BRL" }}
+          </td>
+          <td pEditableColumn>
+            <p-cellEditor>
+              <ng-template pTemplate="input">
+                <p-calendar
+                  name="InpItemPrazo"
+                  [(ngModel)]="item.prazo"
+                  dateFormat="dd/mm/yy"
+                  styleClass="w-100"
+                  appendTo="body"
+                ></p-calendar>
+              </ng-template>
+              <ng-template pTemplate="output">
+                {{ item.prazo | date : "dd/MM/yyyy" }}
+              </ng-template>
+            </p-cellEditor>
+          </td>
+          <td *ngIf="pedidoCompra.status !== 'Orçamento'" class="noprint">
+            <caixaDeStatus
+              [status]="item.status"
+              [options]="status"
+              [editable]="false"
+              (statusChange)="pedidoCompra.status = $event"
+            ></caixaDeStatus>
+          </td>
+          <td
+            class="text-center"
+            *ngIf="pedidoCompra.status !== 'Orçamento'"
+            class="noprint"
+          >
+            <p-knob
+              [size]="75"
+              [name]="'peso_entregue' + item.id"
+              [ngModel]="calculatePesoEntreguePercentage(item)"
+              [disabled]="true"
+              [max]="100"
+              [min]="0"
+              [valueTemplate]="'{value}%'"
+            ></p-knob>
+            <small>{{ item.peso_entregue }}Kg</small>
+          </td>
+          <td class="noprint">
+            <i class="pi pi-trash trash" (click)="removeItem(index)"></i>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="footer">
+        <tr>
+          <td>
+            <button pButton class="button" (click)="newItem()" class="noprint">
+              <i class="pi pi-plus"></i>
+            </button>
+          </td>
+          <td colspan="1">Condição de Pagamento</td>
+          <td colspan="2" pEditableColumn>
+            <p-cellEditor>
+              <ng-template pTemplate="input">
+                <p-dropdown
+                  name="inpCondPagamento"
+                  [options]="condicaoPagamento$ | async"
+                  [(ngModel)]="pedidoCompra.cond_pagamento"
+                  optionLabel="valor"
+                  optionValue="valor"
+                  [editable]="true"
+                  appendTo="body"
+                ></p-dropdown>
+              </ng-template>
+              <ng-template pTemplate="output">
+                {{ pedidoCompra.cond_pagamento }}
+              </ng-template>
+            </p-cellEditor>
+          </td>
+          <td>Frete</td>
+          <td pEditableColumn>
+            <p-cellEditor>
+              <ng-template pTemplate="input">
+                <input
+                  pInputText
+                  class="p-inputtext"
+                  name="inpItemIpi"
+                  type="text"
+                  [ngModel]="pedidoCompra.frete | currency : 'BRL'"
+                  (ngModelChange)="frete($event)"
+                  (input)="calculaTotal()"
+                />
+              </ng-template>
+              <ng-template pTemplate="output">
+                {{ pedidoCompra.frete | currency : "BRL" }}
+              </ng-template>
+            </p-cellEditor>
+          </td>
+          <td>Total</td>
+          <td>{{ pedidoCompra.total | currency : "BRL" }}</td>
+          <td></td>
+        </tr>
+      </ng-template>
+    </p-table>
+    <div>
+      <h4>Observações</h4>
+      <textarea
+        pInputTextarea
+        name="txtObs"
         class="noprint"
-        name="inpFornecedor"
-        type="text"
-        [(ngModel)]="pedidoCompra.fornecedor"
-        field="pessoa.nome"
-        [suggestions]="fornecedores"
-        (completeMethod)="searchFornecedor($event)"
-        [dropdown]="true"
-        [style]="{ width: '100%' }"
-        [inputStyle]="{ width: '100%' }"
-        appendTo="body"
-      ></p-autoComplete>
-      <span class="noview">{{ pedidoCompra.fornecedor?.pessoa?.nome }}</span>
-    </div>
-    <div class="col-12 col-sm-4">
-      <label name="lblContato" for="pContato">Contato:</label>
-      <p name="pContato" >{{ "-" }}</p>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-12 col-sm-8">
-      <label name="lblEndereco" for="pEndereco">Endereço:</label>
-      <p name="pEndereco">
-        {{ pedidoCompra.fornecedor?.pessoa?.endereco || "-" }}
+        [(ngModel)]="pedidoCompra.observacao"
+      ></textarea>
+      <span class="noview">{{ pedidoCompra.observacao }}</span>
+      <h4>Normas de fornecimento do pedido</h4>
+      <p>
+        1. Horário de Recebimento: de Segunda à Quinta das 7:00h às 11:00h e das
+        12:30h às 16:30h Sexta-feira até às 15:30.
+      </p>
+      <p>2. Pedido de Compra elaborado com peso teórico.</p>
+      <p>
+        3. Toda e qualquer despesa com embalagem ou frete, estará a cargo do
+        fornecedor a não ser quando mencionado no pedido.
+      </p>
+      <p>
+        4. As mercadorias deverão vir acompanhadas da Nota Fiscal (descriminando
+        nº pedido de compra) e Duplicatas de cobrança.
+      </p>
+      <p>
+        5. As respectivas faturas e duplicatas deverão ser entregues em nosso
+        escritório.
+      </p>
+      <p>
+        6. A JCM Metais reverva-se o direito de devolver mercadorias a qualquer
+        tempo por defeito ou desacordo com as especificações, não seja entregue
+        no prazo previsto ou não esteja de acordo com as condições estabelecidas
+        neste pedido.
+      </p>
+      <p>
+        7. Todos os itens da Nota Fiscal deverá estar com o código de
+        classificação fiscal.
+      </p>
+      <p>
+        8. Enviar o certificado de qualidade do material junto com a Matéria
+        Prima.
+      </p>
+      <p>
+        9. A JCM Metais monitora o desempenho dos seus provedores externos
+        (fornecedores), atraves da avaliação nas entregas dos produtos/serviços
+        com pontuação na (Prazo de entrega e Qualidade), quando os resultados
+        ficarem abaixo dos objetivos, ações corretivas serão solicitadas para os
+        provedores externos (fornecedores).
       </p>
     </div>
-    <div class="col-12 col-sm-4">
-      <label name="lblTelefone" for="pTelefone">Telefone</label>
-      <p name="pTelefone">
-        {{ pedidoCompra.fornecedor?.pessoa?.telefone || "-" | telefone }}
-      </p>
-    </div>
-  </div>
-  <div class="row">
-    <div class="input col-4">
-      <label name="lblCidade" for="pCidade">Cidade:</label>
-      <p name="pCidade">
-        {{ pedidoCompra.fornecedor?.pessoa?.municipio || "-" }}
-      </p>
-    </div>
-    <div class="input col-4">
-      <label name="lblUF" for="pUF">UF:</label>
-      <p name="pUF">{{ pedidoCompra.fornecedor?.pessoa?.uf || "-" }}</p>
-    </div>
-    <div class="input col-4">
-      <label name="lblCEP" for="pCEP">CEP:</label>
-      <p name="pCEP">{{ pedidoCompra.fornecedor?.pessoa?.cep || "-" | cep }}</p>
-    </div>
-  </div>
-  <div class="row">
-    <div class="input col-8">
-      <label name="lblCnpj" for="pCnpj">CNPJ:</label>
-      <p name="pCnpj">
-        {{ pedidoCompra.fornecedor?.pessoa?.cnpj_cpf || "-" | cpfCnpj }}
-      </p>
-    </div>
-    <div class="Input col-4">
-      <label name="lblIe" for="pIe">I.E</label>
-      <p name="pIe">
-        {{ pedidoCompra.fornecedor?.pessoa?.ie_rg || "-" | ieRg }}
-      </p>
-    </div>
-  </div>
-  <p-table [value]="pedidoCompra.pedido_compra_items">
-    <ng-template pTemplate="caption"></ng-template>
-    <ng-template pTemplate="header">
-      <th>Item</th>
-      <th>Produto</th>
-      <th>Dimensão</th>
-      <th>Qtde</th>
-      <th>Peso(Kg)</th>
-      <th>Preço Unit.</th>
-      <th>Ipi</th>
-      <th>Total</th>
-      <th>Data Entrega</th>
-      <th *ngIf="pedidoCompra.status !== 'Orçamento'" class="noprint">Status</th>
-      <th *ngIf="pedidoCompra.status !== 'Orçamento'" class="noprint">Total Entregue</th>
-      <th class="noprint">Ação</th>
-    </ng-template>
-    <ng-template pTemplate="body" let-item let-index="rowIndex">
-      <tr>
-        <td>{{ index + 1 }}.</td>
-        <td pEditableColumn>
-          <p-cellEditor>
-            <ng-template pTemplate="input">
-              <p-autoComplete
-                pInputText
-                class="p-autocomplete w-100"
-                name="inpProdutos"
-                type="text"
-                [(ngModel)]="item.produto"
-                field="nome"
-                [suggestions]="produtos"
-                (completeMethod)="searchProduto($event)"
-                [dropdown]="true"
-                [style]="{ width: '100%' }"
-                [inputStyle]="{ width: '100%' }"
-                appendTo="body"
-              ></p-autoComplete>
-            </ng-template>
-            <ng-template pTemplate="output">
-              {{ item.produto.nome }}
-            </ng-template>
-          </p-cellEditor>
-        </td>
-        <td pEditableColumn>
-          <p-cellEditor>
-            <ng-template pTemplate="input">
-              <p-dropdown
-                name="inpDimensao"
-                [options]="dimensoes$ | async"
-                [(ngModel)]="item.dimensao"
-                optionLabel="valor"
-                optionValue="valor"
-                [editable]="true"
-                (ngModelChange)="calculaPeso(item)"
-                appendTo="body"
-              ></p-dropdown>
-            </ng-template>
-            <ng-template pTemplate="output">
-              {{ item.dimensao }}
-            </ng-template>
-          </p-cellEditor>
-        </td>
-        <td pEditableColumn>
-          <p-cellEditor>
-            <ng-template pTemplate="input">
-              <input
-                pInputText
-                class="p-inputtext"
-                name="inpItemQuantidade"
-                type="text"
-                [(ngModel)]="item.quantidade"
-                (input)="calculaPeso(item)"
-              />
-            </ng-template>
-            <ng-template pTemplate="output">
-              {{ item.quantidade }}
-            </ng-template>
-          </p-cellEditor>
-        </td>
-        <td pEditableColumn>
-          <p-cellEditor>
-            <ng-template pTemplate="input">
-              <input
-                pInputText
-                class="p-inputtext"
-                name="inpItemPeso"
-                type="text"
-                [ngModel]="item.peso | number : '1.0-2' : 'pt-BR'"
-                (ngModelChange)="itemPeso($event, item)"
-                (input)="calculaTotal()"
-              />
-            </ng-template>
-            <ng-template pTemplate="output">
-              {{ item.peso | number : "1.0-2" : "pt-BR" }}
-            </ng-template>
-          </p-cellEditor>
-        </td>
-        <td pEditableColumn>
-          <p-cellEditor>
-            <ng-template pTemplate="input">
-              <input
-                pInputText
-                class="p-inputtext"
-                name="inpItemPreco"
-                type="text"
-                [ngModel]="item.preco | currency : 'BRL'"
-                (ngModelChange)="itemPreco($event, item)"
-                (input)="calculaTotal()"
-              />
-            </ng-template>
-            <ng-template pTemplate="output">
-              {{ item.preco | currency : "BRL" }}
-            </ng-template>
-          </p-cellEditor>
-        </td>
-        <td pEditableColumn>
-          <p-cellEditor>
-            <ng-template pTemplate="input">
-              <input
-                pInputText
-                class="p-inputtext"
-                name="inpItemIpi"
-                type="text"
-                [ngModel]="item.ipi | percent : '1.2-2' : 'PT-BR'"
-                (ngModelChange)="itemIpi($event, item)"
-                (input)="calculaTotal()"
-              />
-            </ng-template>
-            <ng-template pTemplate="output">
-              {{ item.ipi | percent : "1.2-2" : "PT-BR" }}
-            </ng-template>
-          </p-cellEditor>
-        </td>
-        <td>
-          {{ item.total | currency : "BRL" }}
-        </td>
-        <td pEditableColumn>
-          <p-cellEditor>
-            <ng-template pTemplate="input">
-              <p-calendar
-                name="InpItemPrazo"
-                [(ngModel)]="item.prazo"
-                dateFormat="dd/mm/yy"
-                styleClass="w-100"
-                appendTo="body"
-              ></p-calendar>
-            </ng-template>
-            <ng-template pTemplate="output">
-              {{ item.prazo | date : "dd/MM/yyyy" }}
-            </ng-template>
-          </p-cellEditor>
-        </td>
-        <td *ngIf="pedidoCompra.status !== 'Orçamento'" class="noprint">
-          <caixaDeStatus
-            [status]="item.status"
-            [options]="status"
-            [editable]="false"
-            (statusChange)="pedidoCompra.status = $event"
-          ></caixaDeStatus>
-        </td>
-        <td class="text-center" *ngIf="pedidoCompra.status !== 'Orçamento'" class="noprint">
-          <p-knob [size]="75" [name]="'peso_entregue'+item.id" [ngModel]="calculatePesoEntreguePercentage(item)" [disabled]="true" [max]="100" [min]="0" [valueTemplate]="'{value}%' "></p-knob>
-           <small>{{ item.peso_entregue  }}Kg</small>
-        </td>
-        <td class="noprint">
-          <i class="pi pi-trash trash" (click)="removeItem(index)"></i>
-        </td>
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="footer">
-      <tr>
-        <td>
-          <button pButton class="button" (click)="newItem()" class="noprint">
-            <i class="pi pi-plus"></i>
-          </button>
-        </td>
-        <td colspan="1">Condição de Pagamento</td>
-        <td colspan="2" pEditableColumn>
-          <p-cellEditor>
-            <ng-template pTemplate="input">
-              <p-dropdown
-                name="inpCondPagamento"
-                [options]="condicaoPagamento$ | async"
-                [(ngModel)]="pedidoCompra.cond_pagamento"
-                optionLabel="valor"
-                optionValue="valor"
-                [editable]="true"
-                appendTo="body"
-              ></p-dropdown>
-            </ng-template>
-            <ng-template pTemplate="output">
-              {{ pedidoCompra.cond_pagamento }}
-            </ng-template>
-          </p-cellEditor>
-        </td>
-        <td>Frete</td>
-        <td pEditableColumn>
-          <p-cellEditor>
-            <ng-template pTemplate="input">
-              <input
-                pInputText
-                class="p-inputtext"
-                name="inpItemIpi"
-                type="text"
-                [ngModel]="pedidoCompra.frete | currency : 'BRL'"
-                (ngModelChange)="frete($event)"
-                (input)="calculaTotal()"
-              />
-            </ng-template>
-            <ng-template pTemplate="output">
-              {{ pedidoCompra.frete | currency : "BRL" }}
-            </ng-template>
-          </p-cellEditor>
-        </td>
-        <td>Total</td>
-        <td>{{ pedidoCompra.total | currency : "BRL" }}</td>
-        <td></td>
-      </tr>
-    </ng-template>
-  </p-table>
-  <div>
-    <h4>Observações</h4>
-    <textarea
-      pInputTextarea
-      name="txtObs"
+    <listaFiles
       class="noprint"
-      [(ngModel)]="pedidoCompra.observacao"
-    ></textarea>
-    <span class="noview">{{pedidoCompra.observacao}}</span>
-    <h4>Normas de fornecimento do pedido</h4>
-    <p>
-      1. Horário de Recebimento: de Segunda à Quinta das 7:00h às 11:00h e das
-      12:30h às 16:30h Sexta-feira até às 15:30.
-    </p>
-    <p>2. Pedido de Compra elaborado com peso teórico.</p>
-    <p>
-      3. Toda e qualquer despesa com embalagem ou frete, estará a cargo do
-      fornecedor a não ser quando mencionado no pedido.
-    </p>
-    <p>
-      4. As mercadorias deverão vir acompanhadas da Nota Fiscal (descriminando
-      nº pedido de compra) e Duplicatas de cobrança.
-    </p>
-    <p>
-      5. As respectivas faturas e duplicatas deverão ser entregues em nosso
-      escritório.
-    </p>
-    <p>
-      6. A JCM Metais reverva-se o direito de devolver mercadorias a qualquer
-      tempo por defeito ou desacordo com as especificações, não seja entregue no
-      prazo previsto ou não esteja de acordo com as condições estabelecidas
-      neste pedido.
-    </p>
-    <p>
-      7. Todos os itens da Nota Fiscal deverá estar com o código de
-      classificação fiscal.
-    </p>
-    <p>
-      8. Enviar o certificado de qualidade do material junto com a Matéria
-      Prima.
-    </p>
-    <p>
-      9. A JCM Metais monitora o desempenho dos seus provedores externos
-      (fornecedores), atraves da avaliação nas entregas dos produtos/serviços
-      com pontuação na (Prazo de entrega e Qualidade), quando os resultados
-      ficarem abaixo dos objetivos, ações corretivas serão solicitadas para os
-      provedores externos (fornecedores).
-    </p>
-  </div>
-  <listaFiles
-    class="noprint"
-    [files]="pedidoCompra.files!"
-    (onChangeFiles)="pedidoCompra.files = $event"
-  ></listaFiles>
-</form>
-<div class="noprint">
-  <div class="d-flex flex-row">
-    <div class="flex-grow-1 justify-content-start">
-      <button pButton class="p-button p-button-danger" (click)="confirm()">
-        Excluir
+      [files]="pedidoCompra.files!"
+      (onChangeFiles)="pedidoCompra.files = $event"
+    ></listaFiles>
+  </form>
+  <div class="noprint">
+    <div class="d-flex flex-row">
+      <div class="flex-grow-1 justify-content-start">
+        <button pButton class="p-button p-button-danger" (click)="confirm()">
+          Excluir
+        </button>
+      </div>
+      <button
+        pButton
+        class="p-button p-button-success"
+        (click)="createOrUpdate()"
+      >
+        Salvar
+      </button>
+      <button
+        pButton
+        class="p-button p-button-success"
+        (click)="aprovarPedidoCompra()"
+        [disabled]="pedidoCompra.status !== 'Orçamento'"
+      >
+        Aprovar
+      </button>
+      <button pButton class="p-button" (click)="getBackPedidos()">
+        Voltar
       </button>
     </div>
-    <button pButton class="p-button p-button-success" (click)="createOrUpdate()">
-      Salvar
-    </button>
-    <button
-      pButton
-      class="p-button p-button-success"
-      (click)="aprovarPedidoCompra()"
-      [disabled]="pedidoCompra.status !== 'Orçamento'"
-    >
-      Aprovar
-    </button>
-    <button pButton class="p-button" (click)="getBackPedidos()">Voltar</button>
+
+    <p-confirmDialog
+      header="Confirmação"
+      acceptLabel="Sim"
+      rejectLabel="Não"
+      icon="pi pi-exclamation-triangle"
+    ></p-confirmDialog>
   </div>
-
-
-
-  <p-confirmDialog
-    header="Confirmação"
-    acceptLabel="Sim"
-    rejectLabel="Não"
-    icon="pi pi-exclamation-triangle"
-  ></p-confirmDialog>
 </div>

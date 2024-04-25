@@ -1,222 +1,516 @@
-<form action="">
-  <div class="conteiner">
+<div class="page">
+  <ng-container
+    [ngTemplateOutlet]="!etiquetas ? opView : etiquetaView"
+  ></ng-container>
+</div>
+
+<ng-template #opView>
+  <div class="row">
+    <div class="col">
+      <span
+        >F-026 - Ordem de Produção Rev.07 Data Emissäo: 25/09/2019 Data Revisäo:
+        30/01/2023</span
+      >
+      <table>
+        <tbody>
+          <tr>
+            <td>Cliente:</td>
+            <td>{{ ordemProducao.orcamento?.pessoa?.nome }}</td>
+            <td>Data de abertura:</td>
+            <td>
+              <strong>{{
+                ordemProducao.createdAt | date : "dd/MM/yyyy HH:mm:ss"
+              }}</strong>
+            </td>
+          </tr>
+          <tr>
+            <td>Orçamento:</td>
+            <td
+              class="link"
+              [routerLink]="['/home/orcamentos/' + ordemProducao.orcamento?.id]"
+            >
+              {{ ordemProducao.orcamento?.id }}
+            </td>
+            <td>Prazo de entrega:</td>
+            <td>{{ ordemProducao.data_prazo | date : "dd/MM/yyyy" }}</td>
+          </tr>
+          <tr>
+            <td>Vendedor:</td>
+            <td>{{ ordemProducao.vendedor?.pessoa?.nome }}</td>
+            <td>Ordem de Produção</td>
+            <td>
+              <strong> {{ ordemProducao.id }}</strong>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <small
+        >Observações: Tolerâncias não indicadas nos desenhos/amostras serão
+        utilizados as da norma NBR ISO2768-1 conforme determinado pelo cliente.
+        Setores: Caldeiraria (C) Grosso, Plasma/Dobra (C) Grosso. Baixo Carbono:
+        Aços 1006/1008/1010/1020.
+      </small>
+      <small>Análise Crítica OK, conforme I-002 de vendas, item 6.1.2</small>
+    </div>
     <div class="row">
-      <div class="col">
-        <span
-          >F-026 - Ordem de Produção Rev.07 Data Emissäo: 25/09/2019 Data
-          Revisäo: 30/01/2023</span
-        >
+      <div class="col-5 flex flex-column">
+        <strong>Inspeção Final:</strong>
+        <span>🔲Aprovado, 🔲Reprovado</span>
+      </div>
+      <div class="col">Nome:</div>
+      <div class="col">Data:</div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <hr />
+      <div
+        class="dontBreakPage"
+        *ngFor="
+          let itemProducao of ordemProducao.ordem_producao_items;
+          let indexItemProducao = index;
+          let index = index
+        "
+      >
         <table>
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Descrição</th>
+              <th>Material</th>
+              <th>Qtd.</th>
+              <th style="width: 100px">RIR</th>
+            </tr>
+          </thead>
           <tbody>
             <tr>
-              <td>Cliente:</td>
-              <td>{{ ordemProducao.orcamento?.pessoa?.nome }}</td>
-              <td>Data de abertura:</td>
+              <td>{{ index + 1 }}</td>
+              <td>{{ itemProducao.descricao }}</td>
               <td>
-                <strong>{{
-                  ordemProducao.createdAt | date : "dd/MM/yyyy HH:mm:ss"
-                }}</strong>
+                {{ itemProducao.produto?.nome }} -
+                {{
+                  (itemProducao.orcamento_item?.largura
+                    ? itemProducao.orcamento_item?.largura
+                    : ordemProducao.orcamento!.orcamento_items[index].largura
+                  ) | number
+                }}x{{
+                  (itemProducao.orcamento_item?.altura
+                    ? itemProducao.orcamento_item?.altura
+                    : ordemProducao.orcamento!.orcamento_items[index].altura
+                  ) | number
+                }}mm
               </td>
-            </tr>
-            <tr>
-              <td>Orçamento:</td>
-              <td
-                class="link"
-                [routerLink]="[
-                  '/home/orcamentos/' + ordemProducao.orcamento?.id
-                ]"
-              >
-                {{ ordemProducao.orcamento?.id }}
-              </td>
-              <td>Prazo de entrega:</td>
-              <td>{{ ordemProducao.data_prazo | date : "dd/MM/yyyy" }}</td>
-            </tr>
-            <tr>
-              <td>Vendedor:</td>
-              <td>{{ ordemProducao.vendedor?.pessoa?.nome }}</td>
-              <td>Ordem de Produção</td>
-              <td>
-                <strong> {{ ordemProducao.id }}</strong>
+              <td>{{ itemProducao.quantidade }}</td>
+              <td class="col-1">
+                <div class="noprint">
+                  <p-autoComplete
+                    pInputText
+                    class="p-autocomplete wv-100"
+                    [name]="'rir' + index"
+                    [id]="'rir' + index"
+                    type="text"
+                    [(ngModel)]="itemProducao.registro_inspecao_recebimento"
+                    (onSelect)="itemProducao.id_rir = $event.value.id"
+                    field="id"
+                    [suggestions]="rirs"
+                    (completeMethod)="searchRir(itemProducao)"
+                    [dropdown]="true"
+                    [style]="{ width: '100%' }"
+                    [inputStyle]="{ width: '100%' }"
+                    appendTo="body"
+                    [required]="true"
+                  ></p-autoComplete>
+                </div>
+
+                <span class="noview">{{ itemProducao.id_rir }}</span>
               </td>
             </tr>
           </tbody>
         </table>
-        <small
-          >Observações: Tolerâncias não indicadas nos desenhos/amostras serão
-          utilizados as da norma NBR ISO2768-1 conforme determinado pelo
-          cliente. Setores: Caldeiraria (C) Grosso, Plasma/Dobra (C) Grosso.
-          Baixo Carbono: Aços 1006/1008/1010/1020.
-        </small>
-        <small>Análise Crítica OK, conforme I-002 de vendas, item 6.1.2</small>
-      </div>
-      <div class="row">
-        <div class="col-5 flex flex-column">
-          <strong>Inspeção Final:</strong>
-          <span>🔲Aprovado, 🔲Reprovado</span>
-        </div>
-        <div class="col">Nome:</div>
-        <div class="col">Data:</div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        <hr />
-        <div
-          class="dontBreakPage"
-          *ngFor="
-            let itemProducao of ordemProducao.ordem_producao_items;
-            let indexItemProducao = index;
-            let index = index
-          "
-        >
-          <table>
-            <thead>
-              <tr>
-                <th>Item</th>
-                <th>Descrição</th>
-                <th>Material</th>
-                <th>Qtd.</th>
-                <th style="width: 100px">RIR</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>{{ index + 1 }}</td>
-                <td>{{ itemProducao.descricao }}</td>
-                <td>
-                  {{ itemProducao.produto?.nome }} -
-                  {{
-                    (itemProducao.orcamento_item?.largura
-                      ? itemProducao.orcamento_item?.largura
-                      : ordemProducao.orcamento!.orcamento_items[index].largura
-                    ) | number
-                  }}x{{
-                    (itemProducao.orcamento_item?.altura
-                      ? itemProducao.orcamento_item?.altura
-                      : ordemProducao.orcamento!.orcamento_items[index].altura
-                    ) | number
-                  }}mm
-                </td>
-                <td>{{ itemProducao.quantidade }}</td>
-                <td class="col-1">
-                  <div class="noprint">
-                    <p-autoComplete
-                      pInputText
-                      class="p-autocomplete wv-100"
-                      [name]="'rir' + index"
-                      [id]="'rir' + index"
-                      type="text"
-                      [(ngModel)]="itemProducao.registro_inspecao_recebimento"
-                      (onSelect)="itemProducao.id_rir = $event.value.id"
-                      field="id"
-                      [suggestions]="rirs"
-                      (completeMethod)="searchRir(itemProducao)"
-                      [dropdown]="true"
-                      [style]="{ width: '100%' }"
-                      [inputStyle]="{ width: '100%' }"
-                      appendTo="body"
-                      [required]="true"
-                    ></p-autoComplete>
-                  </div>
 
-                  <span class="noview">{{ itemProducao.id_rir }}</span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-
-          <div class="row">
-            <div class="col-6">
-              <table>
-                <tbody>
-                  <tr
-                    *ngFor="
-                      let processo of itemProducao.ordem_producao_item_processos
-                    "
-                  >
-                    <td style="width: 100px">{{ processo.processo }}</td>
-                    <td style="width: 100px">Data:</td>
-                    <td>Ass:</td>
-                  </tr>
-                </tbody>
-                <tfoot *ngIf="itemProducao.id_rir">
-                  <tr>
-                    <td class="materialCliente" colspan="3">
-                      Material do Cliente
-                    </td>
-                  </tr>
-                </tfoot>
-              </table>
-            </div>
-            <div class="col-6">
-              <p-editor
-                #editor
-                (onInit)="editor.quill.pasteHTML(itemProducao.observacao)"
-                (onTextChange)="itemProducao.observacao = $event.htmlValue"
-                name="observacao"
-                id="observacao"
-                class="noprint"
-              ></p-editor>
-              <div class="noview" [innerHTML]="itemProducao.observacao"></div>
-            </div>
-            <div class="col">
-              <listaFiles
-                [compact]="true"
-                (onChangeFiles)="itemProducao.files = $event"
-                [files]="itemProducao.files!"
-              ></listaFiles>
-            </div>
+        <div class="row">
+          <div class="col-6">
+            <table>
+              <tbody>
+                <tr
+                  *ngFor="
+                    let processo of itemProducao.ordem_producao_item_processos
+                  "
+                >
+                  <td style="width: 100px">{{ processo.processo }}</td>
+                  <td style="width: 100px">Data:</td>
+                  <td>Ass:</td>
+                </tr>
+              </tbody>
+              <tfoot *ngIf="itemProducao.id_rir">
+                <tr>
+                  <td class="materialCliente" colspan="3">
+                    Material do Cliente
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+          <div class="col-6">
+            <p-editor
+              #editor
+              (onInit)="editor.quill.pasteHTML(itemProducao.observacao)"
+              (onTextChange)="itemProducao.observacao = $event.htmlValue"
+              name="observacao"
+              id="observacao"
+              class="noprint"
+            ></p-editor>
+            <div class="noview" [innerHTML]="itemProducao.observacao"></div>
+          </div>
+          <div class="col">
+            <listaFiles
+              [compact]="true"
+              (onChangeFiles)="itemProducao.files = $event"
+              [files]="itemProducao.files!"
+            ></listaFiles>
           </div>
         </div>
       </div>
     </div>
-    <div class="noprint">
-      <hr />
+  </div>
+</ng-template>
+<ng-template #etiquetaView>
+  <!-- Cabecalho -->
+  <div class="noprint my-2">
+    <!-- Seletor Impressora -->
+    <div class="flex flex-row gap-2 flex-wrap">
+      <div class="">Impressora:</div>
+      <div class="">
+        <p-dropdown
+          [options]="impressoras"
+          [(ngModel)]="impressora"
+          optionLabel="valor"
+          [showClear]="false"
+          placeholder="Selecione a Impressora"
+          name="impressoras"
+          id="impressoras"
+        ></p-dropdown>
+      </div>
+      <div class="flex flex-row">
+        <button
+          pButton
+          type="button"
+          name="btEditarImpressora"
+          id="btEditarImpressora"
+          (click)="editImpressora()"
+          [disabled]="!impressora?.id"
+        >
+          Editar
+        </button>
+        <button
+          class="pi pi-plus"
+          type="button"
+          pButton
+          name="btNovoImpressora"
+          id="btNovoImpressora"
+          (click)="newImpressora()"
+        ></button>
+      </div>
+    </div>
+  </div>
+  <!-- Etiquetas -->
+  <div
+    class="pageBreakAfter"
+    *ngFor="
+      let etiqueta of ordemProducao.ordem_producao_items;
+      let index = index
+    "
+    class="p-card-wrapper"
+    [ngStyle]="{
+      width: setSizeStyleStringBuilder(this.impressora?.valor2?.width||0),
+      height: setSizeStyleStringBuilder(this.impressora?.valor2?.height??0),
+
+    }"
+  >
+    <p-card>
+      <div
+        [style]="
+      {
+        'font-size': (impressora?.valor2?.fontSize??3)+'mm',
+        'padding': (impressora?.valor2?.margin?.top)+'mm '
+        +(impressora?.valor2?.margin?.right)+'mm '
+        +(impressora?.valor2?.margin?.bottom)+'mm '
+        +(impressora?.valor2?.margin?.left)+'mm ',
+        'overflow':'hidden',
+        'white-space': 'flex-wrap',
+      }
+      "
+      >
+        <div class="flex flex-row flex-wrap">
+          <img [src]="logoURL" alt="Logotipo Black" class="w-1/3 my-auto" />
+          <div class="flex flex-col w-2/3">
+            <div class="flex flex-row flex-wrap justify-between">
+              <p>
+                <strong class="text-black">Orçamento:</strong>
+                {{ ordemProducao.orcamento?.id }}
+              </p>
+              <p>
+                <strong class="text-black">OP:</strong>
+                {{ ordemProducao.id }}
+              </p>
+              <p>
+                <strong class="text-black">Emissão:</strong>
+                {{ ordemProducao.createdAt | date : "dd/MM/yyyy" }}
+              </p>
+              <p>
+                <strong class="text-black">Prazo:</strong>
+                {{ ordemProducao.data_prazo | date : "dd/MM/yyyy" }}
+              </p>
+            </div>
+            <p class="text-wrap">
+              <strong class="text-black">Cliente:</strong>
+              {{ ordemProducao.orcamento?.pessoa?.nome }}
+            </p>
+          </div>
+        </div>
+        <div class="flex flex-col">
+          <div class="flex flex-row gap-1">
+            <p><strong class="text-black">Item:</strong> {{ index + 1 }}</p>
+            <p>
+              <strong class="text-black">Material:</strong>
+              {{ etiqueta.produto?.nome }} - {{ etiqueta.descricao }} -
+              {{ etiqueta.orcamento_item?.largura | number : "0.0" }}x{{
+                etiqueta.orcamento_item?.altura | number : "0.0"
+              }}mm {{ etiqueta.quantidade }}PC
+            </p>
+          </div>
+          <div class="flex flex-row gap-1">
+            <p>
+              <strong class="text-black">Quantidade:</strong>
+              {{ etiqueta?.quantidade }}
+            </p>
+            <p *ngIf="etiqueta.id_rir">
+              <strong class="text-black">RIR:</strong> {{ etiqueta.id_rir }}
+            </p>
+            <p *ngIf="!etiqueta.orcamento_item?.material_incluido">
+              <strong class="text-white bg-black">Material do Cliente</strong>
+            </p>
+          </div>
+          <div class="flex flex-row gap-1">
+            <p>
+              <strong class="text-black">Processos:</strong>
+              {{
+                concatenarProcessosString(
+                  etiqueta.ordem_producao_item_processos!
+                )
+              }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </p-card>
+  </div>
+</ng-template>
+<footer class="noprint">
+  <hr />
+  <button
+    pButton
+    class="p-button p-button-success"
+    type="submit"
+    name="btnSalvar"
+    id="btnSalvar"
+    (click)="salvar()"
+  >
+    Salvar
+  </button>
+  <button
+    pButton
+    class="p-button"
+    type="button"
+    name="btnImprimir"
+    id="btnImprimir"
+  >
+    <a href="javascript:window.print()"> Imprimir </a>
+  </button>
+  <button
+    pButton
+    class="p-button"
+    type="button"
+    name="btnEtiquetas"
+    id="btnEtiquetas"
+    (click)="toggleEtiquetas()"
+  >
+    {{ etiquetas ? "Ordem de Produção" : "Etiquetas" }}
+  </button>
+  <button
+    pButton
+    class="p-button"
+    type="button"
+    name="btnExportar"
+    id="btnExportar"
+    (click)="gerarEtiquetas()"
+  >
+    Exportar (xlsx)
+  </button>
+  <button
+    pButton
+    class="p-button"
+    (click)="getBack()"
+    type="button"
+    name="btnVoltar"
+    id="btnVoltar"
+  >
+    Voltar
+  </button>
+  <p-confirmDialog
+    header="Confirmação"
+    acceptLabel="Sim"
+    rejectLabel="Não"
+    icon="pi pi-exclamation-triangle"
+  ></p-confirmDialog>
+</footer>
+<!-- Editar Impressora -->
+<p-dialog
+  header="Impressora"
+  [(visible)]="impressoraDetalhes"
+  [style]="{ width: '50vw' }"
+  [modal]="true"
+>
+  <div class="w-full">
+    <form (ngSubmit)="createOrUpdateImpressora()" class="w-full">
+      <div class="flex flex-row gap-2">
+        <div class="flex flex-col">
+          <label for="impressora">Nome</label>
+          <input
+            pInputText
+            type="text"
+            name="inpImpressoraNome"
+            id="inpImpressoraNome"
+            [(ngModel)]="impressoraEdit.valor"
+            required
+            placeholder="Digite o nome da impressora"
+            maxlength="50"
+          />
+        </div>
+      </div>
+      <fieldset class="w-auto flex flex-col">
+        <legend>Dimensões(mm)</legend>
+        <div class="flex flex-row gap-2 flex-wrap">
+          <div class="flex flex-col flex-grow w-min[150px]">
+            <label for="inpImpressoraLargura">Largura</label>
+            <input
+              pInputText
+              type="number"
+              name="inpImpressoraLargura"
+              id="inpImpressoraLargura"
+              [(ngModel)]="impressoraEdit.valor2.width"
+              required
+            />
+          </div>
+          <div class="flex flex-col flex-grow w-min[150px]">
+            <label for="inpImpressoraAltura">Altura</label>
+            <input
+              pInputText
+              type="number"
+              name="inpImpressoraAltura"
+              id="inpImpressoraAltura"
+              [(ngModel)]="impressoraEdit.valor2.height"
+              required
+            />
+          </div>
+          <div class="flex flex-col flex-grow w-min[150px]">
+            <label for="inpImpressoraFontSize">Tamanho da Fonte(mm)</label>
+            <input
+              pInputText
+              type="number"
+              name="inpImpressoraFontSize"
+              id="inpImpressoraFontSize"
+              [(ngModel)]="impressoraEdit.valor2.fontSize"
+              required
+            />
+          </div>
+        </div>
+        <fieldset>
+          <legend>Margens(mm)</legend>
+          <div class="flex flex-col gap-2 flex-wrap">
+            <div class="flex flex-col mx-auto">
+              <label for="inpImpressoraMargemSuperior">Superior</label>
+              <input
+                pInputText
+                type="number"
+                name="inpImpressoraMargemSuperior"
+                id="inpImpressoraMargemsSuperior"
+                [(ngModel)]="impressoraEdit.valor2.margin.top"
+                required
+              />
+            </div>
+            <div class="flex flex-row flex-wrap gap-2 justify-between">
+              <div class="flex flex-col">
+                <label for="inpImpressoraMargemEsquerda">Esquerda</label>
+                <input
+                  pInputText
+                  type="number"
+                  name="inpImpressoraMargemEsquerda"
+                  id="inpImpressoraMargemsEsquerda"
+                  [(ngModel)]="impressoraEdit.valor2.margin.left"
+                  required
+                />
+              </div>
+              <div class="flex flex-col">
+                <label for="inpImpressoraMargemDireita">Direita</label>
+                <input
+                  pInputText
+                  type="number"
+                  name="inpImpressoraMargemDireita"
+                  id="inpImpressoraMargemsDireita"
+                  [(ngModel)]="impressoraEdit.valor2.margin.right"
+                  required
+                />
+              </div>
+            </div>
+            <div class="flex flex-col mx-auto">
+              <label for="inpImpressoraMargemInferior">Inferior</label>
+              <input
+                pInputText
+                type="number"
+                name="inpImpressoraMargemInferior"
+                id="inpImpressoraMargemInferior"
+                [(ngModel)]="impressoraEdit.valor2.margin.bottom"
+                required
+              />
+            </div>
+          </div>
+        </fieldset>
+      </fieldset>
+    </form>
+  </div>
+  <ng-template pTemplate="footer">
+    <div class="flex flex-row gap-2 justify-end">
       <button
         pButton
-        class="p-button p-button-success"
-        type="submit"
-        name="btnSalvar"
-        id="btnSalvar"
-        (click)="salvar()"
+        type="button"
+        name="btSalvarImpressora"
+        id="btSalvarImpressora"
+        (click)="createOrUpdateImpressora()"
+        class="p-button-success"
       >
         Salvar
       </button>
       <button
         pButton
-        class="p-button"
         type="button"
-        name="btnImprimir"
-        id="btnImprimir"
+        name="btApagarImpressora"
+        id="btApagarImpressora"
+        (click)="deleteImpressora()"
+        class="p-button-danger"
+        *ngIf="impressoraEdit.id"
       >
-        <a href="javascript:window.print()"> Imprimir </a>
+        Excluir
       </button>
       <button
         pButton
-        class="p-button"
         type="button"
-        name="btnEtiquetas"
-        id="btnEtiquetas"
-        (click)="gerarEtiquetas()"
-      >
-        Etiquetas
-      </button>
-      <button
-        pButton
-        class="p-button"
-        (click)="getBack()"
-        type="button"
-        name="btnVoltar"
-        id="btnVoltar"
+        name="btCancelarImpressora"
+        id="btCancelarImpressora"
+        (click)="toggleImpressoraDetalhes()"
       >
         Voltar
       </button>
-      <p-confirmDialog
-        header="Confirmação"
-        acceptLabel="Sim"
-        rejectLabel="Não"
-        icon="pi pi-exclamation-triangle"
-      ></p-confirmDialog>
     </div>
-  </div>
-</form>
+  </ng-template>
+</p-dialog>

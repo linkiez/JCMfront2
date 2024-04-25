@@ -1,12 +1,12 @@
-import { Empresa } from './empresa';
-import { Arquivo } from "./arquivo";
-import { Contato } from "./contato";
-import { Fornecedor } from "./fornecedor";
-import { Operador } from "./operador";
-import { Usuario } from "./usuario";
-import { Vendedor } from "./vendedor";
+import { IEmpresa } from './empresa';
+import { IArquivo } from './arquivo';
+import { IContato } from './contato';
+import { IFornecedor } from './fornecedor';
+import { IOperador } from './operador';
+import { IUsuario } from './usuario';
+import { IVendedor } from './vendedor';
 
-export interface Pessoa {
+export interface IPessoa {
   id?: number;
   nome?: string;
   razao_social?: string;
@@ -28,11 +28,11 @@ export interface Pessoa {
   deletedAt?: Date;
   updatedAt?: Date;
   createdAt?: Date;
-  contatos?: Array<Contato>;
-  files?: Array<Arquivo>;
-  fornecedor?: Fornecedor
-  operador?: Operador
-  usuario?: Usuario
-  vendedor?: Vendedor
-  empresa?: Empresa
+  contatos?: Array<IContato>;
+  files?: Array<IArquivo>;
+  fornecedor?: IFornecedor;
+  operador?: IOperador;
+  usuario?: IUsuario;
+  vendedor?: IVendedor;
+  empresa?: IEmpresa;
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Produto } from '../../../../models/produto';
+import { IProduto } from '../../../../models/produto';
 import { ProdutoService } from '../../../../services/produto.service';
 import { ConfirmationService } from 'primeng/api';
 import { MessageService } from 'primeng/api';
@@ -23,10 +23,11 @@ export class ProdutoComponent implements OnInit {
     private listaGenericaService: ListaGenericaService
   ) {}
 
-  produto: Produto = {files: []};
+  produto: IProduto = { files: [] };
 
-  categorias$ = this.listaGenericaService.getByNameListaGenerica('categoriaProduto').pipe(map((listaGenerica: any)=> listaGenerica.lista_generica_items))
-
+  categorias$ = this.listaGenericaService
+    .getByNameListaGenerica('categoriaProduto')
+    .pipe(map((listaGenerica: any) => listaGenerica.lista_generica_items));
 
   ngOnInit(): void {
     this.getProduto();
@@ -40,12 +41,12 @@ export class ProdutoComponent implements OnInit {
           this.produto = produto;
         },
         error: (error) => {
-          console.error(error)
+          console.error(error);
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
             detail: 'Não foi possível carregar o produto. - ' + error.error,
-          })
+          });
         },
       });
     }
@@ -54,12 +55,12 @@ export class ProdutoComponent implements OnInit {
   updateProduto() {
     this.produtoService.updateProduto(this.produto).subscribe({
       error: (error) => {
-        console.error(error)
+        console.error(error);
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
           detail: 'Não foi possível atualizar o produto. - ' + error.error,
-        })
+        });
       },
       complete: () =>
         this.messageService.add({
@@ -71,60 +72,55 @@ export class ProdutoComponent implements OnInit {
     //this.router.navigate(['/home/produtos']);
   }
 
-  createProduto(){
+  createProduto() {
     this.produtoService.addProduto(this.produto).subscribe({
-      next: (produto) => this.produto=produto,
+      next: (produto) => (this.produto = produto),
       error: (error) => {
-        console.error(error)
+        console.error(error);
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
           detail: 'Não foi possível criar o produto. - ' + error.error,
-        })
+        });
       },
-      complete: () =>
-        {this.messageService.add({
+      complete: () => {
+        this.messageService.add({
           severity: 'success',
           summary: 'Sucesso',
           detail: 'O produto foi criado.',
-        })
-        this.router.navigate([
-          `/home/produtos/${this.produto.id}`,
-        ]);
-      }
+        });
+        this.router.navigate([`/home/produtos/${this.produto.id}`]);
+      },
     });
   }
 
-  createOrUpdate(){
-    if(Number(this.route.snapshot.paramMap.get('id'))==0){
-      this.createProduto()
-    }else{
-      this.updateProduto()
+  createOrUpdate() {
+    if (Number(this.route.snapshot.paramMap.get('id')) == 0) {
+      this.createProduto();
+    } else {
+      this.updateProduto();
     }
   }
 
   deleteProduto() {
-    this.produtoService.deleteProduto(this.produto).subscribe(
-      {
-        error: (error) => {
-          console.error(error)
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Erro',
-            detail: 'Não foi possível excluir o produto. - ' + error.error,
-          })
-        },
-        complete: () =>
-          {this.messageService.add({
-            severity: 'success',
-            summary: 'Sucesso',
-            detail: 'O produto foi excluido.',
-          })
-          this.router.navigate(['/home/produtos']);
-        },
-      }
-    );
-
+    this.produtoService.deleteProduto(this.produto).subscribe({
+      error: (error) => {
+        console.error(error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: 'Não foi possível excluir o produto. - ' + error.error,
+        });
+      },
+      complete: () => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Sucesso',
+          detail: 'O produto foi excluido.',
+        });
+        this.router.navigate(['/home/produtos']);
+      },
+    });
   }
 
   confirm() {
@@ -144,8 +140,8 @@ export class ProdutoComponent implements OnInit {
     return Number(event.replace(',', '.'));
   }
 
-  goTo(id: number){
-    this.router.navigate(['/home/pedidoscompras/'+ id])
+  goTo(id: number) {
+    this.router.navigate(['/home/pedidoscompras/' + id]);
   }
 
   onChangeNumber(event: any) {

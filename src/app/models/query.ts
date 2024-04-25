@@ -1,13 +1,13 @@
-import { Pessoa } from "./pessoa";
-import { Vendedor } from "./vendedor";
+import { IPessoa } from './pessoa';
+import { IVendedor } from './vendedor';
 
-export interface Query {
+export interface IQuery {
   page: number;
   pageCount: number;
   searchValue: string;
   fornecedor?: boolean | number;
   operador?: boolean;
-  vendedor?: boolean | Vendedor;
+  vendedor?: boolean | IVendedor;
   id_vendedor?: number;
   deleted?: boolean;
   status?: string;

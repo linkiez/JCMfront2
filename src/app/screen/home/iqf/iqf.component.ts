@@ -4,9 +4,9 @@ import { MessageService } from 'primeng/api';
 import { PedidoCompraService } from 'src/app/services/pedidocompra.service';
 import { QueryService } from 'src/app/services/query.service';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import { Fornecedor } from 'src/app/models/fornecedor';
+import { IFornecedor } from 'src/app/models/fornecedor';
 import { FornecedorService } from 'src/app/services/fornecedor.service';
-import { Query } from 'src/app/models/query';
+import { IQuery } from 'src/app/models/query';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Component({
@@ -34,8 +34,8 @@ export class IqfComponent implements OnInit {
     },
   };
 
-  selectedFornecedor: Fornecedor | undefined = {};
-  fornecedores: Fornecedor[] = [];
+  selectedFornecedor: IFornecedor | null = null;
+  fornecedores: IFornecedor[] = [];
 
   chart: Chart | undefined;
 
@@ -119,26 +119,29 @@ export class IqfComponent implements OnInit {
   }
 
   searchFornecedor(event: any) {
-    let query: Query = {
+    let query: IQuery = {
       page: 0,
       pageCount: 10,
       searchValue: event.query,
       deleted: false,
     };
 
-    this.fornecedorService.getFornecedores(query).pipe(distinctUntilChanged(), debounceTime(500)).subscribe({
-      next: (fornecedores) => {
-        this.fornecedores = fornecedores.fornecedores;
-      },
-      error: (error) => {
-        console.log(error);
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Erro',
-          detail: 'Erro ao buscar fornecedores - ' + error.error,
-        });
-      },
-    });
+    this.fornecedorService
+      .getFornecedores(query)
+      .pipe(distinctUntilChanged(), debounceTime(500))
+      .subscribe({
+        next: (fornecedores) => {
+          this.fornecedores = fornecedores.fornecedores;
+        },
+        error: (error) => {
+          console.log(error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: 'Erro ao buscar fornecedores - ' + error.error,
+          });
+        },
+      });
   }
 
   onSelectFornecedor(event: any) {

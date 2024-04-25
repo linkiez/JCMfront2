@@ -1,14 +1,14 @@
-import { Arquivo } from "./arquivo";
-import { Empresa } from "./empresa";
-import { Operador } from "./operador";
-import { Orcamento, OrcamentoItem } from "./orcamento";
-import { Produto } from "./produto";
-import { RIR } from "./rir";
-import { Usuario } from "./usuario";
-import { Vendedor } from "./vendedor";
+import { IArquivo } from './arquivo';
+import { IEmpresa } from './empresa';
+import { IOperador } from './operador';
+import { IOrcamento, IOrcamentoItem } from './orcamento';
+import { IProduto } from './produto';
+import { IRIR } from './rir';
+import { IUsuario } from './usuario';
+import { IVendedor } from './vendedor';
 
-export interface OrdemProducao {
-  new?: OrdemProducao;
+export interface IOrdemProducao {
+  new?: IOrdemProducao;
   editable?: boolean;
   id?: number;
   data_prazo?: Date;
@@ -22,16 +22,16 @@ export interface OrdemProducao {
   updatedAt?: Date;
   deletedAt?: Date;
   id_orcamento?: number;
-  orcamento?: Orcamento;
+  orcamento?: IOrcamento;
   id_empresa?: number;
-  empresa?: Empresa;
-  vendedor?: Vendedor;
-  ordem_producao_items?: OrdemProducaoItem[];
-  ordem_producao_historicos?: OrdemProducaoHistorico[];
+  empresa?: IEmpresa;
+  vendedor?: IVendedor;
+  ordem_producao_items?: IOrdemProducaoItem[];
+  ordem_producao_historicos?: IOrdemProducaoHistorico[];
   newItem?: string;
 }
 
-export interface OrdemProducaoItem {
+export interface IOrdemProducaoItem {
   id?: number;
   descricao?: string;
   quantidade?: number;
@@ -40,19 +40,18 @@ export interface OrdemProducaoItem {
   updatedAt?: Date;
   deletedAt?: Date;
   id_produto: number;
-  produto?: Produto;
+  produto?: IProduto;
   id_rir?: number;
-  files?: Arquivo[];
-  ordem_producao_item_processos?: OrdemProducaoItemProcesso[];
-  registro_inspecao_recebimento?: RIR;
+  files?: IArquivo[];
+  ordem_producao_item_processos?: IOrdemProducaoItemProcesso[];
+  registro_inspecao_recebimento?: IRIR;
   id_orcamento_item?: number;
-  orcamento_item?: OrcamentoItem;
+  orcamento_item?: IOrcamentoItem;
   id_ordem_producao?: number;
   key?: string;
-
 }
 
-export interface OrdemProducaoItemProcesso {
+export interface IOrdemProducaoItemProcesso {
   id?: number;
   processo?: string;
   inicio?: Date;
@@ -61,14 +60,14 @@ export interface OrdemProducaoItemProcesso {
   updatedAt?: Date;
   deletedAt?: Date;
   id_operador?: number;
-  operador?: Operador
+  operador?: IOperador;
 }
 
-export interface OrdemProducaoHistorico{
+export interface IOrdemProducaoHistorico {
   id?: number;
   texto?: string;
   id_usuario?: number;
-  usuario?: Usuario
+  usuario?: IUsuario;
   createdAt?: Date;
   updatedAt?: Date;
   deletedAt?: Date;

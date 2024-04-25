@@ -2,19 +2,17 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Query } from '../models/query';
+import { IQuery } from '../models/query';
 
-import { Operador } from '../models/operador';
+import { IOperador } from '../models/operador';
 
 @Injectable({
   providedIn: 'root',
 })
 export class OperadorService {
-  constructor(
-    private http: HttpClient,
-  ) {}
+  constructor(private http: HttpClient) {}
 
-  getOperadores(query: Query): Observable<any> {
+  getOperadores(query: IQuery): Observable<any> {
     let chaves = Object.keys(query);
     let valores = Object.values(query);
     let queryString = '?';
@@ -24,26 +22,26 @@ export class OperadorService {
       queryString += chaves[i] + '=' + valores[i];
     }
 
-    return this.http
-      .get(environment.backendURL + 'operador' + queryString, {
-        responseType: 'json',
-      })
-
+    return this.http.get(environment.backendURL + 'operador' + queryString, {
+      responseType: 'json',
+    });
   }
 
-  deleteOperador(operador: Operador): Observable<Object> {
-    return this.http
-      .delete(environment.backendURL + 'operador/' + operador.id, {
+  deleteOperador(operador: IOperador): Observable<Object> {
+    return this.http.delete(
+      environment.backendURL + 'operador/' + operador.id,
+      {
         responseType: 'json',
-      })
-
+      }
+    );
   }
 
-  restoreOperador(operador: Operador): Observable<Object> {
-    return this.http
-      .post(environment.backendURL + 'operador/restore/' + operador.id, {
+  restoreOperador(operador: IOperador): Observable<Object> {
+    return this.http.post(
+      environment.backendURL + 'operador/restore/' + operador.id,
+      {
         responseType: 'json',
-      })
-
+      }
+    );
   }
 }

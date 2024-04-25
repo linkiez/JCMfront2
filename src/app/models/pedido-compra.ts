@@ -1,8 +1,8 @@
-import { Arquivo } from "./arquivo";
-import { Fornecedor } from "./fornecedor";
-import { Produto } from "./produto";
+import { IArquivo } from './arquivo';
+import { IFornecedor } from './fornecedor';
+import { IProduto } from './produto';
 
-export interface PedidoCompra {
+export interface IPedidoCompra {
   id?: number;
   pedido?: string;
   data_emissao?: Date;
@@ -12,30 +12,30 @@ export interface PedidoCompra {
   deletedAt?: Date;
   updatedAt?: Date;
   createdAt?: Date;
-  pedido_compra_items: Array<PedidoCompraItem>;
+  pedido_compra_items: Array<IPedidoCompraItem>;
   id_fornecedor?: number;
-  fornecedor?: Fornecedor;
-  files?: Array<Arquivo>;
+  fornecedor?: IFornecedor;
+  files?: Array<IArquivo>;
   total?: number;
   status?: string;
   observacao?: string;
 }
 
-export interface PedidoCompraItem {
+export interface IPedidoCompraItem {
   id?: number;
   dimensao?: string;
   quantidade?: number;
   peso?: number;
   preco?: number;
   ipi?: number;
-  total?: number
+  total?: number;
   prazo?: Date;
   deletedAt?: Date;
   updatedAt?: Date;
   createdAt?: Date;
   id_pedido?: number;
   id_produto?: number;
-  produto?: Produto;
+  produto?: IProduto;
   peso_entregue: number;
   status: string;
 }

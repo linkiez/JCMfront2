@@ -1,5 +1,5 @@
 import { QueryService } from 'src/app/services/query.service';
-import { OrdemProducao } from './../../../models/ordem-producao';
+import { IOrdemProducao } from './../../../models/ordem-producao';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { OrdemProducaoService } from 'src/app/services/ordem-producao.service';
 import { catchError, debounceTime, distinctUntilChanged, map } from 'rxjs';
@@ -7,7 +7,7 @@ import { Paginator } from 'primeng/paginator';
 import { MessageService } from 'primeng/api';
 import { UsuarioService } from 'src/app/authentication/usuario.service';
 import { VendedorService } from 'src/app/services/vendedor.service';
-import { Pessoa } from 'src/app/models/pessoa';
+import { IPessoa } from 'src/app/models/pessoa';
 import { trackByFunction } from 'src/app/utils/trackByFunction';
 import { ChangeDetectionStrategy } from '@angular/core';
 
@@ -26,7 +26,7 @@ export class OrdensProducaoComponent implements OnInit {
     private vendedorService: VendedorService
   ) {}
 
-  ordemProducao: OrdemProducao[] = [];
+  ordemProducao: IOrdemProducao[] = [];
 
   CaixaDeStatusOptions = [
     'Aguardando',
@@ -62,7 +62,7 @@ export class OrdensProducaoComponent implements OnInit {
       })
     );
 
-  pessoas: Pessoa[] = [];
+  pessoas: IPessoa[] = [];
 
   trackByFunction = trackByFunction;
 
@@ -108,7 +108,7 @@ export class OrdensProducaoComponent implements OnInit {
       });
   }
 
-  newEditable(op: OrdemProducao) {
+  newEditable(op: IOrdemProducao) {
     if (op.data_prazo) op.data_prazo = new Date(op.data_prazo);
     if (op.data_finalizacao)
       op.data_finalizacao = new Date(op.data_finalizacao);
@@ -124,7 +124,7 @@ export class OrdensProducaoComponent implements OnInit {
     console.log(op);
   }
 
-  salvar(op: OrdemProducao, index: number) {
+  salvar(op: IOrdemProducao, index: number) {
     this.ordemProducaoService.updateOrdemProducao(op.new!).subscribe({
       next: (ordemProducao) => {
         this.ordemProducao[index] = ordemProducao;

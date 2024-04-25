@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Query } from '../models/query';
+import { IQuery } from '../models/query';
 
 @Injectable({
   providedIn: 'root',
 })
 export class QueryService {
-  public orcamento: Query = {
+  public orcamento: IQuery = {
     page: 0,
     pageCount: 25,
     searchValue: '',
@@ -13,14 +13,14 @@ export class QueryService {
     vendedor: undefined,
   };
 
-  public contatos: Query = {
+  public contatos: IQuery = {
     page: 0,
     pageCount: 25,
     searchValue: '',
     deleted: false,
   };
 
-  public ordemProducao: Query = {
+  public ordemProducao: IQuery = {
     page: 0,
     pageCount: 25,
     searchValue: '',
@@ -31,14 +31,14 @@ export class QueryService {
     data_prazo: undefined,
   };
 
-  public pedidoCompra: Query = {
+  public pedidoCompra: IQuery = {
     page: 0,
     pageCount: 25,
     searchValue: '',
     deleted: false,
   };
 
-  public pessoas: Query = {
+  public pessoas: IQuery = {
     page: 0,
     pageCount: 10,
     searchValue: '',
@@ -48,14 +48,14 @@ export class QueryService {
     deleted: false,
   };
 
-  public produtos: Query = {
+  public produtos: IQuery = {
     page: 0,
     pageCount: 25,
     searchValue: '',
     deleted: false,
   };
 
-  public rir: Query = {
+  public rir: IQuery = {
     page: 0,
     pageCount: 25,
     searchValue: '',
@@ -67,7 +67,7 @@ export class QueryService {
     ano: new Date().getFullYear(),
   };
 
-  public rncs: Query = {
+  public rncs: IQuery = {
     page: 0,
     pageCount: 25,
     searchValue: '',

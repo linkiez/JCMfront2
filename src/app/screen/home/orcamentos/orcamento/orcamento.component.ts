@@ -5,22 +5,23 @@ import { PessoaService } from './../../../../services/pessoa.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import {
+  Observable,
   catchError,
   debounceTime,
   distinctUntilChanged,
   firstValueFrom,
   map,
 } from 'rxjs';
-import { Contato } from 'src/app/models/contato';
+import { IContato } from 'src/app/models/contato';
 import {
-  Orcamento,
-  OrcamentoItem,
-  OrcamentoItemXlSX,
+  IOrcamento,
+  IOrcamentoItem,
+  IOrcamentoItemXlSX,
 } from 'src/app/models/orcamento';
-import { Pessoa } from 'src/app/models/pessoa';
-import { Produto } from 'src/app/models/produto';
-import { Query } from 'src/app/models/query';
-import { Vendedor } from 'src/app/models/vendedor';
+import { IPessoa } from 'src/app/models/pessoa';
+import { IProduto } from 'src/app/models/produto';
+import { IQuery } from 'src/app/models/query';
+import { IVendedor } from 'src/app/models/vendedor';
 import { ListaGenericaService } from 'src/app/services/lista-generica.service';
 import { ProdutoService } from 'src/app/services/produto.service';
 import { validador } from 'src/app/utils/validadores';
@@ -31,7 +32,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { ArquivoService } from 'src/app/services/arquivo.service';
 import * as XLSX from 'xlsx';
-import { RIR } from 'src/app/models/rir';
+import { IRIR } from 'src/app/models/rir';
+import { IEmpresa } from 'src/app/models/empresa';
 
 @Component({
   selector: 'app-orcamento',
@@ -43,12 +45,12 @@ export class OrcamentoComponent implements OnInit {
     | NgForm
     | undefined;
 
-  orcamento: Orcamento = {
+  orcamento: IOrcamento = {
     status: 'Orçamento',
     orcamento_items: [
       {
         uuid: uuidv4(),
-      produto: {categoria: '', nome: '' },
+        produto: { categoria: '', nome: '' },
         peso: 0,
         total: 0,
         total_hora: 0,
@@ -69,6 +71,7 @@ export class OrcamentoComponent implements OnInit {
     total: 0,
     desconto: 0,
     embalagem: 'Por conta do Fornecedor(nosso padrão)',
+    transporte: 'FOB - Por Conta do Cliente',
     cond_pag: 'AVISTA',
     prazo_emdias: 0,
     empresa: {},
@@ -77,15 +80,15 @@ export class OrcamentoComponent implements OnInit {
 
   fileLoading: boolean = false;
 
-  contatos: Contato[] = [];
+  contatos: IContato[] = [];
 
-  pessoas: Pessoa[] = [];
+  pessoas: IPessoa[] = [];
 
-  vendedores: Vendedor[] = [];
+  vendedores: IVendedor[] = [];
 
-  produtos: Produto[] = [];
+  produtos: IProduto[] = [];
 
-  rirs: RIR[] = [];
+  rirs: IRIR[] = [];
 
   loadingSalvar: boolean = false;
   loadingAprovar: boolean = false;
@@ -178,20 +181,7 @@ export class OrcamentoComponent implements OnInit {
       })
     );
 
-  contatoEmpresas$ = this.empresaService
-    .getEmpresas({ page: 0, pageCount: 10, searchValue: '', deleted: false })
-    .pipe(
-      map((empresas: any) => empresas.empresas),
-      catchError((error) => {
-        console.error(error);
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Erro',
-          detail: 'Error ao buscar empresas - ' + error.error,
-        });
-        return [];
-      })
-    );
+  empresas: IEmpresa[] = [];
 
   aprovacaoOrcamento$ = this.listaGenericaService
     .getByNameListaGenerica('aprovadoOrcamento')
@@ -264,6 +254,7 @@ export class OrcamentoComponent implements OnInit {
 
   ngOnInit() {
     this.id = Number(this.route.snapshot.paramMap.get('id'));
+    this.getEmpresas();
     this.getOrcamento();
   }
 
@@ -271,7 +262,7 @@ export class OrcamentoComponent implements OnInit {
     if (number) {
       searchTerm.query = searchTerm.query.replace(/[^\d]/g, '');
     }
-    let query: Query = {
+    let query: IQuery = {
       page: 0,
       pageCount: 10,
       searchValue: searchTerm.query,
@@ -300,7 +291,7 @@ export class OrcamentoComponent implements OnInit {
   }
 
   searchPessoa(searchTerm: any) {
-    let query: Query = {
+    let query: IQuery = {
       page: 0,
       pageCount: 10,
       searchValue: searchTerm.query,
@@ -327,7 +318,7 @@ export class OrcamentoComponent implements OnInit {
   }
 
   searchVendedor(searchTerm: any) {
-    let query: Query = {
+    let query: IQuery = {
       page: 0,
       pageCount: 10,
       searchValue: searchTerm.query,
@@ -351,7 +342,7 @@ export class OrcamentoComponent implements OnInit {
   }
 
   searchProduto(event: any) {
-    let query: Query = {
+    let query: IQuery = {
       page: 0,
       pageCount: 25,
       searchValue: event.query,
@@ -380,7 +371,7 @@ export class OrcamentoComponent implements OnInit {
   newItem() {
     this.orcamento.orcamento_items.push({
       uuid: uuidv4(),
-      produto: {categoria: '', nome: '' },
+      produto: { categoria: '', nome: '' },
       material_incluido: false,
       peso: 0,
       total: 0,
@@ -403,27 +394,27 @@ export class OrcamentoComponent implements OnInit {
     this.calculaTotais();
   }
 
-  onChangeItemImposto(event: any, item: OrcamentoItem) {
+  onChangeItemImposto(event: any, item: IOrcamentoItem) {
     item.imposto = Number(event.replace(/[^\d]/g, '')) / 10000;
     if (item.imposto > 1) {
       item.imposto = 1;
     }
   }
 
-  onChangeItemPrecoQuilo(event: any, item: OrcamentoItem) {
+  onChangeItemPrecoQuilo(event: any, item: IOrcamentoItem) {
     item.preco_quilo = Number(event.replace(/[^\d]/g, '')) / 100;
   }
 
-  onChangeItemPrecoQuilo2(event: any, item: OrcamentoItem) {
+  onChangeItemPrecoQuilo2(event: any, item: IOrcamentoItem) {
     item.preco_quilo =
       (item.produto?.pedido_compra_items[0].precoComIpi || 0) * event.valor2;
   }
 
-  onChangeItemTotalManual(event: any, item: OrcamentoItem) {
+  onChangeItemTotalManual(event: any, item: IOrcamentoItem) {
     item.total_manual = Number(event.replace(/[^\d]/g, '')) / 100;
   }
 
-  onChangeItemPrecoHora(event: any, item: OrcamentoItem) {
+  onChangeItemPrecoHora(event: any, item: IOrcamentoItem) {
     item.preco_hora = Number(event.replace(/[^\d]/g, '')) / 100;
   }
 
@@ -452,7 +443,7 @@ export class OrcamentoComponent implements OnInit {
     this.getLogoUrl();
   }
 
-  calculaPeso(item: OrcamentoItem) {
+  calculaPeso(item: IOrcamentoItem) {
     if (item.produto !== null && item.produto !== undefined) {
       switch (item.produto.categoria) {
         case 'Chapa':
@@ -506,7 +497,7 @@ export class OrcamentoComponent implements OnInit {
     }
   }
 
-  calculaHora(item: OrcamentoItem) {
+  calculaHora(item: IOrcamentoItem) {
     this.calculaPeso(item);
     let [hours = '0', minutes = '0', seconds = '0'] =
       item.tempo?.split(':') ?? [];
@@ -520,7 +511,7 @@ export class OrcamentoComponent implements OnInit {
     this.calculaTotal(item);
   }
 
-  calculaTotal(item: OrcamentoItem) {
+  calculaTotal(item: IOrcamentoItem) {
     const total =
       Number((item.total_peso || 0) + Number(item.total_hora || 0)) /
       (1 - Number(item.imposto || 0));
@@ -572,16 +563,16 @@ export class OrcamentoComponent implements OnInit {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     if (id != 0) {
       this.orcamentoService.getOrcamento(id).subscribe({
-        next: (response: Orcamento) => {
+        next: (response: IOrcamento) => {
           if (response.contato === null) response.contato = {};
           if (response.pessoa === null) response.pessoa = {};
           if (response.vendedor === null) response.vendedor = {};
           if (response.empresa === null) response.empresa = {};
-          response.orcamento_items.forEach((item: OrcamentoItem) => {
+          response.orcamento_items.forEach((item: IOrcamentoItem) => {
             item.uuid = uuidv4();
           });
           this.orcamento = response;
-          // console.log(this.orcamento);
+          console.log(this.orcamento);
         },
         error: (error) => {
           console.error(error);
@@ -599,18 +590,39 @@ export class OrcamentoComponent implements OnInit {
   }
 
   async getLogoUrl() {
-    if (this.orcamento.empresa?.file?.id) {
-      const url: any = await firstValueFrom(
-        this.arquivoService.getUrlArquivo(this.orcamento.empresa?.file?.id)
+    if (this.orcamento.empresa?.logoColor?.id) {
+      const url: string = await firstValueFrom(
+        this.arquivoService.getUrlArquivo(this.orcamento.empresa?.logoColor?.id)
       );
-      this.logotipoUrl = url.url;
+      this.logotipoUrl = url;
     } else {
       this.logotipoUrl = '';
     }
   }
 
+  getEmpresas() {
+    this.empresaService
+    .getEmpresas({ page: 0, pageCount: 10, searchValue: '', deleted: false })
+    .pipe(
+      map((empresas: any) => empresas.empresas)
+    ).subscribe({
+      next: (response: IEmpresa[]) => {
+        this.empresas = response;
+        console.log(this.empresas)
+      },
+      error: (error) => {
+        console.error(error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: 'Error ao buscar empresas -' + error.error,
+        });
+      },
+    });
+  }
+
   create(clonar?: boolean) {
-    let orcamentoSubmit: Orcamento = this.orcamento;
+    let orcamentoSubmit: IOrcamento = this.orcamento;
     orcamentoSubmit.status = 'Orçamento';
     this.loadingSalvar = true;
     this.orcamentoService
@@ -622,7 +634,7 @@ export class OrcamentoComponent implements OnInit {
           if (response.pessoa === null) response.pessoa = {};
           if (response.vendedor === null) response.vendedor = {};
           if (response.empresa === null) response.empresa = {};
-          response.orcamento_items.forEach((item: OrcamentoItem) => {
+          response.orcamento_items.forEach((item: IOrcamentoItem) => {
             item.uuid = uuidv4();
           });
           this.orcamento = response;
@@ -651,7 +663,7 @@ export class OrcamentoComponent implements OnInit {
   }
 
   update() {
-    let orcamentoSubmit: Orcamento = this.orcamento;
+    let orcamentoSubmit: IOrcamento = this.orcamento;
     this.loadingSalvar = true;
     this.orcamentoService
       .updateOrcamento(orcamentoSubmit)
@@ -662,7 +674,7 @@ export class OrcamentoComponent implements OnInit {
           if (response.pessoa === null) response.pessoa = {};
           if (response.vendedor === null) response.vendedor = {};
           if (response.empresa === null) response.empresa = {};
-          response.orcamento_items.forEach((item: OrcamentoItem) => {
+          response.orcamento_items.forEach((item: IOrcamentoItem) => {
             item.uuid = uuidv4();
           });
           this.orcamento = response;
@@ -884,7 +896,7 @@ export class OrcamentoComponent implements OnInit {
     if ((await this.validacoes()) && this.orcamento.id != undefined) {
       this.orcamento.id = undefined;
       this.orcamento.orcamento_items = this.orcamento.orcamento_items.map(
-        (item: OrcamentoItem) => {
+        (item: IOrcamentoItem) => {
           item.id = undefined;
           return item;
         }
@@ -966,7 +978,8 @@ export class OrcamentoComponent implements OnInit {
       const data = XLSX.read(bstr, { type: 'binary' });
       const wsname: string = data.SheetNames[0];
       const ws: XLSX.WorkSheet = data.Sheets[wsname];
-      const orcamento_items: OrcamentoItemXlSX[] = XLSX.utils.sheet_to_json(ws);
+      const orcamento_items: IOrcamentoItemXlSX[] =
+        XLSX.utils.sheet_to_json(ws);
       if (this.validaXLSX(orcamento_items)) {
         const listaProdutos = await this.procuraProdutos(orcamento_items);
         orcamento_items.forEach((item) => {
@@ -998,7 +1011,7 @@ export class OrcamentoComponent implements OnInit {
               this.orcamento.orcamento_items[item.item - 1].total_manual =
                 +item.total_manual;
             } else {
-              const orcamento_item: OrcamentoItem = {
+              const orcamento_item: IOrcamentoItem = {
                 descricao: item.descricao,
                 produto: produto,
                 material_incluido: item.material_incluido === 'Sim',
@@ -1035,9 +1048,9 @@ export class OrcamentoComponent implements OnInit {
   }
 
   async procuraProdutos(
-    orcamento_items: OrcamentoItemXlSX[]
-  ): Promise<Produto[]> {
-    const listaProdutos: Produto[] = [];
+    orcamento_items: IOrcamentoItemXlSX[]
+  ): Promise<IProduto[]> {
+    const listaProdutos: IProduto[] = [];
 
     for (const item of orcamento_items) {
       const find = listaProdutos.find(
@@ -1068,7 +1081,7 @@ export class OrcamentoComponent implements OnInit {
     return listaProdutos;
   }
 
-  validaXLSX(orcamento_items: OrcamentoItemXlSX[]) {
+  validaXLSX(orcamento_items: IOrcamentoItemXlSX[]) {
     let valido = true;
     orcamento_items.forEach((item) => {
       if (!item.produto) {
@@ -1191,7 +1204,7 @@ export class OrcamentoComponent implements OnInit {
     return valido;
   }
 
-  searchRir(item: OrcamentoItem) {
+  searchRir(item: IOrcamentoItem) {
     if (this.orcamento.pessoa && item.produto)
       this.RIRService.getRIRsByPessoaAndProduto(
         this.orcamento.pessoa.id!,
@@ -1213,7 +1226,7 @@ export class OrcamentoComponent implements OnInit {
         });
   }
 
-  setPrecoPecaProduto(item: OrcamentoItem) {
+  setPrecoPecaProduto(item: IOrcamentoItem) {
     console.log(item);
     if (item.produto?.categoria === 'Peça') {
       item.preco_quilo = item.produto?.preco;

@@ -2,8 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Query } from '../models/query';
-import { Vendedor } from '../models/vendedor';
+import { IQuery } from '../models/query';
+import { IVendedor } from '../models/vendedor';
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +11,7 @@ import { Vendedor } from '../models/vendedor';
 export class VendedorService {
   constructor(private http: HttpClient) {}
 
-  getVendedores(query: Query): Observable<any> {
+  getVendedores(query: IQuery): Observable<any> {
     let chaves = Object.keys(query);
     let valores = Object.values(query);
     let queryString = '?';
@@ -26,16 +26,19 @@ export class VendedorService {
     });
   }
 
-  deleteVendedor(vendedor: Vendedor): Observable<Object> {
+  deleteVendedor(vendedor: IVendedor): Observable<Object> {
     return this.http.delete(
       environment.backendURL + 'vendedor/' + vendedor.id,
       { responseType: 'json' }
     );
   }
 
-  restoreVendedor(vendedor: Vendedor): Observable<Object> {
-    return this.http.post(environment.backendURL + 'vendedor/restore/' + vendedor.id, {
-      responseType: 'json',
-    });
+  restoreVendedor(vendedor: IVendedor): Observable<Object> {
+    return this.http.post(
+      environment.backendURL + 'vendedor/restore/' + vendedor.id,
+      {
+        responseType: 'json',
+      }
+    );
   }
 }

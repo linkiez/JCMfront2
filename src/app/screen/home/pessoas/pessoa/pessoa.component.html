@@ -1,3 +1,4 @@
+<div class="page">
 <div>
   <h2>Pessoa</h2>
   <form action="" class="p">
@@ -462,7 +463,7 @@
                 type="text"
                 pInputText
                 value="{{
-                  pessoa.fornecedor.deletedAt| date : 'dd/MM/yyyy HH:mm:ss'
+                  pessoa.fornecedor.deletedAt | date : 'dd/MM/yyyy HH:mm:ss'
                 }}"
                 disabled
               />
@@ -471,7 +472,7 @@
               <button
                 pButton
                 type="button"
-                style="height: 42px; width: 42px;"
+                style="height: 42px; width: 42px"
                 (click)="deleteOrRestoreFornecedor()"
               >
                 <i
@@ -553,7 +554,7 @@
               <button
                 pButton
                 type="button"
-                style="height: 42px; width: 42px;"
+                style="height: 42px; width: 42px"
                 (click)="deleteOrRestoreOperador()"
               >
                 <i
@@ -645,7 +646,7 @@
               <button
                 pButton
                 type="button"
-                style="height: 42px; width: 42px;"
+                style="height: 42px; width: 42px"
                 (click)="deleteOrRestoreEmpresa()"
               >
                 <i
@@ -664,14 +665,18 @@
               <input
                 type="file"
                 class="file-input"
-                (change)="onFileSelected($event)"
-                #fileUpload
+                (change)="onFileSelected($event, 'logoColor')"
+                #logoColorUpload
                 accept="image/*"
               />
-              <button pButton class="p-button" (click)="fileUpload.click()">
-                <i *ngIf="!fileLoading" class="pi pi-paperclip"></i>
+              <button
+                pButton
+                class="p-button"
+                (click)="logoColorUpload.click()"
+              >
+                <i *ngIf="!logoColorLoading" class="pi pi-paperclip"></i>
                 <p-progressSpinner
-                  *ngIf="fileLoading"
+                  *ngIf="logoColorLoading"
                   [style]="{
                     width: '27px',
                     height: '27px',
@@ -683,7 +688,33 @@
                   animationDuration="1s"
                 ></p-progressSpinner>
               </button>
-              <img #logotipo [src]="logtipoUrl" alt="Logotipo" />
+              <img *ngIf="logoColorUrl" [src]="logoColorUrl" alt="Logotipo"  class="w-full"/>
+            </div>
+            <div class="col">
+              <label for="">Logotipo Etiquetas(Preto): </label>
+              <input
+                type="file"
+                class="file-input"
+                (change)="onFileSelected($event, 'logoBlack')"
+                #logoBlackUpload
+                accept="image/*"
+              />
+              <button pButton class="p-button" (click)="logoBlackUpload.click()">
+                <i *ngIf="!logoBlackLoading" class="pi pi-paperclip"></i>
+                <p-progressSpinner
+                  *ngIf="logoBlackLoading"
+                  [style]="{
+                    width: '27px',
+                    height: '27px',
+                    margin: 'auto'
+                  }"
+                  styleClass="custom-spinner"
+                  strokeWidth="8"
+                  fill="var(--surface-ground)"
+                  animationDuration="1s"
+                ></p-progressSpinner>
+              </button>
+              <img *ngIf="logoBlackUrl" [src]="logoBlackUrl" alt="Logotipo Etiquetas" class="w-full"/>
             </div>
           </div></form
       ></ng-template>
@@ -756,7 +787,7 @@
               <button
                 pButton
                 type="button"
-                style="height: 42px; width: 42px;"
+                style="height: 42px; width: 42px"
                 (click)="deleteOrRestoreVendedor()"
               >
                 <i
@@ -791,3 +822,4 @@
   rejectLabel="Não"
   icon="pi pi-exclamation-triangle"
 ></p-confirmDialog>
+</div>

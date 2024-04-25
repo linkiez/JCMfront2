@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Subscription, map } from 'rxjs';
-import { Contato } from 'src/app/models/contato';
+import { IContato } from 'src/app/models/contato';
 import { ContatoService } from 'src/app/services/contato.service';
 import { ListaGenericaService } from 'src/app/services/lista-generica.service';
 
@@ -13,7 +13,6 @@ import { ListaGenericaService } from 'src/app/services/lista-generica.service';
   providers: [ConfirmationService],
 })
 export class ContatoComponent implements OnInit, OnDestroy {
-
   contatoCategorias$ = this.listaGenericaService
     .getByNameListaGenerica('categoriaContato')
     .pipe(map((listaGenerica: any) => listaGenerica.lista_generica_items));
@@ -25,11 +24,11 @@ export class ContatoComponent implements OnInit, OnDestroy {
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
     private listaGenericaService: ListaGenericaService
-  ) { }
+  ) {}
 
-  contato: Contato = {};
+  contato: IContato = {};
 
-  private subscription: Subscription = new Subscription;
+  private subscription: Subscription = new Subscription();
 
   ngOnInit(): void {
     this.getContato();
@@ -47,12 +46,12 @@ export class ContatoComponent implements OnInit, OnDestroy {
           this.contato = contato;
         },
         error: (error) => {
-          console.log(error)
+          console.log(error);
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
             detail: 'Não foi possível carregar o contato. - ' + error.error,
-          })
+          });
         },
       });
     }
@@ -61,12 +60,12 @@ export class ContatoComponent implements OnInit, OnDestroy {
   updateContato() {
     this.contatoService.updateContato(this.contato).subscribe({
       error: (error) => {
-        console.log(error)
+        console.log(error);
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
           detail: 'Não foi possível atualizar o contato. - ' + error.error,
-        })
+        });
       },
       complete: () =>
         this.messageService.add({
@@ -77,16 +76,16 @@ export class ContatoComponent implements OnInit, OnDestroy {
     });
   }
 
-  createContato(){
+  createContato() {
     this.contatoService.addContato(this.contato).subscribe({
-      next: (contato) => this.contato=this.contato,
+      next: (contato) => (this.contato = this.contato),
       error: (error) => {
-        console.log(error)
+        console.log(error);
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
           detail: 'Não foi possível criar o contato. - ' + error.error,
-        })
+        });
       },
       complete: () =>
         this.messageService.add({
@@ -97,24 +96,24 @@ export class ContatoComponent implements OnInit, OnDestroy {
     });
   }
 
-  createOrUpdate(){
-    if(this.contato.id == undefined){
-      this.createContato()
-    }else{
-      this.updateContato()
+  createOrUpdate() {
+    if (this.contato.id == undefined) {
+      this.createContato();
+    } else {
+      this.updateContato();
     }
   }
 
   deleteContato() {
     this.contatoService.deleteContato(this.contato).subscribe({
       error: (error) => {
-        console.error(error)
+        console.error(error);
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
           detail: 'Não foi possível excluir o contato. - ' + error.error,
-        })
-      }
+        });
+      },
     });
     this.router.navigate(['/home/contatos']);
   }
@@ -135,5 +134,4 @@ export class ContatoComponent implements OnInit, OnDestroy {
   onChangeValor(event: any) {
     this.contato.valor = event.replace(/[^\d]/g, '');
   }
-
 }

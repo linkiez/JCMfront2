@@ -2,7 +2,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { OrcamentoComponent } from './orcamento.component';
-import { OrcamentoItem } from 'src/app/models/orcamento';
+import { IOrcamentoItem } from 'src/app/models/orcamento';
 import { MessageService } from 'primeng/api';
 import { AppModule } from 'src/app/app.module';
 import { OrcamentosModule } from '../orcamentos.module';
@@ -39,7 +39,7 @@ describe('OrcamentoComponent', () => {
 
   describe('calculaPeso', () => {
     it('should calculate weight for a Chapa item', () => {
-      const item: OrcamentoItem = {
+      const item: IOrcamentoItem = {
         produto: { categoria: 'Chapa', espessura: 2, peso: 8 },
         largura: 1000,
         altura: 2000,
@@ -55,7 +55,7 @@ describe('OrcamentoComponent', () => {
     });
 
     it('should calculate weight for a Barra item', () => {
-      const item: OrcamentoItem = {
+      const item: IOrcamentoItem = {
         produto: { categoria: 'Barra', peso: 5 },
         largura: 500,
         quantidade: 4,
@@ -70,7 +70,7 @@ describe('OrcamentoComponent', () => {
     });
 
     it('should calculate weight for a Peça item', () => {
-      const item: OrcamentoItem = {
+      const item: IOrcamentoItem = {
         produto: { categoria: 'Peça', peso: 3 },
         quantidade: 5,
         preco_quilo: 10,
@@ -84,7 +84,7 @@ describe('OrcamentoComponent', () => {
     });
 
     it('should throw an error for an invalid product category', () => {
-      const item: OrcamentoItem = {
+      const item: IOrcamentoItem = {
         produto: { categoria: 'Invalida' } as any,
       };
       expect(() => component.calculaPeso(item)).toThrowError(
@@ -101,7 +101,7 @@ describe('OrcamentoComponent', () => {
     });
 
     it('should throw an error for an invalid product', () => {
-      const item: OrcamentoItem = {
+      const item: IOrcamentoItem = {
         produto: undefined,
       };
       expect(() => component.calculaPeso(item)).toThrowError(
@@ -118,7 +118,7 @@ describe('OrcamentoComponent', () => {
     });
 
     it('should calculate cost if material is included', () => {
-      const item: OrcamentoItem = {
+      const item: IOrcamentoItem = {
         produto: {
           categoria: 'Chapa',
           espessura: 2,
@@ -142,7 +142,7 @@ describe('OrcamentoComponent', () => {
 
   describe('calculaHora', () => {
     it('should calculate total_hora correctly', () => {
-      const item: OrcamentoItem = {
+      const item: IOrcamentoItem = {
         tempo: '01:30:00',
         preco_hora: 50,
         quantidade: 2,
@@ -163,7 +163,7 @@ describe('OrcamentoComponent', () => {
     });
 
     it('should set total_hora to 0 if hora, preco_hora or quantidade is not defined', () => {
-      const item: OrcamentoItem = {
+      const item: IOrcamentoItem = {
         tempo: '01:30:00',
         produto: { pedido_compra_items: [{ precoComIpi: 2 }] },
         largura: 1000,
@@ -195,7 +195,7 @@ describe('OrcamentoComponent', () => {
 
   describe('calculaTotal', () => {
     it('should throw an error if total is equal to 0', () => {
-      const item: OrcamentoItem = {};
+      const item: IOrcamentoItem = {};
 
       expect(() => component.calculaTotal(item)).toThrowError(
         'Total do item inválido'
@@ -208,7 +208,7 @@ describe('OrcamentoComponent', () => {
     });
 
     it('should set total to total_manual if it is greater than 0', () => {
-      const item: OrcamentoItem = {
+      const item: IOrcamentoItem = {
         total_manual: 100,
         imposto: 0.2,
         total_peso: 100,
@@ -219,7 +219,7 @@ describe('OrcamentoComponent', () => {
     });
 
     it('should calculate total correctly based on total_peso, total_hora and imposto', () => {
-      const item: OrcamentoItem = {
+      const item: IOrcamentoItem = {
         total_peso: 100,
         total_hora: 200,
         imposto: 0.2,
@@ -230,7 +230,6 @@ describe('OrcamentoComponent', () => {
   });
 
   describe('OrcamentoComponent', () => {
-
     beforeEach(() => {
       component.orcamento = {
         empresa: { id: 1 },

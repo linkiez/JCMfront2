@@ -20,3 +20,11 @@ input, p, textarea {
 h4 {
   margin-top: 25px;
 }
+
+@media print {
+  label, small, p, span {
+    font-size: xx-small;
+    margin: 1px;
+    width: auto;
+  }
+}

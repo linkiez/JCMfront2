@@ -1,6 +1,6 @@
-import { Pessoa } from "./pessoa";
+import { IPessoa } from './pessoa';
 
-export interface Fornecedor {
+export interface IFornecedor {
   id?: number;
   data_aprov?: Date;
   data_venc?: Date;
@@ -9,5 +9,5 @@ export interface Fornecedor {
   updatedAt?: Date;
   createdAt?: Date;
   id_pessoa?: number;
-  pessoa?: Pessoa;
+  pessoa?: IPessoa;
 }

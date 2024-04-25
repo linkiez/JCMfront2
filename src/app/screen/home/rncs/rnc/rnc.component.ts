@@ -3,16 +3,16 @@ import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { OrdemProducaoService } from './../../../../services/ordem-producao.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import {
-  OrdemProducao,
-  OrdemProducaoItem,
+  IOrdemProducao,
+  IOrdemProducaoItem,
 } from 'src/app/models/ordem-producao';
-import { Query } from 'src/app/models/query';
-import { RNC, RNCItem } from 'src/app/models/rnc';
+import { IQuery } from 'src/app/models/query';
+import { IRNC, IRNCItem } from 'src/app/models/rnc';
 import { MessageService } from 'primeng/api';
 import { v4 as uuidv4 } from 'uuid';
-import { Produto } from 'src/app/models/produto';
+import { IProduto } from 'src/app/models/produto';
 import { ProdutoService } from 'src/app/services/produto.service';
-import { Usuario } from 'src/app/models/usuario';
+import { IUsuario } from 'src/app/models/usuario';
 import { UsuarioServiceDB } from 'src/app/services/usuario.service';
 import { trackByFunction } from 'src/app/utils/trackByFunction';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -25,7 +25,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class RNCComponent implements OnInit {
   @ViewChild('editor') editor: any;
 
-  rnc: RNC = {
+  rnc: IRNC = {
     status: 'Aberto',
     rnc_items: [],
     descricao: '',
@@ -39,17 +39,17 @@ export class RNCComponent implements OnInit {
     custo: 0,
   };
 
-  ordensProducao: OrdemProducao[] = [];
-  selectedOrdemProducao: OrdemProducao | undefined;
-  selectedOrdemProducaoItem: OrdemProducaoItem[] | undefined;
+  ordensProducao: IOrdemProducao[] = [];
+  selectedOrdemProducao: IOrdemProducao | undefined;
+  selectedOrdemProducaoItem: IOrdemProducaoItem[] | undefined;
 
-  responsalveis_analise: Usuario[] = []
+  responsalveis_analise: IUsuario[] = [];
 
   incluirOPToggle: boolean = false;
 
-  status: string[] = ['Aberto','Fechado'];
+  status: string[] = ['Aberto', 'Fechado'];
 
-  produtos: Produto[] = [];
+  produtos: IProduto[] = [];
 
   classificacoes: string[] = [
     'Auditoria Externa',
@@ -58,14 +58,14 @@ export class RNCComponent implements OnInit {
     'Problema com Fornecedor',
     'Problema Interno',
     'Melhorias/Observações/OPMs das auditorias do SGQ',
-  ]
+  ];
 
   acoes_disposicao: Array<string> = [
     'Refugar',
     'Retrabalhar',
     'Reclassificar',
     'Aprovação Condicional',
-    'Outros'
+    'Outros',
   ];
 
   trackByFunction = trackByFunction;
@@ -84,28 +84,28 @@ export class RNCComponent implements OnInit {
     this.getRNC();
   }
 
-  getRNC(){
+  getRNC() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
-    if(id!=0){
+    if (id != 0) {
       this.RNCService.getRNC(id).subscribe({
         next: (rnc) => {
           this.rnc = rnc;
-          this.editor.quill.pasteHTML(rnc.descricao)
+          this.editor.quill.pasteHTML(rnc.descricao);
         },
         error: (error) => {
-          console.error(error)
+          console.error(error);
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
             detail: 'Não foi possível carregar a RNC. - ' + error.error,
-          })
+          });
         },
       });
     }
   }
 
   searchOrdemProducao(event: any) {
-    const query: Query = {
+    const query: IQuery = {
       page: 0,
       pageCount: 10,
       searchValue: event.query,
@@ -137,10 +137,12 @@ export class RNCComponent implements OnInit {
     this.ordemProducaoService.getOrdemProducao(id).subscribe({
       next: (ordemProducao) => {
         ordemProducao.ordem_producao_items =
-          ordemProducao.ordem_producao_items?.map((item: OrdemProducaoItem) => {
-            item.key = uuidv4();
-            return item;
-          });
+          ordemProducao.ordem_producao_items?.map(
+            (item: IOrdemProducaoItem) => {
+              item.key = uuidv4();
+              return item;
+            }
+          );
         this.selectedOrdemProducao = ordemProducao;
       },
       error: (error) => {
@@ -158,7 +160,7 @@ export class RNCComponent implements OnInit {
     if ((this.selectedOrdemProducaoItem?.length ?? 0) < 1) return;
 
     for (let ordemProducaoItem of this.selectedOrdemProducaoItem ?? []) {
-      const rncItem: RNCItem = {
+      const rncItem: IRNCItem = {
         id_produto: ordemProducaoItem.id_produto,
         produto: ordemProducaoItem.produto!,
         quantidade: ordemProducaoItem.quantidade ?? 0,
@@ -178,7 +180,7 @@ export class RNCComponent implements OnInit {
   }
 
   searchProduto(event: any) {
-    let query: Query = {
+    let query: IQuery = {
       page: 0,
       pageCount: 25,
       searchValue: event.query,
@@ -205,7 +207,7 @@ export class RNCComponent implements OnInit {
   }
 
   searchResponsavelAnalise(event: any) {
-    let query: Query = {
+    let query: IQuery = {
       page: 0,
       pageCount: 25,
       searchValue: event.query,
@@ -235,7 +237,7 @@ export class RNCComponent implements OnInit {
     console.log(this.rnc);
   }
 
-  create(){
+  create() {
     this.RNCService.addRNC(this.rnc).subscribe({
       next: (rnc) => {
         this.messageService.add({
@@ -254,12 +256,12 @@ export class RNCComponent implements OnInit {
         });
       },
       complete: () => {
-        this.router.navigate(['/home/rnc/'+this.rnc.id]);
-      }
+        this.router.navigate(['/home/rnc/' + this.rnc.id]);
+      },
     });
   }
 
-  update(){
+  update() {
     this.RNCService.updateRNC(this.rnc).subscribe({
       next: (rnc) => {
         this.messageService.add({
@@ -280,35 +282,38 @@ export class RNCComponent implements OnInit {
     });
   }
 
-  createOrUpdate(){
+  createOrUpdate() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
-    if(id != 0){
+    if (id != 0) {
       this.update();
-    }else{
+    } else {
       this.create();
     }
   }
 
-  aprovar(){
+  aprovar() {
     this.rnc.status = 'Fechado';
     this.rnc.data_fechamento = new Date();
     this.update();
   }
 
-  isNewRNC(){
+  isNewRNC() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     return id == 0;
   }
 
-  removeRNC_item(index: number){
-    this.rnc.rnc_items?.splice(index,1);
+  removeRNC_item(index: number) {
+    this.rnc.rnc_items?.splice(index, 1);
     this.total_custo();
   }
 
-  total_custo(){
+  total_custo() {
     let total = 0;
-    for(let item of this.rnc.rnc_items ?? []){
-      total += ((item.ordem_producao_item.orcamento_item?.total??0)/(item.ordem_producao_item.orcamento_item?.quantidade??1))*item.quantidade;
+    for (let item of this.rnc.rnc_items ?? []) {
+      total +=
+        ((item.ordem_producao_item.orcamento_item?.total ?? 0) /
+          (item.ordem_producao_item.orcamento_item?.quantidade ?? 1)) *
+        item.quantidade;
     }
     this.rnc.custo = total;
   }

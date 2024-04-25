@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { debounceTime } from 'rxjs';
-import { Arquivo } from 'src/app/models/arquivo';
+import { IArquivo } from 'src/app/models/arquivo';
 import { ArquivoService } from 'src/app/services/arquivo.service';
 
 @Component({
@@ -18,17 +18,17 @@ import { ArquivoService } from 'src/app/services/arquivo.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ListaFilesComponent implements OnInit {
-  @Input() files: Array<Arquivo> = [];
+  @Input() files: Array<IArquivo> = [];
 
   @Input() compact: boolean = false;
 
-  @Output() onChangeFiles = new EventEmitter<Array<Arquivo>>();
+  @Output() onChangeFiles = new EventEmitter<Array<IArquivo>>();
 
   fileLoading: boolean = false;
 
   constructor(
     private messageService: MessageService,
-    private arquivoService: ArquivoService,
+    private arquivoService: ArquivoService
   ) {}
 
   ngOnInit() {}
@@ -61,7 +61,7 @@ export class ListaFilesComponent implements OnInit {
         .uploadArquivo(file)
         .pipe(debounceTime(1000))
         .subscribe({
-          next: (arquivo: Arquivo) => {
+          next: (arquivo: IArquivo) => {
             this.files?.push(arquivo);
           },
           error: (error) => {
