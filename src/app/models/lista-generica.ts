@@ -29,6 +29,7 @@ export interface IPrinterSettings {
         width: number;
         height: number;
         margin: { left: number; right: number; top: number; bottom: number };
+        fontSize: number;
       };
   deletedAt?: Date;
   updateAt?: Date;

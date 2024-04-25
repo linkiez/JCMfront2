@@ -1,7 +1,7 @@
 import { ArquivoService } from 'src/app/services/arquivo.service';
 import { ListaGenericaService } from './../../../../services/lista-generica.service';
 import { MessageService } from 'primeng/api';
-import { Component, OnDestroy, OnInit, Renderer2 } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild, ViewChildren } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   IOrdemProducao,
@@ -9,7 +9,7 @@ import {
   IOrdemProducaoItemProcesso,
 } from 'src/app/models/ordem-producao';
 import { OrdemProducaoService } from 'src/app/services/ordem-producao.service';
-import { Quill } from 'quill';
+import Quill from 'quill';
 import * as xlsx from 'xlsx';
 import { RIRService } from 'src/app/services/rir.service';
 import { IRIR } from 'src/app/models/rir';
@@ -38,7 +38,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 export class OrdemProducaoComponent implements OnInit, OnDestroy {
   ordemProducao: IOrdemProducao = {};
 
-  etiquetas: boolean = false;
+  etiquetas: boolean = true;
 
   impressoraDetalhes: boolean = false;
 
@@ -62,6 +62,7 @@ export class OrdemProducaoComponent implements OnInit, OnDestroy {
         top: 0,
         bottom: 0,
       },
+      fontSize: 10,
     },
   };
 
@@ -89,14 +90,8 @@ export class OrdemProducaoComponent implements OnInit, OnDestroy {
 
     this.impressoraSubscription = this.impressora$.subscribe({
       next: (impressora) => {
-        this.renderer.setStyle(
-          document.body,
-          'width',
-          impressora?.valor2.width + 'mm'
-        );
-        this.renderer.setStyle(document.body, 'print', {
-          width: '100%',
-        });
+        if (impressora)
+          {}
       },
     });
   }
@@ -310,6 +305,7 @@ export class OrdemProducaoComponent implements OnInit, OnDestroy {
           top: 0,
           bottom: 0,
         },
+        fontSize: 10,
       },
     };
     this.toggleImpressoraDetalhes();
@@ -472,5 +468,10 @@ export class OrdemProducaoComponent implements OnInit, OnDestroy {
 
   toggleImpressoraDetalhes() {
     this.impressoraDetalhes = !this.impressoraDetalhes;
+  }
+
+  setSizeStyleStringBuilder(size: number) {
+    if(size > 0) return size + 'mm'
+    else return 'auto'
   }
 }

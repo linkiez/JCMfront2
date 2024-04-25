@@ -61,8 +61,7 @@ button {
 }
 
 :host ::ng-deep .p-card-content {
-  padding: 2mm;
-  font-size: 3.2mm;
+  padding: 0;
 }
 
 p {

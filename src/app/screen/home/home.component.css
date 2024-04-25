@@ -49,7 +49,7 @@ p {
 }
 
 .page {
-  padding: 1cm;
+  padding: 0 1cm 1cm 1cm;
   margin: auto;
   border-radius: 5px;
   background: #2a323d;
@@ -129,25 +129,12 @@ fieldset legend {
   }
 
   label, small, p, span {
-    font-size: xx-small;
-    margin: 1px;
     width: auto;
   }
 
   .container {
     padding: 0;
     margin: 0;
-  }
-
-  .page{
-
-    padding: 0;
-    margin: 1.5cm;
-
-    padding-right: 0;
-    margin-right: 0;
-
-    box-shadow: none
   }
 
   .row {
@@ -191,9 +178,9 @@ fieldset legend {
 }
 
 .page {
-  padding: 0cm;
+  padding: 0;
   margin: 0;
-  border-radius: 0px;
+  border-radius: 0;
   background: #2a323d;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }

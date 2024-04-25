@@ -58,4 +58,10 @@ button {
   .fontLarge {
     font-size: large;
   }
+
+  label, small, p, span {
+    font-size: xx-small;
+    margin: 1px;
+    width: auto;
+  }
 }
