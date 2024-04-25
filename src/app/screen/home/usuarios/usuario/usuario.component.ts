@@ -281,7 +281,7 @@ export class UsuarioComponent implements OnInit {
   }
 
   searchPessoa(searchTerm: any) {
-    let query: IQuery = {
+    const query: IQuery = {
       page: 0,
       pageCount: 10,
       searchValue: searchTerm.query,
@@ -308,7 +308,7 @@ export class UsuarioComponent implements OnInit {
   }
 
   getKeys(obj: any) {
-    let keys = Object.keys(obj);
+    const keys = Object.keys(obj);
     keys.splice(keys.indexOf('admin'), 1);
     return keys;
   }
@@ -336,7 +336,7 @@ export class UsuarioComponent implements OnInit {
   validaSenha(event: any) {
     if (!event) this.validacoes = [];
     else {
-      var schema = new passwordValidator();
+      const schema = new passwordValidator();
       schema
         .is()
         .min(8, 'Senha deve possuir no minimo 8 caracteres.')

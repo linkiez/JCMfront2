@@ -51,7 +51,7 @@ export class RirComponent implements OnInit {
   }
 
   searchProduto(event: any) {
-    let query: IQuery = {
+    const query: IQuery = {
       page: 0,
       pageCount: 10,
       searchValue: event.query,
@@ -75,7 +75,7 @@ export class RirComponent implements OnInit {
   }
 
   searchPessoa(event: any) {
-    let query: IQuery = {
+    const query: IQuery = {
       page: 0,
       pageCount: 10,
       searchValue: event.query,
@@ -103,7 +103,7 @@ export class RirComponent implements OnInit {
   }
 
   searchOperador(event: any) {
-    let query: IQuery = {
+    const query: IQuery = {
       page: 0,
       pageCount: 10,
       searchValue: event.query,
@@ -187,7 +187,7 @@ export class RirComponent implements OnInit {
   }
 
   searchPedidoCompraItem() {
-    let query: IQuery = {
+    const query: IQuery = {
       page: 0,
       pageCount: 10,
       searchValue: '',

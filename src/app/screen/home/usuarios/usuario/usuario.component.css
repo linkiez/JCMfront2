@@ -10,8 +10,8 @@ button {
   background: #2a323d;
   color: white;
   border: solid #3f4b5b;
-  border-width: 1px 0 1px 0;
-  padding: 1rem 1rem;
+  border-width: 1px 0;
+  padding: 1rem;
   font-weight: 600;
   margin-top: 1rem;
 }

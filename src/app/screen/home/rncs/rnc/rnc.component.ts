@@ -159,7 +159,7 @@ export class RNCComponent implements OnInit {
   includeRNCItems() {
     if ((this.selectedOrdemProducaoItem?.length ?? 0) < 1) return;
 
-    for (let ordemProducaoItem of this.selectedOrdemProducaoItem ?? []) {
+    for (const ordemProducaoItem of this.selectedOrdemProducaoItem ?? []) {
       const rncItem: IRNCItem = {
         id_produto: ordemProducaoItem.id_produto,
         produto: ordemProducaoItem.produto!,
@@ -180,7 +180,7 @@ export class RNCComponent implements OnInit {
   }
 
   searchProduto(event: any) {
-    let query: IQuery = {
+    const query: IQuery = {
       page: 0,
       pageCount: 25,
       searchValue: event.query,
@@ -207,7 +207,7 @@ export class RNCComponent implements OnInit {
   }
 
   searchResponsavelAnalise(event: any) {
-    let query: IQuery = {
+    const query: IQuery = {
       page: 0,
       pageCount: 25,
       searchValue: event.query,
@@ -309,7 +309,7 @@ export class RNCComponent implements OnInit {
 
   total_custo() {
     let total = 0;
-    for (let item of this.rnc.rnc_items ?? []) {
+    for (const item of this.rnc.rnc_items ?? []) {
       total +=
         ((item.ordem_producao_item.orcamento_item?.total ?? 0) /
           (item.ordem_producao_item.orcamento_item?.quantidade ?? 1)) *

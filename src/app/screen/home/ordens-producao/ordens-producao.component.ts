@@ -78,7 +78,7 @@ export class OrdensProducaoComponent implements OnInit {
       ? this.queryService.ordemProducao.page
       : 0;
 
-    let query = this.queryService.ordemProducao;
+    const query = this.queryService.ordemProducao;
     delete query.vendedor;
 
     this.ordemProducaoService

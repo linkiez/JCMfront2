@@ -119,7 +119,7 @@ export class IqfComponent implements OnInit {
   }
 
   searchFornecedor(event: any) {
-    let query: IQuery = {
+    const query: IQuery = {
       page: 0,
       pageCount: 10,
       searchValue: event.query,

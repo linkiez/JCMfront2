@@ -149,7 +149,7 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   searchFornecedor(event: any) {
-    let query: IQuery = {
+    const query: IQuery = {
       page: 0,
       pageCount: 10,
       searchValue: event.query,
@@ -175,7 +175,7 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   searchProduto(event: any) {
-    let query: IQuery = {
+    const query: IQuery = {
       page: 0,
       pageCount: 10,
       searchValue: event.query,
@@ -229,7 +229,7 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   calculaPeso(item: IPedidoCompraItem) {
-    let dimensao: any = (item.dimensao || '')
+    const dimensao: any = (item.dimensao || '')
       .split('x')
       .map((dimensao: string | number) => {
         dimensao = Number(dimensao.toString().replace(/[^\d]/g, '')) / 1000;

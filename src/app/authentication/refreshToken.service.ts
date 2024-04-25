@@ -30,8 +30,8 @@ export class RefreshTokenService {
   }
 
   possuiToken() {
-    let now = moment.now();
-    let refreshTokenExpireIn = Number(
+    const now = moment.now();
+    const refreshTokenExpireIn = Number(
       localStorage.getItem('refreshTokenExpireIn')
     );
     if (this.retornaToken()) {

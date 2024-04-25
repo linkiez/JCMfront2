@@ -17,7 +17,7 @@ export const validador: IValidação[] = [
     campo: 'cnpj_cpf',
     nome: 'CPF tem 11 numeros',
     funcao: (pessoa: IPessoa) => {
-      let cpfQuantosNumeros = pessoa.cnpj_cpf
+      const cpfQuantosNumeros = pessoa.cnpj_cpf
         ?.toString()
         .replace(/\D/g, '')
         .split('').length;
@@ -33,7 +33,7 @@ export const validador: IValidação[] = [
     campo: 'cnpj_cpf',
     nome: 'CPF Valido',
     funcao: (pessoa: IPessoa) => {
-      let cpfQuantosNumeros = pessoa.cnpj_cpf
+      const cpfQuantosNumeros = pessoa.cnpj_cpf
         ?.toString()
         .replace(/\D/g, '')
         .split('').length;
@@ -44,7 +44,7 @@ export const validador: IValidação[] = [
       ) {
         let Soma;
         let Resto;
-        let strCPF = (pessoa.cnpj_cpf || '').toString().replace(/\D/g, '');
+        const strCPF = (pessoa.cnpj_cpf || '').toString().replace(/\D/g, '');
         Soma = 0;
         if (
           strCPF == '00000000000' ||
@@ -83,7 +83,7 @@ export const validador: IValidação[] = [
     campo: 'cnpj_cpf',
     nome: 'CNPJ tem 14 numeros',
     funcao: (pessoa: IPessoa) => {
-      let cnpjQuantosNumeros = pessoa.cnpj_cpf
+      const cnpjQuantosNumeros = pessoa.cnpj_cpf
         ?.toString()
         .replace(/\D/g, '')
         .split('').length;
@@ -99,7 +99,7 @@ export const validador: IValidação[] = [
     campo: 'cnpj_cpf',
     nome: 'CNPJ Valido',
     funcao: (pessoa: IPessoa) => {
-      let cnpjQuantosNumeros = pessoa.cnpj_cpf
+      const cnpjQuantosNumeros = pessoa.cnpj_cpf
         ?.toString()
         .replace(/\D/g, '')
         .split('').length;
@@ -108,7 +108,7 @@ export const validador: IValidação[] = [
           ? true
           : false
       ) {
-        let cnpj = (pessoa.cnpj_cpf || '').toString().replace(/\D/g, '');
+        const cnpj = (pessoa.cnpj_cpf || '').toString().replace(/\D/g, '');
         // Elimina CNPJs invalidos conhecidos
         if (
           cnpj == '00000000000000' ||
@@ -127,7 +127,7 @@ export const validador: IValidação[] = [
         // Valida DVs
         let tamanho = cnpj.length - 2;
         let numeros = cnpj.substring(0, tamanho);
-        let digitos = cnpj.substring(tamanho);
+        const digitos = cnpj.substring(tamanho);
         let soma = 0;
         let pos = tamanho - 7;
         for (let i = tamanho; i >= 1; i--) {
@@ -158,13 +158,13 @@ export const validador: IValidação[] = [
     funcao: async (pessoa: IPessoa) => {
       pessoa.cnpj_cpf = pessoa.cnpj_cpf?.toString().replace(/\D/g, '');
 
-      let QuantosNumeros = pessoa.cnpj_cpf
+      const QuantosNumeros = pessoa.cnpj_cpf
         ?.toString()
         .replace(/\D/g, '')
         .split('').length;
       if (QuantosNumeros === 14 || QuantosNumeros === 11 ? true : false) {
-        let check = pessoaService.existeCnpjCpfPessoa(pessoa);
-        let resultado = await firstValueFrom(check);
+        const check = pessoaService.existeCnpjCpfPessoa(pessoa);
+        const resultado = await firstValueFrom(check);
         return resultado;
       }
     },

@@ -120,7 +120,7 @@ export class PessoaComponent implements OnInit {
   }
 
   createPessoa() {
-    let pessoaClean = this.cleanPessoa(this.pessoa);
+    const pessoaClean = this.cleanPessoa(this.pessoa);
 
     this.pessoaService.addPessoa(pessoaClean).subscribe({
       next: async (pessoa) => {
@@ -165,7 +165,7 @@ export class PessoaComponent implements OnInit {
   }
 
   updatePessoa() {
-    let pessoaClean = this.cleanPessoa(this.pessoa);
+    const pessoaClean = this.cleanPessoa(this.pessoa);
     this.pessoaService.updatePessoa(pessoaClean).subscribe({
       next: async (pessoa) => {
         pessoa.data_nasc = new Date(pessoa.data_nasc!.toString());
@@ -221,7 +221,7 @@ export class PessoaComponent implements OnInit {
   }
 
   createOrUpdate() {
-    let emailInvalido = Object.values(this.emailInvalido).filter(
+    const emailInvalido = Object.values(this.emailInvalido).filter(
       (valor) => valor === null
     );
 
@@ -469,7 +469,7 @@ export class PessoaComponent implements OnInit {
   }
 
   newContato() {
-    let contatos: IContato[] = [];
+    const contatos: IContato[] = [];
     if (!this.pessoa.contatos) this.pessoa.contatos = contatos;
     this.pessoa.contatos.push({});
   }
@@ -492,16 +492,16 @@ export class PessoaComponent implements OnInit {
   }
 
   validaCpfCnpj() {
-    let cnpj_cpfValidador = validador.filter(
+    const cnpj_cpfValidador = validador.filter(
       (validacao) => validacao.campo === 'cnpj_cpf'
     );
 
-    let cnpj_cpfValidado = cnpj_cpfValidador.map(async (validacao) => {
+    const cnpj_cpfValidado = cnpj_cpfValidador.map(async (validacao) => {
       validacao.resultado = await validacao.funcao(this.pessoa);
       return validacao;
     });
     Promise.all(cnpj_cpfValidado).then((validado) => {
-      let cnpj_cpfInvalido = validado.filter(
+      const cnpj_cpfInvalido = validado.filter(
         (validacao) => validacao.resultado === false
       );
       this.cnpj_cpfInvalido = cnpj_cpfInvalido;
@@ -552,7 +552,7 @@ export class PessoaComponent implements OnInit {
   }
 
   validaEmail(email: string, campo: string) {
-    let emailValidador = validador.filter(
+    const emailValidador = validador.filter(
       (validacao) => validacao.campo === 'email'
     )[0];
 
@@ -560,9 +560,9 @@ export class PessoaComponent implements OnInit {
   }
 
   consultaCep() {
-    let cep = this.pessoa.cep?.toString().replace(/\D/g, '');
+    const cep = this.pessoa.cep?.toString().replace(/\D/g, '');
 
-    let cepQuantosNumeros = cep?.split('').length;
+    const cepQuantosNumeros = cep?.split('').length;
 
     if (cepQuantosNumeros == 8 && cep) {
       this.pessoaService

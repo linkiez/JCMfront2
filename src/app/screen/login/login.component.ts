@@ -29,7 +29,7 @@ export class LoginComponent implements OnInit {
   login() {
     this.authenticationService.login(this.email, this.senha).subscribe({
       next: (response) => {
-        let body = response.body as ILogin;
+        const body = response.body as ILogin;
         this.usuarioService.salvaToken(body!.accessToken, body!.refreshToken);
       },
       error: (error) => {
