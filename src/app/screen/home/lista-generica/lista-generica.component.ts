@@ -92,7 +92,7 @@ export class ListaGenericaComponent implements OnInit {
   }
 
   removeItem(item: IListaGenericaItem) {
-    let index = this.selectedLista.lista_generica_items.indexOf(item);
+    const index = this.selectedLista.lista_generica_items.indexOf(item);
     this.selectedLista.lista_generica_items.splice(index, 1);
   }
 

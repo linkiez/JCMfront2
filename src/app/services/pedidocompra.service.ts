@@ -12,8 +12,8 @@ export class PedidoCompraService {
   constructor(private http: HttpClient) {}
 
   getPedidoCompras(query: IQuery): Observable<any> {
-    let chaves = Object.keys(query);
-    let valores = Object.values(query);
+    const chaves = Object.keys(query);
+    const valores = Object.values(query);
     let queryString = '?';
 
     for (let i = 0; i < chaves.length; i++) {
@@ -33,8 +33,8 @@ export class PedidoCompraService {
     fornecedor: number | undefined;
     ano: number;
   }): Observable<any> {
-    let chaves = Object.keys(query);
-    let valores = Object.values(query);
+    const chaves = Object.keys(query);
+    const valores = Object.values(query);
     let queryString = '?';
 
     for (let i = 0; i < chaves.length; i++) {
@@ -51,8 +51,8 @@ export class PedidoCompraService {
   }
 
   getPedidoCompraItem(query: IQuery): Observable<any> {
-    let chaves = Object.keys(query);
-    let valores = Object.values(query);
+    const chaves = Object.keys(query);
+    const valores = Object.values(query);
     let queryString = '?';
 
     for (let i = 0; i < chaves.length; i++) {

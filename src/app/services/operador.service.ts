@@ -13,8 +13,8 @@ export class OperadorService {
   constructor(private http: HttpClient) {}
 
   getOperadores(query: IQuery): Observable<any> {
-    let chaves = Object.keys(query);
-    let valores = Object.values(query);
+    const chaves = Object.keys(query);
+    const valores = Object.values(query);
     let queryString = '?';
 
     for (let i = 0; i < chaves.length; i++) {

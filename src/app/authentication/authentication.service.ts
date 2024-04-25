@@ -40,15 +40,15 @@ export class AuthenticationService {
   }
 
   async verificaTokens() {
-    let accessToken = this.accessTokenService.possuiToken();
-    let refreshToken = this.refreshTokenService.possuiToken();
+    const accessToken = this.accessTokenService.possuiToken();
+    const refreshToken = this.refreshTokenService.possuiToken();
     if (accessToken) {
       return true;
     }
     if (refreshToken) {
       try {
-        let response = await firstValueFrom(this.refresh());
-        let body = response.body as ILogin;
+        const response = await firstValueFrom(this.refresh());
+        const body = response.body as ILogin;
         if (body) {
           this.accessTokenService.salvaToken(body!.accessToken);
           this.refreshTokenService.salvaToken(body!.refreshToken);

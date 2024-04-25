@@ -107,7 +107,7 @@ export class OrdemProducaoComponent implements OnInit, OnDestroy {
     this.ordemProducaoService.getOrdemProducao(id).subscribe({
       next: (ordemProducao) => {
         if (ordemProducao.ordem_producao_items)
-          for (let ordem_producao_item of ordemProducao.ordem_producao_items) {
+          for (const ordem_producao_item of ordemProducao.ordem_producao_items) {
             if (ordem_producao_item.observacao)
               ordem_producao_item.observacao = this.sanitizer
                 .bypassSecurityTrustHtml(ordem_producao_item.observacao)
@@ -167,7 +167,7 @@ export class OrdemProducaoComponent implements OnInit, OnDestroy {
   }
 
   createImpressora() {
-    let impresoraListaGenericaItem: IListaGenericaItem =
+    const impresoraListaGenericaItem: IListaGenericaItem =
       this.convertIPrinterSettingsToListaGenericaItem(this.impressoraEdit!);
 
     this.ListaGenericaService.addListaGenericaItem(
@@ -196,7 +196,7 @@ export class OrdemProducaoComponent implements OnInit, OnDestroy {
   }
 
   updateImpressora() {
-    let impresoraListaGenericaItem: IListaGenericaItem =
+    const impresoraListaGenericaItem: IListaGenericaItem =
       this.convertIPrinterSettingsToListaGenericaItem(this.impressoraEdit!);
     this.ListaGenericaService.updateListaGenericaItem(
       impresoraListaGenericaItem
@@ -264,7 +264,7 @@ export class OrdemProducaoComponent implements OnInit, OnDestroy {
       });
       return;
     }
-    let impresoraListaGenericaItem: IListaGenericaItem =
+    const impresoraListaGenericaItem: IListaGenericaItem =
       this.convertIPrinterSettingsToListaGenericaItem(this.impressoraEdit!);
 
     this.ListaGenericaService.deleteListaGenericaItem(
@@ -319,7 +319,7 @@ export class OrdemProducaoComponent implements OnInit, OnDestroy {
   convertIPrinterSettingsToListaGenericaItem(
     impressora: IPrinterSettings
   ): IListaGenericaItem {
-    let lista = {
+    const lista = {
       id_lista: this.impressoraIdListaGenerica,
       valor: impressora.valor,
       valor2: JSON.stringify(impressora.valor2),

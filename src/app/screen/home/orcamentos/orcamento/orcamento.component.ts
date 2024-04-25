@@ -262,7 +262,7 @@ export class OrcamentoComponent implements OnInit {
     if (number) {
       searchTerm.query = searchTerm.query.replace(/[^\d]/g, '');
     }
-    let query: IQuery = {
+    const query: IQuery = {
       page: 0,
       pageCount: 10,
       searchValue: searchTerm.query,
@@ -291,7 +291,7 @@ export class OrcamentoComponent implements OnInit {
   }
 
   searchPessoa(searchTerm: any) {
-    let query: IQuery = {
+    const query: IQuery = {
       page: 0,
       pageCount: 10,
       searchValue: searchTerm.query,
@@ -318,7 +318,7 @@ export class OrcamentoComponent implements OnInit {
   }
 
   searchVendedor(searchTerm: any) {
-    let query: IQuery = {
+    const query: IQuery = {
       page: 0,
       pageCount: 10,
       searchValue: searchTerm.query,
@@ -342,7 +342,7 @@ export class OrcamentoComponent implements OnInit {
   }
 
   searchProduto(event: any) {
-    let query: IQuery = {
+    const query: IQuery = {
       page: 0,
       pageCount: 25,
       searchValue: event.query,
@@ -499,7 +499,7 @@ export class OrcamentoComponent implements OnInit {
 
   calculaHora(item: IOrcamentoItem) {
     this.calculaPeso(item);
-    let [hours = '0', minutes = '0', seconds = '0'] =
+    const [hours = '0', minutes = '0', seconds = '0'] =
       item.tempo?.split(':') ?? [];
 
     const hora: number =
@@ -548,7 +548,7 @@ export class OrcamentoComponent implements OnInit {
   }
 
   validaEmail(email: string) {
-    let emailValidador = validador.filter(
+    const emailValidador = validador.filter(
       (validacao) => validacao.campo === 'email'
     )[0];
 
@@ -622,7 +622,7 @@ export class OrcamentoComponent implements OnInit {
   }
 
   create(clonar?: boolean) {
-    let orcamentoSubmit: IOrcamento = this.orcamento;
+    const orcamentoSubmit: IOrcamento = this.orcamento;
     orcamentoSubmit.status = 'Orçamento';
     this.loadingSalvar = true;
     this.orcamentoService
@@ -663,7 +663,7 @@ export class OrcamentoComponent implements OnInit {
   }
 
   update() {
-    let orcamentoSubmit: IOrcamento = this.orcamento;
+    const orcamentoSubmit: IOrcamento = this.orcamento;
     this.loadingSalvar = true;
     this.orcamentoService
       .updateOrcamento(orcamentoSubmit)
@@ -736,7 +736,7 @@ export class OrcamentoComponent implements OnInit {
 
   async validacoes() {
     let valido = true;
-    let idExistente = await firstValueFrom(
+    const idExistente = await firstValueFrom(
       this.orcamentoService.getOrcamento(this.orcamento.id || 0)
     );
 
@@ -950,7 +950,7 @@ export class OrcamentoComponent implements OnInit {
         descricao: item.descricao,
         produto: item.produto?.nome,
         material_incluido: item.material_incluido ? 'Sim' : 'Não',
-        processo: (item.processo as String[])?.join(', '),
+        processo: (item.processo as string[])?.join(', '),
         largura: item.largura,
         altura: item.altura,
         quantidade: item.quantidade,

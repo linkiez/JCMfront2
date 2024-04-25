@@ -141,7 +141,7 @@ export class OrcamentosComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   searchVendedor(searchTerm: any) {
-    let query: IQuery = {
+    const query: IQuery = {
       page: 0,
       pageCount: 10,
       searchValue: searchTerm.query,

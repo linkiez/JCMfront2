@@ -12,8 +12,8 @@ export class RNCService {
   constructor(private http: HttpClient) {}
 
   getRNCs(query: IQuery): Observable<{ rncs: IRNC[]; totalRecords: number }> {
-    let chaves = Object.keys(query);
-    let valores = Object.values(query);
+    const chaves = Object.keys(query);
+    const valores = Object.values(query);
     let queryString = '?';
 
     for (let i = 0; i < chaves.length; i++) {
