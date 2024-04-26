@@ -229,14 +229,14 @@
   >
     <p-card>
       <div
+        #cardInsideContainer
         [style]="
       {
-        'font-size': (impressora?.valor2?.fontSize??3)+'mm',
         'padding': (impressora?.valor2?.margin?.top)+'mm '
         +(impressora?.valor2?.margin?.right)+'mm '
         +(impressora?.valor2?.margin?.bottom)+'mm '
         +(impressora?.valor2?.margin?.left)+'mm ',
-        'overflow':'hidden',
+        'overflow':'auto',
         'white-space': 'flex-wrap',
       }
       "

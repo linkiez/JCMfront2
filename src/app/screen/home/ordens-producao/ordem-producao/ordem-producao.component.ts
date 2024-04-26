@@ -1,7 +1,19 @@
 import { ArquivoService } from 'src/app/services/arquivo.service';
 import { ListaGenericaService } from './../../../../services/lista-generica.service';
 import { MessageService } from 'primeng/api';
-import { Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild, ViewChildren } from '@angular/core';
+import {
+  AfterViewChecked,
+  AfterViewInit,
+  Component,
+  ElementRef,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  QueryList,
+  Renderer2,
+  ViewChild,
+  ViewChildren,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   IOrdemProducao,
@@ -14,6 +26,7 @@ import * as xlsx from 'xlsx';
 import { RIRService } from 'src/app/services/rir.service';
 import { IRIR } from 'src/app/models/rir';
 import {
+  BehaviorSubject,
   Observable,
   Subscription,
   debounce,
@@ -35,7 +48,13 @@ import { DomSanitizer } from '@angular/platform-browser';
   templateUrl: './ordem-producao.component.html',
   styleUrls: ['./ordem-producao.component.css'],
 })
-export class OrdemProducaoComponent implements OnInit, OnDestroy {
+export class OrdemProducaoComponent
+  implements OnInit, OnDestroy, AfterViewChecked
+{
+  @ViewChildren('cardInsideContainer') cardInsideContainer?: QueryList<
+    ElementRef<HTMLDivElement>
+  >;
+
   ordemProducao: IOrdemProducao = {};
 
   etiquetas: boolean = true;
@@ -46,7 +65,9 @@ export class OrdemProducaoComponent implements OnInit, OnDestroy {
 
   impressora?: IPrinterSettings;
 
-  impressora$: Observable<IPrinterSettings | undefined> = of(this.impressora);
+  impressoraPrevious?: IPrinterSettings;
+
+  impressora$ = new BehaviorSubject(this.impressora);
 
   impressoraSubscription?: Subscription;
 
@@ -90,8 +111,7 @@ export class OrdemProducaoComponent implements OnInit, OnDestroy {
 
     this.impressoraSubscription = this.impressora$.subscribe({
       next: (impressora) => {
-        if (impressora)
-          {}
+        this.impressora = impressora;
       },
     });
   }
@@ -99,6 +119,18 @@ export class OrdemProducaoComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     if (this.impressoraSubscription) {
       this.impressoraSubscription.unsubscribe();
+    }
+  }
+
+  ngAfterViewChecked(): void {
+    // Check if impressora has changed and the condition to adjust font size is met
+    if (
+      this.impressora !== this.impressoraPrevious &&
+      this.cardInsideContainer?.first
+    ) {
+      this.adjustFontSize();
+      // Update previousImpressora to the current impressora after adjustment
+      this.impressoraPrevious = this.impressora;
     }
   }
 
@@ -152,7 +184,7 @@ export class OrdemProducaoComponent implements OnInit, OnDestroy {
           }
         ) as unknown as IPrinterSettings[];
 
-        this.impressora = this.impressoras[0];
+        this.impressora$.next(this.impressoras[0]);
       },
       error: (error) => {
         console.error(error);
@@ -471,7 +503,37 @@ export class OrdemProducaoComponent implements OnInit, OnDestroy {
   }
 
   setSizeStyleStringBuilder(size: number) {
-    if(size > 0) return size + 'mm'
-    else return 'auto'
+    if (size > 0) return size + 'mm';
+    else return 'auto';
+  }
+
+  adjustFontSize(): void {
+    if (this.cardInsideContainer) {
+      let fontSize = 5; // Starting font size
+      const containers = this.cardInsideContainer.toArray();
+      // Loop through all containers and adjust font size
+
+      if (containers.length > 0) {
+        for(let container of containers){
+          const containerElement: HTMLDivElement = container.nativeElement;
+          const containerElementParent: HTMLElement = containerElement.parentElement!;
+          const containerElementParent2: HTMLElement = containerElementParent.parentElement!;
+          const containerElementParent3: HTMLElement = containerElementParent2.parentElement!;
+          const containerElementParent4: HTMLElement = containerElementParent3.parentElement!;
+          const containerElementParent5: HTMLElement = containerElementParent4.parentElement!;
+
+          containerElement.style.fontSize = `${fontSize}mm`;
+          // Reduce font size until the text fits
+          while (
+            containerElementParent5.offsetHeight < containerElement.offsetHeight ||
+            containerElementParent5.offsetWidth < containerElement.offsetWidth
+          ) {
+            fontSize-= 0.1;
+            containerElement.style.fontSize = `${fontSize}mm`;
+          }
+        }
+
+      }
+    }
   }
 }
