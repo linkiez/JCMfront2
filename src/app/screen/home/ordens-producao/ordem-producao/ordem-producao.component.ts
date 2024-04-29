@@ -11,6 +11,7 @@ import {
   OnInit,
   QueryList,
   Renderer2,
+  SecurityContext,
   ViewChild,
   ViewChildren,
 } from '@angular/core';
@@ -57,7 +58,7 @@ export class OrdemProducaoComponent
 
   ordemProducao: IOrdemProducao = {};
 
-  etiquetas: boolean = true;
+  etiquetas: boolean = false;
 
   impressoraDetalhes: boolean = false;
 
@@ -126,7 +127,8 @@ export class OrdemProducaoComponent
     // Check if impressora has changed and the condition to adjust font size is met
     if (
       this.impressora !== this.impressoraPrevious &&
-      this.cardInsideContainer?.first
+      this.cardInsideContainer?.first &&
+      this.impressora?.valor2?.fontSize == 0
     ) {
       this.adjustFontSize();
       // Update previousImpressora to the current impressora after adjustment
@@ -138,14 +140,15 @@ export class OrdemProducaoComponent
     const id = Number(this.route.snapshot.paramMap.get('id'));
     this.ordemProducaoService.getOrdemProducao(id).subscribe({
       next: (ordemProducao) => {
-        if (ordemProducao.ordem_producao_items)
+        if (ordemProducao?.ordem_producao_items)
           for (const ordem_producao_item of ordemProducao.ordem_producao_items) {
             if (ordem_producao_item.observacao)
               ordem_producao_item.observacao = this.sanitizer
-                .bypassSecurityTrustHtml(ordem_producao_item.observacao)
-                .toString();
+                .sanitize(SecurityContext.HTML, ordem_producao_item.observacao)
+                ?.toString();
           }
         this.ordemProducao = this.sortOrdemProducaoItems(ordemProducao);
+        this.ordemProducao = ordemProducao;
         console.log(this.ordemProducao);
       },
       error: (error) => {
@@ -372,11 +375,11 @@ export class OrdemProducaoComponent
       .updateOrdemProducao(this.ordemProducao)
       .subscribe({
         next: (ordemProducao) => {
-          this.ordemProducao.ordem_producao_items?.forEach((item) => {
-            const regex = /<p>(.*?)<\/p>/g;
-            if (item.observacao && regex.exec(item.observacao) == null)
-              item.observacao = '<p>' + item.observacao + '</p>';
-          });
+          // this.ordemProducao.ordem_producao_items?.forEach((item) => {
+          //   const regex = /<p>(.*?)<\/p>/g;
+          //   if (item.observacao && regex.exec(item.observacao) == null)
+          //     item.observacao = '<p>' + item.observacao + '</p>';
+          // });
         },
         error: (error) => {
           console.error(error);

@@ -1,22 +1,20 @@
-
-p-menubar img{
+p-menubar img {
   height: 48px;
- }
+}
 
- :host ::ng-deep .favicon-icon {
-      width: 32px;
-      height: 32px;
-      background-image: url("/src/favicon.ico");
-      background-size: 32px 32px;
-  }
-
+:host ::ng-deep .favicon-icon {
+  width: 32px;
+  height: 32px;
+  background-image: url("/src/favicon.ico");
+  background-size: 32px 32px;
+}
 
 body {
   background-color: #20262e;
 
   height: 100%;
   min-height: 100%;
-  color: white
+  color: white;
 }
 html {
   height: 100%;
@@ -24,10 +22,10 @@ html {
 
 html,
 body {
-	padding: 0;
-	margin: 0;
-	font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-		Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  padding: 0;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
 
 label {
@@ -36,8 +34,10 @@ label {
   font-size: small;
 }
 
-input, p, textarea {
-  width: 100%
+input,
+p,
+textarea {
+  width: 100%;
 }
 
 h4 {
@@ -65,7 +65,7 @@ p {
   cursor: pointer;
 }
 
-.p-datatable{
+.p-datatable {
   margin-top: 10px;
   margin-bottom: 10px;
 }
@@ -83,7 +83,7 @@ p {
   background: #343e4d;
   display: flex;
   flex-direction: column;
-  height: 100%
+  height: 100%;
 }
 
 .p-card-body {
@@ -109,7 +109,7 @@ fieldset legend {
   border-radius: 5px;
   padding: 0 5px;
   font-size: 1em;
-  width: auto
+  width: auto;
 }
 
 @media print {
@@ -128,7 +128,10 @@ fieldset legend {
     font-size: large;
   }
 
-  label, small, p, span {
+  label,
+  small,
+  p,
+  span {
     width: auto;
   }
 
@@ -150,39 +153,44 @@ fieldset legend {
   }
 
   .p-datatable .p-datatable-tbody > tr > td,
-.p-datatable .p-datatable-thead > tr > th {
-  font-size: x-small;
-}
+  .p-datatable .p-datatable-thead > tr > th {
+    font-size: x-small;
+  }
 
-.h-12{
-  height: 12px;
-}
+  .h-12 {
+    height: 12px;
+  }
 
-.dontBreakPage {
-  page-break-inside: avoid;
-}
+  .dontBreakPage {
+    page-break-inside: avoid;
+  }
 
-.pageBreakAfter {
-  page-break-after: always;
-}
+  .pageBreakAfter {
+    page-break-after: always;
+  }
 
-.p-card {
+  .p-card {
     width: 100%;
     height: 100%;
-}
+  }
 
-.p-card-body {
+  .p-card-body {
     height: 100%;
     display: flex;
     page-break-inside: avoid;
-}
+  }
 
-.page {
-  padding: 0;
-  margin: 0;
-  border-radius: 0;
-  background: #2a323d;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-}
+  .page {
+    padding: 0;
+    margin: 0;
+    border-radius: 0;
+    background: #2a323d;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  }
 
+  .img-container img {
+    width: 100% !important; /* Make images expand to fit the full container width */
+    object-fit: cover !important; /* Ensure images cover their area, possibly cropping them */
+    height: auto !important; /* Maintain aspect ratio. Alternatively, use 100% for container height */
+  }
 }
