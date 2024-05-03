@@ -638,6 +638,7 @@ export class OrcamentoComponent implements OnInit {
             item.uuid = uuidv4();
           });
           this.orcamento = response;
+          this.id = response.id;
         },
         error: (error) => {
           console.error(error);
@@ -869,6 +870,17 @@ export class OrcamentoComponent implements OnInit {
         severity: 'error',
         summary: 'Erro',
         detail: 'É necessário selecionar a condição de pagamento.',
+      });
+      valido = false;
+    }
+    if (
+      !this.orcamento.contato?.id &&
+      (this.orcamento.contato?.nome?? "").split(' ').length < 2
+    ) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erro',
+        detail: 'É necessário que o contato nome tenha mais de 1 palavras.',
       });
       valido = false;
     }
