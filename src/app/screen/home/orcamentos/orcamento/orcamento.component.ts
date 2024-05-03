@@ -872,6 +872,17 @@ export class OrcamentoComponent implements OnInit {
       });
       valido = false;
     }
+    if (
+      !this.orcamento.contato?.id &&
+      (this.orcamento.contato?.nome?? "").split(' ').length < 2
+    ) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erro',
+        detail: 'É necessário que o contato nome tenha mais de 1 palavras.',
+      });
+      valido = false;
+    }
     this.orcamento.orcamento_items.forEach((item, index) => {
       if (item.quantidade == 0) {
         this.messageService.add({
