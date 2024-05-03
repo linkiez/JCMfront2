@@ -72,7 +72,7 @@ export class OrcamentoComponent implements OnInit {
     desconto: 0,
     embalagem: 'Por conta do Fornecedor(nosso padrão)',
     transporte: 'FOB - Por Conta do Cliente',
-    cond_pag: 'AVISTA',
+    cond_pag: undefined,
     prazo_emdias: 0,
     empresa: {},
     vendastinies: [],
@@ -847,6 +847,31 @@ export class OrcamentoComponent implements OnInit {
       });
       valido = false;
     }
+
+    if (!this.orcamento.empresa) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erro',
+        detail: 'É necessário ter uma empresa para faturamento.',
+      });
+      valido = false;
+    }
+    if (!this.orcamento.transporte) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erro',
+        detail: 'É necessário selecionar tipo de transporte.',
+      });
+      valido = false;
+    }
+    if (!this.orcamento.cond_pag){
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erro',
+        detail: 'É necessário selecionar a condição de pagamento.',
+      });
+      valido = false;
+    }
     this.orcamento.orcamento_items.forEach((item, index) => {
       if (item.quantidade == 0) {
         this.messageService.add({
@@ -901,6 +926,9 @@ export class OrcamentoComponent implements OnInit {
           return item;
         }
       );
+      this.orcamento.status = 'Orçamento';
+      this.orcamento.createdAt = undefined;
+      this.orcamento.updatedAt = undefined;
       this.create(true);
     }
   }
