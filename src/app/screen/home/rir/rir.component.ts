@@ -14,6 +14,7 @@ import { PessoaService } from 'src/app/services/pessoa.service';
 import { ProdutoService } from 'src/app/services/produto.service';
 import { QueryService } from 'src/app/services/query.service';
 import { RIRService } from 'src/app/services/rir.service';
+import { consoleLogDev } from 'src/app/utils/consoleLogDev';
 
 @Component({
   selector: 'app-rir',
@@ -51,7 +52,7 @@ export class RirComponent implements OnInit {
   }
 
   searchProduto(event: any) {
-    let query: IQuery = {
+    const query: IQuery = {
       page: 0,
       pageCount: 10,
       searchValue: event.query,
@@ -75,7 +76,7 @@ export class RirComponent implements OnInit {
   }
 
   searchPessoa(event: any) {
-    let query: IQuery = {
+    const query: IQuery = {
       page: 0,
       pageCount: 10,
       searchValue: event.query,
@@ -103,7 +104,7 @@ export class RirComponent implements OnInit {
   }
 
   searchOperador(event: any) {
-    let query: IQuery = {
+    const query: IQuery = {
       page: 0,
       pageCount: 10,
       searchValue: event.query,
@@ -187,7 +188,7 @@ export class RirComponent implements OnInit {
   }
 
   searchPedidoCompraItem() {
-    let query: IQuery = {
+    const query: IQuery = {
       page: 0,
       pageCount: 10,
       searchValue: '',
@@ -272,6 +273,7 @@ export class RirComponent implements OnInit {
           return rir;
         });
         this.totalRecords = consulta.totalRecords;
+        consoleLogDev(this.rirs);
       },
       error: (error) => {
         console.error(error, this.queryService.rir);

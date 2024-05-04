@@ -86,8 +86,8 @@ export class ListaFilesComponent implements OnInit {
       .getUrlArquivo(id)
       .pipe(debounceTime(1000))
       .subscribe({
-        next: (url: any) => {
-          document.location.href = url.url;
+        next: (url: string) => {
+          document.location.href = url;
         },
       });
   }

@@ -27,8 +27,8 @@ export class AccessTokenService {
   }
 
   possuiToken() {
-    let now = moment.now();
-    let accessTokenExpireIn = Number(
+    const now = moment.now();
+    const accessTokenExpireIn = Number(
       localStorage.getItem('accessTokenExpireIn')
     );
 

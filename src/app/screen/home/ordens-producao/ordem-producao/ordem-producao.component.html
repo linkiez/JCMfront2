@@ -2,6 +2,64 @@
   <ng-container
     [ngTemplateOutlet]="!etiquetas ? opView : etiquetaView"
   ></ng-container>
+  <footer class="noprint">
+    <hr />
+    <button
+      pButton
+      class="p-button p-button-success"
+      type="submit"
+      name="btnSalvar"
+      id="btnSalvar"
+      (click)="salvar()"
+    >
+      Salvar
+    </button>
+    <button
+      pButton
+      class="p-button"
+      type="button"
+      name="btnImprimir"
+      id="btnImprimir"
+    >
+      <a href="javascript:window.print()"> Imprimir </a>
+    </button>
+    <button
+      pButton
+      class="p-button"
+      type="button"
+      name="btnEtiquetas"
+      id="btnEtiquetas"
+      (click)="toggleEtiquetas()"
+    >
+      {{ etiquetas ? "Ordem de Produção" : "Etiquetas" }}
+    </button>
+    <button
+      pButton
+      class="p-button"
+      type="button"
+      name="btnExportar"
+      id="btnExportar"
+      (click)="gerarEtiquetas()"
+    >
+      Exportar (xlsx)
+    </button>
+    <button
+      pButton
+      class="p-button"
+      (click)="getBack()"
+      type="button"
+      name="btnVoltar"
+      id="btnVoltar"
+    >
+      Voltar
+    </button>
+    <p-confirmDialog
+      header="Confirmação"
+      acceptLabel="Sim"
+      rejectLabel="Não"
+      icon="pi pi-exclamation-triangle"
+    ></p-confirmDialog>
+  </footer>
 </div>
 
 <ng-template #opView>
@@ -154,13 +212,12 @@
           <div class="col-6">
             <p-editor
               #editor
-              (onInit)="editor.quill.pasteHTML(itemProducao.observacao)"
-              (onTextChange)="itemProducao.observacao = $event.htmlValue"
+              [(ngModel)]="itemProducao.observacao"
               name="observacao"
               id="observacao"
               class="noprint"
             ></p-editor>
-            <div class="noview" [innerHTML]="itemProducao.observacao"></div>
+            <div class="noview img-container" [innerHTML]="itemProducao.observacao"></div>
           </div>
           <div class="col">
             <listaFiles
@@ -229,14 +286,14 @@
   >
     <p-card>
       <div
+        #cardInsideContainer
         [style]="
       {
-        'font-size': (impressora?.valor2?.fontSize??3)+'mm',
         'padding': (impressora?.valor2?.margin?.top)+'mm '
         +(impressora?.valor2?.margin?.right)+'mm '
         +(impressora?.valor2?.margin?.bottom)+'mm '
         +(impressora?.valor2?.margin?.left)+'mm ',
-        'overflow':'hidden',
+        'overflow':'auto',
         'white-space': 'flex-wrap',
       }
       "
@@ -306,64 +363,7 @@
     </p-card>
   </div>
 </ng-template>
-<footer class="noprint">
-  <hr />
-  <button
-    pButton
-    class="p-button p-button-success"
-    type="submit"
-    name="btnSalvar"
-    id="btnSalvar"
-    (click)="salvar()"
-  >
-    Salvar
-  </button>
-  <button
-    pButton
-    class="p-button"
-    type="button"
-    name="btnImprimir"
-    id="btnImprimir"
-  >
-    <a href="javascript:window.print()"> Imprimir </a>
-  </button>
-  <button
-    pButton
-    class="p-button"
-    type="button"
-    name="btnEtiquetas"
-    id="btnEtiquetas"
-    (click)="toggleEtiquetas()"
-  >
-    {{ etiquetas ? "Ordem de Produção" : "Etiquetas" }}
-  </button>
-  <button
-    pButton
-    class="p-button"
-    type="button"
-    name="btnExportar"
-    id="btnExportar"
-    (click)="gerarEtiquetas()"
-  >
-    Exportar (xlsx)
-  </button>
-  <button
-    pButton
-    class="p-button"
-    (click)="getBack()"
-    type="button"
-    name="btnVoltar"
-    id="btnVoltar"
-  >
-    Voltar
-  </button>
-  <p-confirmDialog
-    header="Confirmação"
-    acceptLabel="Sim"
-    rejectLabel="Não"
-    icon="pi pi-exclamation-triangle"
-  ></p-confirmDialog>
-</footer>
+
 <!-- Editar Impressora -->
 <p-dialog
   header="Impressora"
@@ -423,6 +423,7 @@
               [(ngModel)]="impressoraEdit.valor2.fontSize"
               required
             />
+            <small>Coloque 0 para tamanho automático.</small>
           </div>
         </div>
         <fieldset>
