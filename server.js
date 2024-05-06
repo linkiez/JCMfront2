@@ -34,15 +34,22 @@ app.listen(80, function () {
   console.log(`Server listening on port 80`);
 });
 
-// SSL certificate files
-const privateKey = fs.readFileSync('ssl/jcmmetais.ddns.net-PrivateKey.key', 'utf8');
-const certificate = fs.readFileSync('ssl/jcmmetais.ddns.net-cloudflare.pem', 'utf8');
+const httpsServer = null;
 
-const credentials = {key: privateKey, cert: certificate};
+if (
+  fs.existsSync("./ssl/jcmmetais.ddns.net-PrivateKey.key") &&
+  fs.existsSync("./ssl/jcmmetais.ddns.net-cloudflare.pem")
+) {
+  httpsServer = https.createServer({
+    key: fs.readFileSync("./ssl/jcmmetais.ddns.net-PrivateKey.key"),
+    cert: fs.readFileSync("./ssl/jcmmetais.ddns.net-cloudflare.pem"),
+  }, app);
+  httpsServer.keepAliveTimeout = 60 * 1000 + 1000;
+  httpsServer.headersTimeout = 60 * 1000 + 2000;
 
-// Create HTTPS server
-const httpsServer = https.createServer(credentials, app);
+  httpsServer.listen(443, () => {
+    console.log('HTTPS server running on port 443');
+  })
+}
 
-httpsServer.listen(443, () => {
-  console.log('HTTPS server running on port 443');
-});
+
