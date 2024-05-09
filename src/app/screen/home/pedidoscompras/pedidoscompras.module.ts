@@ -16,6 +16,7 @@ import {InputTextareaModule} from 'primeng/inputtextarea';
 import { ListaFilesModule } from 'src/app/components/listaFiles/listaFiles.module';
 import { CaixaDeStatusModule } from 'src/app/components/caixaDeStatus/caixaDeStatus.module';
 import { KnobModule } from 'primeng/knob';
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 
@@ -38,7 +39,8 @@ import { KnobModule } from 'primeng/knob';
     InputTextareaModule,
     ListaFilesModule,
     CaixaDeStatusModule,
-    KnobModule
+    KnobModule,
+    ReactiveFormsModule
   ]
 })
 export class PedidosComprasModule { }

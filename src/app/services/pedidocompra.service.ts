@@ -93,9 +93,9 @@ export class PedidoCompraService {
     );
   }
 
-  deletePedidoCompra(pedidoCompra: IPedidoCompra): Observable<any> {
+  deletePedidoCompra(id: number): Observable<any> {
     return this.http.delete(
-      environment.backendURL + 'pedidocompra/' + pedidoCompra.id,
+      environment.backendURL + 'pedidocompra/' + id,
       { responseType: 'json' }
     );
   }
