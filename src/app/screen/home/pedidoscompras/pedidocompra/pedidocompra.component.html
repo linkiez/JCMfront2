@@ -74,9 +74,7 @@
         <span class="noview">{{ fornecedor.value.pessoa?.nome }}</span>
       </div>
       <div formGroupName="fornecedor">
-        <div class="col-12 col-sm-4">
-
-        </div>
+        <div class="col-12 col-sm-4"></div>
       </div>
       <div class="row">
         <div class="col-12 col-sm-8">
@@ -137,18 +135,18 @@
         <th>Ipi</th>
         <th>Total</th>
         <th>Data Entrega</th>
-        <th *ngIf="status.value !== 'Orçamento'" class="noprint">
-          Status
-        </th>
+        <th *ngIf="status.value !== 'Orçamento'" class="noprint">Status</th>
         <th *ngIf="status.value !== 'Orçamento'" class="noprint">
           Total Entregue
         </th>
         <th class="noprint">Ação</th>
       </ng-template>
-      <ng-template pTemplate="body"
-       let-item
-       let-index="rowIndex"
-       let-itemGroup="rowGroup">
+      <ng-template
+        pTemplate="body"
+        let-itemValue="rowData"
+        let-index="rowIndex"
+        let-itemGroup="rowGroup"
+      >
         <tr [formGroup]="itemGroup">
           <td>{{ index + 1 }}.</td>
           <td pEditableColumn>
@@ -157,9 +155,9 @@
                 <p-autoComplete
                   pInputText
                   class="p-autocomplete w-100"
-                  name="inpProdutos"
+                  name="produto"
                   type="text"
-                  [formControl]="item.get('produto')"
+                  [formControl]="itemGroup.get('produto')"
                   field="nome"
                   [suggestions]="produtos"
                   (completeMethod)="searchProduto($event)"
@@ -170,7 +168,7 @@
                 ></p-autoComplete>
               </ng-template>
               <ng-template pTemplate="output">
-                {{ item.get('produto').value?.nome }}
+                {{ itemGroup.get("produto").value?.nome }}
               </ng-template>
             </p-cellEditor>
           </td>
@@ -178,18 +176,18 @@
             <p-cellEditor>
               <ng-template pTemplate="input">
                 <p-dropdown
-                  name="inpDimensao"
+                  name="dimensao"
                   [options]="dimensoes$ | async"
-                  [formControl]="item.get('dimensao')"
+                  [formControl]="itemGroup.get('dimensao')"
                   optionLabel="valor"
                   optionValue="valor"
                   [editable]="true"
-                  (ngModelChange)="calculaPeso(item)"
+                  (ngModelChange)="calculaPeso(itemGroup)"
                   appendTo="body"
                 ></p-dropdown>
               </ng-template>
               <ng-template pTemplate="output">
-                {{ item.get('dimensao').value }}
+                {{ itemGroup.get("dimensao").value }}
               </ng-template>
             </p-cellEditor>
           </td>
@@ -199,17 +197,14 @@
                 <input
                   pInputText
                   class="p-inputtext"
-                  name="inpItemQuantidade"
+                  name="quantidade"
                   type="text"
-                  [formControl]="item.get('quantidade')"
-                  [value]="
-                    dynamicFormService.getFormattedValue(item.get('quantidade'))
-                  "
-                  (input)="calculaPeso(item)"
+                  [formControl]="itemGroup.get('quantidade')"
+                  (input)="calculaPeso(itemGroup)"
                 />
               </ng-template>
               <ng-template pTemplate="output">
-                {{ item.get("quantidade").value | number : "1.0-2" : "pt-BR" }}
+                {{ getFormattedValue(itemGroup.get("quantidade")) }}
               </ng-template>
             </p-cellEditor>
           </td>
@@ -219,15 +214,15 @@
                 <input
                   pInputText
                   class="p-inputtext"
-                  name="inpItemPeso"
+                  name="peso"
                   type="text"
-                  [ngModel]="item.peso | number : '1.0-2' : 'pt-BR'"
-                  (ngModelChange)="itemPeso($event, item)"
-                  (input)="calculaTotal()"
+                  [formControl]="itemGroup.get('peso')"
+                  [value]="getFormattedValue(itemGroup.get('peso'))"
+                  (input)="itemPeso($event, itemGroup.get('peso'))"
                 />
               </ng-template>
               <ng-template pTemplate="output">
-                {{ item.peso | number : "1.0-2" : "pt-BR" }}
+                {{ getFormattedValue(itemGroup.get('peso')) }}
               </ng-template>
             </p-cellEditor>
           </td>
@@ -237,8 +232,12 @@
                 <input
                   pInputText
                   class="p-inputtext"
-                  name="inpItemPreco"
+                  name="preco"
                   type="text"
+
+                  [formControl]="itemGroup.get('preco')"
+                  (input)="itemPreco($event, itemGroup.get('preco'))"
+
                   [ngModel]="item.preco | currency : 'BRL'"
                   (ngModelChange)="itemPreco($event, item)"
                   (input)="calculaTotal()"

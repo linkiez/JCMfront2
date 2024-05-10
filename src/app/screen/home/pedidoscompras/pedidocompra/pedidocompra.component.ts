@@ -21,6 +21,7 @@ import { DynamicFormService } from 'src/app/services/dynamic-form.service';
 import { Form, FormArray, FormControl, FormGroup } from '@angular/forms';
 import { IArquivo } from 'src/app/models/arquivo';
 import { IFornecedor } from 'src/app/models/fornecedor';
+import { CurrencyPipe, DecimalPipe } from '@angular/common';
 
 @Component({
   selector: 'app-pedidocompra',
@@ -41,49 +42,71 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
     public dynamicFormService: DynamicFormService
   ) {}
 
+  decimalPipe = new DecimalPipe('pt-BR');
+  currencyPipe = new CurrencyPipe('pt-BR', 'BRL');;
+
   pedidoCompra = this.dynamicFormService.createFormFromObject<IPedidoCompra>({
     fornecedor: {},
-    pedido_compra_items: [{
-      produto: {
-        id: undefined,
-        nome: { value: '' },
-        categoria: '',
-        espessura: 0,
-        peso: 0,
-        updatedAt: undefined,
-        createdAt: undefined,
-        deletedAt: undefined,
-        files: [{
+    pedido_compra_items: [
+      {
+        produto: {
           id: undefined,
-          url: '',
-          originalFilename: '',
-          newFilename: '',
-          mimeType: '',
-          bucket: '',
-          region: '',
-          deletedAt: undefined,
+          nome: '',
+          categoria: '',
+          espessura: 0,
+          peso: 0,
           updatedAt: undefined,
           createdAt: undefined,
-        }],
-        preco: 0,
+          deletedAt: undefined,
+          files: [
+            {
+              id: undefined,
+              url: '',
+              originalFilename: '',
+              newFilename: '',
+              mimeType: '',
+              bucket: '',
+              region: '',
+              deletedAt: undefined,
+              updatedAt: undefined,
+              createdAt: undefined,
+            },
+          ],
+          preco: 0,
+        },
+        prazo: new Date(),
+        quantidade: {
+          value: 0,
+          pipe: {
+            pipe: this.decimalPipe,
+            args: ['1.0-2'],
+          },
+        },
+        peso: {
+          value: 0,
+          pipe: {
+            pipe: this.decimalPipe,
+            args: ['1.0-2'],
+          },
+        },
+        ipi: 0,
+        preco: {
+          value: 0,
+          pipe: {
+            pipe: this.currencyPipe,
+          },
+        },
+        total: 0,
+        peso_entregue: 0,
+        status: 'Aguardando',
+        dimensao: '',
+        deletedAt: undefined,
+        updatedAt: undefined,
+        createdAt: undefined,
+        id_pedido: 0,
+        id_produto: 0,
       },
-      prazo: new Date(),
-      quantidade: {
-        value: 0,
-      },
-      peso: 0,
-      ipi: 0,
-      preco: 0,
-      total: 0,
-      peso_entregue: 0,
-      status: 'Aguardando',
-      dimensao: '',
-      deletedAt: undefined,
-      updatedAt: undefined,
-      createdAt: undefined,
-      id_pedido: 0,
-      id_produto: 0
-    }],
+    ],
     cond_pagamento: 'AVISTA',
     frete: 0,
     status: 'Orçamento',
@@ -94,23 +117,24 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
     updatedAt: undefined,
     createdAt: undefined,
     id_fornecedor: undefined,
-    files: [{
-      id: undefined,
-      url: '',
-      originalFilename: '',
-      newFilename: '',
-      mimeType: '',
-      bucket: '',
-      region: '',
-      deletedAt: undefined,
-      updatedAt: undefined,
-      createdAt: undefined,
-    }],
+    files: [
+      {
+        id: undefined,
+        url: '',
+        originalFilename: '',
+        newFilename: '',
+        mimeType: '',
+        bucket: '',
+        region: '',
+        deletedAt: undefined,
+        updatedAt: undefined,
+        createdAt: undefined,
+      },
+    ],
     total: 0,
     observacao: '',
-    transporte: ''
-  })
-
+    transporte: '',
+  });
 
   fornecedores: IPessoa[] = [];
 
@@ -155,8 +179,6 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
   private subscription: Subscription = new Subscription();
 
   ngOnInit(): void {
-
-
     this.getPedidoCompra();
     this.getStatus();
   }
@@ -268,12 +290,17 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   itemPreco(event: any, item: FormControl) {
-    const value = parseFloat(event.replace(',', '.').replace(/[^\d]/g, '')) / 100;
+    const value =
+      parseFloat(event.replace(',', '.').replace(/[^\d]/g, '')) / 100;
     item.setValue(value);
+    this.calculaTotal();
   }
 
-  itemPeso(event: any, item: IPedidoCompraItem) {
-    item.peso = event.replace(',', '.');
+  itemPeso(event: any, item: FormControl) {
+    const value =
+      parseFloat(event.replace(',', '.'));
+    item.setValue(value);
+    this.calculaTotal();
   }
 
   itemIpi(event: any, item: IPedidoCompraItem) {
@@ -282,13 +309,14 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
 
   calculaTotal() {
     let total = 0;
-    this.pedido_compra_items =
-      this.pedido_compra_items.value.map((item: IPedidoCompraItem) => {
+    this.pedido_compra_items = this.pedido_compra_items.value.map(
+      (item: IPedidoCompraItem) => {
         item.total =
           (item.peso || 0) * (item.preco || 0) * ((Number(item.ipi) || 0) + 1);
         total = total + item.total;
         return item;
-      });
+      }
+    );
 
     total = total + (this.frete.value || 0);
     this.total = total;
@@ -320,7 +348,9 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
     }
     if (pedidoCompraItem.produto?.categoria == 'Peça') {
       pedidoCompraItem.peso =
-        (dimensao[0] || 1) * (pedidoCompraItem.produto?.peso || 0) * (pedidoCompraItem.quantidade || 0);
+        (dimensao[0] || 1) *
+        (pedidoCompraItem.produto?.peso || 0) *
+        (pedidoCompraItem.quantidade || 0);
     }
 
     item.patchValue(pedidoCompraItem);
@@ -369,54 +399,58 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
     }
   }
   createPedido() {
-    this.pedidoCompraService.addPedidoCompra(this.pedidoCompra.value).subscribe({
-      next: (response) => {
-        this.pedidoCompra = response;
-      },
-      error: (error) => {
-        console.error(error);
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Erro',
-          detail: 'Erro ao criar o pedido de compra. - ' + error.error,
-        });
-      },
-      complete: () => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Sucesso',
-          detail: 'O pedido foi criado.',
-        });
-        this.router.navigate([`/home/pedidoscompras/${this.id.value}`]);
-      },
-    });
+    this.pedidoCompraService
+      .addPedidoCompra(this.pedidoCompra.value)
+      .subscribe({
+        next: (response) => {
+          this.pedidoCompra = response;
+        },
+        error: (error) => {
+          console.error(error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: 'Erro ao criar o pedido de compra. - ' + error.error,
+          });
+        },
+        complete: () => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Sucesso',
+            detail: 'O pedido foi criado.',
+          });
+          this.router.navigate([`/home/pedidoscompras/${this.id.value}`]);
+        },
+      });
   }
   updatePedido() {
-    this.pedidoCompraService.updatePedidoCompra(this.pedidoCompra.value).subscribe({
-      next: (response) => {
-        this.pedidoCompra = response;
-      },
-      error: (error) => {
-        console.error(error);
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Erro',
-          detail: 'Erro ao atualizar o pedido de compra. - ' + error.error,
-        });
-      },
-      complete: () => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Sucesso',
-          detail: 'O pedido foi atualizado.',
-        });
-      },
-    });
+    this.pedidoCompraService
+      .updatePedidoCompra(this.pedidoCompra.value)
+      .subscribe({
+        next: (response) => {
+          this.pedidoCompra = response;
+        },
+        error: (error) => {
+          console.error(error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: 'Erro ao atualizar o pedido de compra. - ' + error.error,
+          });
+        },
+        complete: () => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Sucesso',
+            detail: 'O pedido foi atualizado.',
+          });
+        },
+      });
   }
 
   newPedidoCompraItem() {
-    this.pedido_compra_items.push(this.dynamicFormService.createFormFromObject<IPedidoCompraItem>(
-      {
+    this.pedido_compra_items.push(
+      this.dynamicFormService.createFormFromObject<IPedidoCompraItem>({
         produto: {
           id: undefined,
           nome: '',
@@ -426,18 +460,20 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
           updatedAt: undefined,
           createdAt: undefined,
           deletedAt: undefined,
-          files: [{
-            id: undefined,
-            url: '',
-            originalFilename: '',
-            newFilename: '',
-            mimeType: '',
-            bucket: '',
-            region: '',
-            deletedAt: undefined,
-            updatedAt: undefined,
-            createdAt: undefined,
-          }],
+          files: [
+            {
+              id: undefined,
+              url: '',
+              originalFilename: '',
+              newFilename: '',
+              mimeType: '',
+              bucket: '',
+              region: '',
+              deletedAt: undefined,
+              updatedAt: undefined,
+              createdAt: undefined,
+            },
+          ],
           preco: 0,
         },
         prazo: new Date(),
@@ -450,9 +486,9 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
         status: 'Aguardando',
         dimensao: '',
         id_pedido: 0,
-        id_produto: 0
-      }
-    ));
+        id_produto: 0,
+      })
+    );
   }
 
   removeItem(index: number) {
@@ -535,4 +571,10 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
   set fornecedor(value: IFornecedor) {
     this.fornecedor.patchValue(value);
   }
+
+  getFormattedValue(formControl: FormControl): string {
+    return this.dynamicFormService.getFormattedValue(formControl);
+  }
 }
+
+
