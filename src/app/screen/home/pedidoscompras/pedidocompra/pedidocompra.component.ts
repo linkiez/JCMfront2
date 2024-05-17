@@ -1,5 +1,11 @@
 import { IListaGenericaItem } from './../../../../models/lista-generica';
-import { Component, OnChanges, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import {
@@ -21,13 +27,20 @@ import { DynamicFormService } from 'src/app/services/dynamic-form.service';
 import { Form, FormArray, FormControl, FormGroup } from '@angular/forms';
 import { IArquivo } from 'src/app/models/arquivo';
 import { IFornecedor } from 'src/app/models/fornecedor';
-import { CurrencyPipe, DecimalPipe } from '@angular/common';
+import {
+  CurrencyPipe,
+  DatePipe,
+  DecimalPipe,
+  PercentPipe,
+} from '@angular/common';
+import { consoleLogDev } from 'src/app/utils/consoleLogDev';
 
 @Component({
   selector: 'app-pedidocompra',
   templateUrl: './pedidocompra.component.html',
   styleUrls: ['./pedidocompra.component.css'],
   providers: [ConfirmationService],
+  // changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
   constructor(
@@ -43,10 +56,40 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
   ) {}
 
   decimalPipe = new DecimalPipe('pt-BR');
-  currencyPipe = new CurrencyPipe('pt-BR', 'BRL');;
+  currencyPipe = new CurrencyPipe('pt-BR', 'BRL');
+  percentPipe = new PercentPipe('pt-BR');
+  datePipe = new DatePipe('pt-BR');
 
   pedidoCompra = this.dynamicFormService.createFormFromObject<IPedidoCompra>({
-    fornecedor: {},
+    fornecedor: {
+      id: undefined,
+      id_pessoa: undefined,
+      pessoa: {
+        id: undefined,
+        nome: '',
+        razao_social: '',
+        pessoa_juridica: false,
+        telefone: 0,
+        email: '',
+        email_nfe: '',
+        endereco: '',
+        numero: 0,
+        complemento: '',
+        bairro: '',
+        municipio: '',
+        uf: '',
+        cep: 0,
+        ie_rg: '',
+        cnpj_cpf: '',
+        data_nasc: undefined,
+        descricao: '',
+        deletedAt: undefined,
+        updatedAt: undefined,
+        createdAt: undefined,
+        contatos: [],
+        files: [],
+      },
+    },
     pedido_compra_items: [
       {
         produto: {
@@ -74,7 +117,13 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
           ],
           preco: 0,
         },
-        prazo: new Date(),
+        prazo: {
+          value: new Date(),
+          pipe: {
+            pipe: this.datePipe,
+            args: ['dd/MM/yyyy'],
+          },
+        },
         quantidade: {
           value: 0,
           pipe: {
@@ -89,14 +138,25 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
             args: ['1.0-2'],
           },
         },
-        ipi: 0,
+        ipi: {
+          value: 0,
+          pipe: {
+            pipe: this.percentPipe,
+            args: ['1.2-2'],
+          },
+        },
         preco: {
           value: 0,
           pipe: {
             pipe: this.currencyPipe,
           },
         },
-        total: 0,
+        total: {
+          value: 0,
+          pipe: {
+            pipe: this.currencyPipe,
+          },
+        },
         peso_entregue: 0,
         status: 'Aguardando',
         dimensao: '',
@@ -108,11 +168,22 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
       },
     ],
     cond_pagamento: 'AVISTA',
-    frete: 0,
+    frete: {
+      value: 0,
+      pipe: {
+        pipe: this.currencyPipe,
+      },
+    },
     status: 'Orçamento',
     id: 0,
     pedido: '',
-    data_emissao: new Date(),
+    data_emissao: {
+      value: new Date(),
+      pipe: {
+        pipe: this.datePipe,
+        args: ['dd/MM/yyyy'],
+      },
+    },
     deletedAt: undefined,
     updatedAt: undefined,
     createdAt: undefined,
@@ -131,7 +202,12 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
         createdAt: undefined,
       },
     ],
-    total: 0,
+    total: {
+      value: 0,
+      pipe: {
+        pipe: this.currencyPipe,
+      },
+    },
     observacao: '',
     transporte: '',
   });
@@ -197,13 +273,17 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
         // .pipe(debounceTime(1000))
         .subscribe({
           next: (pedido) => {
+            pedido = pedido as IPedidoCompra;
             pedido.pedido_compra_items = pedido.pedido_compra_items.map(
               (item) => {
                 item.prazo = new Date(item.prazo);
                 return item;
               }
             );
+
             this.pedidoCompra?.patchValue(pedido);
+            consoleLogDev(pedido)
+            consoleLogDev(this.pedidoCompra);
           },
           error: (error) => {
             console.error(error);
@@ -297,18 +377,21 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   itemPeso(event: any, item: FormControl) {
-    const value =
-      parseFloat(event.replace(',', '.'));
+    const value = parseFloat(event.replace(',', '.'));
     item.setValue(value);
     this.calculaTotal();
   }
 
-  itemIpi(event: any, item: IPedidoCompraItem) {
-    item.ipi = event.replace(/[^\d]/g, '') / 10000;
+  itemIpi(event: any, item: FormControl) {
+    const value =
+      parseFloat(event.replace(',', '.').replace(/[^\d]/g, '')) / 10000;
+    item.setValue(value);
+    this.calculaTotal();
   }
 
   calculaTotal() {
     let total = 0;
+
     this.pedido_compra_items = this.pedido_compra_items.value.map(
       (item: IPedidoCompraItem) => {
         item.total =
@@ -318,7 +401,7 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
       }
     );
 
-    total = total + (this.frete.value || 0);
+    total = total + Number(this.frete.value || 0);
     this.total = total;
   }
 
@@ -495,7 +578,8 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
     this.pedido_compra_items.removeAt(index);
   }
 
-  calculatePesoEntreguePercentage(item: IPedidoCompraItem) {
+  calculatePesoEntreguePercentage(itemGroup: FormGroup) {
+    const item = itemGroup.value as IPedidoCompraItem;
     let percentage =
       (((item.peso_entregue || 0) / (item.peso || 1)) as number) * 100;
     if (percentage > 100) {
@@ -509,7 +593,7 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   set pedido_compra_items(value: IPedidoCompraItem[]) {
-    this.pedido_compra_items.patchValue(value);
+    this.pedido_compra_items.setValue(value);
   }
 
   get files(): FormArray {
@@ -542,6 +626,7 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
 
   set frete(value: any) {
     this.frete.setValue(+value.replace(/[^\d]/g, '') / 100);
+    this.calculaTotal();
   }
 
   get status(): FormControl {
@@ -564,17 +649,21 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
     return this.pedidoCompra.get('data_emissao') as FormControl;
   }
 
-  get fornecedor(): FormControl {
-    return this.pedidoCompra.get('fornecedor') as FormControl;
+  get fornecedor(): FormGroup {
+    return this.pedidoCompra.get('fornecedor') as FormGroup;
   }
 
   set fornecedor(value: IFornecedor) {
     this.fornecedor.patchValue(value);
   }
 
+  get cond_pagamento(): FormControl {
+    return this.pedidoCompra.get('cond_pagamento') as FormControl;
+  }
+
   getFormattedValue(formControl: FormControl): string {
     return this.dynamicFormService.getFormattedValue(formControl);
   }
+
+
 }
-
-

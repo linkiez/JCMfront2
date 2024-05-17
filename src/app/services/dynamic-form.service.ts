@@ -26,13 +26,15 @@ export class DynamicFormService {
 
       if (Array.isArray(value)) {
         group.addControl(key, this.createArray(value));
-      } else if (
+      }
+      else if (
         typeof value === 'object' &&
         value !== null &&
         !this.isControlDescriptor(value)
       ) {
         group.addControl(key, this.createGroup(value));
-      } else if (this.isControlDescriptor(value)) {
+      }
+      else if (this.isControlDescriptor(value)) {
         const control = this.formBuilder.control(value.value);
 
         if (value.hasOwnProperty('validators')) {
@@ -132,7 +134,7 @@ export class DynamicFormService {
     if ('transform' in pipeDescriptor.pipe) {
       // Checks if it's an Angular pipe
       return pipeDescriptor.pipe.transform(
-        value,
+        value instanceof Date ? value.toISOString() : value,
         ...(pipeDescriptor.args || [])
       );
     } else {
@@ -158,7 +160,9 @@ type PrimitiveOrControlDescriptor<T> = {
   [P in keyof T]: (
     T[P] extends Array<infer U> ? Array<PrimitiveOrControlDescriptor<U>> : // Recursively apply for array items
     T[P] extends Function ? T[P] : // Skip functions
-    T[P] extends object ? PrimitiveOrControlDescriptor<T[P]> : // Recursively apply for nested objects
+
+    T[P] extends object ? T[P] extends Date ? T[P] | ControlDescriptor<T[P]> : PrimitiveOrControlDescriptor<T[P]> : // Recursively apply for nested objects
+
     T[P] | ControlDescriptor<T[P]> // Apply for primitives
   )
 };
