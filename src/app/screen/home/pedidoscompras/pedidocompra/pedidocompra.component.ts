@@ -284,6 +284,7 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
             this.pedidoCompra?.patchValue(pedido);
             consoleLogDev(pedido)
             consoleLogDev(this.pedidoCompra);
+            consoleLogDev(this.pedido_compra_items.controls);
           },
           error: (error) => {
             console.error(error);
@@ -585,6 +586,7 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
     if (percentage > 100) {
       percentage = 100;
     }
+    consoleLogDev(+percentage.toFixed(0))
     return +percentage.toFixed(0);
   }
 
@@ -665,5 +667,7 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
     return this.dynamicFormService.getFormattedValue(formControl);
   }
 
-
+  consoleLog(value: any) {
+    console.log(value);
+  }
 }
