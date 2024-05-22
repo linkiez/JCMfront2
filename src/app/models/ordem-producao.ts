@@ -29,6 +29,7 @@ export interface IOrdemProducao {
   ordem_producao_items?: IOrdemProducaoItem[];
   ordem_producao_historicos?: IOrdemProducaoHistorico[];
   newItem?: string;
+  files?: IArquivo[];
 }
 
 export interface IOrdemProducaoItem {

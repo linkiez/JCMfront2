@@ -230,6 +230,11 @@
       </div>
     </div>
   </div>
+  <listaFiles
+      class="noprint"
+    [files]="ordemProducao.files ?? []"
+      (onChangeFiles)="ordemProducao.files = $event"
+    ></listaFiles>
 </ng-template>
 <ng-template #etiquetaView>
   <!-- Cabecalho -->
