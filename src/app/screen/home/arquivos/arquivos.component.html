@@ -12,15 +12,15 @@
   responsiveLayout="scroll"
 >
   <ng-template pTemplate="caption">
-    <div class="d-flex justify-content-between">
-      <span class="p-input-icon-left ml-auto">
+      <div class="flex flex-row gap-4">
+      <span class="p-input-icon-left">
         <i class="pi pi-search"></i>
         <input
           pInputText
           class="p-inputtext"
           type="text"
           (input)="applyFilterGlobal($event, 'contains')"
-          placeholder="Search keyword"
+          placeholder="Pesquisar"
         />
       </span>
     </div>

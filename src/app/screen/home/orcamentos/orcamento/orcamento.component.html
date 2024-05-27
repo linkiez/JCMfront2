@@ -858,7 +858,12 @@
               ></p-progressSpinner>
             </button>
           </div>
-          <button pButton icon="pi pi-download" type="button" (click)="downloadAllFiles()"></button>
+          <button
+            pButton
+            icon="pi pi-download"
+            type="button"
+            (click)="downloadAllFiles()"
+          ></button>
         </div>
 
         <tr>
@@ -967,18 +972,21 @@
       </div>
     </div>
   </div>
-  <div class="noprint">
-    <hr />
-    <button
-      pButton
-      class="p-button p-button-danger"
-      (click)="confirm()"
-      type="button"
-      name="btnExcluir"
-      id="btnExcluir"
-    >
-      Excluir
-    </button>
+  <hr />
+  <div class="noprint flex flex-col md:flex-row">
+    <div class="flex-grow">
+      <button
+        pButton
+        class="p-button p-button-danger"
+        (click)="confirm()"
+        type="button"
+        name="btnExcluir"
+        id="btnExcluir"
+      >
+        Excluir
+      </button>
+    </div>
+
     <button
       pButton
       class="p-button p-button-success"
