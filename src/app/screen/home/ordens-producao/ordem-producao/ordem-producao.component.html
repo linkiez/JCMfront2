@@ -230,11 +230,16 @@
       </div>
     </div>
   </div>
+  <div class="mt-2">
+    <button pButton icon="pi pi-download" type="button" (click)="downloadAllFiles()"></button> Baixar todos os anexos
+  </div>
+
   <listaFiles
       class="noprint"
     [files]="ordemProducao.files ?? []"
       (onChangeFiles)="ordemProducao.files = $event"
     ></listaFiles>
+
 </ng-template>
 <ng-template #etiquetaView>
   <!-- Cabecalho -->
