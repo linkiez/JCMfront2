@@ -36,7 +36,6 @@
           /><button pButton (click)="createListaGenerica()" class="button">
             <i class="pi pi-plus"></i>
           </button>
-
         </div>
       </ng-template>
 
@@ -64,7 +63,6 @@
       [globalFilterFields]="['valor']"
     >
       <ng-template pTemplate="caption">
-
         <div class="flex flex-col md:flex-row gap-4">
           <span class="p-input-icon-left">
             <i class="pi pi-search"></i>
@@ -93,9 +91,8 @@
             placeholder="Novo Valor"
           />
           <button pButton (click)="addItem()" class="button">
-            <i class="pi pi-plus"></i></button
-          >
-
+            <i class="pi pi-plus"></i>
+          </button>
         </div>
       </ng-template>
 
@@ -107,11 +104,29 @@
           <th class="col-1"></th>
         </tr>
       </ng-template>
-      <ng-template pTemplate="body" let-listaItem>
+      <ng-template pTemplate="body" let-listaItem let-editing="editing">
         <tr>
           <td>{{ listaItem.id }}</td>
-          <td>{{ listaItem.valor }}</td>
-          <td>{{ listaItem.valor2 }}</td>
+          <td [pEditableColumn]="listaItem.valor" pEditableColumnField="valor">
+            <p-cellEditor>
+              <ng-template pTemplate="input">
+                <input pInputText type="text" [(ngModel)]="listaItem.valor" />
+              </ng-template>
+              <ng-template pTemplate="output">
+                {{ listaItem.valor }}
+              </ng-template>
+            </p-cellEditor>
+          </td>
+          <td [pEditableColumn]="listaItem.valor2" pEditableColumnField="valor2">
+            <p-cellEditor>
+              <ng-template pTemplate="input">
+                <input pInputText type="text" [(ngModel)]="listaItem.valor2" />
+              </ng-template>
+              <ng-template pTemplate="output">
+                {{ listaItem.valor2 }}
+              </ng-template>
+            </p-cellEditor>
+          </td>
           <td>
             <i class="pi pi-trash trash" (click)="removeItem(listaItem)"></i>
           </td>
