@@ -20,6 +20,14 @@
             (ngModelChange)="search()"
           />
         </span>
+          <p-checkbox
+          [(ngModel)]="query.deleted"
+          [binary]="true"
+          name="chkDeleted"
+          (ngModelChange)="getUsuarios()"
+          label="Deletados"
+        />
+
         <div class="flex-grow flex flex-row justify-end">
           <button pButton class="button" (click)="new()">
             <i class="pi pi-plus"></i>
