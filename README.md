@@ -1,27 +1,38 @@
 # JCMfront2
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.1.2.
+JCMfront2 is an Angular application built for JCM Metais, a metal trading company. This application serves as the frontend for managing various aspects of the business, including products, services, job applications, contacts, quotes, purchase orders, and more.
 
-## Development server
+## Features
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+- **Product Management**: Create, update, and manage product information, including descriptions, prices, and categories.
+- **Service Management**: Maintain a list of services offered by the company, along with their details and pricing.
+- **Contact Management**: Store and manage contact information for customers, suppliers, and other stakeholders.
+- **Quote Management**: Generate and track quotes for customers, including product/service details and pricing.
+- **Purchase Order Management**: Create and manage purchase orders for acquiring raw materials or other supplies.
+- **User Management**: Manage user accounts and access levels for employees and administrators.
+- **Reporting and Analytics**: Generate reports and visualize data related to sales, inventory, and other business metrics.
 
-## Code scaffolding
+## Technologies Used
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+- Angular
+- TypeScript
+- Bootstrap
+- Chart.js
+- Quill (Rich Text Editor)
+- Express.js (for server-side rendering)
 
-## Build
+## Getting Started
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+To run the JCMfront2 application locally, follow these steps:
 
-## Running unit tests
+1. Clone the repository: `git clone https://github.com/linkiez/jcmfront2.git`
+2. Install dependencies: `npm install`
+3. Start the development server: `ng serve`
+4. Open your browser and navigate to `http://localhost:4200`
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## Building for Production
 
-## Running end-to-end tests
+To build the application for production, run the following command:
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+```bash
+ng build --configuration production
