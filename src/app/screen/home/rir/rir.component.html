@@ -189,7 +189,7 @@
             id="pedido_compra"
             type="text"
             [(ngModel)]="rir.pedido_compra_item"
-            field="pedido_compra.pedido"
+            [optionLabel]="optionLabel"
             [suggestions]="pedidos_compra_item"
             (completeMethod)="searchPedidoCompraItem()"
             [dropdown]="true"
