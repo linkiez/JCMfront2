@@ -58,7 +58,7 @@ export class ArquivoService {
     array: IOrdemProducaoItem[] | IOrcamentoItem[]
   ) {
     const files = array.map((item) => item.files ?? []).flat();
-    let filesUrl = files.map((file) =>
+    const filesUrl = files.map((file) =>
       firstValueFrom(this.getUrlArquivo(file?.id!))
     );
 
