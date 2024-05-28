@@ -56,7 +56,7 @@ export interface IOrcamentoItem {
   deletedAt?: Date;
   updatedAt?: Date;
   createdAt?: Date;
-  files?: File[];
+  files?: IArquivo[];
   peso?: number;
   total?: number;
   total_peso?: number;

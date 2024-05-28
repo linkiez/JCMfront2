@@ -34,7 +34,7 @@ app.listen(80, function () {
   console.log(`Server listening on port 80`);
 });
 
-const httpsServer = null;
+let httpsServer = null;
 
 if (
   fs.existsSync("./ssl/jcmmetais.ddns.net-PrivateKey.key") &&

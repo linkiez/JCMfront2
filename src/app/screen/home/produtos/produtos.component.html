@@ -8,14 +8,14 @@
   responsiveLayout="scroll"
 >
   <ng-template pTemplate="caption">
-    <div class="d-flex justify-content-between">
-      <span class="p-input-icon-left ml-auto">
+      <div class="flex flex-col md:flex-row gap-4">
+      <span class="p-input-icon-left">
         <i class="pi pi-search"></i>
         <input
           pInputText
           class="p-inputtext"
           type="text"
-          placeholder="Search keyword"
+          placeholder="Pesquisar"
           [(ngModel)]="queryService.produtos.searchValue"
           (ngModelChange)="search()"
         />
@@ -27,9 +27,12 @@
         [binary]="true"
         (ngModelChange)="getProdutos()"
       ></p-checkbox>
-      <button pButton class="button" (click)="new()">
-        <i class="pi pi-plus"></i>
-      </button>
+        <div class="flex-grow flex flex-row justify-end">
+        <button pButton class="button" (click)="new()">
+          <i class="pi pi-plus"></i>
+        </button>
+      </div>
+
     </div>
   </ng-template>
 

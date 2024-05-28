@@ -5,6 +5,7 @@
     header="Registro de Inspeção e Recebimento"
     [(visible)]="dialogVisible"
     [style]="{ width: '90vw' }"
+    [modal]="true"
   >
     <form action="">
       <div class="row">
@@ -189,7 +190,7 @@
             id="pedido_compra"
             type="text"
             [(ngModel)]="rir.pedido_compra_item"
-            field="pedido_compra.pedido"
+            [optionLabel]="optionLabel"
             [suggestions]="pedidos_compra_item"
             (completeMethod)="searchPedidoCompraItem()"
             [dropdown]="true"
@@ -204,27 +205,31 @@
       </div>
       <div class="row">
         <hr />
-        <div class="col d-flex flex-row">
-
-          <div class="flex-grow-1 d-flex justify-content-start">
-            <button pButton class="p-button p-button-danger" (click)="delete(rir); dialogVisible = false" [disabled]="!rir.id">
+        <div class="flex flex-col md:flex-row gap-2">
+          <div class="flex-grow">
+            <button
+              pButton
+              class="p-button p-button-danger"
+              (click)="delete(rir); dialogVisible = false"
+              [disabled]="!rir.id"
+            >
               Excluir
             </button>
           </div>
           <button
-          pButton
-          type="button"
-          label="Salvar"
-          class="p-button-success"
-          (click)="createOrUpdate()"
-        ></button>
-        <button
-          pButton
-          type="button"
-          label="Fechar"
-          class=""
-          (click)="dialogVisible = false"
-        ></button>
+            pButton
+            type="button"
+            label="Salvar"
+            class="p-button-success"
+            (click)="createOrUpdate()"
+          ></button>
+          <button
+            pButton
+            type="button"
+            label="Fechar"
+            class=""
+            (click)="dialogVisible = false"
+          ></button>
         </div>
       </div>
     </form>
@@ -240,24 +245,27 @@
     styleClass="p-datatable-striped"
   >
     <ng-template pTemplate="caption">
-      <div class="d-flex justify-content-between">
-        <span class="p-input-icon-left ml-auto">
+      <div class="flex flex-col md:flex-row gap-4">
+        <span class="p-input-icon-left">
           <i class="pi pi-search"></i>
           <input
             pInputText
             class="p-inputtext"
             type="text"
-            placeholder="Search keyword"
+            placeholder="Pesquisar"
             [(ngModel)]="queryService.rir.searchValue"
             (ngModelChange)="getRIRs()"
           />
         </span>
-        <button
-          pButton
-          type="button"
-          icon="pi pi-plus"
-          (click)="limpar(); dialogVisible = true"
-        ></button>
+        <div class="flex-grow flex flex-row justify-end">
+          <button
+            pButton
+            type="button"
+            (click)="limpar(); dialogVisible = true"
+          >
+            <i class="pi pi-plus"></i>
+          </button>
+        </div>
       </div>
     </ng-template>
 
@@ -298,19 +306,21 @@
             *ngIf="RirLista.pedido_compra_item?.pedido_compra?.pedido"
             >{{ RirLista.pedido_compra_item?.pedido_compra?.pedido }}</span
           >
-          <span *ngFor="let op_item of setOfOrdemProducaoItem(RirLista.ordem_producao_items)">
-            <p
-            class="link"
-            [routerLink]="[
-              '/home/ordensproducao/' +
-                op_item
-            ]"
-            *ngIf="op_item"
+          <span
+            *ngFor="
+              let op_item of setOfOrdemProducaoItem(
+                RirLista.ordem_producao_items
+              )
+            "
           >
-            {{ op_item }}
-          </p>
+            <p
+              class="link"
+              [routerLink]="['/home/ordensproducao/' + op_item]"
+              *ngIf="op_item"
+            >
+              {{ op_item }}
+            </p>
           </span>
-
         </td>
       </tr>
     </ng-template>

@@ -38,4 +38,5 @@ export interface IPedidoCompraItem {
   produto: IProduto;
   peso_entregue: number;
   status: string;
+  pedido_compra?: IPedidoCompra;
 }

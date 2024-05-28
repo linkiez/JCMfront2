@@ -34,6 +34,7 @@ import { ArquivoService } from 'src/app/services/arquivo.service';
 import * as XLSX from 'xlsx';
 import { IRIR } from 'src/app/models/rir';
 import { IEmpresa } from 'src/app/models/empresa';
+import { consoleLogDev } from 'src/app/utils/consoleLogDev';
 
 @Component({
   selector: 'app-orcamento',
@@ -572,7 +573,7 @@ export class OrcamentoComponent implements OnInit {
             item.uuid = uuidv4();
           });
           this.orcamento = response;
-          console.log(this.orcamento);
+          consoleLogDev(this.orcamento);
         },
         error: (error) => {
           console.error(error);
@@ -608,7 +609,6 @@ export class OrcamentoComponent implements OnInit {
     ).subscribe({
       next: (response: IEmpresa[]) => {
         this.empresas = response;
-        console.log(this.empresas)
       },
       error: (error) => {
         console.error(error);
@@ -1267,9 +1267,12 @@ export class OrcamentoComponent implements OnInit {
   }
 
   setPrecoPecaProduto(item: IOrcamentoItem) {
-    console.log(item);
     if (item.produto?.categoria === 'Peça') {
       item.preco_quilo = item.produto?.preco;
     }
+  }
+
+  downloadAllFiles() {
+    this.arquivoService.downloadAllFilesFromArray(this.orcamento.orcamento_items);
   }
 }
