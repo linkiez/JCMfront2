@@ -25,9 +25,9 @@ export class IqfComponent implements OnInit {
   ) {}
 
   iqfData = {
-    data: [],
+    data: [] as { total: number }[],
     getPercentage: function () {
-      return this.data.map((item: any) => {
+      return this.data.map((item) => {
         const total = item.total * 100;
         return total > 100 ? 100 : total;
       });

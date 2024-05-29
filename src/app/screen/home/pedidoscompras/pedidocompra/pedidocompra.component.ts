@@ -24,7 +24,13 @@ import { PedidoCompraService } from 'src/app/services/pedidocompra.service';
 import { ProdutoService } from 'src/app/services/produto.service';
 import { FornecedorService } from 'src/app/services/fornecedor.service';
 import { DynamicFormService } from 'src/app/services/dynamic-form.service';
-import { Form, FormArray, FormControl, FormGroup } from '@angular/forms';
+import {
+  Form,
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+} from '@angular/forms';
 import { IArquivo } from 'src/app/models/arquivo';
 import { IFornecedor } from 'src/app/models/fornecedor';
 import {
@@ -52,7 +58,8 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
     private route: ActivatedRoute,
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
-    public dynamicFormService: DynamicFormService
+    public dynamicFormService: DynamicFormService,
+    private formBuilder: FormBuilder
   ) {}
 
   decimalPipe = new DecimalPipe('pt-BR');
@@ -62,10 +69,17 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
 
   pedidoCompra = this.dynamicFormService.createFormFromObject<IPedidoCompra>({
     fornecedor: {
-      id: undefined,
-      id_pessoa: undefined,
+      id: {
+        value: 0,
+        validators: [
+          {
+            name: 'nullValidator',
+          },
+        ],
+      },
+      id_pessoa: 0,
       pessoa: {
-        id: undefined,
+        id: 0,
         nome: '',
         razao_social: '',
         pessoa_juridica: false,
@@ -81,11 +95,11 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
         cep: 0,
         ie_rg: '',
         cnpj_cpf: '',
-        data_nasc: undefined,
+        data_nasc: null,
         descricao: '',
-        deletedAt: undefined,
-        updatedAt: undefined,
-        createdAt: undefined,
+        deletedAt: null,
+        updatedAt: null,
+        createdAt: null,
         contatos: [],
         files: [],
       },
@@ -93,26 +107,26 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
     pedido_compra_items: [
       {
         produto: {
-          id: undefined,
+          id: null,
           nome: '',
           categoria: '',
           espessura: 0,
           peso: 0,
-          updatedAt: undefined,
-          createdAt: undefined,
-          deletedAt: undefined,
+          updatedAt: null,
+          createdAt: null,
+          deletedAt: null,
           files: [
             {
-              id: undefined,
+              id: null,
               url: '',
               originalFilename: '',
               newFilename: '',
               mimeType: '',
               bucket: '',
               region: '',
-              deletedAt: undefined,
-              updatedAt: undefined,
-              createdAt: undefined,
+              deletedAt: null,
+              updatedAt: null,
+              createdAt: null,
             },
           ],
           preco: 0,
@@ -160,9 +174,9 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
         peso_entregue: 0,
         status: 'Aguardando',
         dimensao: '',
-        deletedAt: undefined,
-        updatedAt: undefined,
-        createdAt: undefined,
+        deletedAt: null,
+        updatedAt: null,
+        createdAt: null,
         id_pedido: 0,
         id_produto: 0,
       },
@@ -184,22 +198,22 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
         args: ['dd/MM/yyyy'],
       },
     },
-    deletedAt: undefined,
-    updatedAt: undefined,
-    createdAt: undefined,
-    id_fornecedor: undefined,
+    deletedAt: null,
+    updatedAt: null,
+    createdAt: null,
+    id_fornecedor: null,
     files: [
       {
-        id: undefined,
+        id: null,
         url: '',
         originalFilename: '',
         newFilename: '',
         mimeType: '',
         bucket: '',
         region: '',
-        deletedAt: undefined,
-        updatedAt: undefined,
-        createdAt: undefined,
+        deletedAt: null,
+        updatedAt: null,
+        createdAt: null,
       },
     ],
     total: {
@@ -280,11 +294,8 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
                 return item;
               }
             );
-
-            this.pedidoCompra?.patchValue(pedido);
-            consoleLogDev(pedido)
+            this.pedidoCompra.patchValue(pedido);
             consoleLogDev(this.pedidoCompra);
-            consoleLogDev(this.pedido_compra_items.controls);
           },
           error: (error) => {
             console.error(error);
@@ -378,8 +389,10 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   itemPeso(event: any, item: FormControl) {
-    const value = parseFloat(event.replace(',', '.'));
-    item.setValue(value);
+    consoleLogDev(event);
+    const value = Number(event.replace('.', '').replace(',', '.'));
+    consoleLogDev(value);
+    item.patchValue(value);
     this.calculaTotal();
   }
 
@@ -586,7 +599,6 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
     if (percentage > 100) {
       percentage = 100;
     }
-    consoleLogDev(+percentage.toFixed(0))
     return +percentage.toFixed(0);
   }
 
@@ -667,7 +679,11 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
     return this.dynamicFormService.getFormattedValue(formControl);
   }
 
-  consoleLog(value: any) {
-    console.log(value);
+  optionLabelFornecedor(event: any) {
+    return event.pessoa.nome;
+  }
+
+  optionLabelProduto(event: any){
+    return event.nome;
   }
 }

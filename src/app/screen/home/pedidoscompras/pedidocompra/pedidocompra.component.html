@@ -50,17 +50,19 @@
         <span class="noview">{{ getFormattedValue(data_emissao) }}</span>
       </div>
     </div>
-    <div class="row">
-      <div class="col-12 col-sm-8">
+    <div class="row" formGroupName="fornecedor">
+      <div class="col-12 col-sm-8" formGroupName="pessoa">
         <label name="lblFornecedor" for="fornecedor">Fornecedor: </label
         ><p-autoComplete
           pInputText
-          formGroupName="fornecedor"
+          dataKey="id"
           class="noprint"
           id="fornecedor"
           name="fornecedor"
           type="text"
-          field="pessoa.nome"
+          formControlName="nome"
+          [optionLabel]="optionLabelFornecedor"
+          dataKey="id"
           [suggestions]="fornecedores"
           (completeMethod)="searchFornecedor($event)"
           (onSelect)="fornecedor.patchValue($event.value)"
@@ -121,7 +123,7 @@
         </div>
       </div>
     </div>
-    <p-table [value]="pedidoCompra.value.pedido_compra_items">
+    <p-table [value]="pedido_compra_items.controls">
       <ng-template pTemplate="caption"></ng-template>
       <ng-template pTemplate="header">
         <th>Item</th>
@@ -140,81 +142,83 @@
         <th class="noprint">Ação</th>
       </ng-template>
       <ng-template pTemplate="body" let-index="rowIndex" let-rowData>
-        <tr>
+        <tr [formGroup]="rowData">
           <td>{{ index + 1 }}.</td>
-          <td pEditableColumn>
+          <td pEditableColumn formGroupName="produto">
             <p-cellEditor>
               <ng-template pTemplate="input">
-                <!-- <p-autoComplete
+                <p-autoComplete
                   pInputText
                   class="p-autocomplete w-100"
-                  name="produto"
+                  [name]="'produto'+index"
+                  [id]="'produto'+index"
+                  formControlName="nome"
                   type="text"
-                  field="nome"
                   [suggestions]="produtos"
+                  [optionLabel]="optionLabelProduto"
                   (completeMethod)="searchProduto($event)"
+                  (onSelect)="rowData.controls.produto.patchValue($event.value)"
                   [dropdown]="true"
                   [style]="{ width: '100%' }"
                   [inputStyle]="{ width: '100%' }"
                   appendTo="body"
-                ></p-autoComplete> -->
+                ></p-autoComplete>
               </ng-template>
               <ng-template pTemplate="output">
-                <!-- {{ rowData.controls.produto.value?.nome }} -->
+                {{ rowData.controls.produto.value?.nome }}
               </ng-template>
             </p-cellEditor>
           </td>
           <td pEditableColumn>
             <p-cellEditor>
               <ng-template pTemplate="input">
-                <!-- <p-dropdown
+                <p-dropdown
                   name="dimensao"
                   [options]="dimensoes$ | async"
                   formControlName="dimensao"
                   optionLabel="valor"
                   optionValue="valor"
                   [editable]="true"
-                  (ngModelChange)="calculaPeso(rowData)"
+                  (onSelect)="calculaPeso(rowData)"
                   appendTo="body"
-                ></p-dropdown> -->
+                ></p-dropdown>
               </ng-template>
               <ng-template pTemplate="output">
-                <!-- {{ rowData.get("dimensao").value }} -->
+                {{ rowData.get("dimensao").value }}
               </ng-template>
             </p-cellEditor>
           </td>
           <td pEditableColumn>
             <p-cellEditor>
               <ng-template pTemplate="input">
-                <!-- <input
+                <input
                   pInputText
                   class="p-inputtext"
                   name="quantidade"
                   type="text"
-                  [formControlName]="rowData.get('quantidade')"
-                  (input)="calculaPeso(rowData)"
-                /> -->
+                  formControlName="quantidade"
+                  (change)="calculaPeso(rowData)"
+                />
               </ng-template>
               <ng-template pTemplate="output">
-                <!-- {{ getFormattedValue(rowData.get("quantidade")) }} -->
+                {{ getFormattedValue(rowData.get("quantidade")) }}
               </ng-template>
             </p-cellEditor>
           </td>
           <td pEditableColumn>
             <p-cellEditor>
               <ng-template pTemplate="input">
-                <!-- <input
+                <input
                   pInputText
                   class="p-inputtext"
                   name="peso"
                   type="text"
-                  [formControlName]="rowData.get('peso')"
                   [value]="getFormattedValue(rowData.get('peso'))"
-                  (input)="itemPeso($event, rowData.get('peso'))"
-                /> -->
+                  (change)="itemPeso($event, rowData.get('peso'))"
+                />
               </ng-template>
               <ng-template pTemplate="output">
-                <!-- {{ getFormattedValue(rowData.get('peso')) }} -->
+                {{ getFormattedValue(rowData.get('peso')) }}
               </ng-template>
             </p-cellEditor>
           </td>
@@ -325,7 +329,7 @@
                 ></p-dropdown>
               </ng-template>
               <ng-template pTemplate="output">
-                {{ pedidoCompra.get("cond_pagamento")?.value }}
+                {{ pedidoCompra.get("cond_pagamento").value }}
               </ng-template>
             </p-cellEditor>
           </td>
@@ -362,7 +366,7 @@
         class="noprint"
         formControlName="observacao"
       ></textarea>
-      <span class="noview">{{ pedidoCompra.get("observacao")?.value }}</span>
+      <span class="noview">{{ pedidoCompra.get("observacao").value }}</span>
       <h4>Normas de fornecimento do pedido</h4>
       <p>
         1. Horário de Recebimento: de Segunda à Quinta das 7:00h às 11:00h e das

@@ -2,7 +2,7 @@ import { Injectable, PipeTransform } from '@angular/core';
 import {
   AbstractControl,
   FormArray,
-  FormBuilder,
+  FormControl,
   FormGroup,
   Validators,
 } from '@angular/forms';
@@ -13,14 +13,14 @@ import {
 export class DynamicFormService {
   private controlPipes: Map<AbstractControl, PipeDescriptor> = new Map();
 
-  constructor(private formBuilder: FormBuilder) {}
+  constructor() {}
 
   createFormFromObject<T>(data: PrimitiveOrControlDescriptor<T>): FormGroup {
     return this.createGroup(data);
   }
 
   private createGroup<P>(data: any): FormGroup {
-    const group = this.formBuilder.group({});
+    const group = new FormGroup({});
     Object.keys(data).forEach((key) => {
       let value = data[key];
 
@@ -35,7 +35,7 @@ export class DynamicFormService {
         group.addControl(key, this.createGroup(value));
       }
       else if (this.isControlDescriptor(value)) {
-        const control = this.formBuilder.control(value.value);
+        const control = new FormControl(value.value);
 
         if (value.hasOwnProperty('validators')) {
           control.setValidators(this.mapValidators(value.validators || []));
@@ -53,7 +53,7 @@ export class DynamicFormService {
 
         group.addControl(key, control);
       } else {
-        group.addControl(key, this.formBuilder.control(value));
+        group.addControl(key, new FormControl(value));
       }
     });
     return group;
@@ -66,10 +66,10 @@ export class DynamicFormService {
       } else if (typeof item === 'object' && item !== null) {
         return this.createGroup(item);
       } else {
-        return this.formBuilder.control(item);
+        return new FormControl(item);
       }
     });
-    return this.formBuilder.array(arrayControls);
+    return new FormArray(arrayControls);
   }
 
   private isControlDescriptor(obj: any): obj is ControlDescriptor<any> {
