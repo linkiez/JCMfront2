@@ -1,10 +1,13 @@
 import { IListaGenericaItem } from './../../../../models/lista-generica';
 import {
   Component,
-  OnChanges,
   OnDestroy,
   OnInit,
   ChangeDetectionStrategy,
+  ViewChildren,
+  ElementRef,
+  QueryList,
+  AfterViewInit,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -24,13 +27,7 @@ import { PedidoCompraService } from 'src/app/services/pedidocompra.service';
 import { ProdutoService } from 'src/app/services/produto.service';
 import { FornecedorService } from 'src/app/services/fornecedor.service';
 import { DynamicFormService } from 'src/app/services/dynamic-form.service';
-import {
-  Form,
-  FormArray,
-  FormBuilder,
-  FormControl,
-  FormGroup,
-} from '@angular/forms';
+import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { IArquivo } from 'src/app/models/arquivo';
 import { IFornecedor } from 'src/app/models/fornecedor';
 import {
@@ -40,15 +37,17 @@ import {
   PercentPipe,
 } from '@angular/common';
 import { consoleLogDev } from 'src/app/utils/consoleLogDev';
+import { Chart, ChartData } from 'chart.js';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 @Component({
   selector: 'app-pedidocompra',
   templateUrl: './pedidocompra.component.html',
   styleUrls: ['./pedidocompra.component.css'],
   providers: [ConfirmationService],
-  // changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
+export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(
     private pedidoCompraService: PedidoCompraService,
     private fornecedorService: FornecedorService,
@@ -58,9 +57,14 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
     private route: ActivatedRoute,
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
-    public dynamicFormService: DynamicFormService,
-    private formBuilder: FormBuilder
+    public dynamicFormService: DynamicFormService
   ) {}
+
+  @ViewChildren('pesoEntregueChart')
+  pesoEntregueCBox$: QueryList<ElementRef<HTMLCanvasElement>> = null;
+  pesoEntregueCBoxs: HTMLCanvasElement[] = [];
+  pesoEntregueChartData: any[] = [];
+  charts: Chart[] = [];
 
   decimalPipe = new DecimalPipe('pt-BR');
   currencyPipe = new CurrencyPipe('pt-BR', 'BRL');
@@ -277,13 +281,20 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
     this.subscription.unsubscribe();
   }
 
-  ngOnChanges() {}
+  ngAfterViewInit() {
+    this.pesoEntregueCBox$.changes.subscribe(() => {
+      this.pesoEntregueCBoxs = this.pesoEntregueCBox$
+        .toArray()
+        .map((element: ElementRef<HTMLCanvasElement>) => element.nativeElement);
+      this.renderChart();
+    });
+  }
 
   getPedidoCompra() {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
-    if (id != 0) {
+    this.id = Number(this.route.snapshot.paramMap.get('id'));
+    if (this.id.value != 0) {
       this.subscription = this.pedidoCompraService
-        .getPedidoCompra(id)
+        .getPedidoCompra(this.id.value)
         // .pipe(debounceTime(1000))
         .subscribe({
           next: (pedido) => {
@@ -294,6 +305,11 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
                 return item;
               }
             );
+            this.pedidoCompra = this.dynamicFormService.resizeForm(
+              this.pedidoCompra,
+              pedido
+            );
+
             this.pedidoCompra.patchValue(pedido);
             consoleLogDev(this.pedidoCompra);
           },
@@ -383,23 +399,23 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
 
   itemPreco(event: any, item: FormControl) {
     const value =
-      parseFloat(event.replace(',', '.').replace(/[^\d]/g, '')) / 100;
+      Number(event.target.value.replace(',', '.').replace(/[^\d]/g, '')) / 100;
     item.setValue(value);
     this.calculaTotal();
   }
 
   itemPeso(event: any, item: FormControl) {
-    consoleLogDev(event);
-    const value = Number(event.replace('.', '').replace(',', '.'));
-    consoleLogDev(value);
+    const value = Number(event.target.value.replace('.', '').replace(',', '.'));
     item.patchValue(value);
     this.calculaTotal();
   }
 
   itemIpi(event: any, item: FormControl) {
     const value =
-      parseFloat(event.replace(',', '.').replace(/[^\d]/g, '')) / 10000;
+      parseFloat(event.target.value.replace(',', '.').replace(/[^\d]/g, '')) /
+      10000;
     item.setValue(value);
+    consoleLogDev(value);
     this.calculaTotal();
   }
 
@@ -489,6 +505,14 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   createOrUpdate() {
+    if (this.pedidoCompra.invalid) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erro',
+        detail: 'Preencha todos os campos obrigatórios.',
+      });
+      return;
+    }
     if (Number(this.id) == 0) {
       this.createPedido();
     } else {
@@ -599,7 +623,87 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
     if (percentage > 100) {
       percentage = 100;
     }
-    return +percentage.toFixed(0);
+    return +percentage.toFixed(2);
+  }
+
+  renderChart() {
+    if (this.pedidoCompra.value.status == 'Orçamento') return;
+    for (let chart of this.charts) {
+      if (chart) {
+        chart.destroy();
+      }
+    }
+    for (let cBox, i = 0; (cBox = this.pesoEntregueCBoxs[i]); i++) {
+      const pedidoCompraItem = this.pedido_compra_items.controls[i];
+
+      const percent = this.calculatePesoEntreguePercentage(
+        pedidoCompraItem as FormGroup
+      );
+      this.charts = [];
+      this.charts.push(
+        new Chart(cBox, {
+          type: 'doughnut',
+          data: <ChartData>{
+            datasets: [
+              {
+                data: [percent, 100 - percent],
+                backgroundColor: [
+                  'rgba(54, 162, 235, 0.2)',
+                  'rgba(255, 99, 132, 0.2)',
+                ],
+                borderColor: ['rgba(54, 162, 235, 1)', 'rgba(255, 99, 132, 1)'],
+                datalabels: {
+                  anchor: 'center',
+                  formatter: (value: number) => {
+                    if (value) return value.toFixed(2) + '%';
+                    else return '';
+                  },
+                  color: 'white',
+                },
+              },
+            ],
+          },
+          plugins: [ChartDataLabels],
+        })
+      );
+    }
+    // const ctx = document.getElementById('IQFChart') as HTMLCanvasElement;
+    // if (this.chart) {
+    //   this.chart.destroy();
+    // }
+    // this.chart = new Chart(ctx, {
+    //   type: 'bar',
+
+    //   data: {
+    //     labels: this.meses,
+    //     datasets: [
+    //       {
+    //         label: 'IQF',
+    //         backgroundColor: 'rgb(255, 99, 132)',
+    //         borderColor: 'rgb(255, 99, 132)',
+    //         data: this.iqfData.getPercentage(),
+    //         datalabels: {
+    //           anchor: 'center',
+    //           formatter: (value: number) => {
+    //             return value.toFixed(2) + '%';
+    //           },
+    //           color: 'white',
+    //         },
+    //       },
+    //       {
+    //         label: 'Meta',
+    //         type: 'line',
+    //         data: [80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80],
+    //         borderDash: [5, 5],
+    //         borderColor: 'lightblue',
+    //         datalabels: {
+    //           display: false,
+    //         },
+    //       },
+    //     ],
+    //   },
+    //   plugins: [ChartDataLabels],
+    // });
   }
 
   get pedido_compra_items(): FormArray {
@@ -683,7 +787,7 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, OnChanges {
     return event.pessoa.nome;
   }
 
-  optionLabelProduto(event: any){
+  optionLabelProduto(event: any) {
     return event.nome;
   }
 }

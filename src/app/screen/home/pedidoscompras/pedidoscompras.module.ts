@@ -17,6 +17,8 @@ import { ListaFilesModule } from 'src/app/components/listaFiles/listaFiles.modul
 import { CaixaDeStatusModule } from 'src/app/components/caixaDeStatus/caixaDeStatus.module';
 import { KnobModule } from 'primeng/knob';
 import { ReactiveFormsModule } from '@angular/forms';
+import { DynamicFormService } from 'src/app/services/dynamic-form.service';
+import { ChartModule } from 'primeng/chart';
 
 
 
@@ -40,7 +42,11 @@ import { ReactiveFormsModule } from '@angular/forms';
     ListaFilesModule,
     CaixaDeStatusModule,
     KnobModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ChartModule
+  ],
+  providers:[
+    DynamicFormService
   ]
 })
 export class PedidosComprasModule { }

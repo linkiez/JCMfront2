@@ -150,7 +150,7 @@ export class PessoaComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'Não foi possível criar a pessoa. - ' + error.error,
+          detail: 'Não foi possível criar a pessoa. - ' + error.error.message,
         });
       },
       complete: () => {

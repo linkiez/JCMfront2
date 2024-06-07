@@ -7,9 +7,6 @@ import {
   Validators,
 } from '@angular/forms';
 
-@Injectable({
-  providedIn: 'root',
-})
 export class DynamicFormService {
   private controlPipes: Map<AbstractControl, PipeDescriptor> = new Map();
 
@@ -26,15 +23,13 @@ export class DynamicFormService {
 
       if (Array.isArray(value)) {
         group.addControl(key, this.createArray(value));
-      }
-      else if (
+      } else if (
         typeof value === 'object' &&
         value !== null &&
         !this.isControlDescriptor(value)
       ) {
         group.addControl(key, this.createGroup(value));
-      }
-      else if (this.isControlDescriptor(value)) {
+      } else if (this.isControlDescriptor(value)) {
         const control = new FormControl(value.value);
 
         if (value.hasOwnProperty('validators')) {
@@ -116,7 +111,7 @@ export class DynamicFormService {
       .filter((v) => v !== null);
   }
 
-  saveControlPipe(control: AbstractControl, pipeDescriptor: PipeDescriptor) {
+  private saveControlPipe(control: AbstractControl, pipeDescriptor: PipeDescriptor) {
     this.controlPipes.set(control, pipeDescriptor);
   }
 
@@ -142,6 +137,85 @@ export class DynamicFormService {
       return pipeDescriptor.pipe(value, ...(pipeDescriptor.args || []));
     }
   }
+
+  resizeForm(form: FormGroup, data: any): FormGroup {
+    Object.keys(data)
+      .sort()
+      .forEach((dataKey) => {
+        let control = form.get(dataKey);
+        if (!control) {
+          return;
+        } else if (control instanceof FormArray) {
+          const array = this.resizeArray(control, data[dataKey]);
+          form.setControl(dataKey, array);
+        } else if (control instanceof FormGroup) {
+          const group = this.resizeForm(control, data[dataKey]);
+          form.setControl(dataKey, group);
+        } else {
+          form.setControl(dataKey, control);
+        }
+      });
+    return form;
+  }
+
+  private resizeArray(formArray: FormArray, dataArray: any[]): FormArray {
+    if (formArray.controls.length === 0) {
+      return formArray;
+    }
+
+    const controlModel = (): FormGroup => {
+      const originalControl = formArray.at(0) as FormGroup;
+      return this.cloneFormGroup(originalControl);
+    };
+
+    while (formArray.controls.length > dataArray.length) {
+      formArray.removeAt(formArray.controls.length - 1);
+    }
+
+    for (let i = formArray.controls.length; i < dataArray.length; i++) {
+      formArray.push(controlModel());
+    }
+
+    dataArray.forEach((item, index) => {
+      if (Array.isArray(item)) {
+        const formArrayControl = formArray.controls[index] as FormArray;
+        formArray.controls[index] = this.resizeArray(formArrayControl, item);
+      } else if (typeof item === 'object' && item !== null) {
+        const control = formArray.controls[index] as FormGroup;
+        formArray.controls[index] = this.resizeForm(control, item);
+      }
+    });
+    return formArray;
+  }
+
+  // Function to clone a FormControl
+  private cloneFormControl(control: FormControl): FormControl {
+    const newControl = new FormControl(
+      control.value,
+      control.validator,
+      control.asyncValidator
+    );
+
+    const pipe = this.controlPipes.get(control);
+    this.controlPipes.set(newControl, pipe);
+
+    return newControl;
+  }
+
+  private cloneFormGroup(original: FormGroup): FormGroup {
+    const cloned = new FormGroup({});
+
+    Object.keys(original.controls).forEach((key) => {
+      const originalControl = original.controls[key];
+      if (originalControl instanceof FormGroup) {
+        cloned.registerControl(key, this.cloneFormGroup(originalControl));
+      } else if (originalControl instanceof FormControl) {
+        cloned.registerControl(key, this.cloneFormControl(originalControl));
+      }
+    });
+
+    return cloned;
+  }
 }
 
 interface ControlDescriptor<T> {
@@ -157,12 +231,13 @@ interface PipeDescriptor {
 }
 
 type PrimitiveOrControlDescriptor<T> = {
-  [P in keyof T]: (
-    T[P] extends Array<infer U> ? Array<PrimitiveOrControlDescriptor<U>> : // Recursively apply for array items
-    T[P] extends Function ? T[P] : // Skip functions
-
-    T[P] extends object ? T[P] extends Date ? T[P] | ControlDescriptor<T[P]> : PrimitiveOrControlDescriptor<T[P]> : // Recursively apply for nested objects
-
-    T[P] | ControlDescriptor<T[P]> // Apply for primitives
-  )
+  [P in keyof T]: T[P] extends Array<infer U>
+    ? Array<PrimitiveOrControlDescriptor<U>> // Recursively apply for array items
+    : T[P] extends Function
+    ? T[P] // Skip functions
+    : T[P] extends object
+    ? T[P] extends Date
+      ? T[P] | ControlDescriptor<T[P]>
+      : PrimitiveOrControlDescriptor<T[P]> // Recursively apply for nested objects
+    : T[P] | ControlDescriptor<T[P]>; // Apply for primitives
 };

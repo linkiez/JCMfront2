@@ -7,8 +7,11 @@
     [editable]="false"
     (statusChange)="status = $event"
   ></caixaDeStatus>
-  <form [formGroup]="pedidoCompra" (ngSubmit)="createOrUpdate()">
-    >
+  <form
+    #pedidoCompraForm
+    [formGroup]="pedidoCompra"
+    (ngSubmit)="createOrUpdate()"
+  >
     <div class="row">
       <div class="col-6 col-sm-2">
         <label name="lblId" id="lblId" for="id">Id: </label
@@ -73,7 +76,7 @@
         ></p-autoComplete>
         <span class="noview">{{ fornecedor.value.pessoa?.nome }}</span>
       </div>
-      <div formGroupName="fornecedor">
+      <div>
         <div class="col-12 col-sm-4"></div>
       </div>
       <div class="row">
@@ -150,8 +153,8 @@
                 <p-autoComplete
                   pInputText
                   class="p-autocomplete w-100"
-                  [name]="'produto'+index"
-                  [id]="'produto'+index"
+                  [name]="'produto' + index"
+                  [id]="'produto' + index"
                   formControlName="nome"
                   type="text"
                   [suggestions]="produtos"
@@ -214,89 +217,89 @@
                   name="peso"
                   type="text"
                   [value]="getFormattedValue(rowData.get('peso'))"
-                  (change)="itemPeso($event, rowData.get('peso'))"
+                  (input)="itemPeso($event, rowData.get('peso'))"
                 />
               </ng-template>
               <ng-template pTemplate="output">
-                {{ getFormattedValue(rowData.get('peso')) }}
+                {{ getFormattedValue(rowData.get("peso")) }}
               </ng-template>
             </p-cellEditor>
           </td>
           <td pEditableColumn>
             <p-cellEditor>
               <ng-template pTemplate="input">
-                <!-- <input
+                <input
                   pInputText
                   class="p-inputtext"
                   name="preco"
                   type="text"
-
-                  [formControlName]="rowData.get('preco')"
+                  [value]="getFormattedValue(rowData.get('preco'))"
                   (input)="itemPreco($event, rowData.get('preco'))"
-                /> -->
+                />
               </ng-template>
               <ng-template pTemplate="output">
-                <!-- {{ getFormattedValue(rowData.get('preco')) }} -->
+                {{ getFormattedValue(rowData.get("preco")) }}
               </ng-template>
             </p-cellEditor>
           </td>
           <td pEditableColumn>
             <p-cellEditor>
               <ng-template pTemplate="input">
-                <!-- <input
+                <input
                   pInputText
                   class="p-inputtext"
                   name="inpItemIpi"
                   type="text"
-                  [formControlName]="rowData.get('ipi')"
+                  [value]="getFormattedValue(rowData.get('ipi'))"
                   (input)="itemIpi($event, rowData.get('ipi'))"
-                /> -->
+                />
               </ng-template>
               <ng-template pTemplate="output">
-                <!-- {{ getFormattedValue(rowData.get("ipi")) }} -->
+                {{ getFormattedValue(rowData.get("ipi")) }}
               </ng-template>
             </p-cellEditor>
           </td>
           <td>
-            <!-- {{ getFormattedValue(rowData.get("total")) }} -->
+            {{ getFormattedValue(rowData.get("total")) }}
           </td>
           <td pEditableColumn>
             <p-cellEditor>
               <ng-template pTemplate="input">
-                <!-- <p-calendar
+                <p-calendar
                   name="InpItemPrazo"
-                  [formControlName]="rowData.get('prazo')"
+                  formControlName="prazo"
                   dateFormat="dd/mm/yy"
                   styleClass="w-100"
                   appendTo="body"
-                ></p-calendar> -->
+                ></p-calendar>
               </ng-template>
               <ng-template pTemplate="output">
-                <!-- {{ getFormattedValue(rowData.get('prazo')) }} -->
+                {{ getFormattedValue(rowData.get("prazo")) }}
               </ng-template>
             </p-cellEditor>
           </td>
-          <!-- <td *ngIf="pedidoCompra.get('status')?.value !== 'Orçamento'" class="noprint">
+          <td
+            *ngIf="pedidoCompra.get('status')?.value !== 'Orçamento'"
+            class="noprint"
+          >
             <caixaDeStatus
               [status]="rowData.get('status').value"
               [editable]="false"
             ></caixaDeStatus>
-          </td> -->
-          <!-- <td
+          </td>
+          <td
             class="text-center"
             *ngIf="pedidoCompra.get('status')?.value !== 'Orçamento'"
             class="noprint"
           >
-            <p-knob
-              [size]="75"
-              [name]="'peso_entregue' + index"
-              [disabled]="true"
-              [max]="100"
-              [min]="0"
-              [valueTemplate]="'{value}%'"
-            ></p-knob>
-            <small>{{ pedido_compra_items.value[index].peso_entregue}}Kg</small>
-          </td> -->
+            <div style="width: 100px;" class="position-relative">
+              <canvas #pesoEntregueChart [id]="'pesoEntregue' + index"></canvas>
+              <small class="position-absolute top-1/2 left-1/2 anchor text-xs"
+              >{{ pedido_compra_items.value[index].peso_entregue }}Kg</small
+            >
+            </div>
+
+          </td>
           <td class="noprint">
             <i class="pi pi-trash trash" (click)="removeItem(index)"></i>
           </td>
@@ -412,36 +415,44 @@
       [files]="files.value"
       (onChangeFiles)="files = $event"
     ></listaFiles>
-  </form>
-  <div class="noprint">
-    <div class="d-flex flex-row">
-      <div class="flex-grow-1 justify-content-start">
-        <button pButton class="p-button p-button-danger" (click)="confirm()">
-          Excluir
+    <div class="noprint">
+      <div class="d-flex flex-row">
+        <div class="flex-grow-1 justify-content-start">
+          <button pButton class="p-button p-button-danger" (click)="confirm()">
+            Excluir
+          </button>
+        </div>
+        <button
+          #btnSalvar
+          name="btnSalvar"
+          id="btnSalvar"
+          pButton
+          class="p-button p-button-success"
+          type="submit"
+        >
+          Salvar
+        </button>
+        <button
+          pButton
+          type="submit"
+          class="p-button p-button-success"
+          (click)="status = 'Aprovado'; btnSalvar.click()"
+          [disabled]="status.value !== 'Orçamento'"
+        >
+          Aprovar
+        </button>
+        <button pButton class="p-button" (click)="getBackPedidos()">
+          Voltar
         </button>
       </div>
-      <button pButton class="p-button p-button-success" type="submit">
-        Salvar
-      </button>
-      <button
-        pButton
-        type="submit"
-        class="p-button p-button-success"
-        (click)="status = 'Aprovado'"
-        [disabled]="status.value !== 'Orçamento'"
-      >
-        Aprovar
-      </button>
-      <button pButton class="p-button" (click)="getBackPedidos()">
-        Voltar
-      </button>
-    </div>
 
-    <p-confirmDialog
-      header="Confirmação"
-      acceptLabel="Sim"
-      rejectLabel="Não"
-      icon="pi pi-exclamation-triangle"
-    ></p-confirmDialog>
-  </div>
+      <p-confirmDialog
+        header="Confirmação"
+        acceptLabel="Sim"
+        rejectLabel="Não"
+        icon="pi pi-exclamation-triangle"
+      ></p-confirmDialog>
+    </div>
+  </form>
+
 </div>

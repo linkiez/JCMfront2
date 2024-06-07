@@ -10,9 +10,17 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
 
-
 @NgModule({
   declarations: [IqfComponent],
-  imports: [CommonModule, IqfRoutingModule, ChartModule, AutoCompleteModule, FormsModule, ButtonModule, InputTextModule, TableModule],
+  imports: [
+    CommonModule,
+    IqfRoutingModule,
+    ChartModule,
+    AutoCompleteModule,
+    FormsModule,
+    ButtonModule,
+    InputTextModule,
+    TableModule,
+  ],
 })
 export class IqfModule {}
