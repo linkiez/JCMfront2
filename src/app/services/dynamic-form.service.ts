@@ -4,6 +4,7 @@ import {
   FormArray,
   FormControl,
   FormGroup,
+  ValidationErrors,
   Validators,
 } from '@angular/forms';
 
@@ -111,7 +112,10 @@ export class DynamicFormService {
       .filter((v) => v !== null);
   }
 
-  private saveControlPipe(control: AbstractControl, pipeDescriptor: PipeDescriptor) {
+  private saveControlPipe(
+    control: AbstractControl,
+    pipeDescriptor: PipeDescriptor
+  ) {
     this.controlPipes.set(control, pipeDescriptor);
   }
 
@@ -123,6 +127,104 @@ export class DynamicFormService {
       return control.value;
     }
     return this.applyPipe(control.value, pipeDescriptor);
+  }
+
+  getAllErrors(form: FormGroup) {
+    const errors = {};
+    Object.keys(form.controls).forEach((key) => {
+      const control = form.controls[key];
+      if (control instanceof FormArray) {
+        const arrayErrors = this.getArrayErrors(control);
+        if (arrayErrors) {
+          (errors as any)[key] = arrayErrors;
+        }
+      } else if (control instanceof FormGroup) {
+        const groupErrors = this.getGroupErrors(control);
+        if (groupErrors) {
+          (errors as any)[key] = groupErrors;
+        }
+      } else if (control instanceof FormControl) {
+        const controlErrors = this.getControlErrors(control);
+        if (controlErrors) {
+          (errors as any)[key] = controlErrors;
+        }
+      }
+    });
+    if (Object.keys(errors).length === 0) {
+      return null;
+    } else {
+      return errors;
+    }
+  }
+
+  private getArrayErrors(formArray: FormArray): ValidationErrors[] | null {
+    const errors: ValidationErrors[] = [];
+    Object.keys(formArray.controls).forEach((key) => {
+      const control = formArray.controls[+key];
+      if (control instanceof FormArray) {
+        const arrayErrors = this.getArrayErrors(control);
+        if (arrayErrors) {
+          (errors as any)[key] = arrayErrors;
+        }
+      } else if (control instanceof FormGroup) {
+        const groupErrors = this.getGroupErrors(control);
+        if (groupErrors) {
+          (errors as any)[key] = groupErrors;
+        }
+      } else if (control instanceof FormControl) {
+        const controlErrors = this.getControlErrors(control);
+        if (controlErrors) {
+          (errors as any)[key] = controlErrors;
+        }
+      }
+    });
+    if (errors.length > 0) {
+      return errors;
+    }
+    else {
+      return null;
+    }
+  }
+
+  private getGroupErrors(formGroup: FormGroup): ValidationErrors {
+    const errors: ValidationErrors = {};
+    Object.keys(formGroup.controls).forEach((key) => {
+      const control = formGroup.controls[key];
+      if (control instanceof FormArray) {
+        const arrayErrors = this.getArrayErrors(control);
+        if (arrayErrors) {
+          (errors as any)[key] = arrayErrors;
+        }
+      } else if (control instanceof FormGroup) {
+        const groupErrors = this.getGroupErrors(control);
+        if (groupErrors) {
+          (errors as any)[key] = groupErrors;
+        }
+      } else if (control instanceof FormControl) {
+        const controlErrors = this.getControlErrors(control);
+        if (controlErrors) {
+          (errors as any)[key] = controlErrors;
+        }
+      }
+    });
+    if (Object.keys(errors).length > 0) {
+      return errors;
+    } else {
+      return null;
+    }
+  }
+
+  private getControlErrors(control: AbstractControl): ValidationErrors {
+    const errors: ValidationErrors = {};
+    const controlErrors: ValidationErrors | null = control.errors;
+    if (controlErrors) {
+      Object.keys(controlErrors).forEach((key) => {
+        (errors as any)[key] = controlErrors[key];
+      });
+    } else {
+      return null;
+    }
+    return errors;
   }
 
   private applyPipe(value: any, pipeDescriptor: PipeDescriptor): any {

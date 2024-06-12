@@ -72,6 +72,7 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
   datePipe = new DatePipe('pt-BR');
 
   pedidoCompra = this.dynamicFormService.createFormFromObject<IPedidoCompra>({
+    id: undefined,
     fornecedor: {
       id: {
         value: 0,
@@ -79,6 +80,10 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
           {
             name: 'nullValidator',
           },
+          {
+            name: 'min',
+            min: 1
+          }
         ],
       },
       id_pessoa: 0,
@@ -193,7 +198,6 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
       },
     },
     status: 'Orçamento',
-    id: 0,
     pedido: '',
     data_emissao: {
       value: new Date(),
@@ -244,7 +248,7 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
           severity: 'error',
           summary: 'Erro',
           detail:
-            'Erro ao carregar as dimensões dos produtos. - ' + error.error,
+            'Erro ao carregar as dimensões dos produtos. - ' + error.error.message,
         });
         return [];
       })
@@ -260,7 +264,7 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
           severity: 'error',
           summary: 'Erro',
           detail:
-            'Erro ao carregar as condições de pagamento. - ' + error.error,
+            'Erro ao carregar as condições de pagamento. - ' + error.error.message,
         });
         return [];
       })
@@ -318,7 +322,7 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
             this.messageService.add({
               severity: 'error',
               summary: 'Erro',
-              detail: 'Erro ao carregar o pedido de compra. - ' + error.error,
+              detail: 'Erro ao carregar o pedido de compra. - ' + error.error.message,
             });
           },
           complete: () => {
@@ -341,7 +345,7 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Erro ao carregar os status. - ' + error.error,
+            detail: 'Erro ao carregar os status. - ' + error.error.message,
           });
         },
       });
@@ -490,7 +494,7 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'Erro ao excluir o pedido de compra. - ' + error.error,
+          detail: 'Erro ao excluir o pedido de compra. - ' + error.error.message,
         });
       },
       complete: () => {
@@ -505,15 +509,10 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   createOrUpdate() {
-    if (this.pedidoCompra.invalid) {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Erro',
-        detail: 'Preencha todos os campos obrigatórios.',
-      });
+    if (this.dynamicFormService.getAllErrors(this.pedidoCompra)) {
       return;
     }
-    if (Number(this.id) == 0) {
+    if (Number(this.id.value) == 0) {
       this.createPedido();
     } else {
       this.updatePedido();
@@ -524,14 +523,15 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
       .addPedidoCompra(this.pedidoCompra.value)
       .subscribe({
         next: (response) => {
-          this.pedidoCompra = response;
+          this.dynamicFormService.resizeForm(this.pedidoCompra, response);
+          this.pedidoCompra.setValue(response);
         },
         error: (error) => {
           console.error(error);
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Erro ao criar o pedido de compra. - ' + error.error,
+            detail: 'Erro ao criar o pedido de compra. - ' + error.error.message,
           });
         },
         complete: () => {
@@ -549,14 +549,15 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
       .updatePedidoCompra(this.pedidoCompra.value)
       .subscribe({
         next: (response) => {
-          this.pedidoCompra = response;
+          this.dynamicFormService.resizeForm(this.pedidoCompra, response);
+          this.pedidoCompra.setValue(response);
         },
         error: (error) => {
           console.error(error);
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Erro ao atualizar o pedido de compra. - ' + error.error,
+            detail: 'Erro ao atualizar o pedido de compra. - ' + error.error.message,
           });
         },
         complete: () => {
@@ -573,43 +574,91 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
     this.pedido_compra_items.push(
       this.dynamicFormService.createFormFromObject<IPedidoCompraItem>({
         produto: {
-          id: undefined,
+          id: null,
           nome: '',
           categoria: '',
           espessura: 0,
           peso: 0,
-          updatedAt: undefined,
-          createdAt: undefined,
-          deletedAt: undefined,
+          updatedAt: null,
+          createdAt: null,
+          deletedAt: null,
           files: [
             {
-              id: undefined,
+              id: null,
               url: '',
               originalFilename: '',
               newFilename: '',
               mimeType: '',
               bucket: '',
               region: '',
-              deletedAt: undefined,
-              updatedAt: undefined,
-              createdAt: undefined,
+              deletedAt: null,
+              updatedAt: null,
+              createdAt: null,
             },
           ],
           preco: 0,
         },
-        prazo: new Date(),
-        quantidade: 0,
-        peso: 0,
-        ipi: 0,
-        preco: 0,
-        total: 0,
+        prazo: {
+          value: new Date(),
+          pipe: {
+            pipe: this.datePipe,
+            args: ['dd/MM/yyyy'],
+          },
+        },
+        quantidade: {
+          value: 0,
+          pipe: {
+            pipe: this.decimalPipe,
+            args: ['1.0-2'],
+          },
+        },
+        peso: {
+          value: 0,
+          pipe: {
+            pipe: this.decimalPipe,
+            args: ['1.0-2'],
+          },
+        },
+        ipi: {
+          value: 0,
+          pipe: {
+            pipe: this.percentPipe,
+            args: ['1.2-2'],
+          },
+        },
+        preco: {
+          value: 0,
+          pipe: {
+            pipe: this.currencyPipe,
+          },
+        },
+        total: {
+          value: 0,
+          pipe: {
+            pipe: this.currencyPipe,
+          },
+        },
         peso_entregue: 0,
         status: 'Aguardando',
         dimensao: '',
+        deletedAt: null,
+        updatedAt: null,
+        createdAt: null,
         id_pedido: 0,
         id_produto: 0,
       })
     );
+  }
+
+  setFiles(files: IArquivo[]){
+    if (this.files.length > 0) {
+      this.files.clear();
+    }
+    for (let file of files) {
+      this.files.push(
+        this.dynamicFormService.createFormFromObject<IArquivo>(file)
+      );
+    }
   }
 
   removeItem(index: number) {
@@ -667,43 +716,6 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
         })
       );
     }
-    // const ctx = document.getElementById('IQFChart') as HTMLCanvasElement;
-    // if (this.chart) {
-    //   this.chart.destroy();
-    // }
-    // this.chart = new Chart(ctx, {
-    //   type: 'bar',
-
-    //   data: {
-    //     labels: this.meses,
-    //     datasets: [
-    //       {
-    //         label: 'IQF',
-    //         backgroundColor: 'rgb(255, 99, 132)',
-    //         borderColor: 'rgb(255, 99, 132)',
-    //         data: this.iqfData.getPercentage(),
-    //         datalabels: {
-    //           anchor: 'center',
-    //           formatter: (value: number) => {
-    //             return value.toFixed(2) + '%';
-    //           },
-    //           color: 'white',
-    //         },
-    //       },
-    //       {
-    //         label: 'Meta',
-    //         type: 'line',
-    //         data: [80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80],
-    //         borderDash: [5, 5],
-    //         borderColor: 'lightblue',
-    //         datalabels: {
-    //           display: false,
-    //         },
-    //       },
-    //     ],
-    //   },
-    //   plugins: [ChartDataLabels],
-    // });
   }
 
   get pedido_compra_items(): FormArray {

@@ -74,6 +74,7 @@
           [inputStyle]="{ width: '100%' }"
           appendTo="body"
         ></p-autoComplete>
+        <small *ngIf="!fornecedor.get('id').valid" class="text-red-400 text-xs">Fornecedor deve ser selecionado.</small>
         <span class="noview">{{ fornecedor.value.pessoa?.nome }}</span>
       </div>
       <div>
@@ -292,13 +293,12 @@
             *ngIf="pedidoCompra.get('status')?.value !== 'Orçamento'"
             class="noprint"
           >
-            <div style="width: 100px;" class="position-relative">
+            <div style="width: 100px" class="position-relative">
               <canvas #pesoEntregueChart [id]="'pesoEntregue' + index"></canvas>
               <small class="position-absolute top-1/2 left-1/2 anchor text-xs"
-              >{{ pedido_compra_items.value[index].peso_entregue }}Kg</small
-            >
+                >{{ pedido_compra_items.value[index].peso_entregue }}Kg</small
+              >
             </div>
-
           </td>
           <td class="noprint">
             <i class="pi pi-trash trash" (click)="removeItem(index)"></i>
@@ -313,6 +313,7 @@
               class="button"
               (click)="newPedidoCompraItem()"
               class="noprint"
+              type="button"
             >
               <i class="pi pi-plus"></i>
             </button>
@@ -413,7 +414,7 @@
     <listaFiles
       class="noprint"
       [files]="files.value"
-      (onChangeFiles)="files = $event"
+      (onChangeFiles)="setFiles($event)"
     ></listaFiles>
     <div class="noprint">
       <div class="d-flex flex-row">
@@ -429,19 +430,25 @@
           pButton
           class="p-button p-button-success"
           type="submit"
+          [disabled]="pedidoCompra.pristine"
         >
           Salvar
         </button>
         <button
           pButton
-          type="submit"
+          type="button"
           class="p-button p-button-success"
           (click)="status = 'Aprovado'; btnSalvar.click()"
           [disabled]="status.value !== 'Orçamento'"
         >
           Aprovar
         </button>
-        <button pButton class="p-button" (click)="getBackPedidos()">
+        <button
+          pButton
+          class="p-button"
+          type="button"
+          (click)="getBackPedidos()"
+        >
           Voltar
         </button>
       </div>
@@ -454,5 +461,4 @@
       ></p-confirmDialog>
     </div>
   </form>
-
 </div>
