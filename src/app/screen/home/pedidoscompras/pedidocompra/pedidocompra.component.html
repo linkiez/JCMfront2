@@ -3,7 +3,7 @@
   <span>F-035 - Rev.01 - Emissão: 12/09/2018 Revisão: 26/4/2023</span>
   <caixaDeStatus
     [status]="status.value"
-    [options]="statusList"
+    [options]="status$ | async"
     [editable]="false"
     (statusChange)="status = $event"
   ></caixaDeStatus>

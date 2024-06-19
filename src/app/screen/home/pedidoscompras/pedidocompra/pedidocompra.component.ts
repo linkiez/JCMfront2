@@ -82,8 +82,8 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
           },
           {
             name: 'min',
-            min: 1
-          }
+            min: 1,
+          },
         ],
       },
       // id_pessoa: undefined,
@@ -159,6 +159,12 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
               pipe: this.decimalPipe,
               args: ['1.0-2'],
             },
+            validators: [
+              {
+                name: 'min',
+                min: 1,
+              },
+            ],
           },
           peso: {
             value: 0,
@@ -166,6 +172,12 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
               pipe: this.decimalPipe,
               args: ['1.0-2'],
             },
+            validators: [
+              {
+                name: 'min',
+                min: 1,
+              },
+            ],
           },
           ipi: {
             value: 0,
@@ -173,6 +185,12 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
               pipe: this.percentPipe,
               args: ['1.2-2'],
             },
+            validators: [
+              {
+                name: 'min',
+                min: 0,
+              },
+            ],
           },
           preco: {
             value: 0,
@@ -201,9 +219,9 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
           name: 'nullValidator',
         },
         {
-          name:'minLength',
-          min: 1
-        }
+          name: 'minLength',
+          min: 1,
+        },
       ],
     },
     cond_pagamento: 'AVISTA',
@@ -273,7 +291,8 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
           severity: 'error',
           summary: 'Erro',
           detail:
-            'Erro ao carregar as dimensões dos produtos. - ' + error.error.message,
+            'Erro ao carregar as dimensões dos produtos. - ' +
+            error.error.message,
         });
         return [];
       })
@@ -289,13 +308,27 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
           severity: 'error',
           summary: 'Erro',
           detail:
-            'Erro ao carregar as condições de pagamento. - ' + error.error.message,
+            'Erro ao carregar as condições de pagamento. - ' +
+            error.error.message,
         });
         return [];
       })
     );
 
-  statusList: string[] = [];
+  status$ = this.listaGenericaService
+    .getByNameListaGenerica('statusPedidoCompra')
+    .pipe(
+      map((listaGenerica: any) => listaGenerica.lista_generica_items),
+      catchError((error) => {
+        console.error(error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: 'Erro ao carregar lista de status. - ' + error.error.message,
+        });
+        return [];
+      })
+    );
 
   observacoes: IListaGenericaItem[] = [];
 
@@ -303,7 +336,6 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnInit(): void {
     this.getPedidoCompra();
-    this.getStatus();
   }
 
   ngOnDestroy(): void {
@@ -347,7 +379,8 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
             this.messageService.add({
               severity: 'error',
               summary: 'Erro',
-              detail: 'Erro ao carregar o pedido de compra. - ' + error.error.message,
+              detail:
+                'Erro ao carregar o pedido de compra. - ' + error.error.message,
             });
           },
           complete: () => {
@@ -355,25 +388,6 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
           },
         });
     }
-  }
-
-  getStatus() {
-    this.listaGenericaService
-      .getByNameListaGenerica('statusPedidoCompra')
-      .pipe(map((listaGenerica: any) => listaGenerica.lista_generica_items))
-      .subscribe({
-        next: (response) => {
-          this.statusList = response;
-        },
-        error: (error) => {
-          console.error(error);
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Erro',
-            detail: 'Erro ao carregar os status. - ' + error.error.message,
-          });
-        },
-      });
   }
 
   searchFornecedor(event: any) {
@@ -519,7 +533,8 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'Erro ao excluir o pedido de compra. - ' + error.error.message,
+          detail:
+            'Erro ao excluir o pedido de compra. - ' + error.error.message,
         });
       },
       complete: () => {
@@ -558,7 +573,8 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Erro ao criar o pedido de compra. - ' + error.error.message,
+            detail:
+              'Erro ao criar o pedido de compra. - ' + error.error.message,
           });
         },
         complete: () => {
@@ -584,7 +600,8 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Erro ao atualizar o pedido de compra. - ' + error.error.message,
+            detail:
+              'Erro ao atualizar o pedido de compra. - ' + error.error.message,
           });
         },
         complete: () => {
@@ -638,6 +655,12 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
             pipe: this.decimalPipe,
             args: ['1.0-2'],
           },
+          validators: [
+            {
+              name: 'min',
+              min: 1,
+            },
+          ],
         },
         peso: {
           value: 0,
@@ -645,6 +668,12 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
             pipe: this.decimalPipe,
             args: ['1.0-2'],
           },
+          validators: [
+            {
+              name: 'min',
+              min: 1,
+            },
+          ],
         },
         ipi: {
           value: 0,
@@ -652,6 +681,12 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
             pipe: this.percentPipe,
             args: ['1.2-2'],
           },
+          validators: [
+            {
+              name: 'min',
+              min: 0,
+            },
+          ],
         },
         preco: {
           value: 0,
@@ -673,11 +708,11 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
         createdAt: null,
         id_pedido: null,
         id_produto: null,
-      })
+      },)
     );
   }
 
-  setFiles(files: IArquivo[]){
+  setFiles(files: IArquivo[]) {
     if (this.files.length > 0) {
       this.files.clear();
     }
@@ -736,7 +771,7 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
                   },
                   color: 'white',
                   display(context) {
-                    return context.dataIndex as number == 0;
+                    return (context.dataIndex as number) == 0;
                   },
                 },
               },
