@@ -86,7 +86,7 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
           }
         ],
       },
-      id_pessoa: 0,
+      // id_pessoa: undefined,
       pessoa: {
         id: 0,
         nome: '',
@@ -112,6 +112,11 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
         contatos: [],
         files: [],
       },
+      data_aprov: null,
+      data_venc: null,
+      createdAt: null,
+      updatedAt: null,
+      deletedAt: null,
     },
     pedido_compra_items: {
       value: [
@@ -187,8 +192,8 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
           deletedAt: null,
           updatedAt: null,
           createdAt: null,
-          id_pedido: 0,
-          id_produto: 0,
+          id_pedido: null,
+          id_produto: null,
         },
       ],
       validators: [
@@ -229,7 +234,7 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
     deletedAt: null,
     updatedAt: null,
     createdAt: null,
-    id_fornecedor: null,
+    // id_fornecedor: null,
     files: [
       {
         id: null,
@@ -439,7 +444,6 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
       parseFloat(event.target.value.replace(',', '.').replace(/[^\d]/g, '')) /
       10000;
     item.setValue(value);
-    consoleLogDev(value);
     this.calculaTotal();
   }
 
@@ -545,7 +549,8 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
       .addPedidoCompra(this.pedidoCompra.value)
       .subscribe({
         next: (response) => {
-          this.dynamicFormService.resizeForm(this.pedidoCompra, response);
+          // this.dynamicFormService.resizeForm(this.pedidoCompra, response);
+          consoleLogDev(response);
           this.pedidoCompra.setValue(response);
         },
         error: (error) => {
@@ -666,8 +671,8 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
         deletedAt: null,
         updatedAt: null,
         createdAt: null,
-        id_pedido: 0,
-        id_produto: 0,
+        id_pedido: null,
+        id_produto: null,
       })
     );
   }
@@ -741,8 +746,6 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
         })
       );
     }
-
-    consoleLogDev(this.charts)
   }
 
   get pedido_compra_items(): FormArray {
