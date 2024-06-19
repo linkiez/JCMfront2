@@ -1,15 +1,19 @@
-import { Injectable, PipeTransform } from '@angular/core';
+import { PipeTransform } from '@angular/core';
 import {
   AbstractControl,
+  AsyncValidatorFn,
   FormArray,
   FormControl,
   FormGroup,
   ValidationErrors,
+  Validator,
+  ValidatorFn,
   Validators,
 } from '@angular/forms';
 
 export class DynamicFormService {
   private controlPipes: Map<AbstractControl, PipeDescriptor> = new Map();
+  private validators: Map<string, ValidatorFn | AsyncValidatorFn> = new Map();
 
   constructor() {}
 
@@ -17,7 +21,7 @@ export class DynamicFormService {
     return this.createGroup(data);
   }
 
-  private createGroup<P>(data: any): FormGroup {
+  private createGroup(data: any): FormGroup {
     const group = new FormGroup({});
     Object.keys(data).forEach((key) => {
       let value = data[key];
@@ -31,7 +35,21 @@ export class DynamicFormService {
       ) {
         group.addControl(key, this.createGroup(value));
       } else if (this.isControlDescriptor(value)) {
-        const control = new FormControl(value.value);
+        let control;
+        if (Array.isArray(value.value)) {
+          control = this.createArray(value.value);
+        } else if (
+          typeof value.value === 'object' &&
+          value.value !== null &&
+          !(value.value instanceof Date)
+        ) {
+          control = this.createGroup(value.value);
+        } else {
+          control = new FormControl(value.value);
+          if (value.hasOwnProperty('pipe') && value.pipe) {
+            this.controlPipes.set(control, value.pipe);
+          }
+        }
 
         if (value.hasOwnProperty('validators')) {
           control.setValidators(this.mapValidators(value.validators || []));
@@ -41,10 +59,6 @@ export class DynamicFormService {
           control.setAsyncValidators(
             this.mapValidators(value.asyncValidators || [])
           );
-        }
-
-        if (value.hasOwnProperty('pipe') && value.pipe) {
-          this.controlPipes.set(control, value.pipe);
         }
 
         group.addControl(key, control);
@@ -82,41 +96,34 @@ export class DynamicFormService {
     if (!validators) return [];
     return validators
       .map((validator) => {
-        switch (validator.name) {
-          case 'required':
-            return Validators.required;
-          case 'email':
-            return Validators.email;
-          case 'minLength':
-            return Validators.minLength(validator.minLength);
-          case 'maxLength':
-            return Validators.maxLength(validator.maxLength);
-          case 'min':
-            return Validators.min(validator.min);
-          case 'max':
-            return Validators.max(validator.max);
-          case 'requiredTrue':
-            return Validators.requiredTrue;
-          case 'pattern':
-            return Validators.pattern(validator.pattern);
-          case 'nullValidator':
-            return Validators.nullValidator;
-          case 'compose':
-            return this.mapValidators(validator.validators);
-          case 'composeAsync':
-            return this.mapValidators(validator.validators);
+        if (Validators.hasOwnProperty(validator.name)) {
+          if (validator.hasOwnProperty(validator.name))
+            return (Validators as any)[validator.name](
+              validator[validator.name]
+            );
+          else return (Validators as any)[validator.name];
         }
-
-        return null;
+        const validatorFn = this.validators.get(validator.name);
+        if (!validatorFn) {
+          throw new Error(`Validator ${validator.name} não encontrado`);
+        }
+        if (validator.hasOwnProperty(validator.name))
+          return validatorFn(validator[validator.name]);
+        else return validatorFn;
       })
       .filter((v) => v !== null);
   }
 
-  private saveControlPipe(
-    control: AbstractControl,
-    pipeDescriptor: PipeDescriptor
+  addValidator(name: string, validator: ValidatorFn | AsyncValidatorFn) {
+    this.validators.set(name, validator);
+  }
+
+  addValidators(
+    validators: { name: string; validator: ValidatorFn | AsyncValidatorFn }[]
   ) {
-    this.controlPipes.set(control, pipeDescriptor);
+    validators.forEach((validador) => {
+      this.validators.set(validador.name, validador.validator);
+    });
   }
 
   getFormattedValue(control: AbstractControl): any {
@@ -159,6 +166,11 @@ export class DynamicFormService {
 
   private getArrayErrors(formArray: FormArray): ValidationErrors[] | null {
     const errors: ValidationErrors[] = [];
+    if (formArray.errors) {
+      Object.keys(formArray.errors).forEach((key) => {
+        errors.push(formArray.errors[key]);
+      });
+    }
     Object.keys(formArray.controls).forEach((key) => {
       const control = formArray.controls[+key];
       if (control instanceof FormArray) {
@@ -180,8 +192,7 @@ export class DynamicFormService {
     });
     if (errors.length > 0) {
       return errors;
-    }
-    else {
+    } else {
       return null;
     }
   }
@@ -290,7 +301,6 @@ export class DynamicFormService {
     return formArray;
   }
 
-  // Function to clone a FormControl
   private cloneFormControl(control: FormControl): FormControl {
     const newControl = new FormControl(
       control.value,
@@ -322,8 +332,8 @@ export class DynamicFormService {
 
 interface ControlDescriptor<T> {
   value: T;
-  validators?: { name: string; [param: string]: any }[];
-  asyncValidators?: { name: string; [param: string]: any }[];
+  validators?: ValidatorDescriptor[];
+  asyncValidators?: ValidatorDescriptor[];
   pipe?: PipeDescriptor;
 }
 
@@ -332,9 +342,16 @@ interface PipeDescriptor {
   args?: any[];
 }
 
+interface ValidatorDescriptor {
+  name: string;
+  [param: string]: any;
+}
+
 type PrimitiveOrControlDescriptor<T> = {
   [P in keyof T]: T[P] extends Array<infer U>
-    ? Array<PrimitiveOrControlDescriptor<U>> // Recursively apply for array items
+    ?
+        | Array<PrimitiveOrControlDescriptor<U>>
+        | ControlDescriptor<Array<PrimitiveOrControlDescriptor<U>>> // Recursively apply for array items
     : T[P] extends Function
     ? T[P] // Skip functions
     : T[P] extends object

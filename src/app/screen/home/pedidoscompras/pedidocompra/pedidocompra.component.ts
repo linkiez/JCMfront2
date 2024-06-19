@@ -113,89 +113,109 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
         files: [],
       },
     },
-    pedido_compra_items: [
-      {
-        produto: {
-          id: null,
-          nome: '',
-          categoria: '',
-          espessura: 0,
-          peso: 0,
+    pedido_compra_items: {
+      value: [
+        {
+          produto: {
+            id: null,
+            nome: '',
+            categoria: '',
+            espessura: 0,
+            peso: 0,
+            updatedAt: null,
+            createdAt: null,
+            deletedAt: null,
+            files: [
+              {
+                id: null,
+                url: '',
+                originalFilename: '',
+                newFilename: '',
+                mimeType: '',
+                bucket: '',
+                region: '',
+                deletedAt: null,
+                updatedAt: null,
+                createdAt: null,
+              },
+            ],
+            preco: 0,
+          },
+          prazo: {
+            value: new Date(),
+            pipe: {
+              pipe: this.datePipe,
+              args: ['dd/MM/yyyy'],
+            },
+          },
+          quantidade: {
+            value: 0,
+            pipe: {
+              pipe: this.decimalPipe,
+              args: ['1.0-2'],
+            },
+          },
+          peso: {
+            value: 0,
+            pipe: {
+              pipe: this.decimalPipe,
+              args: ['1.0-2'],
+            },
+          },
+          ipi: {
+            value: 0,
+            pipe: {
+              pipe: this.percentPipe,
+              args: ['1.2-2'],
+            },
+          },
+          preco: {
+            value: 0,
+            pipe: {
+              pipe: this.currencyPipe,
+            },
+          },
+          total: {
+            value: 0,
+            pipe: {
+              pipe: this.currencyPipe,
+            },
+          },
+          peso_entregue: 0,
+          status: 'Aguardando',
+          dimensao: '',
+          deletedAt: null,
           updatedAt: null,
           createdAt: null,
-          deletedAt: null,
-          files: [
-            {
-              id: null,
-              url: '',
-              originalFilename: '',
-              newFilename: '',
-              mimeType: '',
-              bucket: '',
-              region: '',
-              deletedAt: null,
-              updatedAt: null,
-              createdAt: null,
-            },
-          ],
-          preco: 0,
+          id_pedido: 0,
+          id_produto: 0,
         },
-        prazo: {
-          value: new Date(),
-          pipe: {
-            pipe: this.datePipe,
-            args: ['dd/MM/yyyy'],
-          },
+      ],
+      validators: [
+        {
+          name: 'nullValidator',
         },
-        quantidade: {
-          value: 0,
-          pipe: {
-            pipe: this.decimalPipe,
-            args: ['1.0-2'],
-          },
-        },
-        peso: {
-          value: 0,
-          pipe: {
-            pipe: this.decimalPipe,
-            args: ['1.0-2'],
-          },
-        },
-        ipi: {
-          value: 0,
-          pipe: {
-            pipe: this.percentPipe,
-            args: ['1.2-2'],
-          },
-        },
-        preco: {
-          value: 0,
-          pipe: {
-            pipe: this.currencyPipe,
-          },
-        },
-        total: {
-          value: 0,
-          pipe: {
-            pipe: this.currencyPipe,
-          },
-        },
-        peso_entregue: 0,
-        status: 'Aguardando',
-        dimensao: '',
-        deletedAt: null,
-        updatedAt: null,
-        createdAt: null,
-        id_pedido: 0,
-        id_produto: 0,
-      },
-    ],
+        {
+          name:'minLength',
+          min: 1
+        }
+      ],
+    },
     cond_pagamento: 'AVISTA',
     frete: {
       value: 0,
       pipe: {
         pipe: this.currencyPipe,
       },
+      validators: [
+        {
+          name: 'nullValidator',
+        },
+        {
+          name: 'min',
+          min: 0,
+        },
+      ],
     },
     status: 'Orçamento',
     pedido: '',
@@ -437,6 +457,7 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
 
     total = total + Number(this.frete.value || 0);
     this.total = total;
+    this.renderChart();
   }
 
   calculaPeso(item: FormGroup) {
@@ -510,6 +531,7 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
 
   createOrUpdate() {
     if (this.dynamicFormService.getAllErrors(this.pedidoCompra)) {
+      consoleLogDev(this.dynamicFormService.getAllErrors(this.pedidoCompra));
       return;
     }
     if (Number(this.id.value) == 0) {
@@ -688,7 +710,7 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
       const percent = this.calculatePesoEntreguePercentage(
         pedidoCompraItem as FormGroup
       );
-      this.charts = [];
+      // this.charts = [];
       this.charts.push(
         new Chart(cBox, {
           type: 'doughnut',
@@ -708,6 +730,9 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
                     else return '';
                   },
                   color: 'white',
+                  display(context) {
+                    return context.dataIndex as number == 0;
+                  },
                 },
               },
             ],
@@ -716,6 +741,8 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
         })
       );
     }
+
+    consoleLogDev(this.charts)
   }
 
   get pedido_compra_items(): FormArray {
