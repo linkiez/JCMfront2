@@ -2,122 +2,132 @@
   <h2>Pedido de Compra</h2>
   <span>F-035 - Rev.01 - Emissão: 12/09/2018 Revisão: 26/4/2023</span>
   <caixaDeStatus
-    [status]="pedidoCompra.status"
-    [options]="status"
+    [status]="status.value"
+    [options]="status$ | async"
     [editable]="false"
-    (statusChange)="pedidoCompra.status = $event"
+    (statusChange)="status = $event"
   ></caixaDeStatus>
-  <form class="">
+  <form
+    #pedidoCompraForm
+    [formGroup]="pedidoCompra"
+    (ngSubmit)="createOrUpdate()"
+  >
     <div class="row">
       <div class="col-6 col-sm-2">
-        <label name="lblId" for="inpId">Id: </label
+        <label name="lblId" id="lblId" for="id">Id: </label
         ><input
           pInputText
           class="p-inputtext noprint"
-          disabled
-          name="inpId"
+          id="id"
+          readonly
+          name="id"
           type="text"
-          [(ngModel)]="pedidoCompra.id"
+          formControlName="id"
         />
-        <span class="noview">{{ pedidoCompra.id }}</span>
+        <span class="noview">{{ id.value }}</span>
       </div>
       <div class="col-6 col-sm-5">
-        <label name="lblPedido" for="inpPedido">Pedido: </label
+        <label name="lblPedido" id="lblPedido" for="pedido">Pedido: </label
         ><input
           pInputText
           class="p-inputtext noprint"
-          name="inpPedido"
+          name="pedido"
+          id="pedido"
           type="text"
-          [(ngModel)]="pedidoCompra.pedido"
+          formControlName="pedido"
         />
-        <span class="noview">{{ pedidoCompra.pedido }}</span>
+        <span class="noview">{{ pedido.value }}</span>
       </div>
       <div class="col-12 col-sm-5">
-        <label name="lblDataEmissao" for="inpDataEmissao">Data: </label
+        <label name="lblDataEmissao" id="lblDataEmissao" for="data_emissao"
+          >Data: </label
         ><input
           pInputText
           class="noprint p-inputtext"
-          name="inpDataEmissao"
+          name="data_emissao"
+          id="data_emissao"
           type="text"
-          disabled
-          value="{{ pedidoCompra.data_emissao | date : 'dd/MM/yyyy' }}"
+          readonly
+          [value]="getFormattedValue(data_emissao)"
         />
-        <span class="noview">{{
-          pedidoCompra.data_emissao | date : "dd/MM/yyyy"
-        }}</span>
+        <span class="noview">{{ getFormattedValue(data_emissao) }}</span>
       </div>
     </div>
-    <div class="row">
-      <div class="col-12 col-sm-8">
-        <label name="lblFornecedor" for="inpFornecedor">Fornecedor: </label
+    <div class="row" formGroupName="fornecedor">
+      <div class="col-12 col-sm-8" formGroupName="pessoa">
+        <label name="lblFornecedor" for="fornecedor">Fornecedor: </label
         ><p-autoComplete
           pInputText
+          dataKey="id"
           class="noprint"
-          name="inpFornecedor"
+          id="fornecedor"
+          name="fornecedor"
           type="text"
-          [(ngModel)]="pedidoCompra.fornecedor"
-          field="pessoa.nome"
+          formControlName="nome"
+          [optionLabel]="optionLabelFornecedor"
+          dataKey="id"
           [suggestions]="fornecedores"
           (completeMethod)="searchFornecedor($event)"
+          (onSelect)="fornecedor.patchValue($event.value)"
           [dropdown]="true"
           [style]="{ width: '100%' }"
           [inputStyle]="{ width: '100%' }"
           appendTo="body"
         ></p-autoComplete>
-        <span class="noview">{{ pedidoCompra.fornecedor?.pessoa?.nome }}</span>
+        <small *ngIf="!fornecedor.get('id').valid" class="text-red-400 text-xs">Fornecedor deve ser selecionado.</small>
+        <span class="noview">{{ fornecedor.value.pessoa?.nome }}</span>
       </div>
-      <div class="col-12 col-sm-4">
-        <label name="lblContato" for="pContato">Contato:</label>
-        <p name="pContato">{{ "-" }}</p>
+      <div>
+        <div class="col-12 col-sm-4"></div>
+      </div>
+      <div class="row">
+        <div class="col-12 col-sm-8">
+          <label name="lblEndereco" for="pEndereco">Endereço:</label>
+          <p name="pEndereco">
+            {{ fornecedor.value.pessoa?.endereco || "-" }}
+          </p>
+        </div>
+        <div class="col-12 col-sm-4">
+          <label name="lblTelefone" for="pTelefone">Telefone</label>
+          <p name="pTelefone">
+            {{ fornecedor.value.pessoa?.telefone || "-" | telefone }}
+          </p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input col-4">
+          <label name="lblCidade" for="pCidade">Cidade:</label>
+          <p name="pCidade">
+            {{ fornecedor.value.pessoa?.municipio || "-" }}
+          </p>
+        </div>
+        <div class="input col-4">
+          <label name="lblUF" for="pUF">UF:</label>
+          <p name="pUF">{{ fornecedor.value.pessoa?.uf || "-" }}</p>
+        </div>
+        <div class="input col-4">
+          <label name="lblCEP" for="pCEP">CEP:</label>
+          <p name="pCEP">
+            {{ fornecedor.value.pessoa?.cep || "-" | cep }}
+          </p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input col-8">
+          <label name="lblCnpj" for="pCnpj">CNPJ:</label>
+          <p name="pCnpj">
+            {{ fornecedor.value.pessoa?.cnpj_cpf || "-" | cpfCnpj }}
+          </p>
+        </div>
+        <div class="Input col-4">
+          <label name="lblIe" for="pIe">I.E</label>
+          <p name="pIe">
+            {{ fornecedor.value.pessoa?.ie_rg || "-" | ieRg }}
+          </p>
+        </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col-12 col-sm-8">
-        <label name="lblEndereco" for="pEndereco">Endereço:</label>
-        <p name="pEndereco">
-          {{ pedidoCompra.fornecedor?.pessoa?.endereco || "-" }}
-        </p>
-      </div>
-      <div class="col-12 col-sm-4">
-        <label name="lblTelefone" for="pTelefone">Telefone</label>
-        <p name="pTelefone">
-          {{ pedidoCompra.fornecedor?.pessoa?.telefone || "-" | telefone }}
-        </p>
-      </div>
-    </div>
-    <div class="row">
-      <div class="input col-4">
-        <label name="lblCidade" for="pCidade">Cidade:</label>
-        <p name="pCidade">
-          {{ pedidoCompra.fornecedor?.pessoa?.municipio || "-" }}
-        </p>
-      </div>
-      <div class="input col-4">
-        <label name="lblUF" for="pUF">UF:</label>
-        <p name="pUF">{{ pedidoCompra.fornecedor?.pessoa?.uf || "-" }}</p>
-      </div>
-      <div class="input col-4">
-        <label name="lblCEP" for="pCEP">CEP:</label>
-        <p name="pCEP">
-          {{ pedidoCompra.fornecedor?.pessoa?.cep || "-" | cep }}
-        </p>
-      </div>
-    </div>
-    <div class="row">
-      <div class="input col-8">
-        <label name="lblCnpj" for="pCnpj">CNPJ:</label>
-        <p name="pCnpj">
-          {{ pedidoCompra.fornecedor?.pessoa?.cnpj_cpf || "-" | cpfCnpj }}
-        </p>
-      </div>
-      <div class="Input col-4">
-        <label name="lblIe" for="pIe">I.E</label>
-        <p name="pIe">
-          {{ pedidoCompra.fornecedor?.pessoa?.ie_rg || "-" | ieRg }}
-        </p>
-      </div>
-    </div>
-    <p-table [value]="pedidoCompra.pedido_compra_items">
+    <p-table [value]="pedido_compra_items.controls">
       <ng-template pTemplate="caption"></ng-template>
       <ng-template pTemplate="header">
         <th>Item</th>
@@ -129,29 +139,29 @@
         <th>Ipi</th>
         <th>Total</th>
         <th>Data Entrega</th>
-        <th *ngIf="pedidoCompra.status !== 'Orçamento'" class="noprint">
-          Status
-        </th>
-        <th *ngIf="pedidoCompra.status !== 'Orçamento'" class="noprint">
+        <th *ngIf="status.value !== 'Orçamento'" class="noprint">Status</th>
+        <th *ngIf="status.value !== 'Orçamento'" class="noprint">
           Total Entregue
         </th>
         <th class="noprint">Ação</th>
       </ng-template>
-      <ng-template pTemplate="body" let-item let-index="rowIndex">
-        <tr>
+      <ng-template pTemplate="body" let-index="rowIndex" let-rowData>
+        <tr [formGroup]="rowData">
           <td>{{ index + 1 }}.</td>
-          <td pEditableColumn>
+          <td pEditableColumn formGroupName="produto">
             <p-cellEditor>
               <ng-template pTemplate="input">
                 <p-autoComplete
                   pInputText
                   class="p-autocomplete w-100"
-                  name="inpProdutos"
+                  [name]="'produto' + index"
+                  [id]="'produto' + index"
+                  formControlName="nome"
                   type="text"
-                  [(ngModel)]="item.produto"
-                  field="nome"
                   [suggestions]="produtos"
+                  [optionLabel]="optionLabelProduto"
                   (completeMethod)="searchProduto($event)"
+                  (onSelect)="rowData.controls.produto.patchValue($event.value)"
                   [dropdown]="true"
                   [style]="{ width: '100%' }"
                   [inputStyle]="{ width: '100%' }"
@@ -159,7 +169,7 @@
                 ></p-autoComplete>
               </ng-template>
               <ng-template pTemplate="output">
-                {{ item.produto.nome }}
+                {{ rowData.controls.produto.value?.nome }}
               </ng-template>
             </p-cellEditor>
           </td>
@@ -167,18 +177,18 @@
             <p-cellEditor>
               <ng-template pTemplate="input">
                 <p-dropdown
-                  name="inpDimensao"
+                  name="dimensao"
                   [options]="dimensoes$ | async"
-                  [(ngModel)]="item.dimensao"
+                  formControlName="dimensao"
                   optionLabel="valor"
                   optionValue="valor"
                   [editable]="true"
-                  (ngModelChange)="calculaPeso(item)"
+                  (onSelect)="calculaPeso(rowData)"
                   appendTo="body"
                 ></p-dropdown>
               </ng-template>
               <ng-template pTemplate="output">
-                {{ item.dimensao }}
+                {{ rowData.get("dimensao").value }}
               </ng-template>
             </p-cellEditor>
           </td>
@@ -188,14 +198,14 @@
                 <input
                   pInputText
                   class="p-inputtext"
-                  name="inpItemQuantidade"
+                  name="quantidade"
                   type="text"
-                  [(ngModel)]="item.quantidade"
-                  (input)="calculaPeso(item)"
+                  formControlName="quantidade"
+                  (change)="calculaPeso(rowData)"
                 />
               </ng-template>
               <ng-template pTemplate="output">
-                {{ item.quantidade }}
+                {{ getFormattedValue(rowData.get("quantidade")) }}
               </ng-template>
             </p-cellEditor>
           </td>
@@ -205,15 +215,14 @@
                 <input
                   pInputText
                   class="p-inputtext"
-                  name="inpItemPeso"
+                  name="peso"
                   type="text"
-                  [ngModel]="item.peso | number : '1.0-2' : 'pt-BR'"
-                  (ngModelChange)="itemPeso($event, item)"
-                  (input)="calculaTotal()"
+                  [value]="getFormattedValue(rowData.get('peso'))"
+                  (input)="itemPeso($event, rowData.get('peso'))"
                 />
               </ng-template>
               <ng-template pTemplate="output">
-                {{ item.peso | number : "1.0-2" : "pt-BR" }}
+                {{ getFormattedValue(rowData.get("peso")) }}
               </ng-template>
             </p-cellEditor>
           </td>
@@ -223,15 +232,14 @@
                 <input
                   pInputText
                   class="p-inputtext"
-                  name="inpItemPreco"
+                  name="preco"
                   type="text"
-                  [ngModel]="item.preco | currency : 'BRL'"
-                  (ngModelChange)="itemPreco($event, item)"
-                  (input)="calculaTotal()"
+                  [value]="getFormattedValue(rowData.get('preco'))"
+                  (input)="itemPreco($event, rowData.get('preco'))"
                 />
               </ng-template>
               <ng-template pTemplate="output">
-                {{ item.preco | currency : "BRL" }}
+                {{ getFormattedValue(rowData.get("preco")) }}
               </ng-template>
             </p-cellEditor>
           </td>
@@ -243,58 +251,54 @@
                   class="p-inputtext"
                   name="inpItemIpi"
                   type="text"
-                  [ngModel]="item.ipi | percent : '1.2-2' : 'PT-BR'"
-                  (ngModelChange)="itemIpi($event, item)"
-                  (input)="calculaTotal()"
+                  [value]="getFormattedValue(rowData.get('ipi'))"
+                  (input)="itemIpi($event, rowData.get('ipi'))"
                 />
               </ng-template>
               <ng-template pTemplate="output">
-                {{ item.ipi | percent : "1.2-2" : "PT-BR" }}
+                {{ getFormattedValue(rowData.get("ipi")) }}
               </ng-template>
             </p-cellEditor>
           </td>
           <td>
-            {{ item.total | currency : "BRL" }}
+            {{ getFormattedValue(rowData.get("total")) }}
           </td>
           <td pEditableColumn>
             <p-cellEditor>
               <ng-template pTemplate="input">
                 <p-calendar
                   name="InpItemPrazo"
-                  [(ngModel)]="item.prazo"
+                  formControlName="prazo"
                   dateFormat="dd/mm/yy"
                   styleClass="w-100"
                   appendTo="body"
                 ></p-calendar>
               </ng-template>
               <ng-template pTemplate="output">
-                {{ item.prazo | date : "dd/MM/yyyy" }}
+                {{ getFormattedValue(rowData.get("prazo")) }}
               </ng-template>
             </p-cellEditor>
           </td>
-          <td *ngIf="pedidoCompra.status !== 'Orçamento'" class="noprint">
+          <td
+            *ngIf="pedidoCompra.get('status')?.value !== 'Orçamento'"
+            class="noprint"
+          >
             <caixaDeStatus
-              [status]="item.status"
-              [options]="status"
+              [status]="rowData.get('status').value"
               [editable]="false"
-              (statusChange)="pedidoCompra.status = $event"
             ></caixaDeStatus>
           </td>
           <td
             class="text-center"
-            *ngIf="pedidoCompra.status !== 'Orçamento'"
+            *ngIf="pedidoCompra.get('status')?.value !== 'Orçamento'"
             class="noprint"
           >
-            <p-knob
-              [size]="75"
-              [name]="'peso_entregue' + item.id"
-              [ngModel]="calculatePesoEntreguePercentage(item)"
-              [disabled]="true"
-              [max]="100"
-              [min]="0"
-              [valueTemplate]="'{value}%'"
-            ></p-knob>
-            <small>{{ item.peso_entregue }}Kg</small>
+            <div style="width: 100px" class="position-relative">
+              <canvas #pesoEntregueChart [id]="'pesoEntregue' + index"></canvas>
+              <small class="position-absolute top-1/2 left-1/2 anchor text-xs"
+                >{{ pedido_compra_items.value[index].peso_entregue }}Kg</small
+              >
+            </div>
           </td>
           <td class="noprint">
             <i class="pi pi-trash trash" (click)="removeItem(index)"></i>
@@ -304,7 +308,13 @@
       <ng-template pTemplate="footer">
         <tr>
           <td>
-            <button pButton class="button" (click)="newItem()" class="noprint">
+            <button
+              pButton
+              class="button"
+              (click)="newPedidoCompraItem()"
+              class="noprint"
+              type="button"
+            >
               <i class="pi pi-plus"></i>
             </button>
           </td>
@@ -313,9 +323,9 @@
             <p-cellEditor>
               <ng-template pTemplate="input">
                 <p-dropdown
-                  name="inpCondPagamento"
+                  name="cond_pagamento"
                   [options]="condicaoPagamento$ | async"
-                  [(ngModel)]="pedidoCompra.cond_pagamento"
+                  formControlName="cond_pagamento"
                   optionLabel="valor"
                   optionValue="valor"
                   [editable]="true"
@@ -323,7 +333,7 @@
                 ></p-dropdown>
               </ng-template>
               <ng-template pTemplate="output">
-                {{ pedidoCompra.cond_pagamento }}
+                {{ pedidoCompra.get("cond_pagamento").value }}
               </ng-template>
             </p-cellEditor>
           </td>
@@ -334,20 +344,20 @@
                 <input
                   pInputText
                   class="p-inputtext"
-                  name="inpItemIpi"
+                  name="frete"
                   type="text"
-                  [ngModel]="pedidoCompra.frete | currency : 'BRL'"
-                  (ngModelChange)="frete($event)"
-                  (input)="calculaTotal()"
+                  formControlName="frete"
+                  [value]="getFormattedValue(frete)"
+                  (input)="frete = $event"
                 />
               </ng-template>
               <ng-template pTemplate="output">
-                {{ pedidoCompra.frete | currency : "BRL" }}
+                {{ getFormattedValue(frete) }}
               </ng-template>
             </p-cellEditor>
           </td>
           <td>Total</td>
-          <td>{{ pedidoCompra.total | currency : "BRL" }}</td>
+          <td>{{ getFormattedValue(total) }}</td>
           <td></td>
         </tr>
       </ng-template>
@@ -358,9 +368,9 @@
         pInputTextarea
         name="txtObs"
         class="noprint"
-        [(ngModel)]="pedidoCompra.observacao"
+        formControlName="observacao"
       ></textarea>
-      <span class="noview">{{ pedidoCompra.observacao }}</span>
+      <span class="noview">{{ pedidoCompra.get("observacao").value }}</span>
       <h4>Normas de fornecimento do pedido</h4>
       <p>
         1. Horário de Recebimento: de Segunda à Quinta das 7:00h às 11:00h e das
@@ -403,42 +413,52 @@
     </div>
     <listaFiles
       class="noprint"
-      [files]="pedidoCompra.files!"
-      (onChangeFiles)="pedidoCompra.files = $event"
+      [files]="files.value"
+      (onChangeFiles)="setFiles($event)"
     ></listaFiles>
-  </form>
-  <div class="noprint">
-    <div class="d-flex flex-row">
-      <div class="flex-grow-1 justify-content-start">
-        <button pButton class="p-button p-button-danger" (click)="confirm()">
-          Excluir
+    <div class="noprint">
+      <div class="d-flex flex-row">
+        <div class="flex-grow-1 justify-content-start">
+          <button pButton class="p-button p-button-danger" (click)="confirm()">
+            Excluir
+          </button>
+        </div>
+        <button
+          #btnSalvar
+          name="btnSalvar"
+          id="btnSalvar"
+          pButton
+          class="p-button p-button-success"
+          type="submit"
+          [disabled]="pedidoCompra.pristine"
+        >
+          Salvar
+        </button>
+        <button
+          pButton
+          type="button"
+          class="p-button p-button-success"
+          (click)="status = 'Aprovado'; btnSalvar.click()"
+          [disabled]="status.value !== 'Orçamento'"
+        >
+          Aprovar
+        </button>
+        <button
+          pButton
+          class="p-button"
+          type="button"
+          (click)="getBackPedidos()"
+        >
+          Voltar
         </button>
       </div>
-      <button
-        pButton
-        class="p-button p-button-success"
-        (click)="createOrUpdate()"
-      >
-        Salvar
-      </button>
-      <button
-        pButton
-        class="p-button p-button-success"
-        (click)="aprovarPedidoCompra()"
-        [disabled]="pedidoCompra.status !== 'Orçamento'"
-      >
-        Aprovar
-      </button>
-      <button pButton class="p-button" (click)="getBackPedidos()">
-        Voltar
-      </button>
-    </div>
 
-    <p-confirmDialog
-      header="Confirmação"
-      acceptLabel="Sim"
-      rejectLabel="Não"
-      icon="pi pi-exclamation-triangle"
-    ></p-confirmDialog>
-  </div>
+      <p-confirmDialog
+        header="Confirmação"
+        acceptLabel="Sim"
+        rejectLabel="Não"
+        icon="pi pi-exclamation-triangle"
+      ></p-confirmDialog>
+    </div>
+  </form>
 </div>

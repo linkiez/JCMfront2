@@ -1,7 +1,6 @@
 import { IOrdemProducaoItem } from './../../../models/ordem-producao';
 import { Component, OnInit } from '@angular/core';
-import { round } from 'lodash-es';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { MessageService } from 'primeng/api';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { IOperador } from 'src/app/models/operador';
 import { IPedidoCompraItem } from 'src/app/models/pedido-compra';
@@ -326,7 +325,7 @@ export class RirComponent implements OnInit {
   }
 
   optionLabel(event: IPedidoCompraItem) {
-    const label = `${event.pedido_compra?.pedido} - ${event.dimensao} - ${round(event.peso!, 0)}Kg`;
+    const label = `${event.pedido_compra?.pedido} - ${event.dimensao} - ${Math.round(event.peso!).toFixed(0)}Kg`;
     return `${label}`;
   }
 }

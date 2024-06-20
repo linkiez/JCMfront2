@@ -16,6 +16,9 @@ import {InputTextareaModule} from 'primeng/inputtextarea';
 import { ListaFilesModule } from 'src/app/components/listaFiles/listaFiles.module';
 import { CaixaDeStatusModule } from 'src/app/components/caixaDeStatus/caixaDeStatus.module';
 import { KnobModule } from 'primeng/knob';
+import { ReactiveFormsModule } from '@angular/forms';
+import { DynamicFormService } from 'src/app/services/dynamic-form.service';
+import { ChartModule } from 'primeng/chart';
 
 
 
@@ -38,7 +41,12 @@ import { KnobModule } from 'primeng/knob';
     InputTextareaModule,
     ListaFilesModule,
     CaixaDeStatusModule,
-    KnobModule
+    KnobModule,
+    ReactiveFormsModule,
+    ChartModule
+  ],
+  providers:[
+    DynamicFormService
   ]
 })
 export class PedidosComprasModule { }

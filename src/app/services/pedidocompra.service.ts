@@ -1,7 +1,7 @@
 import { IQuery } from './../models/query';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, catchError } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { IPedidoCompra } from '../models/pedido-compra';
 
@@ -90,12 +90,12 @@ export class PedidoCompraService {
       environment.backendURL + 'pedidocompra/' + pedidoCompra.id,
       pedidoCompra,
       { responseType: 'json' }
-    );
+      )
   }
 
-  deletePedidoCompra(pedidoCompra: IPedidoCompra): Observable<any> {
+  deletePedidoCompra(id: number): Observable<any> {
     return this.http.delete(
-      environment.backendURL + 'pedidocompra/' + pedidoCompra.id,
+      environment.backendURL + 'pedidocompra/' + id,
       { responseType: 'json' }
     );
   }
