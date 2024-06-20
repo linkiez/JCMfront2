@@ -24,7 +24,7 @@ export class DynamicFormService {
   private createGroup(data: any): FormGroup {
     const group = new FormGroup({});
     Object.keys(data).forEach((key) => {
-      let value = data[key];
+      const value = data[key];
 
       if (Array.isArray(value)) {
         group.addControl(key, this.createArray(value));
@@ -255,7 +255,7 @@ export class DynamicFormService {
     Object.keys(data)
       .sort()
       .forEach((dataKey) => {
-        let control = form.get(dataKey);
+        const control = form.get(dataKey);
         if (!control) {
           return;
         } else if (control instanceof FormArray) {

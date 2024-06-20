@@ -479,7 +479,7 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   calculaPeso(item: FormGroup) {
-    let pedidoCompraItem: IPedidoCompraItem = item.value as IPedidoCompraItem;
+    const pedidoCompraItem: IPedidoCompraItem = item.value as IPedidoCompraItem;
 
     const dimensao: any = (pedidoCompraItem.dimensao || '')
       .split('x')
@@ -716,7 +716,7 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.files.length > 0) {
       this.files.clear();
     }
-    for (let file of files) {
+    for (const file of files) {
       this.files.push(
         this.dynamicFormService.createFormFromObject<IArquivo>(file)
       );
@@ -739,7 +739,7 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
 
   renderChart() {
     if (this.pedidoCompra.value.status == 'Orçamento') return;
-    for (let chart of this.charts) {
+    for (const chart of this.charts) {
       if (chart) {
         chart.destroy();
       }
