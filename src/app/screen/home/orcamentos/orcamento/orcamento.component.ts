@@ -2,7 +2,7 @@ import { RIRService } from 'src/app/services/rir.service';
 import { EmpresaService } from './../../../../services/empresa.service';
 import { ContatoService } from 'src/app/services/contato.service';
 import { PessoaService } from './../../../../services/pessoa.service';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, ViewChild } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import {
   Observable,
@@ -40,6 +40,7 @@ import { consoleLogDev } from 'src/app/utils/consoleLogDev';
   selector: 'app-orcamento',
   templateUrl: './orcamento.component.html',
   styleUrls: ['./orcamento.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OrcamentoComponent implements OnInit {
   @ViewChild('orcamentoForm', { static: false }) orcamentoForm:
@@ -427,12 +428,12 @@ export class OrcamentoComponent implements OnInit {
     this.orcamento.desconto = Number(event.replace(/[^\d]/g, '')) / 100;
   }
 
-  onChangeFiles(event: any, item: any) {
+  onChangeFiles(event: any, item: IOrcamentoItem) {
     item.files = event;
   }
 
   onChangeWhatsapp(event: any) {
-    this.orcamento.contato!.valor = event.replace(/[^\d]/g, '');
+    this.orcamento.contato!.valor = event.toString().replace(/[^\d]/g, '');
   }
 
   selectContato($event: any) {
@@ -442,6 +443,13 @@ export class OrcamentoComponent implements OnInit {
   onChangeEmpresa(event: any) {
     this.orcamento.empresa = event;
     this.getLogoUrl();
+  }
+
+  onPrecoSixMonthsAgo(item: IOrcamentoItem) {
+    const sixMonthsAgo = new Date();
+    sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+    if (new Date(item.produto.pedido_compra_items[0].pedido_compra.data_emissao) < sixMonthsAgo) return false;
+    return true
   }
 
   calculaPeso(item: IOrcamentoItem) {

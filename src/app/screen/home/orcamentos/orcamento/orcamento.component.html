@@ -176,7 +176,7 @@
             "
             name="ContatoValor"
             id="ContatoValor"
-            [ngModel]="orcamento.contato?.valor | telefone"
+            [ngModel]="orcamento.contato.valor | telefone"
             (ngModelChange)="onChangeWhatsapp($event)"
             [contentEditable]="true"
             (onSelect)="selectContato($event)"
@@ -669,7 +669,10 @@
                       [disabled]="orcamento.status !== 'Orçamento'"
                       (input)="calculaPeso(item)"
                     />
-                    <table style="width: 100%">
+                    <table
+                      style="width: 100%"
+                      *ngIf="onPrecoSixMonthsAgo(item); else precosixmonthsago"
+                    >
                       <tr *ngFor="let markup of markupOptions$ | async">
                         <td>
                           <div
@@ -690,6 +693,9 @@
                         </td>
                       </tr>
                     </table>
+                    <ng-template #precosixmonthsago>
+                    <span style="font-size: xx-small" class="statusRed">Preço desatualizado</span>
+                    </ng-template>
                   </ng-template>
                   <ng-template pTemplate="output">
                     {{ item.preco_quilo | currency : "BRL" }}
