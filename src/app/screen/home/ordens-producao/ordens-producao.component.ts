@@ -56,7 +56,7 @@ export class OrdensProducaoComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'Erro ao carregar os vendedores. - ' + error.error,
+          detail: 'Erro ao carregar os vendedores. - ' + error.error.message,
         });
         return [];
       })
@@ -102,7 +102,7 @@ export class OrdensProducaoComponent implements OnInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Erro ao carregar as ordens de produção. - ' + error.error,
+            detail: 'Erro ao carregar as ordens de produção. - ' + error.error.message,
           });
         },
       });
@@ -140,7 +140,7 @@ export class OrdensProducaoComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'Erro ao atualizar a ordem de produção. - ' + error.error,
+          detail: 'Erro ao atualizar a ordem de produção. - ' + error.error.message,
         });
       },
     });

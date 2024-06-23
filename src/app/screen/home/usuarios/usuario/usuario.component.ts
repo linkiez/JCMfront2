@@ -182,7 +182,7 @@ export class UsuarioComponent implements OnInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Erro ao carregar usuário - ' + error.error,
+            detail: 'Erro ao carregar usuário - ' + error.error.message,
           });
         },
         complete: () => {},
@@ -203,7 +203,7 @@ export class UsuarioComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'Erro ao criar usuário - ' + error.error,
+          detail: 'Erro ao criar usuário - ' + error.error.message,
         });
       },
       complete: () => {
@@ -227,7 +227,7 @@ export class UsuarioComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'Erro ao atualizar usuário - ' + error.error,
+          detail: 'Erro ao atualizar usuário - ' + error.error.message,
         });
       },
       complete: () => {
@@ -262,7 +262,7 @@ export class UsuarioComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'Erro ao apagar usuário - ' + error.error,
+          detail: 'Erro ao apagar usuário - ' + error.error.message,
         });
       },
       complete: () => {
@@ -301,7 +301,7 @@ export class UsuarioComponent implements OnInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Erro ao buscar pessoas - ' + error.error,
+            detail: 'Erro ao buscar pessoas - ' + error.error.message,
           });
         },
       });

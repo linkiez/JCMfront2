@@ -48,7 +48,7 @@ export class UsuariosComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'Erro ao carregar os usuários - ' + error.error,
+          detail: 'Erro ao carregar os usuários - ' + error.error.message,
         });
       },
     });

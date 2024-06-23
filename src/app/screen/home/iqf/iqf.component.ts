@@ -72,7 +72,7 @@ export class IqfComponent implements OnInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro ao buscar IQF',
-            detail: error.error,
+            detail: error.error.message,
           });
         },
       });
@@ -138,7 +138,7 @@ export class IqfComponent implements OnInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Erro ao buscar fornecedores - ' + error.error,
+            detail: 'Erro ao buscar fornecedores - ' + error.error.message,
           });
         },
       });

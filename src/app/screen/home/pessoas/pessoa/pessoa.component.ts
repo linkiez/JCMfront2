@@ -74,7 +74,7 @@ export class PessoaComponent implements OnInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Não foi possível carregar as categorias. - ' + error.error,
+            detail: 'Não foi possível carregar as categorias. - ' + error.error.message,
           });
         },
       });
@@ -112,7 +112,7 @@ export class PessoaComponent implements OnInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Não foi possível carregar a pessoa. - ' + error.error,
+            detail: 'Não foi possível carregar a pessoa. - ' + error.error.message,
           });
         },
       });
@@ -194,7 +194,7 @@ export class PessoaComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'Não foi possível atualizar a pessoa. - ' + error.error,
+          detail: 'Não foi possível atualizar a pessoa. - ' + error.error.message,
         });
       },
       complete: () =>
@@ -250,7 +250,7 @@ export class PessoaComponent implements OnInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Não foi possível excluir a pessoa. - ' + error.error,
+            detail: 'Não foi possível excluir a pessoa. - ' + error.error.message,
           });
         },
         complete: () => {
@@ -272,7 +272,7 @@ export class PessoaComponent implements OnInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Não foi possível excluir o vendedor. - ' + error.error,
+            detail: 'Não foi possível excluir o vendedor. - ' + error.error.message,
           });
         },
         complete: () => {
@@ -294,7 +294,7 @@ export class PessoaComponent implements OnInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Não foi possível restaurar o vendedor. - ' + error.error,
+            detail: 'Não foi possível restaurar o vendedor. - ' + error.error.message,
           });
         },
         complete: () => {
@@ -317,7 +317,7 @@ export class PessoaComponent implements OnInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Não foi possível excluir a empresa. - ' + error.error,
+            detail: 'Não foi possível excluir a empresa. - ' + error.error.message,
           });
         },
         complete: () => {
@@ -339,7 +339,7 @@ export class PessoaComponent implements OnInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Não foi possível restaurar a empresa. - ' + error.error,
+            detail: 'Não foi possível restaurar a empresa. - ' + error.error.message,
           });
         },
         complete: () => {
@@ -362,7 +362,7 @@ export class PessoaComponent implements OnInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Não foi possível excluir o operador. - ' + error.error,
+            detail: 'Não foi possível excluir o operador. - ' + error.error.message,
           });
         },
         complete: () => {
@@ -384,7 +384,7 @@ export class PessoaComponent implements OnInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Não foi possível restaurar o operador. - ' + error.error,
+            detail: 'Não foi possível restaurar o operador. - ' + error.error.message,
           });
         },
         complete: () => {
@@ -412,7 +412,7 @@ export class PessoaComponent implements OnInit {
             this.messageService.add({
               severity: 'error',
               summary: 'Erro',
-              detail: 'Não foi possível excluir o fornecedor. - ' + error.error,
+              detail: 'Não foi possível excluir o fornecedor. - ' + error.error.message,
             });
           },
           complete: () => {
@@ -437,7 +437,7 @@ export class PessoaComponent implements OnInit {
               severity: 'error',
               summary: 'Erro',
               detail:
-                'Não foi possível restaurar o fornecedor. - ' + error.error,
+                'Não foi possível restaurar o fornecedor. - ' + error.error.message,
             });
           },
           complete: () => {
@@ -604,7 +604,7 @@ export class PessoaComponent implements OnInit {
             this.messageService.add({
               severity: 'error',
               summary: 'Erro',
-              detail: `Nao foi possivel fazer o upload do arquivo. - ${error.error}`,
+              detail: `Nao foi possivel fazer o upload do arquivo. - ${error.error.message}`,
             });
           },
           complete: async () => {

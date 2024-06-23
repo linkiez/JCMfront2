@@ -3,7 +3,6 @@ import { IContato } from '../../../models/contato';
 import { ContatoService } from '../../../services/contato.service';
 import { Table } from 'primeng/table';
 import { Router } from '@angular/router';
-import { IQuery } from 'src/app/models/query';
 import { QueryService } from 'src/app/services/query.service';
 import { MessageService } from 'primeng/api';
 
@@ -48,7 +47,7 @@ export class ContatosComponent implements OnInit {
         this.messageSerivice.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'Erro ao carregar contatos - ' + error.error,
+          detail: 'Erro ao carregar contatos - ' + error.error.message,
         });
       },
     });

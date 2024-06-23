@@ -62,7 +62,7 @@ export class PedidosComprasComponent implements OnInit, OnDestroy {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Erro ao carregar os pedidos de compra. - ' + error.error,
+            detail: 'Erro ao carregar os pedidos de compra. - ' + error.error.message,
           });
         },
       });
@@ -98,7 +98,7 @@ export class PedidosComprasComponent implements OnInit, OnDestroy {
             this.messageService.add({
               severity: 'error',
               summary: 'Erro',
-              detail: 'Erro ao restaurar o pedido de compra. - ' + error.error,
+              detail: 'Erro ao restaurar o pedido de compra. - ' + error.error.message,
             });
           },
           complete: () => {

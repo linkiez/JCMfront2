@@ -109,7 +109,7 @@ export class OrcamentoComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'Error ao buscar processos - ' + error.error,
+          detail: 'Error ao buscar processos - ' + error.error.message,
         });
         return [];
       })
@@ -124,7 +124,7 @@ export class OrcamentoComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'Error ao buscar status - ' + error.error,
+          detail: 'Error ao buscar status - ' + error.error.message,
         });
         return [];
       })
@@ -139,7 +139,7 @@ export class OrcamentoComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'Error ao buscar categorias de contato - ' + error.error,
+          detail: 'Error ao buscar categorias de contato - ' + error.error.message,
         });
         return [];
       })
@@ -158,7 +158,7 @@ export class OrcamentoComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'Error ao buscar condições de pagamento - ' + error.error,
+          detail: 'Error ao buscar condições de pagamento - ' + error.error.message,
         });
         return [];
       })
@@ -177,7 +177,7 @@ export class OrcamentoComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'Error ao buscar condições de orçamento - ' + error.error,
+          detail: 'Error ao buscar condições de orçamento - ' + error.error.message,
         });
         return [];
       })
@@ -199,7 +199,7 @@ export class OrcamentoComponent implements OnInit {
           severity: 'error',
           summary: 'Erro',
           detail:
-            'Error ao buscar opções de aprovação de orçamento - ' + error.error,
+            'Error ao buscar opções de aprovação de orçamento - ' + error.error.message,
         });
         return [];
       })
@@ -214,7 +214,7 @@ export class OrcamentoComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'Error ao buscar opções de markup - ' + error.error,
+          detail: 'Error ao buscar opções de markup - ' + error.error.message,
         });
         return [];
       })
@@ -286,7 +286,7 @@ export class OrcamentoComponent implements OnInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Error ao buscar contatos - ' + error.error,
+            detail: 'Error ao buscar contatos - ' + error.error.message,
           });
         },
       });
@@ -313,7 +313,7 @@ export class OrcamentoComponent implements OnInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Error ao buscar pessoas - ' + error.error,
+            detail: 'Error ao buscar pessoas - ' + error.error.message,
           });
         },
       });
@@ -337,7 +337,7 @@ export class OrcamentoComponent implements OnInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Error ao buscar vendedores - ' + error.error,
+            detail: 'Error ao buscar vendedores - ' + error.error.message,
           });
         },
       });
@@ -364,7 +364,7 @@ export class OrcamentoComponent implements OnInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Error ao buscar produtos - ' + error.error,
+            detail: 'Error ao buscar produtos - ' + error.error.message,
           });
         },
       });
@@ -588,7 +588,7 @@ export class OrcamentoComponent implements OnInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Error ao buscar orçamento - ' + error.error,
+            detail: 'Error ao buscar orçamento - ' + error.error.message,
           });
         },
         complete: () => {
@@ -623,7 +623,7 @@ export class OrcamentoComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'Error ao buscar empresas -' + error.error,
+          detail: 'Error ao buscar empresas -' + error.error.message,
         });
       },
     });
@@ -655,7 +655,7 @@ export class OrcamentoComponent implements OnInit {
             summary: 'Erro',
             detail:
               `Error ao ${clonar ? 'clonar' : 'criar'} orçamento - ` +
-              error.error,
+              error.error.message,
           });
           this.loadingSalvar = false;
         },
@@ -693,7 +693,7 @@ export class OrcamentoComponent implements OnInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Error ao atualizar orçamento - ' + error.error,
+            detail: 'Error ao atualizar orçamento - ' + error.error.message,
           });
           this.loadingSalvar = false;
         },
@@ -725,7 +725,7 @@ export class OrcamentoComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'Error ao apagar orçamento - ' + error.error,
+          detail: 'Error ao apagar orçamento - ' + error.error.message,
         });
       },
       complete: () => {
@@ -973,7 +973,7 @@ export class OrcamentoComponent implements OnInit {
             this.messageService.add({
               severity: 'error',
               summary: 'Erro',
-              detail: `Erro ao aprovar o orçamento - ${error.error}`,
+              detail: `Erro ao aprovar o orçamento - ${error.error.message}`,
             });
             this.loadingAprovar = false;
           },
@@ -1268,7 +1268,7 @@ export class OrcamentoComponent implements OnInit {
             this.messageService.add({
               severity: 'error',
               summary: 'Erro',
-              detail: 'Erro ao buscar RIRs - ' + error.error,
+              detail: 'Erro ao buscar RIRs - ' + error.error.message,
             });
           },
         });

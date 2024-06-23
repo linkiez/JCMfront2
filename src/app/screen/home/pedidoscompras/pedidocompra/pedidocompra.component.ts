@@ -410,7 +410,7 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Erro ao carregar os fornecedores. - ' + error.error,
+            detail: 'Erro ao carregar os fornecedores. - ' + error.error.message,
           });
         },
       });
@@ -434,7 +434,7 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Erro ao carregar os produtos. - ' + error.error,
+            detail: 'Erro ao carregar os produtos. - ' + error.error.message,
           });
         },
       });

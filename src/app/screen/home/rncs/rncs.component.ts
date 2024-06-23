@@ -51,7 +51,7 @@ export class RNCsComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'Erro ao carregar as RNCs. - ' + error.error,
+          detail: 'Erro ao carregar as RNCs. - ' + error.error.message,
         });
       },
     });
@@ -81,7 +81,7 @@ export class RNCsComponent implements OnInit {
             this.messageService.add({
               severity: 'error',
               summary: 'Erro',
-              detail: 'Erro ao restaurar a RNC. - ' + error.error,
+              detail: 'Erro ao restaurar a RNC. - ' + error.error.message,
             });
           },
           complete: () => {

@@ -66,7 +66,7 @@ export class ProdutosComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'Erro ao carregar os produtos. - ' + error.error,
+          detail: 'Erro ao carregar os produtos. - ' + error.error.message,
         });
       },
     });
@@ -100,7 +100,7 @@ export class ProdutosComponent implements OnInit {
             this.messageService.add({
               severity: 'error',
               summary: 'Erro',
-              detail: 'Erro ao restaurar o produto. - ' + error.error,
+              detail: 'Erro ao restaurar o produto. - ' + error.error.message,
             });
           },
           complete: () => {
