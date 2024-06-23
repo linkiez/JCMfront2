@@ -44,7 +44,6 @@ export class ListaGenericaComponent implements OnInit {
   getListas() {
     this.listaGenericaService.getListaGenericas().subscribe({
       next: (listas) => {
-        console.log(listas);
         this.listas = listas;
       },
       error: (error) => {
@@ -52,7 +51,7 @@ export class ListaGenericaComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'Erro ao buscar listas genéricas - ' + error.error,
+          detail: 'Erro ao buscar listas genéricas - ' + error.error.message,
         });
       },
     });
@@ -68,7 +67,7 @@ export class ListaGenericaComponent implements OnInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Erro ao criar lista genérica - ' + error.error,
+            detail: 'Erro ao criar lista genérica - ' + error.error.message,
           });
         },
       });
@@ -109,7 +108,7 @@ export class ListaGenericaComponent implements OnInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Erro ao salvar lista genérica - ' + error.error,
+            detail: 'Erro ao salvar lista genérica - ' + error.error.message,
           });
         },
       });
@@ -144,6 +143,20 @@ export class ListaGenericaComponent implements OnInit {
       ($event.target as HTMLInputElement).value,
       stringVal
     );
+  }
+
+  destroyListaGenerica(lista: IListaGenerica) {
+    this.listaGenericaService.deleteListaGenerica(lista).subscribe({
+      complete: () => this.getListas(),
+      error: (error) => {
+        console.error(error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: 'Erro ao deletar lista genérica - ' + error.error.message,
+        });
+      },
+    });
   }
 
   clear(table: Table) {
