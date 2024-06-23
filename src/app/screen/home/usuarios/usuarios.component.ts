@@ -1,4 +1,4 @@
-import { UsuarioServiceDB } from './../../../services/usuario.service';
+import { UsuarioServiceDB } from '../../../services/usuarioDB.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';

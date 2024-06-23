@@ -13,7 +13,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { IProduto } from 'src/app/models/produto';
 import { ProdutoService } from 'src/app/services/produto.service';
 import { IUsuario } from 'src/app/models/usuario';
-import { UsuarioServiceDB } from 'src/app/services/usuario.service';
+import { UsuarioServiceDB } from 'src/app/services/usuarioDB.service';
 import { trackByFunction } from 'src/app/utils/trackByFunction';
 import { ActivatedRoute, Router } from '@angular/router';
 

@@ -6,7 +6,7 @@ import { IPessoa } from 'src/app/models/pessoa';
 import { IQuery } from 'src/app/models/query';
 import { IUsuario } from 'src/app/models/usuario';
 import { PessoaService } from 'src/app/services/pessoa.service';
-import { UsuarioServiceDB } from 'src/app/services/usuario.service';
+import { UsuarioServiceDB } from 'src/app/services/usuarioDB.service';
 import passwordValidator from 'password-validator';
 
 @Component({
