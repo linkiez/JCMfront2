@@ -43,11 +43,11 @@ export class ListaFilesComponent implements OnInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: `${error.status} - ${error.statusText} - ${error.error}`,
+            detail: `Erro ao remover o arquivo - ${error.error.message}`,
           });
         },
         complete: () => {
-          this.files!.splice(rowIndex, 1);
+          this.files.splice(rowIndex, 1);
           this.emitFiles();
         },
       });
@@ -62,7 +62,13 @@ export class ListaFilesComponent implements OnInit {
         .pipe(debounceTime(1000))
         .subscribe({
           next: (arquivo: IArquivo) => {
-            this.files?.push(arquivo);
+            const find = this.files.find((item) => {
+              item.id === arquivo.id;
+            });
+            console.log(find);
+            if (!find) {
+              this.files?.push(arquivo);
+            }
           },
           error: (error) => {
             this.fileLoading = false;
@@ -70,7 +76,7 @@ export class ListaFilesComponent implements OnInit {
             this.messageService.add({
               severity: 'error',
               summary: 'Erro',
-              detail: `${error.status} - ${error.statusText} - ${error.error}`,
+              detail: `Erro no upload do arquivo - ${error.error.message}`,
             });
           },
           complete: () => {
