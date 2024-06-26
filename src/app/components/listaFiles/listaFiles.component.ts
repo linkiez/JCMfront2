@@ -34,23 +34,22 @@ export class ListaFilesComponent implements OnInit {
   ngOnInit() {}
 
   removeArquivo(rowIndex: number) {
-    this.arquivoService
-      .deleteArquivo(this.files![rowIndex].id!)
-      .pipe(debounceTime(1000))
-      .subscribe({
-        error: (error) => {
-          console.error(error);
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Erro',
-            detail: `Erro ao remover o arquivo - ${error.error.message}`,
-          });
-        },
-        complete: () => {
-          this.files.splice(rowIndex, 1);
-          this.emitFiles();
-        },
-      });
+    this.arquivoService.deleteArquivo(this.files![rowIndex].id!).subscribe({
+      next: () => {
+      },
+      error: (error) => {
+        console.error(error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: `Erro ao remover o arquivo - ${error.error.message}`,
+        });
+      },
+      complete: () => {
+        this.files.splice(rowIndex, 1);
+        this.emitFiles();
+      },
+    });
   }
 
   onFileSelected(event: Event) {
@@ -65,7 +64,6 @@ export class ListaFilesComponent implements OnInit {
             const find = this.files.find((item) => {
               item.id === arquivo.id;
             });
-            console.log(find);
             if (!find) {
               this.files?.push(arquivo);
             }

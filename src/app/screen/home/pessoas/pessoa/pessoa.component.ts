@@ -168,14 +168,14 @@ export class PessoaComponent implements OnInit {
     const pessoaClean = this.cleanPessoa(this.pessoa);
     this.pessoaService.updatePessoa(pessoaClean).subscribe({
       next: async (pessoa) => {
-        pessoa.data_nasc = new Date(pessoa.data_nasc!.toString());
+        pessoa.data_nasc = new Date(pessoa.data_nasc!);
         if (pessoa.fornecedor?.data_aprov)
           pessoa.fornecedor.data_aprov = new Date(
-            pessoa.fornecedor.data_aprov.toString()
+            pessoa.fornecedor.data_aprov
           );
         if (pessoa.fornecedor?.data_venc)
           pessoa.fornecedor.data_venc = new Date(
-            pessoa.fornecedor.data_venc.toString()
+            pessoa.fornecedor.data_venc
           );
         if (pessoa.empresa?.logoColor?.id) {
           this.logoColorUrl = await firstValueFrom(
