@@ -1,6 +1,6 @@
 import { IOrdemProducaoItem } from './../../../models/ordem-producao';
 import { Component, OnInit } from '@angular/core';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { MessageService } from 'primeng/api';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { IOperador } from 'src/app/models/operador';
 import { IPedidoCompraItem } from 'src/app/models/pedido-compra';
@@ -63,7 +63,7 @@ export class RirComponent implements OnInit {
       .getProdutos(query)
       .pipe(distinctUntilChanged(), debounceTime(500))
       .subscribe({
-        next: (consulta) => (this.produtos = consulta.produtos),
+        next: consulta => this.produtos = consulta.produtos,
         error: (error) => {
           console.error(error);
           this.messageService.add({
@@ -262,6 +262,7 @@ export class RirComponent implements OnInit {
 
     this.RIRService.getRIRs(this.queryService.rir).subscribe({
       next: (consulta) => {
+
         this.rirs = consulta.rirs;
         this.rirs = this.rirs.map((rir) => {
           if (rir.recebido_data !== undefined) {
@@ -273,7 +274,7 @@ export class RirComponent implements OnInit {
           return rir;
         });
         this.totalRecords = consulta.totalRecords;
-        consoleLogDev(this.rirs);
+        consoleLogDev(consulta);
       },
       error: (error) => {
         console.error(error, this.queryService.rir);
@@ -321,5 +322,10 @@ export class RirComponent implements OnInit {
       },
       complete: () => this.getRIRs(true),
     });
+  }
+
+  optionLabel(event: IPedidoCompraItem) {
+    const label = `${event.pedido_compra?.pedido} - ${event.dimensao} - ${Math.round(event.peso!).toFixed(0)}Kg`;
+    return `${label}`;
   }
 }

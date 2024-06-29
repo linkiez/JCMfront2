@@ -2,8 +2,11 @@
   <ng-container
     [ngTemplateOutlet]="!etiquetas ? opView : etiquetaView"
   ></ng-container>
-  <footer class="noprint">
-    <hr />
+  <hr />
+  <footer class="noprint flex flex-col md:flex-row gap-2">
+    <div class="flex-grow">
+      
+    </div>
     <button
       pButton
       class="p-button p-button-success"
@@ -230,6 +233,16 @@
       </div>
     </div>
   </div>
+  <div class="mt-2">
+    <button pButton icon="pi pi-download" type="button" (click)="downloadAllFiles()"></button> Baixar todos os anexos
+  </div>
+
+  <listaFiles
+      class="noprint"
+    [files]="ordemProducao.files ?? []"
+      (onChangeFiles)="ordemProducao.files = $event"
+    ></listaFiles>
+
 </ng-template>
 <ng-template #etiquetaView>
   <!-- Cabecalho -->

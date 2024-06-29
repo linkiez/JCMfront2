@@ -1,11 +1,11 @@
 <div class="flex header flex-col">
   <div class="p-2 flex flex-col md:flex-row gap-4">
-    <span class="p-input-icon-left ml-auto">
+    <span class="p-input-icon-left">
       <i class="pi pi-search"></i>
       <input
         pInputText
         type="text"
-        placeholder="Procurar"
+        placeholder="Pesquisar"
         [(ngModel)]="queryService.ordemProducao.searchValue"
         (ngModelChange)="search()"
       />

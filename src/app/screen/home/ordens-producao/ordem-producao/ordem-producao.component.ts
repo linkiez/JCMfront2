@@ -539,4 +539,9 @@ export class OrdemProducaoComponent
       }
     }
   }
+
+  downloadAllFiles() {
+    if (this.ordemProducao.ordem_producao_items)
+    this.ArquivoService.downloadAllFilesFromArray(this.ordemProducao.ordem_producao_items)
+  }
 }

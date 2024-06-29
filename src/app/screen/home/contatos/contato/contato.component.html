@@ -90,13 +90,19 @@
     </div>
   </form>
   <hr>
-  <button pButton class="p-button p-button-danger" (click)="confirm()">
-    Excluir
-  </button>
-  <button pButton class="p-button p-button-success" (click)="createOrUpdate()">
-    Salvar
-  </button>
-  <button pButton class="p-button" (click)="getBackContatos()">Voltar</button>
+  <div class="flex flex-col md:flex-row gap-2">
+    <div class="flex-grow">
+      <button pButton class="p-button p-button-danger" (click)="confirm()">
+        Excluir
+      </button>
+    </div>
+
+    <button pButton class="p-button p-button-success" (click)="createOrUpdate()">
+      Salvar
+    </button>
+    <button pButton class="p-button" (click)="getBackContatos()">Voltar</button>
+  </div>
+
 </div>
 <p-confirmDialog
   header="Confirmação"

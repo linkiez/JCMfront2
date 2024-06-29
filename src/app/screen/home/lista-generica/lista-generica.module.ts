@@ -8,6 +8,7 @@ import { ListaGenericaComponent } from './lista-generica.component';
 import { TableModule } from 'primeng/table';
 import {ButtonModule} from 'primeng/button';
 import {DropdownModule} from 'primeng/dropdown';
+import { InputTextModule } from 'primeng/inputtext';
 
 
 
@@ -21,6 +22,7 @@ import {DropdownModule} from 'primeng/dropdown';
     FormsModule,
     ButtonModule,
     DropdownModule,
+    InputTextModule
   ]
 })
 export class ListaGenericaModule { }
