@@ -35,6 +35,7 @@ import * as XLSX from 'xlsx';
 import { IRIR } from 'src/app/models/rir';
 import { IEmpresa } from 'src/app/models/empresa';
 import { consoleLogDev } from 'src/app/utils/consoleLogDev';
+import { AutoCompleteSelectEvent } from 'primeng/autocomplete';
 
 @Component({
   selector: 'app-orcamento',
@@ -238,6 +239,8 @@ export class OrcamentoComponent implements OnInit {
 
   logotipoUrl: string = '';
 
+  orcamentoItemsByDescription: IOrcamentoItem[] = [];
+
   constructor(
     private listaGenericaService: ListaGenericaService,
     private produtoService: ProdutoService,
@@ -359,6 +362,35 @@ export class OrcamentoComponent implements OnInit {
       )
       .subscribe({
         next: (consulta) => (this.produtos = consulta.produtos),
+        error: (error) => {
+          console.error(error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: 'Error ao buscar produtos - ' + error.error.message,
+          });
+        },
+      });
+  }
+
+  searchOrcamentoItem(event: any) {
+    const query: IQuery = {
+      page: 0,
+      pageCount: 25,
+      searchValue: event.query.trim(),
+      deleted: false,
+      pessoa_id: this.orcamento.pessoa.id,
+    };
+
+    this.orcamentoService.getOrcamentoItemByDescription(query)
+      .pipe(
+        distinctUntilChanged(),
+        debounceTime(500)
+      )
+      .subscribe({
+        next: (consulta) =>{
+          this.orcamentoItemsByDescription = consulta.orcamentoItems
+        },
         error: (error) => {
           console.error(error);
           this.messageService.add({
@@ -1282,5 +1314,16 @@ export class OrcamentoComponent implements OnInit {
 
   downloadAllFiles() {
     this.arquivoService.downloadAllFilesFromArray(this.orcamento.orcamento_items);
+  }
+
+  onSelectOrcamentoItem(event: AutoCompleteSelectEvent, index: number){
+    let selectedItem = event.value as IOrcamentoItem;
+    delete selectedItem.id;
+    delete selectedItem.createdAt
+    delete selectedItem.updatedAt;
+
+    this.orcamento.orcamento_items[index] = { ...selectedItem };
+    this.calculaPeso(this.orcamento.orcamento_items[index]);
+    this.setPrecoPecaProduto(this.orcamento.orcamento_items[index])
   }
 }

@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { IOrcamento } from '../models/orcamento';
+import { IOrcamento, IOrcamentoItem } from '../models/orcamento';
 
 @Injectable({
   providedIn: 'root',
@@ -68,6 +68,24 @@ export class OrcamentoService {
       environment.backendURL + 'orcamento/' + id + '/aprovar/',
       { aprovacao: aprovacao },
       { responseType: 'json' }
+    );
+  }
+
+  getOrcamentoItemByDescription(query: IQuery): Observable<any>{
+    const chaves = Object.keys(query);
+    const valores = Object.values(query);
+    let queryString = '?';
+
+    for (let i = 0; i < chaves.length; i++) {
+      if (i > 0) queryString += '&';
+      queryString += chaves[i] + '=' + valores[i];
+    }
+
+    return this.http.get<IOrcamentoItem[]>(
+      environment.backendURL + 'orcamento/item/' + queryString,
+      {
+        responseType: 'json',
+      }
     );
   }
 }
