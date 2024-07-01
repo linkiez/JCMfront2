@@ -1317,7 +1317,7 @@ export class OrcamentoComponent implements OnInit {
   }
 
   onSelectOrcamentoItem(event: AutoCompleteSelectEvent, index: number){
-    let selectedItem = event.value as IOrcamentoItem;
+    const selectedItem = event.value as IOrcamentoItem;
     delete selectedItem.id;
     delete selectedItem.createdAt
     delete selectedItem.updatedAt;
