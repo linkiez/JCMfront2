@@ -45,7 +45,7 @@
     <tr>
       <td>{{ arquivo.id }}</td>
       <td>
-        <span class="link" (click)="goToUrl(arquivo.id)">{{
+        <span class="link" (click)="goToUrl(arquivo)">{{
           arquivo.originalFilename
         }}</span>
       </td>
@@ -83,7 +83,7 @@
   </button>
   <div *ngFor="let file of files; let index = index" class="ml-3">
     <div class="d-flex justify-content-between align-items-center h-100">
-      <span class="link" (click)="goToUrl(file.id!)">{{ file.originalFilename }}</span>
+      <a class="link text-white" (click)="goToUrl(file)">{{ file.originalFilename }} - {{ file.createdAt | date: 'dd/MM/yyyy hh:mm:ss'}}</a>
       <i class="pi pi-trash trash ml-3" (click)="removeArquivo(index)"></i>
     </div>
   </div>

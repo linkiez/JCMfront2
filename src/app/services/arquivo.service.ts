@@ -80,7 +80,7 @@ export class ArquivoService {
     });
   }
 
-  private downloadArquivo(url: string): Observable<Blob> {
+  downloadArquivo(url: string): Observable<Blob> {
     return this.http.get(url, {
       responseType: 'blob'
     });
