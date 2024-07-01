@@ -473,7 +473,7 @@
                 <p-cellEditor>
                   <ng-template pTemplate="input">
                     <input
-                      *ngIf="!orcamento.pessoa?.id"
+                      *ngIf="!orcamento.pessoa"
                       pInputText
                       class="p-inputtext"
                       [name]="'inpItemDescricao' + index"
@@ -483,7 +483,7 @@
                       [disabled]="orcamento.status !== 'Orçamento'"
                     />
                     <p-autoComplete
-                      *ngIf="orcamento.pessoa.id"
+                      *ngIf="orcamento.pessoa"
                       pInputText
                       class="p-autocomplete wv-100"
                       [name]="'searchItemDescricao' + index"
