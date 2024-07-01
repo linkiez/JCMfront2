@@ -156,7 +156,7 @@ export class OrdemProducaoComponent
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'Erro ao buscar ordem de produção - ' + error.error,
+          detail: 'Erro ao buscar ordem de produção - ' + error.error.message,
         });
       },
       complete: async () => {
@@ -194,7 +194,7 @@ export class OrdemProducaoComponent
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'Erro ao buscar impressoras - ' + error.error,
+          detail: 'Erro ao buscar impressoras - ' + error.error.message,
         });
       },
       complete: () => {},
@@ -220,7 +220,7 @@ export class OrdemProducaoComponent
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'Erro ao adicionar impressora -' + error.error,
+          detail: 'Erro ao adicionar impressora -' + error.error.message,
         });
       },
       complete: () => {
@@ -248,7 +248,7 @@ export class OrdemProducaoComponent
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'Erro ao atualizar impressora -' + error.error,
+          detail: 'Erro ao atualizar impressora -' + error.error.message,
         });
       },
       complete: () => {
@@ -317,7 +317,7 @@ export class OrdemProducaoComponent
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'Erro ao excluir impressora -' + error.error,
+          detail: 'Erro ao excluir impressora -' + error.error.message,
         });
       },
       complete: () => {
@@ -386,7 +386,7 @@ export class OrdemProducaoComponent
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Erro ao atualizar ordem de produção - ' + error.error,
+            detail: 'Erro ao atualizar ordem de produção - ' + error.error.message,
           });
         },
         complete: () => {
@@ -464,7 +464,7 @@ export class OrdemProducaoComponent
             this.messageService.add({
               severity: 'error',
               summary: 'Erro',
-              detail: 'Erro ao buscar RIRs - ' + error.error,
+              detail: 'Erro ao buscar RIRs - ' + error.error.message,
             });
           },
         });

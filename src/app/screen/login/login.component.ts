@@ -28,19 +28,20 @@ export class LoginComponent implements OnInit {
 
   login() {
     this.authenticationService.login(this.email, this.senha).subscribe({
-      next: (response) => {
+      next: async (response) => {
         const body = response.body as ILogin;
-        this.usuarioService.salvaToken(body!.accessToken, body!.refreshToken);
+        await this.usuarioService.salvaToken(body!.accessToken, body!.refreshToken);
+        this.router.navigate(['home']);
       },
       error: (error) => {
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'Erro ao fazer login - ' + error.error,
+          detail: 'Erro ao fazer login - ' + error.error.message,
         });
         console.error(error);
       },
-      complete: () => this.router.navigate(['home']),
+      complete: () => {},
     });
   }
 }

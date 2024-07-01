@@ -1,7 +1,6 @@
 import { VendedorService } from './../../../services/vendedor.service';
 import { QueryService } from './../../../services/query.service';
 import { OrcamentoService } from './../../../services/orcamento.service';
-import { PedidoCompraService } from './../../../services/pedidocompra.service';
 import {
   AfterViewInit,
   Component,
@@ -12,7 +11,6 @@ import {
 import { Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { debounceTime, distinctUntilChanged, Subscription } from 'rxjs';
-import { IPedidoCompra } from 'src/app/models/pedido-compra';
 import { IQuery } from 'src/app/models/query';
 import { Paginator } from 'primeng/paginator';
 import { IOrcamento } from 'src/app/models/orcamento';
@@ -79,7 +77,7 @@ export class OrcamentosComponent implements OnInit, OnDestroy, AfterViewInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Erro ao carregar os orçamentos - ' + error.error,
+            detail: 'Erro ao carregar os orçamentos - ' + error.error.message,
           });
         },
       });
@@ -116,7 +114,7 @@ export class OrcamentosComponent implements OnInit, OnDestroy, AfterViewInit {
             this.messageService.add({
               severity: 'error',
               summary: 'Erro',
-              detail: 'Erro ao restaurar o orçamento - ' + error.error,
+              detail: 'Erro ao restaurar o orçamento - ' + error.error.message,
             });
           },
           complete: () => {
@@ -158,7 +156,7 @@ export class OrcamentosComponent implements OnInit, OnDestroy, AfterViewInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Erro ao carregar os vendedores - ' + error.error,
+            detail: 'Erro ao carregar os vendedores - ' + error.error.message,
           });
         },
       });

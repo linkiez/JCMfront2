@@ -176,7 +176,7 @@
             "
             name="ContatoValor"
             id="ContatoValor"
-            [ngModel]="orcamento.contato?.valor | telefone"
+            [ngModel]="orcamento.contato.valor | telefone"
             (ngModelChange)="onChangeWhatsapp($event)"
             [contentEditable]="true"
             (onSelect)="selectContato($event)"
@@ -473,14 +473,71 @@
                 <p-cellEditor>
                   <ng-template pTemplate="input">
                     <input
+                      *ngIf="!orcamento.pessoa.id"
                       pInputText
                       class="p-inputtext"
-                      name="inpItemDescricao"
-                      id="inpItemDescricao"
+                      [name]="'inpItemDescricao' + index"
+                      [id]="'inpItemDescricao' + index"
                       type="text"
                       [(ngModel)]="item.descricao"
                       [disabled]="orcamento.status !== 'Orçamento'"
                     />
+                    <p-autoComplete
+                      *ngIf="orcamento.pessoa.id"
+                      pInputText
+                      class="p-autocomplete wv-100"
+                      [name]="'searchItemDescricao' + index"
+                      [id]="'searchItemDescricao' + index"
+                      type="text"
+                      [(ngModel)]="item.descricao"
+                      (onSelect)="onSelectOrcamentoItem($event, index)"
+                      [suggestions]="orcamentoItemsByDescription"
+                      (completeMethod)="searchOrcamentoItem($event)"
+                      [dropdown]="true"
+                      [style]="{ width: '100%' }"
+                      [inputStyle]="{ width: '100%' }"
+                      appendTo="body"
+                      [required]="true"
+                      [disabled]="orcamento.status !== 'Orçamento'"
+                    >
+                      <ng-template let-item pTemplate="item">
+                        <div
+                          class="flex flex-column gap-1 text-xs shadow p-2"
+                        >
+                          <span
+                            ><strong>Descrição</strong>: {{ item.descricao }}
+                            <strong>Criado</strong>:
+                            {{ item.createdAt | date : "dd/MM/yyyy" }}</span
+                          >
+                          <span
+                            ><strong>Tamanho</strong>:
+                            {{
+                              (item.largura | number : "1.0-2" : "pt-BR") + "x"
+                            }}{{
+                              item.altura
+                                ? (item.altura | number : "1.0-2" : "pt-BR") +
+                                  "x"
+                                : ""
+                            }}{{
+                              item.produto.espessura
+                                | number : "1.0-2" : "pt-BR"
+                            }}mm</span
+                          >
+                          <span>
+                            <strong>Material</strong>: {{item.produto.nome}}
+                          </span>
+                          <span *ngIf="item.files.length > 0"
+                            ><strong>Arquivos</strong>:
+                            <div class="flex flex-column gap-1">
+                              <span *ngFor="let file of item.files">
+                                {{ file.originalFilename }} -
+                                {{ file.createdAt | date : "dd/MM/yyyy" }}
+                              </span>
+                            </div>
+                          </span>
+                        </div>
+                      </ng-template>
+                    </p-autoComplete>
                   </ng-template>
                   <ng-template pTemplate="output">
                     {{ item.descricao || "-" }}
@@ -669,7 +726,10 @@
                       [disabled]="orcamento.status !== 'Orçamento'"
                       (input)="calculaPeso(item)"
                     />
-                    <table style="width: 100%">
+                    <table
+                      style="width: 100%"
+                      *ngIf="onPrecoSixMonthsAgo(item); else precosixmonthsago"
+                    >
                       <tr *ngFor="let markup of markupOptions$ | async">
                         <td>
                           <div
@@ -690,6 +750,11 @@
                         </td>
                       </tr>
                     </table>
+                    <ng-template #precosixmonthsago>
+                      <span style="font-size: xx-small" class="statusRed"
+                        >Preço desatualizado</span
+                      >
+                    </ng-template>
                   </ng-template>
                   <ng-template pTemplate="output">
                     {{ item.preco_quilo | currency : "BRL" }}

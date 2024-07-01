@@ -50,7 +50,7 @@ export class ContatoComponent implements OnInit, OnDestroy {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Não foi possível carregar o contato. - ' + error.error,
+            detail: 'Não foi possível carregar o contato. - ' + error.error.message,
           });
         },
       });
@@ -64,7 +64,7 @@ export class ContatoComponent implements OnInit, OnDestroy {
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'Não foi possível atualizar o contato. - ' + error.error,
+          detail: 'Não foi possível atualizar o contato. - ' + error.error.message,
         });
       },
       complete: () =>
@@ -84,7 +84,7 @@ export class ContatoComponent implements OnInit, OnDestroy {
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'Não foi possível criar o contato. - ' + error.error,
+          detail: 'Não foi possível criar o contato. - ' + error.error.message,
         });
       },
       complete: () =>
@@ -111,7 +111,7 @@ export class ContatoComponent implements OnInit, OnDestroy {
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'Não foi possível excluir o contato. - ' + error.error,
+          detail: 'Não foi possível excluir o contato. - ' + error.error.message,
         });
       },
     });

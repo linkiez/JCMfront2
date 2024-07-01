@@ -55,7 +55,7 @@ export class AuthenticationService {
           return true;
         }
       } catch (error: any) {
-        console.log(error);
+        console.error(error);
       }
       this.router.navigate(['login']);
       return false;

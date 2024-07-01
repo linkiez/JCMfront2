@@ -14,4 +14,5 @@ export interface IQuery {
   produto?: number;
   data_prazo?: Date;
   ano?: number;
+  pessoa_id?: number;
 }

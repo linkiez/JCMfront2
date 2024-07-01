@@ -34,23 +34,22 @@ export class ListaFilesComponent implements OnInit {
   ngOnInit() {}
 
   removeArquivo(rowIndex: number) {
-    this.arquivoService
-      .deleteArquivo(this.files![rowIndex].id!)
-      .pipe(debounceTime(1000))
-      .subscribe({
-        error: (error) => {
-          console.error(error);
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Erro',
-            detail: `${error.status} - ${error.statusText} - ${error.error}`,
-          });
-        },
-        complete: () => {
-          this.files!.splice(rowIndex, 1);
-          this.emitFiles();
-        },
-      });
+    this.arquivoService.deleteArquivo(this.files![rowIndex].id!).subscribe({
+      next: () => {
+      },
+      error: (error) => {
+        console.error(error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: `Erro ao remover o arquivo - ${error.error.message}`,
+        });
+      },
+      complete: () => {
+        this.files.splice(rowIndex, 1);
+        this.emitFiles();
+      },
+    });
   }
 
   onFileSelected(event: Event) {
@@ -62,7 +61,12 @@ export class ListaFilesComponent implements OnInit {
         .pipe(debounceTime(1000))
         .subscribe({
           next: (arquivo: IArquivo) => {
-            this.files?.push(arquivo);
+            const find = this.files.find((item) => {
+              item.id === arquivo.id;
+            });
+            if (!find) {
+              this.files?.push(arquivo);
+            }
           },
           error: (error) => {
             this.fileLoading = false;
@@ -70,7 +74,7 @@ export class ListaFilesComponent implements OnInit {
             this.messageService.add({
               severity: 'error',
               summary: 'Erro',
-              detail: `${error.status} - ${error.statusText} - ${error.error}`,
+              detail: `Erro no upload do arquivo - ${error.error.message}`,
             });
           },
           complete: () => {

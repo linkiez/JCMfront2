@@ -8,7 +8,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output
 })
 export class CaixaDeStatusComponent implements OnInit {
 
-  @Input() status: any = '';
+  @Input() status: string = 'Status';
   @Input() editable? = false
   @Input() options: string[] = [];
   @Output() statusChange = new EventEmitter<string>()

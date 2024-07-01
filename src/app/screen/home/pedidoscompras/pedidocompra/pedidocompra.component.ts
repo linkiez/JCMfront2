@@ -410,7 +410,7 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Erro ao carregar os fornecedores. - ' + error.error,
+            detail: 'Erro ao carregar os fornecedores. - ' + error.error.message,
           });
         },
       });
@@ -434,7 +434,7 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Erro ao carregar os produtos. - ' + error.error,
+            detail: 'Erro ao carregar os produtos. - ' + error.error.message,
           });
         },
       });
@@ -499,7 +499,7 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
       pedidoCompraItem.peso =
         (dimensao[0] || 1) *
         (pedidoCompraItem.produto?.peso || 0) *
-        (pedidoCompraItem.produto.espessura || 0) *
+        // (pedidoCompraItem.produto.espessura || 0) *
         (pedidoCompraItem.quantidade || 0);
     }
     if (pedidoCompraItem.produto?.categoria == 'Peça') {
@@ -593,7 +593,7 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
       .subscribe({
         next: (response) => {
           this.dynamicFormService.resizeForm(this.pedidoCompra, response);
-          this.pedidoCompra.setValue(response);
+          this.pedidoCompra.patchValue(response);
         },
         error: (error) => {
           console.error(error);

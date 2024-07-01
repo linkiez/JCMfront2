@@ -1,4 +1,4 @@
-import { UsuarioServiceDB } from './../../../services/usuario.service';
+import { UsuarioServiceDB } from '../../../services/usuarioDB.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
@@ -48,7 +48,7 @@ export class UsuariosComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'Erro ao carregar os usuários - ' + error.error,
+          detail: 'Erro ao carregar os usuários - ' + error.error.message,
         });
       },
     });

@@ -2,7 +2,7 @@ import { RIRService } from 'src/app/services/rir.service';
 import { EmpresaService } from './../../../../services/empresa.service';
 import { ContatoService } from 'src/app/services/contato.service';
 import { PessoaService } from './../../../../services/pessoa.service';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, ViewChild } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import {
   Observable,
@@ -35,11 +35,13 @@ import * as XLSX from 'xlsx';
 import { IRIR } from 'src/app/models/rir';
 import { IEmpresa } from 'src/app/models/empresa';
 import { consoleLogDev } from 'src/app/utils/consoleLogDev';
+import { AutoCompleteSelectEvent } from 'primeng/autocomplete';
 
 @Component({
   selector: 'app-orcamento',
   templateUrl: './orcamento.component.html',
   styleUrls: ['./orcamento.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OrcamentoComponent implements OnInit {
   @ViewChild('orcamentoForm', { static: false }) orcamentoForm:
@@ -108,7 +110,7 @@ export class OrcamentoComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'Error ao buscar processos - ' + error.error,
+          detail: 'Error ao buscar processos - ' + error.error.message,
         });
         return [];
       })
@@ -123,7 +125,7 @@ export class OrcamentoComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'Error ao buscar status - ' + error.error,
+          detail: 'Error ao buscar status - ' + error.error.message,
         });
         return [];
       })
@@ -138,7 +140,7 @@ export class OrcamentoComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'Error ao buscar categorias de contato - ' + error.error,
+          detail: 'Error ao buscar categorias de contato - ' + error.error.message,
         });
         return [];
       })
@@ -157,7 +159,7 @@ export class OrcamentoComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'Error ao buscar condições de pagamento - ' + error.error,
+          detail: 'Error ao buscar condições de pagamento - ' + error.error.message,
         });
         return [];
       })
@@ -176,7 +178,7 @@ export class OrcamentoComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'Error ao buscar condições de orçamento - ' + error.error,
+          detail: 'Error ao buscar condições de orçamento - ' + error.error.message,
         });
         return [];
       })
@@ -198,7 +200,7 @@ export class OrcamentoComponent implements OnInit {
           severity: 'error',
           summary: 'Erro',
           detail:
-            'Error ao buscar opções de aprovação de orçamento - ' + error.error,
+            'Error ao buscar opções de aprovação de orçamento - ' + error.error.message,
         });
         return [];
       })
@@ -213,7 +215,7 @@ export class OrcamentoComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'Error ao buscar opções de markup - ' + error.error,
+          detail: 'Error ao buscar opções de markup - ' + error.error.message,
         });
         return [];
       })
@@ -236,6 +238,8 @@ export class OrcamentoComponent implements OnInit {
   aprovacao: string = '';
 
   logotipoUrl: string = '';
+
+  orcamentoItemsByDescription: IOrcamentoItem[] = [];
 
   constructor(
     private listaGenericaService: ListaGenericaService,
@@ -285,7 +289,7 @@ export class OrcamentoComponent implements OnInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Error ao buscar contatos - ' + error.error,
+            detail: 'Error ao buscar contatos - ' + error.error.message,
           });
         },
       });
@@ -312,7 +316,7 @@ export class OrcamentoComponent implements OnInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Error ao buscar pessoas - ' + error.error,
+            detail: 'Error ao buscar pessoas - ' + error.error.message,
           });
         },
       });
@@ -336,7 +340,7 @@ export class OrcamentoComponent implements OnInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Error ao buscar vendedores - ' + error.error,
+            detail: 'Error ao buscar vendedores - ' + error.error.message,
           });
         },
       });
@@ -363,7 +367,36 @@ export class OrcamentoComponent implements OnInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Error ao buscar produtos - ' + error.error,
+            detail: 'Error ao buscar produtos - ' + error.error.message,
+          });
+        },
+      });
+  }
+
+  searchOrcamentoItem(event: any) {
+    const query: IQuery = {
+      page: 0,
+      pageCount: 25,
+      searchValue: event.query.trim(),
+      deleted: false,
+      pessoa_id: this.orcamento.pessoa.id,
+    };
+
+    this.orcamentoService.getOrcamentoItemByDescription(query)
+      .pipe(
+        distinctUntilChanged(),
+        debounceTime(500)
+      )
+      .subscribe({
+        next: (consulta) =>{
+          this.orcamentoItemsByDescription = consulta.orcamentoItems
+        },
+        error: (error) => {
+          console.error(error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: 'Error ao buscar produtos - ' + error.error.message,
           });
         },
       });
@@ -427,12 +460,12 @@ export class OrcamentoComponent implements OnInit {
     this.orcamento.desconto = Number(event.replace(/[^\d]/g, '')) / 100;
   }
 
-  onChangeFiles(event: any, item: any) {
+  onChangeFiles(event: any, item: IOrcamentoItem) {
     item.files = event;
   }
 
   onChangeWhatsapp(event: any) {
-    this.orcamento.contato!.valor = event.replace(/[^\d]/g, '');
+    this.orcamento.contato!.valor = event.toString().replace(/[^\d]/g, '');
   }
 
   selectContato($event: any) {
@@ -442,6 +475,13 @@ export class OrcamentoComponent implements OnInit {
   onChangeEmpresa(event: any) {
     this.orcamento.empresa = event;
     this.getLogoUrl();
+  }
+
+  onPrecoSixMonthsAgo(item: IOrcamentoItem) {
+    const sixMonthsAgo = new Date();
+    sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+    if (new Date(item.produto.pedido_compra_items[0].pedido_compra.data_emissao) < sixMonthsAgo) return false;
+    return true
   }
 
   calculaPeso(item: IOrcamentoItem) {
@@ -580,7 +620,7 @@ export class OrcamentoComponent implements OnInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Error ao buscar orçamento - ' + error.error,
+            detail: 'Error ao buscar orçamento - ' + error.error.message,
           });
         },
         complete: () => {
@@ -615,7 +655,7 @@ export class OrcamentoComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'Error ao buscar empresas -' + error.error,
+          detail: 'Error ao buscar empresas -' + error.error.message,
         });
       },
     });
@@ -647,7 +687,7 @@ export class OrcamentoComponent implements OnInit {
             summary: 'Erro',
             detail:
               `Error ao ${clonar ? 'clonar' : 'criar'} orçamento - ` +
-              error.error,
+              error.error.message,
           });
           this.loadingSalvar = false;
         },
@@ -685,7 +725,7 @@ export class OrcamentoComponent implements OnInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Error ao atualizar orçamento - ' + error.error,
+            detail: 'Error ao atualizar orçamento - ' + error.error.message,
           });
           this.loadingSalvar = false;
         },
@@ -717,7 +757,7 @@ export class OrcamentoComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'Error ao apagar orçamento - ' + error.error,
+          detail: 'Error ao apagar orçamento - ' + error.error.message,
         });
       },
       complete: () => {
@@ -965,7 +1005,7 @@ export class OrcamentoComponent implements OnInit {
             this.messageService.add({
               severity: 'error',
               summary: 'Erro',
-              detail: `Erro ao aprovar o orçamento - ${error.error}`,
+              detail: `Erro ao aprovar o orçamento - ${error.error.message}`,
             });
             this.loadingAprovar = false;
           },
@@ -1260,7 +1300,7 @@ export class OrcamentoComponent implements OnInit {
             this.messageService.add({
               severity: 'error',
               summary: 'Erro',
-              detail: 'Erro ao buscar RIRs - ' + error.error,
+              detail: 'Erro ao buscar RIRs - ' + error.error.message,
             });
           },
         });
@@ -1274,5 +1314,16 @@ export class OrcamentoComponent implements OnInit {
 
   downloadAllFiles() {
     this.arquivoService.downloadAllFilesFromArray(this.orcamento.orcamento_items);
+  }
+
+  onSelectOrcamentoItem(event: AutoCompleteSelectEvent, index: number){
+    const selectedItem = event.value as IOrcamentoItem;
+    delete selectedItem.id;
+    delete selectedItem.createdAt
+    delete selectedItem.updatedAt;
+
+    this.orcamento.orcamento_items[index] = { ...selectedItem };
+    this.calculaPeso(this.orcamento.orcamento_items[index]);
+    this.setPrecoPecaProduto(this.orcamento.orcamento_items[index])
   }
 }

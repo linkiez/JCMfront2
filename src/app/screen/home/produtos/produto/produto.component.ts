@@ -45,7 +45,7 @@ export class ProdutoComponent implements OnInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Não foi possível carregar o produto. - ' + error.error,
+            detail: 'Não foi possível carregar o produto. - ' + error.error.message,
           });
         },
       });
@@ -59,7 +59,7 @@ export class ProdutoComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'Não foi possível atualizar o produto. - ' + error.error,
+          detail: 'Não foi possível atualizar o produto. - ' + error.error.message,
         });
       },
       complete: () =>
@@ -80,7 +80,7 @@ export class ProdutoComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'Não foi possível criar o produto. - ' + error.error,
+          detail: 'Não foi possível criar o produto. - ' + error.error.message,
         });
       },
       complete: () => {
@@ -109,7 +109,7 @@ export class ProdutoComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'Não foi possível excluir o produto. - ' + error.error,
+          detail: 'Não foi possível excluir o produto. - ' + error.error.message,
         });
       },
       complete: () => {
