@@ -473,7 +473,7 @@
                 <p-cellEditor>
                   <ng-template pTemplate="input">
                     <input
-                      *ngIf="!orcamento.pessoa.id"
+                      *ngIf="!orcamento.pessoa?.id"
                       pInputText
                       class="p-inputtext"
                       [name]="'inpItemDescricao' + index"
