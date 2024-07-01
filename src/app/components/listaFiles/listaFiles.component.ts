@@ -7,7 +7,7 @@ import {
   Output,
 } from '@angular/core';
 import { MessageService } from 'primeng/api';
-import { debounceTime } from 'rxjs';
+import { debounceTime, firstValueFrom } from 'rxjs';
 import { IArquivo } from 'src/app/models/arquivo';
 import { ArquivoService } from 'src/app/services/arquivo.service';
 
@@ -35,8 +35,7 @@ export class ListaFilesComponent implements OnInit {
 
   removeArquivo(rowIndex: number) {
     this.arquivoService.deleteArquivo(this.files![rowIndex].id!).subscribe({
-      next: () => {
-      },
+      next: () => {},
       error: (error) => {
         console.error(error);
         this.messageService.add({
@@ -85,13 +84,22 @@ export class ListaFilesComponent implements OnInit {
     }
   }
 
-  goToUrl(id: number): void {
+  goToUrl(arquivo: IArquivo): void {
     this.arquivoService
-      .getUrlArquivo(id)
+      .getUrlArquivo(arquivo.id)
       .pipe(debounceTime(1000))
       .subscribe({
-        next: (url: string) => {
-          document.location.href = url;
+        next: async (url: string) => {
+          console.log(arquivo.mimeType);
+          const blob = await firstValueFrom(this.arquivoService.downloadArquivo(url));
+          const urlBlob = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = urlBlob;
+          a.download = arquivo.originalFilename!;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(urlBlob);
         },
       });
   }
