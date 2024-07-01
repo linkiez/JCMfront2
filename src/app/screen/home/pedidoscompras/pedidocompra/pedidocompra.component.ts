@@ -499,7 +499,7 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
       pedidoCompraItem.peso =
         (dimensao[0] || 1) *
         (pedidoCompraItem.produto?.peso || 0) *
-        (pedidoCompraItem.produto.espessura || 0) *
+        // (pedidoCompraItem.produto.espessura || 0) *
         (pedidoCompraItem.quantidade || 0);
     }
     if (pedidoCompraItem.produto?.categoria == 'Peça') {
