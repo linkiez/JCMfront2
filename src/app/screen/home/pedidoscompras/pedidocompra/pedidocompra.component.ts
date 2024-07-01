@@ -593,7 +593,7 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
       .subscribe({
         next: (response) => {
           this.dynamicFormService.resizeForm(this.pedidoCompra, response);
-          this.pedidoCompra.setValue(response);
+          this.pedidoCompra.patchValue(response);
         },
         error: (error) => {
           console.error(error);
