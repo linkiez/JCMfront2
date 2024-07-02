@@ -6,6 +6,7 @@ import {
   Input,
   OnInit,
   Output,
+  ChangeDetectorRef
 } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { debounceTime, firstValueFrom } from 'rxjs';
@@ -16,7 +17,7 @@ import { ArquivoService } from 'src/app/services/arquivo.service';
   selector: 'listaFiles',
   templateUrl: './listaFiles.component.html',
   styleUrls: ['./listaFiles.component.css'],
-  // changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ListaFilesComponent implements OnInit, AfterViewInit {
   @Input() files: Array<IArquivo> = [];
@@ -31,7 +32,8 @@ export class ListaFilesComponent implements OnInit, AfterViewInit {
 
   constructor(
     private messageService: MessageService,
-    private arquivoService: ArquivoService
+    private arquivoService: ArquivoService,
+    private changeDetectorRef: ChangeDetectorRef
   ) {}
 
   ngOnInit() {}
@@ -52,11 +54,13 @@ export class ListaFilesComponent implements OnInit, AfterViewInit {
           detail: `Erro ao remover o arquivo - ${error.error.message}`,
         });
         this.filesLoading[rowIndex] = false;
+        this.changeDetectorRef.detectChanges();
       },
       complete: () => {
         this.files.splice(rowIndex, 1);
         this.filesLoading.splice(rowIndex, 1);
         this.emitFiles();
+        this.changeDetectorRef.detectChanges();
       },
     });
   }
@@ -90,6 +94,7 @@ export class ListaFilesComponent implements OnInit, AfterViewInit {
           complete: () => {
             this.fileLoading = false;
             this.emitFiles();
+            this.changeDetectorRef.detectChanges();
           },
         });
     }
@@ -111,10 +116,6 @@ export class ListaFilesComponent implements OnInit, AfterViewInit {
           a.click();
           document.body.removeChild(a);
           URL.revokeObjectURL(urlBlob);
-          this.filesLoading[this.files.indexOf(arquivo)] = false;
-          console.log(this.files.indexOf(arquivo))
-          console.log(this.filesLoading);
-          console.log(this.files);
         },
         error: (error) => {
           console.error(error);
@@ -124,9 +125,11 @@ export class ListaFilesComponent implements OnInit, AfterViewInit {
             detail: `Erro ao obter URL do arquivo - ${error.error.message}`,
           });
           this.filesLoading[this.files.indexOf(arquivo)] = false;
+          this.changeDetectorRef.detectChanges();
         },
         complete: () => {
-
+          this.filesLoading[this.files.indexOf(arquivo)] = false;
+          this.changeDetectorRef.detectChanges();
         },
       });
   }
