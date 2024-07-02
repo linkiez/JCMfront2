@@ -2,7 +2,13 @@ import { RIRService } from 'src/app/services/rir.service';
 import { EmpresaService } from './../../../../services/empresa.service';
 import { ContatoService } from 'src/app/services/contato.service';
 import { PessoaService } from './../../../../services/pessoa.service';
-import { ChangeDetectionStrategy, Component, OnInit, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  ViewChild,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import {
   Observable,
@@ -140,7 +146,8 @@ export class OrcamentoComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'Error ao buscar categorias de contato - ' + error.error.message,
+          detail:
+            'Error ao buscar categorias de contato - ' + error.error.message,
         });
         return [];
       })
@@ -159,7 +166,8 @@ export class OrcamentoComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'Error ao buscar condições de pagamento - ' + error.error.message,
+          detail:
+            'Error ao buscar condições de pagamento - ' + error.error.message,
         });
         return [];
       })
@@ -178,7 +186,8 @@ export class OrcamentoComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'Error ao buscar condições de orçamento - ' + error.error.message,
+          detail:
+            'Error ao buscar condições de orçamento - ' + error.error.message,
         });
         return [];
       })
@@ -200,7 +209,8 @@ export class OrcamentoComponent implements OnInit {
           severity: 'error',
           summary: 'Erro',
           detail:
-            'Error ao buscar opções de aprovação de orçamento - ' + error.error.message,
+            'Error ao buscar opções de aprovação de orçamento - ' +
+            error.error.message,
         });
         return [];
       })
@@ -254,7 +264,8 @@ export class OrcamentoComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private RIRService: RIRService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private changeDetectorRef: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -382,14 +393,12 @@ export class OrcamentoComponent implements OnInit {
       pessoa_id: this.orcamento.pessoa.id,
     };
 
-    this.orcamentoService.getOrcamentoItemByDescription(query)
-      .pipe(
-        distinctUntilChanged(),
-        debounceTime(500)
-      )
+    this.orcamentoService
+      .getOrcamentoItemByDescription(query)
+      .pipe(distinctUntilChanged(), debounceTime(500))
       .subscribe({
-        next: (consulta) =>{
-          this.orcamentoItemsByDescription = consulta.orcamentoItems
+        next: (consulta) => {
+          this.orcamentoItemsByDescription = consulta.orcamentoItems;
         },
         error: (error) => {
           console.error(error);
@@ -462,6 +471,7 @@ export class OrcamentoComponent implements OnInit {
 
   onChangeFiles(event: any, item: IOrcamentoItem) {
     item.files = event;
+    this.changeDetectorRef.detectChanges();
   }
 
   onChangeWhatsapp(event: any) {
@@ -480,8 +490,12 @@ export class OrcamentoComponent implements OnInit {
   onPrecoSixMonthsAgo(item: IOrcamentoItem) {
     const sixMonthsAgo = new Date();
     sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
-    if (new Date(item.produto.pedido_compra_items[0].pedido_compra.data_emissao) < sixMonthsAgo) return false;
-    return true
+    if (
+      new Date(item.produto.pedido_compra_items[0].pedido_compra.data_emissao) <
+      sixMonthsAgo
+    )
+      return false;
+    return true;
   }
 
   calculaPeso(item: IOrcamentoItem) {
@@ -643,22 +657,21 @@ export class OrcamentoComponent implements OnInit {
 
   getEmpresas() {
     this.empresaService
-    .getEmpresas({ page: 0, pageCount: 10, searchValue: '', deleted: false })
-    .pipe(
-      map((empresas: any) => empresas.empresas)
-    ).subscribe({
-      next: (response: IEmpresa[]) => {
-        this.empresas = response;
-      },
-      error: (error) => {
-        console.error(error);
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Erro',
-          detail: 'Error ao buscar empresas -' + error.error.message,
-        });
-      },
-    });
+      .getEmpresas({ page: 0, pageCount: 10, searchValue: '', deleted: false })
+      .pipe(map((empresas: any) => empresas.empresas))
+      .subscribe({
+        next: (response: IEmpresa[]) => {
+          this.empresas = response;
+        },
+        error: (error) => {
+          console.error(error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: 'Error ao buscar empresas -' + error.error.message,
+          });
+        },
+      });
   }
 
   create(clonar?: boolean) {
@@ -905,7 +918,7 @@ export class OrcamentoComponent implements OnInit {
       });
       valido = false;
     }
-    if (!this.orcamento.cond_pag){
+    if (!this.orcamento.cond_pag) {
       this.messageService.add({
         severity: 'error',
         summary: 'Erro',
@@ -915,7 +928,7 @@ export class OrcamentoComponent implements OnInit {
     }
     if (
       !this.orcamento.contato?.id &&
-      (this.orcamento.contato?.nome?? "").split(' ').length < 2
+      (this.orcamento.contato?.nome ?? '').split(' ').length < 2
     ) {
       this.messageService.add({
         severity: 'error',
@@ -1313,17 +1326,19 @@ export class OrcamentoComponent implements OnInit {
   }
 
   downloadAllFiles() {
-    this.arquivoService.downloadAllFilesFromArray(this.orcamento.orcamento_items);
+    this.arquivoService.downloadAllFilesFromArray(
+      this.orcamento.orcamento_items
+    );
   }
 
-  onSelectOrcamentoItem(event: AutoCompleteSelectEvent, index: number){
+  onSelectOrcamentoItem(event: AutoCompleteSelectEvent, index: number) {
     const selectedItem = event.value as IOrcamentoItem;
     delete selectedItem.id;
-    delete selectedItem.createdAt
+    delete selectedItem.createdAt;
     delete selectedItem.updatedAt;
 
     this.orcamento.orcamento_items[index] = { ...selectedItem };
     this.calculaPeso(this.orcamento.orcamento_items[index]);
-    this.setPrecoPecaProduto(this.orcamento.orcamento_items[index])
+    this.setPrecoPecaProduto(this.orcamento.orcamento_items[index]);
   }
 }
