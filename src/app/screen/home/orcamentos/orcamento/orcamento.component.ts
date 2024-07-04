@@ -47,7 +47,7 @@ import { AutoCompleteSelectEvent } from 'primeng/autocomplete';
   selector: 'app-orcamento',
   templateUrl: './orcamento.component.html',
   styleUrls: ['./orcamento.component.css'],
-  // changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OrcamentoComponent implements OnInit {
   @ViewChild('orcamentoForm', { static: false }) orcamentoForm:
@@ -639,6 +639,7 @@ export class OrcamentoComponent implements OnInit {
         },
         complete: () => {
           this.getLogoUrl();
+          this.changeDetectorRef.detectChanges();
         },
       });
     }
