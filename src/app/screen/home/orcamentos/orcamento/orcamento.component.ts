@@ -499,12 +499,22 @@ export class OrcamentoComponent implements OnInit {
   }
 
   calculaPeso(item: IOrcamentoItem) {
+    const addEspessura = (item: IOrcamentoItem) => {
+      if (item.produto.espessura > 20) {
+        return 20 * 2;
+      } else if (item.produto.espessura < 3) {
+        return 3 * 2;
+      } else {
+        return item.produto.espessura * 2;
+      }
+    };
+
     if (item.produto !== null && item.produto !== undefined) {
       switch (item.produto.categoria) {
         case 'Chapa':
           item.peso =
-            ((item.largura || 0) / 1000) *
-            ((item.altura || 0) / 1000) *
+            (((item.largura || 0)+addEspessura(item)) / 1000) *
+            (((item.altura || 0)+addEspessura(item)) / 1000) *
             (item.produto.espessura || 0) *
             (item.produto.peso || 0) *
             (item.quantidade || 0);
@@ -639,6 +649,7 @@ export class OrcamentoComponent implements OnInit {
         },
         complete: () => {
           this.getLogoUrl();
+          this.changeDetectorRef.detectChanges();
         },
       });
     }

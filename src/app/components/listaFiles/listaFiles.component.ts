@@ -39,7 +39,9 @@ export class ListaFilesComponent implements OnInit, AfterViewInit {
   ngOnInit() {}
 
   ngAfterViewInit(): void {
-    this.filesLoading = this.files.map(() => false);
+    if (this.files && this.files.length > 0) {
+      this.filesLoading = this.files.map(() => false);
+    }
   }
 
   removeArquivo(rowIndex: number) {
