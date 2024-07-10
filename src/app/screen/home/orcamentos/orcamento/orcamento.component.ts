@@ -1,3 +1,4 @@
+import { ValidadorService } from './../../../../utils/validadores';
 import { RIRService } from 'src/app/services/rir.service';
 import { EmpresaService } from './../../../../services/empresa.service';
 import { ContatoService } from 'src/app/services/contato.service';
@@ -30,7 +31,6 @@ import { IQuery } from 'src/app/models/query';
 import { IVendedor } from 'src/app/models/vendedor';
 import { ListaGenericaService } from 'src/app/services/lista-generica.service';
 import { ProdutoService } from 'src/app/services/produto.service';
-import { validador } from 'src/app/utils/validadores';
 import { VendedorService } from 'src/app/services/vendedor.service';
 import { v4 as uuidv4 } from 'uuid';
 import { OrcamentoService } from 'src/app/services/orcamento.service';
@@ -265,7 +265,8 @@ export class OrcamentoComponent implements OnInit {
     private RIRService: RIRService,
     private router: Router,
     private route: ActivatedRoute,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    private validadorService: ValidadorService
   ) {}
 
   ngOnInit() {
@@ -613,7 +614,7 @@ export class OrcamentoComponent implements OnInit {
   }
 
   validaEmail(email: string) {
-    const emailValidador = validador.filter(
+    const emailValidador = this.validadorService.validador.filter(
       (validacao) => validacao.campo === 'email'
     )[0];
 
@@ -649,7 +650,6 @@ export class OrcamentoComponent implements OnInit {
         },
         complete: () => {
           this.getLogoUrl();
-          this.changeDetectorRef.detectChanges();
         },
       });
     }
@@ -664,6 +664,7 @@ export class OrcamentoComponent implements OnInit {
     } else {
       this.logotipoUrl = '';
     }
+    this.changeDetectorRef.detectChanges();
   }
 
   getEmpresas() {

@@ -16,6 +16,7 @@ import { IUsuario } from 'src/app/models/usuario';
 import { UsuarioServiceDB } from 'src/app/services/usuarioDB.service';
 import { trackByFunction } from 'src/app/utils/trackByFunction';
 import { ActivatedRoute, Router } from '@angular/router';
+import { consoleLogDev } from 'src/app/utils/consoleLogDev';
 
 @Component({
   selector: 'app-rnc',
@@ -90,6 +91,7 @@ export class RNCComponent implements OnInit {
       this.RNCService.getRNC(id).subscribe({
         next: (rnc) => {
           this.rnc = rnc;
+          consoleLogDev(rnc)
           this.editor.quill.pasteHTML(rnc.descricao);
         },
         error: (error) => {

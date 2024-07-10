@@ -1,16 +1,15 @@
+import { ValidadorService } from './../../../../utils/validadores';
 import { EmpresaService } from './../../../../services/empresa.service';
-import { Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { debounceTime, firstValueFrom, map, Subscription } from 'rxjs';
+import { debounceTime, firstValueFrom, map } from 'rxjs';
 import { IPessoa } from 'src/app/models/pessoa';
 import { PessoaService } from 'src/app/services/pessoa.service';
 import { IContato } from 'src/app/models/contato';
-import { DOCUMENT } from '@angular/common';
 import { ArquivoService } from 'src/app/services/arquivo.service';
 import { IValidação } from 'src/app/models/validacao';
 import { ListaGenericaService } from 'src/app/services/lista-generica.service';
-import { validador } from 'src/app/utils/validadores';
 import { IArquivo } from 'src/app/models/arquivo';
 import { VendedorService } from 'src/app/services/vendedor.service';
 import { OperadorService } from 'src/app/services/operador.service';
@@ -34,7 +33,8 @@ export class PessoaComponent implements OnInit {
     private vendedorService: VendedorService,
     private empresaService: EmpresaService,
     private operadorService: OperadorService,
-    private fornecedorService: FornecedorService
+    private fornecedorService: FornecedorService,
+    private validadorService: ValidadorService,
   ) {}
   pessoa: IPessoa = { pessoa_juridica: false };
   pessoaOld: IPessoa = {};
@@ -492,7 +492,7 @@ export class PessoaComponent implements OnInit {
   }
 
   validaCpfCnpj() {
-    const cnpj_cpfValidador = validador.filter(
+    const cnpj_cpfValidador = this.validadorService.validador.filter(
       (validacao) => validacao.campo === 'cnpj_cpf'
     );
 
@@ -541,7 +541,7 @@ export class PessoaComponent implements OnInit {
               this.pessoa.ie_rg =
                 consultaPJ.estabelecimento.inscricoes_estaduais[0].inscricao_estadual;
 
-              this.pessoa.descricao += `Situação Cadastral: ${consultaPJ.estabelecimento.situacao_cadastral}`;
+              this.pessoa.descricao = this.pessoa.descricao??'' + `Situação Cadastral: ${consultaPJ.estabelecimento.situacao_cadastral}`;
             },
             complete: () => {
               this.cnpjLoading = false;
@@ -552,7 +552,7 @@ export class PessoaComponent implements OnInit {
   }
 
   validaEmail(email: string, campo: string) {
-    const emailValidador = validador.filter(
+    const emailValidador = this.validadorService.validador.filter(
       (validacao) => validacao.campo === 'email'
     )[0];
 
