@@ -11,6 +11,7 @@ import { MessageModule } from 'primeng/message';
 import { FormsModule } from '@angular/forms';
 import { PaginatorModule } from 'primeng/paginator';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { DialogService, DynamicDialogRef, DynamicDialogConfig } from 'primeng/dynamicdialog';
 
 @NgModule({
   declarations: [ContatosComponent, ContatoComponent],
@@ -24,6 +25,11 @@ import { SharedModule } from 'src/app/shared/shared.module';
     ConfirmDialogModule,
     PaginatorModule,
     SharedModule
+  ],
+  providers: [
+    DialogService,
+    DynamicDialogRef,
+    DynamicDialogConfig,
   ],
 })
 export class ContatosModule {}

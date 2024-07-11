@@ -21,6 +21,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { ListaFilesModule } from 'src/app/components/listaFiles/listaFiles.module';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
+import { DialogService, DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 
 @NgModule({
   declarations: [PessoasComponent, PessoaComponent],
@@ -43,6 +44,11 @@ import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
     ListaFilesModule,
     InputGroupModule,
     InputGroupAddonModule,
+  ],
+  providers: [
+    DialogService,
+    DynamicDialogRef,
+    DynamicDialogConfig,
   ],
 })
 export class PessoasModule {}
