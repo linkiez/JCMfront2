@@ -44,6 +44,7 @@ export class IqfComponent implements OnInit {
     'Fevereiro',
     'Março',
     'Abril',
+    'Maio',
     'Junho',
     'Julho',
     'Agosto',

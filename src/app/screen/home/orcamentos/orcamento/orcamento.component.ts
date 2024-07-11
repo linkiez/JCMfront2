@@ -42,12 +42,16 @@ import { IRIR } from 'src/app/models/rir';
 import { IEmpresa } from 'src/app/models/empresa';
 import { consoleLogDev } from 'src/app/utils/consoleLogDev';
 import { AutoCompleteSelectEvent } from 'primeng/autocomplete';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { PessoaComponent } from '../../pessoas/pessoa/pessoa.component';
+import { ContatoComponent } from '../../contatos/contato/contato.component';
 
 @Component({
   selector: 'app-orcamento',
   templateUrl: './orcamento.component.html',
   styleUrls: ['./orcamento.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [],
 })
 export class OrcamentoComponent implements OnInit {
   @ViewChild('orcamentoForm', { static: false }) orcamentoForm:
@@ -251,6 +255,8 @@ export class OrcamentoComponent implements OnInit {
 
   orcamentoItemsByDescription: IOrcamentoItem[] = [];
 
+  ref: DynamicDialogRef | undefined;
+
   constructor(
     private listaGenericaService: ListaGenericaService,
     private produtoService: ProdutoService,
@@ -266,13 +272,46 @@ export class OrcamentoComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private changeDetectorRef: ChangeDetectorRef,
-    private validadorService: ValidadorService
+    private validadorService: ValidadorService,
+    public dialogService: DialogService
   ) {}
 
   ngOnInit() {
     this.id = Number(this.route.snapshot.paramMap.get('id'));
     this.getEmpresas();
     this.getOrcamento();
+  }
+
+  editPessoa() {
+    this.ref = this.dialogService.open(PessoaComponent, {
+      data: {
+        pessoa: this.orcamento.pessoa,
+      },
+      header: 'Editar Pessoa',
+    });
+
+    this.ref.onClose.subscribe((pessoa) => {
+      if (pessoa) {
+        this.orcamento.pessoa = pessoa;
+        this.changeDetectorRef.detectChanges();
+      }
+    });
+  }
+
+  editContato() {
+    this.ref = this.dialogService.open(ContatoComponent, {
+      data: {
+        contato: this.orcamento.contato,
+      },
+      header: 'Editar Contato',
+    });
+
+    this.ref.onClose.subscribe((contato) => {
+      if (contato) {
+        this.orcamento.contato = contato;
+        this.changeDetectorRef.detectChanges();
+      }
+    });
   }
 
   searchContato(searchTerm: any, number?: boolean) {
@@ -304,6 +343,9 @@ export class OrcamentoComponent implements OnInit {
             detail: 'Error ao buscar contatos - ' + error.error.message,
           });
         },
+        complete: () => {
+          this.changeDetectorRef.detectChanges();
+        },
       });
   }
 
@@ -331,6 +373,9 @@ export class OrcamentoComponent implements OnInit {
             detail: 'Error ao buscar pessoas - ' + error.error.message,
           });
         },
+        complete: () => {
+          this.changeDetectorRef.detectChanges();
+        },
       });
   }
 
@@ -354,6 +399,9 @@ export class OrcamentoComponent implements OnInit {
             summary: 'Erro',
             detail: 'Error ao buscar vendedores - ' + error.error.message,
           });
+        },
+        complete: () => {
+          this.changeDetectorRef.detectChanges();
         },
       });
   }
@@ -382,6 +430,9 @@ export class OrcamentoComponent implements OnInit {
             detail: 'Error ao buscar produtos - ' + error.error.message,
           });
         },
+        complete: () => {
+          this.changeDetectorRef.detectChanges();
+        },
       });
   }
 
@@ -408,6 +459,9 @@ export class OrcamentoComponent implements OnInit {
             summary: 'Erro',
             detail: 'Error ao buscar produtos - ' + error.error.message,
           });
+        },
+        complete: () => {
+          this.changeDetectorRef.detectChanges();
         },
       });
   }
@@ -514,8 +568,8 @@ export class OrcamentoComponent implements OnInit {
       switch (item.produto.categoria) {
         case 'Chapa':
           item.peso =
-            (((item.largura || 0)+addEspessura(item)) / 1000) *
-            (((item.altura || 0)+addEspessura(item)) / 1000) *
+            (((item.largura || 0) + addEspessura(item)) / 1000) *
+            (((item.altura || 0) + addEspessura(item)) / 1000) *
             (item.produto.espessura || 0) *
             (item.produto.peso || 0) *
             (item.quantidade || 0);
@@ -622,7 +676,7 @@ export class OrcamentoComponent implements OnInit {
   }
 
   getBackOrcamentos() {
-    window.history.back();
+    this.router.navigate(['/home/orcamentos']);
   }
 
   getOrcamento() {
@@ -683,6 +737,9 @@ export class OrcamentoComponent implements OnInit {
             detail: 'Error ao buscar empresas -' + error.error.message,
           });
         },
+        complete: () => {
+          this.changeDetectorRef.detectChanges();
+        }
       });
   }
 

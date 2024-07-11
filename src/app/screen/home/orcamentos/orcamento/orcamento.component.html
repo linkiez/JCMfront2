@@ -109,7 +109,8 @@
       <div class="row">
         <div class="col-12 col-sm-4 d-print-flex">
           <label for="ContatoNome">Nome: </label>
-          <p-autoComplete
+          <p-inputGroup>
+            <p-autoComplete
             name="ContatoNome"
             id="ContatoNome"
             [(ngModel)]="orcamento.contato!.nome"
@@ -147,6 +148,17 @@
               </div>
             </ng-template></p-autoComplete
           >
+            <p-inputGroupAddon class="p-0">
+              <button
+                type="button"
+                pButton
+                icon="pi pi-pencil"
+                class="m-0"
+                (click)="editContato()"
+              ></button>
+            </p-inputGroupAddon>
+          </p-inputGroup>
+
           <span class="noview fontLarge">{{
             orcamento.contato?.nome || "-"
           }}</span>
@@ -290,19 +302,30 @@
       <div class="row">
         <div class="col-12 col-sm-6 d-print-flex">
           <label for="inpPessoaNome">Nome: </label>
-          <p-autoComplete
-            name="inpPessoaNome"
-            id="inpPessoaNome"
-            [(ngModel)]="orcamento.pessoa"
-            field="nome"
-            [suggestions]="pessoas"
-            (completeMethod)="searchPessoa($event)"
-            [style]="{ width: '100%' }"
-            [inputStyle]="{ width: '100%' }"
-            appendTo="body"
-            [disabled]="orcamento.status !== 'Orçamento'"
-            class="noprint flex-grow-1"
-          ></p-autoComplete>
+          <p-inputGroup>
+            <p-autoComplete
+              name="inpPessoaNome"
+              id="inpPessoaNome"
+              [(ngModel)]="orcamento.pessoa"
+              field="nome"
+              [suggestions]="pessoas"
+              (completeMethod)="searchPessoa($event)"
+              [style]="{ width: '100%' }"
+              [inputStyle]="{ width: '100%' }"
+              appendTo="body"
+              [disabled]="orcamento.status !== 'Orçamento'"
+              class="noprint flex-grow-1"
+            ></p-autoComplete>
+            <p-inputGroupAddon class="p-0">
+              <button
+                type="button"
+                pButton
+                icon="pi pi-pencil"
+                class="m-0"
+                (click)="editPessoa()"
+              ></button>
+            </p-inputGroupAddon>
+          </p-inputGroup>
           <span class="noview">{{ orcamento.pessoa?.nome || "-" }}</span>
         </div>
         <div class="col-6 col-sm-3 d-print-flex">
@@ -501,9 +524,7 @@
                       [disabled]="orcamento.status !== 'Orçamento'"
                     >
                       <ng-template let-item pTemplate="item">
-                        <div
-                          class="flex flex-column gap-1 text-xs shadow p-2"
-                        >
+                        <div class="flex flex-column gap-1 text-xs shadow p-2">
                           <span
                             ><strong>Descrição</strong>: {{ item.descricao }}
                             <strong>Criado</strong>:
@@ -524,7 +545,7 @@
                             }}mm</span
                           >
                           <span>
-                            <strong>Material</strong>: {{item.produto.nome}}
+                            <strong>Material</strong>: {{ item.produto.nome }}
                           </span>
                           <span *ngIf="item.files.length > 0"
                             ><strong>Arquivos</strong>:
