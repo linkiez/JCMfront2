@@ -1,6 +1,6 @@
 {
   "name": "jcmfront2",
-  "version": "1.16.9",
+  "version": "1.16.10",
   "scripts": {
     "ng": "ng",
     "start": "node server.js",
