@@ -1,825 +1,877 @@
 <div class="page">
-<div>
-  <h2>Pessoa</h2>
-  <form action="" class="p">
-    <div class="row">
-      <div class="input col-2">
-        <label for="InpIdPessoa">Id</label>
-        <input
-          name="InpIdPessoa"
-          class="p-inputtext"
-          type="text"
-          pInputText
-          disabled
-          [(ngModel)]="pessoa.id"
-        />
-      </div>
-      <div class="input col-10">
-        <label for="InpNome">Nome</label>
-        <input
-          name="InpNome"
-          class="p-inputtext"
-          type="text"
-          pInputText
-          [(ngModel)]="pessoa.nome"
-        />
-        <small *ngIf="pessoaOld.nome">"{{ pessoaOld.nome }}"</small>
-      </div>
-      <div class="input col-2">
-        <p-checkbox
-          name="ChkPessoaJuridica"
-          [(ngModel)]="pessoa.pessoa_juridica"
-          label="Pessoa Juridica"
-          [binary]="true"
-          (ngModelChange)="validaCpfCnpj()"
-        ></p-checkbox>
-      </div>
+  <div>
+    <h2>Pessoa</h2>
+    <form action="" class="p">
+      <div class="row">
+        <div class="input col-2">
+          <label for="InpIdPessoa">Id</label>
+          <input
+            name="InpIdPessoa"
+            class="p-inputtext"
+            type="text"
+            pInputText
+            disabled
+            [(ngModel)]="pessoa.id"
+          />
+        </div>
+        <div class="input col-10">
+          <label for="InpNome">Nome</label>
+          <input
+            name="InpNome"
+            class="p-inputtext"
+            type="text"
+            pInputText
+            [(ngModel)]="pessoa.nome"
+          />
+          <small *ngIf="pessoaOld.nome">"{{ pessoaOld.nome }}"</small>
+        </div>
+        <div class="input col-2">
+          <p-checkbox
+            name="ChkPessoaJuridica"
+            [(ngModel)]="pessoa.pessoa_juridica"
+            label="Pessoa Juridica"
+            [binary]="true"
+            (ngModelChange)="validaCpfCnpj()"
+          ></p-checkbox>
+        </div>
 
-      <div class="input col-10" *ngIf="pessoa.pessoa_juridica">
-        <label for="InpRazaoSocial">Razão Social</label>
-        <input
-          name="InpRazaoSocial"
-          class="p-inputtext"
-          type="text"
-          pInputText
-          [(ngModel)]="pessoa.razao_social"
-        />
-        <small *ngIf="pessoaOld.razao_social"
-          >"{{ pessoaOld.razao_social }}"</small
-        >
-      </div>
-      <div class="input col-10" *ngIf="!pessoa.pessoa_juridica"></div>
-      <div class="input col-4">
-        <label for="InpCnpjCpf">
-          <span *ngIf="pessoa.pessoa_juridica">CNPJ</span
-          ><span *ngIf="!pessoa.pessoa_juridica">CPF</span></label
-        >
-        <input
-          name="InpCnpjCpf"
-          class="p-inputtext"
-          type="text"
-          pInputText
-          [ngModel]="pessoa.cnpj_cpf | cpfCnpj"
-          [ngClass]="{ 'ng-erro': cnpj_cpfInvalido.length }"
-          (ngModelChange)="pessoa.cnpj_cpf = $event; cleanPessoa(pessoa)"
-          (change)="validaCpfCnpj()"
-          [ngClass]="{ cnpjLoading: cnpjLoading }"
-          maxlength="18"
-        />
-        <p-progressSpinner
-          *ngIf="cnpjLoading"
-          [style]="{ width: '27px', height: '27px', margin: 'auto' }"
-          styleClass="custom-spinner"
-          strokeWidth="8"
-          fill="var(--surface-ground)"
-          animationDuration="1s"
-        ></p-progressSpinner>
-        <small
-          class="p-error block"
-          *ngFor="let validacao of cnpj_cpfInvalido"
-          >{{ validacao.menssagem }}</small
-        >
-      </div>
-      <div class="input col-4">
-        <label for="InpIeRg">
-          <span *ngIf="pessoa.pessoa_juridica">Incrição Estadual</span>
-          <span *ngIf="!pessoa.pessoa_juridica">RG</span>
-        </label>
-        <input
-          name="InpIeRg"
-          class="p-inputtext"
-          type="text"
-          pInputText
-          [ngModel]="pessoa.ie_rg | ieRg"
-          (ngModelChange)="pessoa.ie_rg = $event"
-          maxlength="15"
-        />
-      </div>
-      <div class="input col-4">
-        <label for="InpTelefone">Telefone</label>
-        <input
-          name="InpTelefone"
-          class="p-inputtext"
-          type="text"
-          pInputText
-          [ngModel]="pessoa.telefone | telefone"
-          (ngModelChange)="pessoa.telefone = $event"
-        />
-        <small *ngIf="pessoaOld.telefone"
-          >"{{ pessoaOld.telefone | telefone }}"</small
-        >
-      </div>
-      <div class="input col-6">
-        <label for="InpEmail">Email</label>
-        <input
-          name="InpEmail"
-          class="p-inputtext"
-          type="text"
-          pInputText
-          [(ngModel)]="pessoa.email"
-          (ngModelChange)="validaEmail($event, 'email')"
-        />
-        <small *ngIf="pessoaOld.email">"{{ pessoaOld.email }}"</small>
-        <small
-          *ngIf="!emailInvalido.email && emailInvalido.email !== undefined"
-          class="p-error block"
-          >Email invalido.</small
-        >
-      </div>
-      <div class="input col-6">
-        <label for="InpEmailNFe">Email NFe</label>
-        <input
-          name="InpEmailNFe"
-          class="p-inputtext"
-          type="text"
-          pInputText
-          [(ngModel)]="pessoa.email_nfe"
-          (ngModelChange)="validaEmail($event, 'email_nfe')"
-        />
-        <small
-          *ngIf="
-            !emailInvalido.email_nfe && emailInvalido.email_nfe !== undefined
-          "
-          class="p-error block"
-          >Email invalido.</small
-        >
-      </div>
-      <div class="input col-2">
-        <label for="InpCEP">CEP</label>
-        <input
-          name="InpCEP"
-          class="p-inputtext"
-          type="text"
-          pInputText
-          [ngModel]="pessoa.cep | cep"
-          (ngModelChange)="pessoa.cep = $event"
-          (change)="consultaCep()"
-        />
-        <small *ngIf="pessoaOld.cep">"{{ pessoaOld.cep }}"</small>
-      </div>
-      <div class="input col-4">
-        <label for="InpEndereco">Endereço</label>
-        <input
-          name="InpEndereco"
-          class="p-inputtext"
-          type="text"
-          pInputText
-          [(ngModel)]="pessoa.endereco"
-        />
-        <small *ngIf="pessoaOld.endereco">"{{ pessoaOld.endereco }}"</small>
-      </div>
-      <div class="input col-1">
-        <label for="InpNumero">Numero</label>
-        <input
-          name="InpNumero"
-          id="InpNumero"
-          class="p-inputtext"
-          type="text"
-          pInputText
-          [(ngModel)]="pessoa.numero"
-        />
-      </div>
-      <div class="input col-2">
-        <label for="InpComplemento">Complemento</label>
-        <input
-          name="InpComplemento"
-          class="p-inputtext"
-          type="text"
-          pInputText
-          [(ngModel)]="pessoa.complemento"
-        />
-      </div>
-      <div class="input col-3">
-        <label for="InpBairro">Bairro</label>
-        <input
-          name="InpBairro"
-          class="p-inputtext"
-          type="text"
-          pInputText
-          [(ngModel)]="pessoa.bairro"
-        />
-      </div>
-      <div class="input col-4">
-        <label for="InpMunicipio">Cidade</label>
-        <input
-          name="InpMunicipio"
-          class="p-inputtext"
-          type="text"
-          pInputText
-          [(ngModel)]="pessoa.municipio"
-        />
-        <small *ngIf="pessoaOld.municipio">"{{ pessoaOld.municipio }}"</small>
-      </div>
-      <div class="input col-2">
-        <label for="InpUF">UF</label>
-        <input
-          name="InpUF"
-          class="p-inputtext"
-          type="text"
-          pInputText
-          [ngModel]="pessoa.uf | uppercase"
-          (ngModelChange)="pessoa.uf = $event"
-          maxlength="2"
-        />
-        <small *ngIf="pessoaOld.uf">"{{ pessoaOld.uf }}"</small>
-      </div>
+        <div class="input col-10" *ngIf="pessoa.pessoa_juridica">
+          <label for="InpRazaoSocial">Razão Social</label>
+          <input
+            name="InpRazaoSocial"
+            class="p-inputtext"
+            type="text"
+            pInputText
+            [(ngModel)]="pessoa.razao_social"
+          />
+          <small *ngIf="pessoaOld.razao_social"
+            >"{{ pessoaOld.razao_social }}"</small
+          >
+        </div>
+        <div class="input col-10" *ngIf="!pessoa.pessoa_juridica"></div>
+        <div class="input col-4">
+          <label for="InpCnpjCpf">
+            <span *ngIf="pessoa.pessoa_juridica">CNPJ</span
+            ><span *ngIf="!pessoa.pessoa_juridica">CPF</span></label
+          >
+          <p-inputGroup>
+            <input
+              name="InpCnpjCpf"
+              class="p-inputtext"
+              type="text"
+              pInputText
+              [ngModel]="pessoa.cnpj_cpf | cpfCnpj"
+              [ngClass]="{ 'ng-erro': cnpj_cpfInvalido.length }"
+              (ngModelChange)="pessoa.cnpj_cpf = $event; cleanPessoa(pessoa)"
+              (change)="validaCpfCnpj()"
+              [ngClass]="{ cnpjLoading: cnpjLoading }"
+              maxlength="18"
+            />
+            <p-inputGroupAddon class="p-0">
+              <button
+                *ngIf="!cnpjLoading"
+                type="button"
+                pButton
+                icon="pi pi-search"
+                (click)="validaCpfCnpj()"
+                class="m-0"
+              ></button>
+              <p-progressSpinner
+                *ngIf="cnpjLoading"
+                [style]="{ width: '27px', height: '27px', margin: 'auto' }"
+                styleClass="custom-spinner"
+                strokeWidth="8"
+                fill="var(--surface-ground)"
+                animationDuration="1s"
+              ></p-progressSpinner>
+            </p-inputGroupAddon>
+          </p-inputGroup>
 
-      <div class="input col-6">
-        <label for="InpDataNasc">
-          <span *ngIf="pessoa.pessoa_juridica">Data de fundação</span>
-          <span *ngIf="!pessoa.pessoa_juridica">Data de nascimento</span>
-        </label>
-        <p-calendar
-          name="InpDataNasc"
-          [(ngModel)]="pessoa.data_nasc"
-          dateFormat="dd/mm/yy"
-          styleClass="w-100"
-        ></p-calendar>
-        <small *ngIf="pessoaOld.data_nasc"
-          >"{{ pessoaOld.data_nasc | date : "dd/MM/yyyy HH:mm:ss" }}"</small
-        >
-      </div>
-      <div class="input">
-        <label for="descricaoPessoa">Descrição</label>
-        <textarea
-          name="descricaoPessoa"
-          [rows]="5"
-          [cols]="30"
-          pInputTextarea
-          class="p-inputtextarea"
-          [(ngModel)]="pessoa.descricao"
-        ></textarea>
-      </div>
-      <div class="input col-6">
-        <label for="InpCreatedAt">Criado em</label>
-        <input
-          name="InpCreatedAt"
-          class="p-inputtext"
-          type="text"
-          pInputText
-          disabled
-          value="{{ pessoa.createdAt | date : 'dd/MM/yyyy HH:mm:ss' }}"
-        />
-      </div>
-      <div class="input col-6">
-        <label for="InpUpdatedAt">Atualizado em</label>
-        <input
-          name="InpUpdatedAt"
-          class="p-inputtext"
-          type="text"
-          pInputText
-          disabled
-          value="{{ pessoa.updatedAt | date : 'dd/MM/yyyy HH:mm:ss' }}"
-        />
-      </div>
-      <div>
-        <p-table
-          *ngIf="pessoa.contatos"
-          [value]="pessoa.contatos"
-          responsiveLayout="scroll"
-        >
-          <ng-template pTemplate="caption">
-            <div class="d-flex justify-content-between">
-              <h3>Contatos</h3>
+          <small
+            class="p-error block"
+            *ngFor="let validacao of cnpj_cpfInvalido"
+            >{{ validacao.menssagem }}</small
+          >
+        </div>
+        <div class="input col-4">
+          <label for="InpIeRg">
+            <span *ngIf="pessoa.pessoa_juridica">Incrição Estadual</span>
+            <span *ngIf="!pessoa.pessoa_juridica">RG</span>
+          </label>
+          <input
+            name="InpIeRg"
+            class="p-inputtext"
+            type="text"
+            pInputText
+            [ngModel]="pessoa.ie_rg | ieRg"
+            (ngModelChange)="pessoa.ie_rg = $event"
+            maxlength="15"
+          />
+        </div>
+        <div class="input col-4">
+          <label for="InpTelefone">Telefone</label>
+          <input
+            name="InpTelefone"
+            class="p-inputtext"
+            type="text"
+            pInputText
+            [ngModel]="pessoa.telefone | telefone"
+            (ngModelChange)="pessoa.telefone = $event"
+          />
+          <small *ngIf="pessoaOld.telefone"
+            >"{{ pessoaOld.telefone | telefone }}"</small
+          >
+        </div>
+        <div class="input col-6">
+          <label for="InpEmail">Email</label>
+          <input
+            name="InpEmail"
+            class="p-inputtext"
+            type="text"
+            pInputText
+            [(ngModel)]="pessoa.email"
+            (ngModelChange)="validaEmail($event, 'email')"
+          />
+          <small *ngIf="pessoaOld.email">"{{ pessoaOld.email }}"</small>
+          <small
+            *ngIf="!emailInvalido.email && emailInvalido.email !== undefined"
+            class="p-error block"
+            >Email invalido.</small
+          >
+        </div>
+        <div class="input col-6">
+          <label for="InpEmailNFe">Email NFe</label>
+          <input
+            name="InpEmailNFe"
+            class="p-inputtext"
+            type="text"
+            pInputText
+            [(ngModel)]="pessoa.email_nfe"
+            (ngModelChange)="validaEmail($event, 'email_nfe')"
+          />
+          <small
+            *ngIf="
+              !emailInvalido.email_nfe && emailInvalido.email_nfe !== undefined
+            "
+            class="p-error block"
+            >Email invalido.</small
+          >
+        </div>
+        <div class="input col-2">
+          <label for="InpCEP">CEP</label>
+          <p-inputGroup>
+            <input
+            name="InpCEP"
+            class="p-inputtext"
+            type="text"
+            pInputText
+            [ngModel]="pessoa.cep | cep"
+            (ngModelChange)="pessoa.cep = $event"
+            (change)="consultaCep()"
+          />
+          <p-inputGroupAddon class="p-0">
+            <button
+                *ngIf="!cepLoading"
+                type="button"
+                pButton
+                icon="pi pi-search"
+                (click)="consultaCep()"
+                class="m-0"
+              ></button>
+              <p-progressSpinner
+                *ngIf="cepLoading"
+                [style]="{ width: '27px', height: '27px', margin: 'auto' }"
+                styleClass="custom-spinner"
+                strokeWidth="8"
+                fill="var(--surface-ground)"
+                animationDuration="1s"
+              ></p-progressSpinner>
+          </p-inputGroupAddon>
+          </p-inputGroup>
 
-              &nbsp;<button pButton class="p-button" (click)="newContato()">
-                <i class="pi pi-plus"></i>
-              </button>
-            </div>
-          </ng-template>
+          <small *ngIf="pessoaOld.cep">"{{ pessoaOld.cep }}"</small>
+        </div>
+        <div class="input col-4">
+          <label for="InpEndereco">Endereço</label>
+          <input
+            name="InpEndereco"
+            class="p-inputtext"
+            type="text"
+            pInputText
+            [(ngModel)]="pessoa.endereco"
+          />
+          <small *ngIf="pessoaOld.endereco">"{{ pessoaOld.endereco }}"</small>
+        </div>
+        <div class="input col-1">
+          <label for="InpNumero">Numero</label>
+          <input
+            name="InpNumero"
+            id="InpNumero"
+            class="p-inputtext"
+            type="text"
+            pInputText
+            [(ngModel)]="pessoa.numero"
+          />
+        </div>
+        <div class="input col-2">
+          <label for="InpComplemento">Complemento</label>
+          <input
+            name="InpComplemento"
+            class="p-inputtext"
+            type="text"
+            pInputText
+            [(ngModel)]="pessoa.complemento"
+          />
+        </div>
+        <div class="input col-3">
+          <label for="InpBairro">Bairro</label>
+          <input
+            name="InpBairro"
+            class="p-inputtext"
+            type="text"
+            pInputText
+            [(ngModel)]="pessoa.bairro"
+          />
+        </div>
+        <div class="input col-4">
+          <label for="InpMunicipio">Cidade</label>
+          <input
+            name="InpMunicipio"
+            class="p-inputtext"
+            type="text"
+            pInputText
+            [(ngModel)]="pessoa.municipio"
+          />
+          <small *ngIf="pessoaOld.municipio">"{{ pessoaOld.municipio }}"</small>
+        </div>
+        <div class="input col-2">
+          <label for="InpUF">UF</label>
+          <input
+            name="InpUF"
+            class="p-inputtext"
+            type="text"
+            pInputText
+            [ngModel]="pessoa.uf | uppercase"
+            (ngModelChange)="pessoa.uf = $event"
+            maxlength="2"
+          />
+          <small *ngIf="pessoaOld.uf">"{{ pessoaOld.uf }}"</small>
+        </div>
 
-          <ng-template pTemplate="header">
-            <tr>
-              <th>Nome</th>
-              <th>Tipo</th>
-              <th></th>
-              <th></th>
-            </tr>
-          </ng-template>
-          <ng-template pTemplate="body" let-contato let-i="rowIndex">
-            <tr>
-              <td>
+        <div class="input col-6">
+          <label for="InpDataNasc">
+            <span *ngIf="pessoa.pessoa_juridica">Data de fundação</span>
+            <span *ngIf="!pessoa.pessoa_juridica">Data de nascimento</span>
+          </label>
+          <p-calendar
+            name="InpDataNasc"
+            [(ngModel)]="pessoa.data_nasc"
+            dateFormat="dd/mm/yy"
+            styleClass="w-100"
+          ></p-calendar>
+          <small *ngIf="pessoaOld.data_nasc"
+            >"{{ pessoaOld.data_nasc | date : "dd/MM/yyyy HH:mm:ss" }}"</small
+          >
+        </div>
+        <div class="input">
+          <label for="descricaoPessoa">Descrição</label>
+          <textarea
+            name="descricaoPessoa"
+            [rows]="5"
+            [cols]="30"
+            pInputTextarea
+            class="p-inputtextarea"
+            [(ngModel)]="pessoa.descricao"
+          ></textarea>
+        </div>
+        <div class="input col-6">
+          <label for="InpCreatedAt">Criado em</label>
+          <input
+            name="InpCreatedAt"
+            class="p-inputtext"
+            type="text"
+            pInputText
+            disabled
+            value="{{ pessoa.createdAt | date : 'dd/MM/yyyy HH:mm:ss' }}"
+          />
+        </div>
+        <div class="input col-6">
+          <label for="InpUpdatedAt">Atualizado em</label>
+          <input
+            name="InpUpdatedAt"
+            class="p-inputtext"
+            type="text"
+            pInputText
+            disabled
+            value="{{ pessoa.updatedAt | date : 'dd/MM/yyyy HH:mm:ss' }}"
+          />
+        </div>
+        <div>
+          <p-table
+            *ngIf="pessoa.contatos"
+            [value]="pessoa.contatos"
+            responsiveLayout="scroll"
+          >
+            <ng-template pTemplate="caption">
+              <div class="d-flex justify-content-between">
+                <h3>Contatos</h3>
+
+                &nbsp;<button pButton class="p-button" (click)="newContato()">
+                  <i class="pi pi-plus"></i>
+                </button>
+              </div>
+            </ng-template>
+
+            <ng-template pTemplate="header">
+              <tr>
+                <th>Nome</th>
+                <th>Tipo</th>
+                <th></th>
+                <th></th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-contato let-i="rowIndex">
+              <tr>
+                <td>
+                  <input
+                    [name]="'InpContatoNome' + i"
+                    type="text"
+                    class="p-inputtext"
+                    pInputText
+                    [(ngModel)]="contato.nome"
+                  />
+                </td>
+                <td>
+                  <p-dropdown
+                    [name]="'InpContatoTipo' + i"
+                    [options]="categorias"
+                    [(ngModel)]="contato.tipo"
+                    styleClass="w-100"
+                    appendTo="body"
+                    optionLabel="valor"
+                    optionValue="valor"
+                  ></p-dropdown>
+                </td>
+                <td>
+                  <input
+                    *ngIf="
+                      contato.tipo === 'Telefone' || contato.tipo === 'WhatsApp'
+                    "
+                    [name]="'InpContatoValor' + i"
+                    type="text"
+                    class="p-inputtext"
+                    pInputText
+                    [ngModel]="contato.valor | telefone"
+                    (ngModelChange)="contato.valor = $event"
+                  />
+                  <input
+                    *ngIf="contato.tipo === 'Email'"
+                    [name]="'InpContatoValor' + i"
+                    type="text"
+                    class="p-inputtext"
+                    pInputText
+                    [(ngModel)]="contato.valor"
+                    (ngModelChange)="validaEmail($event, 'contato' + i)"
+                  />
+                  <small
+                    *ngIf="
+                      !emailInvalido['contato' + i] &&
+                      emailInvalido['contato' + i] !== undefined
+                    "
+                    class="p-error block"
+                    >Email invalido.</small
+                  >
+                  <input
+                    *ngIf="
+                      contato.tipo !== 'Email' &&
+                      contato.tipo !== 'Telefone' &&
+                      contato.tipo !== 'WhatsApp'
+                    "
+                    [name]="'InpContatoValor' + i"
+                    type="text"
+                    class="p-inputtext"
+                    pInputText
+                    [(ngModel)]="contato.valor"
+                  />
+                </td>
+                <td>
+                  <i class="pi pi-trash trash" (click)="removeContato(i)"></i>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+        <div>
+          <listaFiles
+            [files]="pessoa.files!"
+            (onChangeFiles)="pessoa.files = $event"
+          ></listaFiles>
+        </div>
+      </div>
+    </form>
+    <p-accordion [multiple]="true">
+      <p-accordionTab header="Fornecedor">
+        <ng-template pTemplate="header"
+          >&nbsp;<button
+            pButton
+            class="p-button"
+            (click)="newFornecedor()"
+            *ngIf="!pessoa.fornecedor"
+          >
+            <i class="pi pi-plus"></i></button
+        ></ng-template>
+        <ng-template pTemplate="content">
+          <form action="d-flex flex-wrap" *ngIf="pessoa.fornecedor">
+            <div class="row">
+              <div class="input col-2">
+                <label for="InpIdFornecedor">Id</label>
                 <input
-                  [name]="'InpContatoNome' + i"
-                  type="text"
+                  name="InpIdFornecedor"
                   class="p-inputtext"
+                  type="text"
                   pInputText
-                  [(ngModel)]="contato.nome"
+                  [(ngModel)]="pessoa.fornecedor.id"
+                  disabled
                 />
-              </td>
-              <td>
-                <p-dropdown
-                  [name]="'InpContatoTipo' + i"
-                  [options]="categorias"
-                  [(ngModel)]="contato.tipo"
+              </div>
+              <div class="input col-5">
+                <label for="InpDataAprovacao">Data Aprovação</label>
+                <p-calendar
+                  name="InpDataAprovacao"
+                  [(ngModel)]="pessoa.fornecedor.data_aprov"
+                  dateFormat="dd/mm/yy"
                   styleClass="w-100"
-                  appendTo="body"
-                  optionLabel="valor"
-                  optionValue="valor"
-                ></p-dropdown>
-              </td>
-              <td>
+                ></p-calendar>
+              </div>
+              <div class="input col-5">
+                <label for="InpDataVencimento">Data Vencimento</label>
+                <p-calendar
+                  name="InpDataVencimento"
+                  [(ngModel)]="pessoa.fornecedor.data_venc"
+                  dateFormat="dd/mm/yy"
+                  styleClass="w-100"
+                ></p-calendar>
+              </div>
+              <div class="input">
+                <label for="descricaoFornecedor">Observações</label>
+                <textarea
+                  name="descricaoFornecedor"
+                  [rows]="5"
+                  [cols]="30"
+                  pInputTextarea
+                  class="p-inputtextarea"
+                  [(ngModel)]="pessoa.fornecedor.observacao"
+                ></textarea>
+              </div>
+              <div class="input col-4">
+                <label for="InpCreatedAtFornecedor">Criado em:</label>
                 <input
-                  *ngIf="
-                    contato.tipo === 'Telefone' || contato.tipo === 'WhatsApp'
-                  "
-                  [name]="'InpContatoValor' + i"
-                  type="text"
+                  name="InpCreatedAtFornecedor"
                   class="p-inputtext"
+                  type="text"
                   pInputText
-                  [ngModel]="contato.valor | telefone"
-                  (ngModelChange)="contato.valor = $event"
+                  value="{{
+                    pessoa.fornecedor.createdAt | date : 'dd/MM/yyyy HH:mm:ss'
+                  }}"
+                  disabled
                 />
+              </div>
+              <div class="input col-4">
+                <label for="InpUpdatedAtFornecedor">Atualizado em:</label>
                 <input
-                  *ngIf="contato.tipo === 'Email'"
-                  [name]="'InpContatoValor' + i"
-                  type="text"
+                  name="InpUpdatedAtFornecedor"
                   class="p-inputtext"
+                  type="text"
                   pInputText
-                  [(ngModel)]="contato.valor"
-                  (ngModelChange)="validaEmail($event, 'contato' + i)"
+                  value="{{
+                    pessoa.fornecedor.updatedAt | date : 'dd/MM/yyyy HH:mm:ss'
+                  }}"
+                  disabled
                 />
-                <small
-                  *ngIf="
-                    !emailInvalido['contato' + i] &&
-                    emailInvalido['contato' + i] !== undefined
-                  "
-                  class="p-error block"
-                  >Email invalido.</small
+              </div>
+              <div class="input col-4" *ngIf="pessoa.fornecedor.deletedAt">
+                <label for="InpUpdatedAtFornecedor">Apagado em:</label>
+                <input
+                  name="InpDeletedAtFornecedor"
+                  class="p-inputtext"
+                  type="text"
+                  pInputText
+                  value="{{
+                    pessoa.fornecedor.deletedAt | date : 'dd/MM/yyyy HH:mm:ss'
+                  }}"
+                  disabled
+                />
+              </div>
+              <div class="col-1 d-flex flex-column justify-content-end">
+                <button
+                  pButton
+                  type="button"
+                  style="height: 42px; width: 42px"
+                  (click)="deleteOrRestoreFornecedor()"
                 >
+                  <i
+                    class="pi"
+                    [ngClass]="{
+                      'pi-trash': !pessoa.fornecedor.deletedAt,
+                      'pi-history': pessoa.fornecedor.deletedAt
+                    }"
+                  ></i>
+                </button>
+              </div>
+            </div></form
+        ></ng-template>
+      </p-accordionTab>
+      <p-accordionTab header="Operador">
+        <ng-template pTemplate="header"
+          >&nbsp;<button
+            pButton
+            class="p-button"
+            (click)="newOperador()"
+            *ngIf="!pessoa.operador"
+          >
+            <i class="pi pi-plus"></i></button
+        ></ng-template>
+        <ng-template pTemplate="content"
+          ><form action="" class="" *ngIf="pessoa.operador">
+            <div class="row">
+              <div class="input col-1">
+                <label for="InpIdOperador">Id</label>
                 <input
-                  *ngIf="
-                    contato.tipo !== 'Email' &&
-                    contato.tipo !== 'Telefone' &&
-                    contato.tipo !== 'WhatsApp'
-                  "
-                  [name]="'InpContatoValor' + i"
-                  type="text"
+                  name="InpIdOperador"
                   class="p-inputtext"
+                  type="text"
                   pInputText
-                  [(ngModel)]="contato.valor"
+                  disabled
+                  [(ngModel)]="pessoa.operador.id"
                 />
-              </td>
-              <td>
-                <i class="pi pi-trash trash" (click)="removeContato(i)"></i>
-              </td>
-            </tr>
-          </ng-template>
-        </p-table>
-      </div>
-      <div>
-        <listaFiles
-          [files]="pessoa.files!"
-          (onChangeFiles)="pessoa.files = $event"
-        ></listaFiles>
-      </div>
-    </div>
-  </form>
-  <p-accordion [multiple]="true">
-    <p-accordionTab header="Fornecedor">
-      <ng-template pTemplate="header"
-        >&nbsp;<button
-          pButton
-          class="p-button"
-          (click)="newFornecedor()"
-          *ngIf="!pessoa.fornecedor"
-        >
-          <i class="pi pi-plus"></i></button
-      ></ng-template>
-      <ng-template pTemplate="content">
-        <form action="d-flex flex-wrap" *ngIf="pessoa.fornecedor">
-          <div class="row">
-            <div class="input col-2">
-              <label for="InpIdFornecedor">Id</label>
-              <input
-                name="InpIdFornecedor"
-                class="p-inputtext"
-                type="text"
-                pInputText
-                [(ngModel)]="pessoa.fornecedor.id"
-                disabled
-              />
+              </div>
+              <div class="input col-3">
+                <label for="InpCreatedAtOperador">Criado em:</label>
+                <input
+                  name="InpCreatedAtOperador"
+                  class="p-inputtext"
+                  type="text"
+                  pInputText
+                  value="{{
+                    pessoa.operador.createdAt | date : 'dd/MM/yyyy HH:mm:ss'
+                  }}"
+                  disabled
+                />
+              </div>
+              <div class="input col-3">
+                <label for="InpUpdatedAtOperador">Atualizado em:</label>
+                <input
+                  name="InpUpdatedAtOperador"
+                  class="p-inputtext"
+                  type="text"
+                  pInputText
+                  value="{{
+                    pessoa.operador.updatedAt | date : 'dd/MM/yyyy HH:mm:ss'
+                  }}"
+                  disabled
+                />
+              </div>
+              <div class="input col-3" *ngIf="pessoa.operador.deletedAt">
+                <label for="InpUpdatedAtOperador">Apagado em:</label>
+                <input
+                  name="InpDeletedAtOperador"
+                  class="p-inputtext"
+                  type="text"
+                  pInputText
+                  value="{{
+                    pessoa.operador.deletedAt | date : 'dd/MM/yyyy HH:mm:ss'
+                  }}"
+                  disabled
+                />
+              </div>
+              <div class="col-1 d-flex flex-column justify-content-end">
+                <button
+                  pButton
+                  type="button"
+                  style="height: 42px; width: 42px"
+                  (click)="deleteOrRestoreOperador()"
+                >
+                  <i
+                    class="pi"
+                    [ngClass]="{
+                      'pi-trash': !pessoa.operador.deletedAt,
+                      'pi-history': pessoa.operador.deletedAt
+                    }"
+                  ></i>
+                </button>
+              </div>
+            </div></form
+        ></ng-template>
+      </p-accordionTab>
+      <p-accordionTab header="Empresa">
+        <ng-template pTemplate="header"
+          >&nbsp;<button
+            pButton
+            class="p-button"
+            (click)="newEmpresa()"
+            *ngIf="!pessoa.empresa"
+          >
+            <i class="pi pi-plus"></i></button
+        ></ng-template>
+        <ng-template pTemplate="content"
+          ><form action="" class="" *ngIf="pessoa.empresa">
+            <div class="row">
+              <div class="input col-1">
+                <label for="InpIdEmpresa">Id</label>
+                <input
+                  name="InpIdEmpresa"
+                  class="p-inputtext"
+                  type="text"
+                  pInputText
+                  disabled
+                  [(ngModel)]="pessoa.empresa.id"
+                />
+              </div>
+              <div class="input col-2">
+                <label for="InpCreatedAtEmpresa">Criado em:</label>
+                <input
+                  name="InpCreatedAtEmpresa"
+                  class="p-inputtext"
+                  type="text"
+                  pInputText
+                  value="{{
+                    pessoa.empresa.createdAt | date : 'dd/MM/yyyy HH:mm:ss'
+                  }}"
+                  disabled
+                />
+              </div>
+              <div class="input col-2">
+                <label for="InpUpdatedAtEmpresa">Atualizado em:</label>
+                <input
+                  name="InpUpdatedAtEmpresa"
+                  class="p-inputtext"
+                  type="text"
+                  pInputText
+                  value="{{
+                    pessoa.empresa.updatedAt | date : 'dd/MM/yyyy HH:mm:ss'
+                  }}"
+                  disabled
+                />
+              </div>
+              <div class="input col-2" *ngIf="pessoa.empresa.deletedAt">
+                <label for="InpUpdatedAtEmpresa">Apagado em:</label>
+                <input
+                  name="InpUpdatedAtEmpresa"
+                  class="p-inputtext"
+                  type="text"
+                  pInputText
+                  value="{{
+                    pessoa.empresa.deletedAt | date : 'dd/MM/yyyy HH:mm:ss'
+                  }}"
+                  disabled
+                />
+              </div>
+              <div class="input col-3">
+                <label for="">Token TinyERP</label>
+                <input
+                  name="InpTokenTinyERP"
+                  class="p-inputtext"
+                  type="text"
+                  pInputText
+                  [(ngModel)]="pessoa.empresa.token_tiny"
+                />
+              </div>
+              <div class="col-1 d-flex flex-column justify-content-end">
+                <button
+                  pButton
+                  type="button"
+                  style="height: 42px; width: 42px"
+                  (click)="deleteOrRestoreEmpresa()"
+                >
+                  <i
+                    class="pi"
+                    [ngClass]="{
+                      'pi-trash': !pessoa.empresa.deletedAt,
+                      'pi-history': pessoa.empresa.deletedAt
+                    }"
+                  ></i>
+                </button>
+              </div>
             </div>
-            <div class="input col-5">
-              <label for="InpDataAprovacao">Data Aprovação</label>
-              <p-calendar
-                name="InpDataAprovacao"
-                [(ngModel)]="pessoa.fornecedor.data_aprov"
-                dateFormat="dd/mm/yy"
-                styleClass="w-100"
-              ></p-calendar>
-            </div>
-            <div class="input col-5">
-              <label for="InpDataVencimento">Data Vencimento</label>
-              <p-calendar
-                name="InpDataVencimento"
-                [(ngModel)]="pessoa.fornecedor.data_venc"
-                dateFormat="dd/mm/yy"
-                styleClass="w-100"
-              ></p-calendar>
-            </div>
-            <div class="input">
-              <label for="descricaoFornecedor">Observações</label>
-              <textarea
-                name="descricaoFornecedor"
-                [rows]="5"
-                [cols]="30"
-                pInputTextarea
-                class="p-inputtextarea"
-                [(ngModel)]="pessoa.fornecedor.observacao"
-              ></textarea>
-            </div>
-            <div class="input col-4">
-              <label for="InpCreatedAtFornecedor">Criado em:</label>
-              <input
-                name="InpCreatedAtFornecedor"
-                class="p-inputtext"
-                type="text"
-                pInputText
-                value="{{
-                  pessoa.fornecedor.createdAt | date : 'dd/MM/yyyy HH:mm:ss'
-                }}"
-                disabled
-              />
-            </div>
-            <div class="input col-4">
-              <label for="InpUpdatedAtFornecedor">Atualizado em:</label>
-              <input
-                name="InpUpdatedAtFornecedor"
-                class="p-inputtext"
-                type="text"
-                pInputText
-                value="{{
-                  pessoa.fornecedor.updatedAt | date : 'dd/MM/yyyy HH:mm:ss'
-                }}"
-                disabled
-              />
-            </div>
-            <div class="input col-4" *ngIf="pessoa.fornecedor.deletedAt">
-              <label for="InpUpdatedAtFornecedor">Apagado em:</label>
-              <input
-                name="InpDeletedAtFornecedor"
-                class="p-inputtext"
-                type="text"
-                pInputText
-                value="{{
-                  pessoa.fornecedor.deletedAt | date : 'dd/MM/yyyy HH:mm:ss'
-                }}"
-                disabled
-              />
-            </div>
-            <div class="col-1 d-flex flex-column justify-content-end">
-              <button
-                pButton
-                type="button"
-                style="height: 42px; width: 42px"
-                (click)="deleteOrRestoreFornecedor()"
-              >
-                <i
-                  class="pi"
-                  [ngClass]="{
-                    'pi-trash': !pessoa.fornecedor.deletedAt,
-                    'pi-history': pessoa.fornecedor.deletedAt
-                  }"
-                ></i>
-              </button>
-            </div>
-          </div></form
-      ></ng-template>
-    </p-accordionTab>
-    <p-accordionTab header="Operador">
-      <ng-template pTemplate="header"
-        >&nbsp;<button
-          pButton
-          class="p-button"
-          (click)="newOperador()"
-          *ngIf="!pessoa.operador"
-        >
-          <i class="pi pi-plus"></i></button
-      ></ng-template>
-      <ng-template pTemplate="content"
-        ><form action="" class="" *ngIf="pessoa.operador">
-          <div class="row">
-            <div class="input col-1">
-              <label for="InpIdOperador">Id</label>
-              <input
-                name="InpIdOperador"
-                class="p-inputtext"
-                type="text"
-                pInputText
-                disabled
-                [(ngModel)]="pessoa.operador.id"
-              />
-            </div>
-            <div class="input col-3">
-              <label for="InpCreatedAtOperador">Criado em:</label>
-              <input
-                name="InpCreatedAtOperador"
-                class="p-inputtext"
-                type="text"
-                pInputText
-                value="{{
-                  pessoa.operador.createdAt | date : 'dd/MM/yyyy HH:mm:ss'
-                }}"
-                disabled
-              />
-            </div>
-            <div class="input col-3">
-              <label for="InpUpdatedAtOperador">Atualizado em:</label>
-              <input
-                name="InpUpdatedAtOperador"
-                class="p-inputtext"
-                type="text"
-                pInputText
-                value="{{
-                  pessoa.operador.updatedAt | date : 'dd/MM/yyyy HH:mm:ss'
-                }}"
-                disabled
-              />
-            </div>
-            <div class="input col-3" *ngIf="pessoa.operador.deletedAt">
-              <label for="InpUpdatedAtOperador">Apagado em:</label>
-              <input
-                name="InpDeletedAtOperador"
-                class="p-inputtext"
-                type="text"
-                pInputText
-                value="{{
-                  pessoa.operador.deletedAt | date : 'dd/MM/yyyy HH:mm:ss'
-                }}"
-                disabled
-              />
-            </div>
-            <div class="col-1 d-flex flex-column justify-content-end">
-              <button
-                pButton
-                type="button"
-                style="height: 42px; width: 42px"
-                (click)="deleteOrRestoreOperador()"
-              >
-                <i
-                  class="pi"
-                  [ngClass]="{
-                    'pi-trash': !pessoa.operador.deletedAt,
-                    'pi-history': pessoa.operador.deletedAt
-                  }"
-                ></i>
-              </button>
-            </div>
-          </div></form
-      ></ng-template>
-    </p-accordionTab>
-    <p-accordionTab header="Empresa">
-      <ng-template pTemplate="header"
-        >&nbsp;<button
-          pButton
-          class="p-button"
-          (click)="newEmpresa()"
-          *ngIf="!pessoa.empresa"
-        >
-          <i class="pi pi-plus"></i></button
-      ></ng-template>
-      <ng-template pTemplate="content"
-        ><form action="" class="" *ngIf="pessoa.empresa">
-          <div class="row">
-            <div class="input col-1">
-              <label for="InpIdEmpresa">Id</label>
-              <input
-                name="InpIdEmpresa"
-                class="p-inputtext"
-                type="text"
-                pInputText
-                disabled
-                [(ngModel)]="pessoa.empresa.id"
-              />
-            </div>
-            <div class="input col-2">
-              <label for="InpCreatedAtEmpresa">Criado em:</label>
-              <input
-                name="InpCreatedAtEmpresa"
-                class="p-inputtext"
-                type="text"
-                pInputText
-                value="{{
-                  pessoa.empresa.createdAt | date : 'dd/MM/yyyy HH:mm:ss'
-                }}"
-                disabled
-              />
-            </div>
-            <div class="input col-2">
-              <label for="InpUpdatedAtEmpresa">Atualizado em:</label>
-              <input
-                name="InpUpdatedAtEmpresa"
-                class="p-inputtext"
-                type="text"
-                pInputText
-                value="{{
-                  pessoa.empresa.updatedAt | date : 'dd/MM/yyyy HH:mm:ss'
-                }}"
-                disabled
-              />
-            </div>
-            <div class="input col-2" *ngIf="pessoa.empresa.deletedAt">
-              <label for="InpUpdatedAtEmpresa">Apagado em:</label>
-              <input
-                name="InpUpdatedAtEmpresa"
-                class="p-inputtext"
-                type="text"
-                pInputText
-                value="{{
-                  pessoa.empresa.deletedAt | date : 'dd/MM/yyyy HH:mm:ss'
-                }}"
-                disabled
-              />
-            </div>
-            <div class="input col-3">
-              <label for="">Token TinyERP</label>
-              <input
-                name="InpTokenTinyERP"
-                class="p-inputtext"
-                type="text"
-                pInputText
-                [(ngModel)]="pessoa.empresa.token_tiny"
-              />
-            </div>
-            <div class="col-1 d-flex flex-column justify-content-end">
-              <button
-                pButton
-                type="button"
-                style="height: 42px; width: 42px"
-                (click)="deleteOrRestoreEmpresa()"
-              >
-                <i
-                  class="pi"
-                  [ngClass]="{
-                    'pi-trash': !pessoa.empresa.deletedAt,
-                    'pi-history': pessoa.empresa.deletedAt
-                  }"
-                ></i>
-              </button>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col">
-              <label for="">Logotipo: </label>
-              <input
-                type="file"
-                class="file-input"
-                (change)="onFileSelected($event, 'logoColor')"
-                #logoColorUpload
-                accept="image/*"
-              />
-              <button
-                pButton
-                class="p-button"
-                (click)="logoColorUpload.click()"
-              >
-                <i *ngIf="!logoColorLoading" class="pi pi-paperclip"></i>
-                <p-progressSpinner
-                  *ngIf="logoColorLoading"
-                  [style]="{
-                    width: '27px',
-                    height: '27px',
-                    margin: 'auto'
-                  }"
-                  styleClass="custom-spinner"
-                  strokeWidth="8"
-                  fill="var(--surface-ground)"
-                  animationDuration="1s"
-                ></p-progressSpinner>
-              </button>
-              <img *ngIf="logoColorUrl" [src]="logoColorUrl" alt="Logotipo"  class="w-full"/>
-            </div>
-            <div class="col">
-              <label for="">Logotipo Etiquetas(Preto): </label>
-              <input
-                type="file"
-                class="file-input"
-                (change)="onFileSelected($event, 'logoBlack')"
-                #logoBlackUpload
-                accept="image/*"
-              />
-              <button pButton class="p-button" (click)="logoBlackUpload.click()">
-                <i *ngIf="!logoBlackLoading" class="pi pi-paperclip"></i>
-                <p-progressSpinner
-                  *ngIf="logoBlackLoading"
-                  [style]="{
-                    width: '27px',
-                    height: '27px',
-                    margin: 'auto'
-                  }"
-                  styleClass="custom-spinner"
-                  strokeWidth="8"
-                  fill="var(--surface-ground)"
-                  animationDuration="1s"
-                ></p-progressSpinner>
-              </button>
-              <img *ngIf="logoBlackUrl" [src]="logoBlackUrl" alt="Logotipo Etiquetas" class="w-full"/>
-            </div>
-          </div></form
-      ></ng-template>
-    </p-accordionTab>
+            <div class="row">
+              <div class="col">
+                <label for="">Logotipo: </label>
+                <input
+                  type="file"
+                  class="file-input"
+                  (change)="onFileSelected($event, 'logoColor')"
+                  #logoColorUpload
+                  accept="image/*"
+                />
+                <button
+                  pButton
+                  class="p-button"
+                  (click)="logoColorUpload.click()"
+                >
+                  <i *ngIf="!logoColorLoading" class="pi pi-paperclip"></i>
+                  <p-progressSpinner
+                    *ngIf="logoColorLoading"
+                    [style]="{
+                      width: '27px',
+                      height: '27px',
+                      margin: 'auto'
+                    }"
+                    styleClass="custom-spinner"
+                    strokeWidth="8"
+                    fill="var(--surface-ground)"
+                    animationDuration="1s"
+                  ></p-progressSpinner>
+                </button>
+                <img
+                  *ngIf="logoColorUrl"
+                  [src]="logoColorUrl"
+                  alt="Logotipo"
+                  class="w-full"
+                />
+              </div>
+              <div class="col">
+                <label for="">Logotipo Etiquetas(Preto): </label>
+                <input
+                  type="file"
+                  class="file-input"
+                  (change)="onFileSelected($event, 'logoBlack')"
+                  #logoBlackUpload
+                  accept="image/*"
+                />
+                <button
+                  pButton
+                  class="p-button"
+                  (click)="logoBlackUpload.click()"
+                >
+                  <i *ngIf="!logoBlackLoading" class="pi pi-paperclip"></i>
+                  <p-progressSpinner
+                    *ngIf="logoBlackLoading"
+                    [style]="{
+                      width: '27px',
+                      height: '27px',
+                      margin: 'auto'
+                    }"
+                    styleClass="custom-spinner"
+                    strokeWidth="8"
+                    fill="var(--surface-ground)"
+                    animationDuration="1s"
+                  ></p-progressSpinner>
+                </button>
+                <img
+                  *ngIf="logoBlackUrl"
+                  [src]="logoBlackUrl"
+                  alt="Logotipo Etiquetas"
+                  class="w-full"
+                />
+              </div>
+            </div></form
+        ></ng-template>
+      </p-accordionTab>
 
-    <p-accordionTab header="Vendedor">
-      <ng-template pTemplate="header"
-        >&nbsp;<button
-          pButton
-          class="p-button"
-          (click)="newVendedor()"
-          *ngIf="!pessoa.vendedor"
-        >
-          <i class="pi pi-plus"></i></button
-      ></ng-template>
-      <ng-template pTemplate="content"
-        ><form action="" class="d-flex flex-wrap" *ngIf="pessoa.vendedor">
-          <div class="row">
-            <div class="input col-2">
-              <label for="InpIdVendedor">Id</label>
-              <input
-                name="InpIdVendedor"
-                class="p-inputtext"
-                type="text"
-                pInputText
-                disabled
-                [(ngModel)]="pessoa.vendedor.id"
-              />
-            </div>
-            <div class="input col-3">
-              <label for="InpCreatedAtVendedor">Criado em:</label>
-              <input
-                name="InpCreatedAtVendedor"
-                class="p-inputtext"
-                type="text"
-                pInputText
-                value="{{
-                  pessoa.vendedor.createdAt | date : 'dd/MM/yyyy HH:mm:ss'
-                }}"
-                disabled
-              />
-            </div>
-            <div class="input col-3">
-              <label for="InpUpdatedAtVendedor">Atualizado em:</label>
-              <input
-                name="InpUpdatedAtVendedor"
-                class="p-inputtext"
-                type="text"
-                pInputText
-                value="{{
-                  pessoa.vendedor.updatedAt | date : 'dd/MM/yyyy HH:mm:ss'
-                }}"
-                disabled
-              />
-            </div>
-            <div class="input col-3" *ngIf="pessoa.vendedor.deletedAt">
-              <label for="InpUpdatedAtVendedor">Apagado em:</label>
-              <input
-                name="InpUpdatedAtVendedor"
-                class="p-inputtext"
-                type="text"
-                pInputText
-                value="{{
-                  pessoa.vendedor.deletedAt | date : 'dd/MM/yyyy HH:mm:ss'
-                }}"
-                disabled
-              />
-            </div>
-            <div class="col-1 flex flex-column justify-content-end">
-              <button
-                pButton
-                type="button"
-                style="height: 42px; width: 42px"
-                (click)="deleteOrRestoreVendedor()"
-              >
-                <i
-                  class="pi"
-                  [ngClass]="{
-                    'pi-trash': !pessoa.vendedor.deletedAt,
-                    'pi-history': pessoa.vendedor.deletedAt
-                  }"
-                ></i>
-              </button>
-            </div>
-          </div></form
-      ></ng-template>
-    </p-accordionTab>
-  </p-accordion>
-</div>
-<div class="d-flex flex-row">
-  <div class="flex-grow-1 justify-content-start">
-    <button pButton class="p-button p-button-danger" (click)="confirm()">
-      Excluir
-    </button>
+      <p-accordionTab header="Vendedor">
+        <ng-template pTemplate="header"
+          >&nbsp;<button
+            pButton
+            class="p-button"
+            (click)="newVendedor()"
+            *ngIf="!pessoa.vendedor"
+          >
+            <i class="pi pi-plus"></i></button
+        ></ng-template>
+        <ng-template pTemplate="content"
+          ><form action="" class="d-flex flex-wrap" *ngIf="pessoa.vendedor">
+            <div class="row">
+              <div class="input col-2">
+                <label for="InpIdVendedor">Id</label>
+                <input
+                  name="InpIdVendedor"
+                  class="p-inputtext"
+                  type="text"
+                  pInputText
+                  disabled
+                  [(ngModel)]="pessoa.vendedor.id"
+                />
+              </div>
+              <div class="input col-3">
+                <label for="InpCreatedAtVendedor">Criado em:</label>
+                <input
+                  name="InpCreatedAtVendedor"
+                  class="p-inputtext"
+                  type="text"
+                  pInputText
+                  value="{{
+                    pessoa.vendedor.createdAt | date : 'dd/MM/yyyy HH:mm:ss'
+                  }}"
+                  disabled
+                />
+              </div>
+              <div class="input col-3">
+                <label for="InpUpdatedAtVendedor">Atualizado em:</label>
+                <input
+                  name="InpUpdatedAtVendedor"
+                  class="p-inputtext"
+                  type="text"
+                  pInputText
+                  value="{{
+                    pessoa.vendedor.updatedAt | date : 'dd/MM/yyyy HH:mm:ss'
+                  }}"
+                  disabled
+                />
+              </div>
+              <div class="input col-3" *ngIf="pessoa.vendedor.deletedAt">
+                <label for="InpUpdatedAtVendedor">Apagado em:</label>
+                <input
+                  name="InpUpdatedAtVendedor"
+                  class="p-inputtext"
+                  type="text"
+                  pInputText
+                  value="{{
+                    pessoa.vendedor.deletedAt | date : 'dd/MM/yyyy HH:mm:ss'
+                  }}"
+                  disabled
+                />
+              </div>
+              <div class="col-1 flex flex-column justify-content-end">
+                <button
+                  pButton
+                  type="button"
+                  style="height: 42px; width: 42px"
+                  (click)="deleteOrRestoreVendedor()"
+                >
+                  <i
+                    class="pi"
+                    [ngClass]="{
+                      'pi-trash': !pessoa.vendedor.deletedAt,
+                      'pi-history': pessoa.vendedor.deletedAt
+                    }"
+                  ></i>
+                </button>
+              </div>
+            </div></form
+        ></ng-template>
+      </p-accordionTab>
+    </p-accordion>
   </div>
-  <button pButton class="p-button p-button-success" (click)="createOrUpdate()">
-    Salvar
-  </button>
-  <button pButton class="p-button" (click)="getBackPessoas()">Voltar</button>
-</div>
+  <div class="d-flex flex-row">
+    <div class="flex-grow-1 justify-content-start">
+      <button pButton class="p-button p-button-danger" (click)="confirm()">
+        Excluir
+      </button>
+    </div>
+    <button
+      pButton
+      class="p-button p-button-success"
+      (click)="createOrUpdate()"
+    >
+      Salvar
+    </button>
+    <button pButton class="p-button" (click)="getBackPessoas()">Voltar</button>
+  </div>
 
-<p-confirmDialog
-  header="Confirmação"
-  acceptLabel="Sim"
-  rejectLabel="Não"
-  icon="pi pi-exclamation-triangle"
-></p-confirmDialog>
+  <p-confirmDialog
+    header="Confirmação"
+    acceptLabel="Sim"
+    rejectLabel="Não"
+    icon="pi pi-exclamation-triangle"
+  ></p-confirmDialog>
 </div>

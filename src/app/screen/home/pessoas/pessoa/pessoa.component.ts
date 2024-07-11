@@ -46,6 +46,7 @@ export class PessoaComponent implements OnInit {
   categorias: any = [];
 
   cnpjLoading: boolean = false;
+  cepLoading: boolean = false;
 
   logoColorLoading: boolean = false;
   logoBlackLoading: boolean = false;
@@ -560,6 +561,7 @@ export class PessoaComponent implements OnInit {
   }
 
   consultaCep() {
+    this.cepLoading = true;
     const cep = this.pessoa.cep?.toString().replace(/\D/g, '');
 
     const cepQuantosNumeros = cep?.split('').length;
@@ -578,6 +580,15 @@ export class PessoaComponent implements OnInit {
           },
           error: (error: Error) => {
             console.error(error);
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Erro',
+              detail: 'Ocorreu um erro ao consultar o CEP.',
+            });
+            this.cepLoading = false;
+          },
+          complete: () => {
+            this.cepLoading = false;
           },
         });
     }
