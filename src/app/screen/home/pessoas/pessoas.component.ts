@@ -58,7 +58,7 @@ export class PessoasComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'Erro ao carregar pessoas. - ' + error.error,
+          detail: 'Erro ao carregar pessoas. - ' + error.error.message,
         });
       },
     });
@@ -100,7 +100,7 @@ export class PessoasComponent implements OnInit {
             this.messageService.add({
               severity: 'error',
               summary: 'Erro',
-              detail: 'Erro ao restaurar pessoa. - ' + error.error,
+              detail: 'Erro ao restaurar pessoa. - ' + error.error.message,
             });
           },
           complete: () => {

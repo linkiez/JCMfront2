@@ -36,9 +36,13 @@ export class ArquivoService {
     const formData = new FormData();
 
     formData.append('filetoupload', file);
+    const mimeType = file.type;
 
     return this.http.post(environment.backendURL + 'file', formData, {
       responseType: 'json',
+      headers: {
+        'Content-Type': mimeType
+      },
     });
   }
 
@@ -80,7 +84,7 @@ export class ArquivoService {
     });
   }
 
-  private downloadArquivo(url: string): Observable<Blob> {
+  downloadArquivo(url: string): Observable<Blob> {
     return this.http.get(url, {
       responseType: 'blob'
     });

@@ -1,20 +1,24 @@
+import { ValidadorService } from './../../../../utils/validadores';
 import { EmpresaService } from './../../../../services/empresa.service';
-import { Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { debounceTime, firstValueFrom, map, Subscription } from 'rxjs';
+import { debounceTime, firstValueFrom, map } from 'rxjs';
 import { IPessoa } from 'src/app/models/pessoa';
 import { PessoaService } from 'src/app/services/pessoa.service';
 import { IContato } from 'src/app/models/contato';
-import { DOCUMENT } from '@angular/common';
 import { ArquivoService } from 'src/app/services/arquivo.service';
 import { IValidação } from 'src/app/models/validacao';
 import { ListaGenericaService } from 'src/app/services/lista-generica.service';
-import { validador } from 'src/app/utils/validadores';
 import { IArquivo } from 'src/app/models/arquivo';
 import { VendedorService } from 'src/app/services/vendedor.service';
 import { OperadorService } from 'src/app/services/operador.service';
 import { FornecedorService } from 'src/app/services/fornecedor.service';
+import {
+  DialogService,
+  DynamicDialogConfig,
+  DynamicDialogRef,
+} from 'primeng/dynamicdialog';
 
 @Component({
   selector: 'app-pessoa',
@@ -34,9 +38,13 @@ export class PessoaComponent implements OnInit {
     private vendedorService: VendedorService,
     private empresaService: EmpresaService,
     private operadorService: OperadorService,
-    private fornecedorService: FornecedorService
+    private fornecedorService: FornecedorService,
+    private validadorService: ValidadorService,
+    private dialogService: DialogService,
+    private ref: DynamicDialogRef,
+    private config: DynamicDialogConfig
   ) {}
-  pessoa: IPessoa = { pessoa_juridica: false };
+  pessoa: IPessoa = { pessoa_juridica: false, data_nasc: null };
   pessoaOld: IPessoa = {};
 
   cnpj_cpfInvalido: IValidação[] = [];
@@ -46,6 +54,7 @@ export class PessoaComponent implements OnInit {
   categorias: any = [];
 
   cnpjLoading: boolean = false;
+  cepLoading: boolean = false;
 
   logoColorLoading: boolean = false;
   logoBlackLoading: boolean = false;
@@ -74,14 +83,17 @@ export class PessoaComponent implements OnInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Não foi possível carregar as categorias. - ' + error.error,
+            detail:
+              'Não foi possível carregar as categorias. - ' +
+              error.error.message,
           });
         },
       });
   }
 
   getPessoa() {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
+    let id = Number(this.route.snapshot.paramMap.get('id'));
+    if (!id) id = this.config.data?.pessoa?.id || 0;
     if (id != 0 && isFinite(id)) {
       this.pessoaService.getPessoa(id).subscribe({
         next: async (pessoa) => {
@@ -112,7 +124,8 @@ export class PessoaComponent implements OnInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Não foi possível carregar a pessoa. - ' + error.error,
+            detail:
+              'Não foi possível carregar a pessoa. - ' + error.error.message,
           });
         },
       });
@@ -159,7 +172,7 @@ export class PessoaComponent implements OnInit {
           summary: 'Sucesso',
           detail: 'A pessoa foi criada.',
         });
-        this.router.navigate([`/home/pessoas/${this.pessoa.id}`]);
+        this.getBackPessoas(true);
       },
     });
   }
@@ -168,15 +181,11 @@ export class PessoaComponent implements OnInit {
     const pessoaClean = this.cleanPessoa(this.pessoa);
     this.pessoaService.updatePessoa(pessoaClean).subscribe({
       next: async (pessoa) => {
-        pessoa.data_nasc = new Date(pessoa.data_nasc!.toString());
+        pessoa.data_nasc = new Date(pessoa.data_nasc!);
         if (pessoa.fornecedor?.data_aprov)
-          pessoa.fornecedor.data_aprov = new Date(
-            pessoa.fornecedor.data_aprov.toString()
-          );
+          pessoa.fornecedor.data_aprov = new Date(pessoa.fornecedor.data_aprov);
         if (pessoa.fornecedor?.data_venc)
-          pessoa.fornecedor.data_venc = new Date(
-            pessoa.fornecedor.data_venc.toString()
-          );
+          pessoa.fornecedor.data_venc = new Date(pessoa.fornecedor.data_venc);
         if (pessoa.empresa?.logoColor?.id) {
           this.logoColorUrl = await firstValueFrom(
             this.arquivoService.getUrlArquivo(pessoa.empresa?.logoColor?.id)
@@ -194,15 +203,18 @@ export class PessoaComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'Não foi possível atualizar a pessoa. - ' + error.error,
+          detail:
+            'Não foi possível atualizar a pessoa. - ' + error.error.message,
         });
       },
-      complete: () =>
+      complete: () => {
         this.messageService.add({
           severity: 'success',
           summary: 'Sucesso',
           detail: 'A pessoa foi atualizada.',
-        }),
+        });
+        this.getBackPessoas();
+      },
     });
   }
 
@@ -250,7 +262,8 @@ export class PessoaComponent implements OnInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Não foi possível excluir a pessoa. - ' + error.error,
+            detail:
+              'Não foi possível excluir a pessoa. - ' + error.error.message,
           });
         },
         complete: () => {
@@ -259,7 +272,7 @@ export class PessoaComponent implements OnInit {
             summary: 'Sucesso',
             detail: 'A pessoa foi exluida.',
           });
-          this.router.navigate(['/home/pessoas']);
+          this.getBackPessoas();
         },
       });
   }
@@ -272,7 +285,8 @@ export class PessoaComponent implements OnInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Não foi possível excluir o vendedor. - ' + error.error,
+            detail:
+              'Não foi possível excluir o vendedor. - ' + error.error.message,
           });
         },
         complete: () => {
@@ -294,7 +308,8 @@ export class PessoaComponent implements OnInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Não foi possível restaurar o vendedor. - ' + error.error,
+            detail:
+              'Não foi possível restaurar o vendedor. - ' + error.error.message,
           });
         },
         complete: () => {
@@ -317,7 +332,8 @@ export class PessoaComponent implements OnInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Não foi possível excluir a empresa. - ' + error.error,
+            detail:
+              'Não foi possível excluir a empresa. - ' + error.error.message,
           });
         },
         complete: () => {
@@ -339,7 +355,8 @@ export class PessoaComponent implements OnInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Não foi possível restaurar a empresa. - ' + error.error,
+            detail:
+              'Não foi possível restaurar a empresa. - ' + error.error.message,
           });
         },
         complete: () => {
@@ -362,7 +379,8 @@ export class PessoaComponent implements OnInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Não foi possível excluir o operador. - ' + error.error,
+            detail:
+              'Não foi possível excluir o operador. - ' + error.error.message,
           });
         },
         complete: () => {
@@ -384,7 +402,8 @@ export class PessoaComponent implements OnInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Não foi possível restaurar o operador. - ' + error.error,
+            detail:
+              'Não foi possível restaurar o operador. - ' + error.error.message,
           });
         },
         complete: () => {
@@ -412,7 +431,9 @@ export class PessoaComponent implements OnInit {
             this.messageService.add({
               severity: 'error',
               summary: 'Erro',
-              detail: 'Não foi possível excluir o fornecedor. - ' + error.error,
+              detail:
+                'Não foi possível excluir o fornecedor. - ' +
+                error.error.message,
             });
           },
           complete: () => {
@@ -437,7 +458,8 @@ export class PessoaComponent implements OnInit {
               severity: 'error',
               summary: 'Erro',
               detail:
-                'Não foi possível restaurar o fornecedor. - ' + error.error,
+                'Não foi possível restaurar o fornecedor. - ' +
+                error.error.message,
             });
           },
           complete: () => {
@@ -478,8 +500,16 @@ export class PessoaComponent implements OnInit {
     this.pessoa.contatos!.splice(rowIndex, 1);
   }
 
-  getBackPessoas() {
-    window.history.back();
+  getBackPessoas(created = false) {
+    if (this.config.data) {
+      this.ref.close(this.pessoa);
+    } else {
+      if (created) {
+        this.router.navigate(['/pessoas']);
+      } else {
+        this.router.navigate([`/home/pessoas/${this.pessoa.id}`]);
+      }
+    }
   }
 
   confirm() {
@@ -492,7 +522,7 @@ export class PessoaComponent implements OnInit {
   }
 
   validaCpfCnpj() {
-    const cnpj_cpfValidador = validador.filter(
+    const cnpj_cpfValidador = this.validadorService.validador.filter(
       (validacao) => validacao.campo === 'cnpj_cpf'
     );
 
@@ -541,7 +571,10 @@ export class PessoaComponent implements OnInit {
               this.pessoa.ie_rg =
                 consultaPJ.estabelecimento.inscricoes_estaduais[0].inscricao_estadual;
 
-              this.pessoa.descricao += `Situação Cadastral: ${consultaPJ.estabelecimento.situacao_cadastral}`;
+              this.pessoa.descricao =
+                this.pessoa.descricao ??
+                '' +
+                  `Situação Cadastral: ${consultaPJ.estabelecimento.situacao_cadastral}`;
             },
             complete: () => {
               this.cnpjLoading = false;
@@ -552,7 +585,7 @@ export class PessoaComponent implements OnInit {
   }
 
   validaEmail(email: string, campo: string) {
-    const emailValidador = validador.filter(
+    const emailValidador = this.validadorService.validador.filter(
       (validacao) => validacao.campo === 'email'
     )[0];
 
@@ -560,6 +593,7 @@ export class PessoaComponent implements OnInit {
   }
 
   consultaCep() {
+    this.cepLoading = true;
     const cep = this.pessoa.cep?.toString().replace(/\D/g, '');
 
     const cepQuantosNumeros = cep?.split('').length;
@@ -578,6 +612,15 @@ export class PessoaComponent implements OnInit {
           },
           error: (error: Error) => {
             console.error(error);
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Erro',
+              detail: 'Ocorreu um erro ao consultar o CEP.',
+            });
+            this.cepLoading = false;
+          },
+          complete: () => {
+            this.cepLoading = false;
           },
         });
     }
@@ -604,7 +647,7 @@ export class PessoaComponent implements OnInit {
             this.messageService.add({
               severity: 'error',
               summary: 'Erro',
-              detail: `Nao foi possivel fazer o upload do arquivo. - ${error.error}`,
+              detail: `Nao foi possivel fazer o upload do arquivo. - ${error.error.message}`,
             });
           },
           complete: async () => {

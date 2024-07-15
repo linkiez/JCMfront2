@@ -16,6 +16,7 @@ import { CaixaUsuarioComponent } from 'src/app/components/caixa-usuario/caixa-us
 import {ToastModule} from 'primeng/toast';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthenticationInterceptor } from 'src/app/authentication/authentication.interceptor';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 
 
 @NgModule({

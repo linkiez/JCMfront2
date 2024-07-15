@@ -2,7 +2,13 @@ import { QueryService } from 'src/app/services/query.service';
 import { IOrdemProducao } from './../../../models/ordem-producao';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { OrdemProducaoService } from 'src/app/services/ordem-producao.service';
-import { catchError, debounceTime, distinctUntilChanged, map } from 'rxjs';
+import {
+  catchError,
+  debounceTime,
+  distinctUntilChanged,
+  firstValueFrom,
+  map,
+} from 'rxjs';
 import { Paginator } from 'primeng/paginator';
 import { MessageService } from 'primeng/api';
 import { UsuarioService } from 'src/app/authentication/usuario.service';
@@ -56,7 +62,7 @@ export class OrdensProducaoComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'Erro ao carregar os vendedores. - ' + error.error,
+          detail: 'Erro ao carregar os vendedores. - ' + error.error.message,
         });
         return [];
       })
@@ -102,7 +108,9 @@ export class OrdensProducaoComponent implements OnInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Erro ao carregar as ordens de produção. - ' + error.error,
+            detail:
+              'Erro ao carregar as ordens de produção. - ' +
+              error.error.message,
           });
         },
       });
@@ -140,7 +148,8 @@ export class OrdensProducaoComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'Erro ao atualizar a ordem de produção. - ' + error.error,
+          detail:
+            'Erro ao atualizar a ordem de produção. - ' + error.error.message,
         });
       },
     });
@@ -154,10 +163,10 @@ export class OrdensProducaoComponent implements OnInit {
     }
   }
 
-  addHistorico(index: number) {
+  async addHistorico(index: number) {
     const historico = {
       texto: this.ordemProducao[index].new?.newItem,
-      usuario: this.usuarioService.getUsuario(),
+      usuario: await firstValueFrom(this.usuarioService.getUsuario$()),
       updatedAt: new Date(),
     };
     this.ordemProducao[index].new?.ordem_producao_historicos?.push(historico);

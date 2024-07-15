@@ -13,9 +13,10 @@ import { v4 as uuidv4 } from 'uuid';
 import { IProduto } from 'src/app/models/produto';
 import { ProdutoService } from 'src/app/services/produto.service';
 import { IUsuario } from 'src/app/models/usuario';
-import { UsuarioServiceDB } from 'src/app/services/usuario.service';
+import { UsuarioServiceDB } from 'src/app/services/usuarioDB.service';
 import { trackByFunction } from 'src/app/utils/trackByFunction';
 import { ActivatedRoute, Router } from '@angular/router';
+import { consoleLogDev } from 'src/app/utils/consoleLogDev';
 
 @Component({
   selector: 'app-rnc',
@@ -90,6 +91,7 @@ export class RNCComponent implements OnInit {
       this.RNCService.getRNC(id).subscribe({
         next: (rnc) => {
           this.rnc = rnc;
+          consoleLogDev(rnc)
           this.editor.quill.pasteHTML(rnc.descricao);
         },
         error: (error) => {
@@ -97,7 +99,7 @@ export class RNCComponent implements OnInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Não foi possível carregar a RNC. - ' + error.error,
+            detail: 'Não foi possível carregar a RNC. - ' + error.error.message,
           });
         },
       });
@@ -127,7 +129,7 @@ export class RNCComponent implements OnInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Erro ao carregar as ordens de produção. - ' + error.error,
+            detail: 'Erro ao carregar as ordens de produção. - ' + error.error.message,
           });
         },
       });
@@ -150,7 +152,7 @@ export class RNCComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'Erro ao carregar a ordem de produção. - ' + error.error,
+          detail: 'Erro ao carregar a ordem de produção. - ' + error.error.message,
         });
       },
     });
@@ -200,7 +202,7 @@ export class RNCComponent implements OnInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Error ao buscar produtos - ' + error.error,
+            detail: 'Error ao buscar produtos - ' + error.error.message,
           });
         },
       });
@@ -227,7 +229,7 @@ export class RNCComponent implements OnInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Error ao buscar usuarios - ' + error.error,
+            detail: 'Error ao buscar usuarios - ' + error.error.message,
           });
         },
       });
@@ -252,7 +254,7 @@ export class RNCComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'Erro ao criar a RNC. - ' + error.error,
+          detail: 'Erro ao criar a RNC. - ' + error.error.message,
         });
       },
       complete: () => {
@@ -276,7 +278,7 @@ export class RNCComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'Erro ao atualizar a RNC. - ' + error.error,
+          detail: 'Erro ao atualizar a RNC. - ' + error.error.message,
         });
       },
     });

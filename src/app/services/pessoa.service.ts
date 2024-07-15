@@ -1,15 +1,18 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, catchError } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { IPessoa } from '../models/pessoa';
 import { IQuery } from '../models/query';
+import { MessageService } from 'primeng/api';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PessoaService {
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+  ) {}
 
   getPessoas(query: IQuery): Observable<any> {
     const chaves = Object.keys(query);
@@ -33,13 +36,13 @@ export class PessoaService {
   }
 
   addPessoa(pessoa: IPessoa): Observable<IPessoa> {
-    return this.http.post(environment.backendURL + 'pessoa', pessoa, {
+    return this.http.post<IPessoa>(environment.backendURL + 'pessoa', pessoa, {
       responseType: 'json',
     });
   }
 
   updatePessoa(pessoa: IPessoa): Observable<IPessoa> {
-    return this.http.put(
+    return this.http.put<IPessoa>(
       environment.backendURL + 'pessoa/' + pessoa.id,
       pessoa,
       { responseType: 'json' }
@@ -61,8 +64,7 @@ export class PessoaService {
   existeCnpjCpfPessoa(pessoa: IPessoa): Observable<any> {
     return this.http.post(
       environment.backendURL + 'pessoa/cnpj_cpf/existe',
-      pessoa
-    );
+      pessoa)
   }
 
   consultaCep(cep: string): Observable<any> {

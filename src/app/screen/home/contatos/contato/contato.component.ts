@@ -5,6 +5,11 @@ import { Subscription, map } from 'rxjs';
 import { IContato } from 'src/app/models/contato';
 import { ContatoService } from 'src/app/services/contato.service';
 import { ListaGenericaService } from 'src/app/services/lista-generica.service';
+import {
+  DialogService,
+  DynamicDialogConfig,
+  DynamicDialogRef,
+} from 'primeng/dynamicdialog';
 
 @Component({
   selector: 'app-contato',
@@ -23,7 +28,10 @@ export class ContatoComponent implements OnInit, OnDestroy {
     private router: Router,
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
-    private listaGenericaService: ListaGenericaService
+    private listaGenericaService: ListaGenericaService,
+    private dialogService: DialogService,
+    private ref: DynamicDialogRef,
+    private config: DynamicDialogConfig
   ) {}
 
   contato: IContato = {};
@@ -39,7 +47,10 @@ export class ContatoComponent implements OnInit, OnDestroy {
   }
 
   getContato() {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
+    let id = Number(this.route.snapshot.paramMap.get('id'));
+    if (!id) id = this.config.data?.contato?.id || 0;
+    console.log('id', id);
+    console.log('this.config.data', this.config.data);
     if (id != 0) {
       this.subscription = this.contatoService.getContato(id).subscribe({
         next: (contato) => {
@@ -50,7 +61,8 @@ export class ContatoComponent implements OnInit, OnDestroy {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Não foi possível carregar o contato. - ' + error.error,
+            detail:
+              'Não foi possível carregar o contato. - ' + error.error.message,
           });
         },
       });
@@ -64,15 +76,18 @@ export class ContatoComponent implements OnInit, OnDestroy {
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'Não foi possível atualizar o contato. - ' + error.error,
+          detail:
+            'Não foi possível atualizar o contato. - ' + error.error.message,
         });
       },
-      complete: () =>
+      complete: () => {
         this.messageService.add({
           severity: 'success',
           summary: 'Sucesso',
           detail: 'O contato foi atualizado.',
-        }),
+        });
+        this.getBackContatos();
+      },
     });
   }
 
@@ -84,15 +99,17 @@ export class ContatoComponent implements OnInit, OnDestroy {
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'Não foi possível criar o contato. - ' + error.error,
+          detail: 'Não foi possível criar o contato. - ' + error.error.message,
         });
       },
-      complete: () =>
+      complete: () => {
         this.messageService.add({
           severity: 'success',
           summary: 'Sucesso',
           detail: 'O contato foi criado.',
-        }),
+        });
+        this.getBackContatos(true);
+      },
     });
   }
 
@@ -111,11 +128,12 @@ export class ContatoComponent implements OnInit, OnDestroy {
         this.messageService.add({
           severity: 'error',
           summary: 'Erro',
-          detail: 'Não foi possível excluir o contato. - ' + error.error,
+          detail:
+            'Não foi possível excluir o contato. - ' + error.error.message,
         });
       },
     });
-    this.router.navigate(['/home/contatos']);
+    this.getBackContatos();
   }
 
   confirm() {
@@ -127,8 +145,16 @@ export class ContatoComponent implements OnInit, OnDestroy {
     });
   }
 
-  getBackContatos() {
-    this.router.navigate(['/home/contatos']);
+  getBackContatos(created = false) {
+    if (this.config.data) {
+      this.ref.close(this.contato);
+    } else {
+      if (created) {
+        this.router.navigate(['/contatos']);
+      } else {
+        this.router.navigate([`/home/contatos/${this.contato.id}`]);
+      }
+    }
   }
 
   onChangeValor(event: any) {

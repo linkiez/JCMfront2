@@ -1,13 +1,15 @@
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
   Input,
   OnInit,
   Output,
+  ChangeDetectorRef
 } from '@angular/core';
 import { MessageService } from 'primeng/api';
-import { debounceTime } from 'rxjs';
+import { debounceTime, firstValueFrom } from 'rxjs';
 import { IArquivo } from 'src/app/models/arquivo';
 import { ArquivoService } from 'src/app/services/arquivo.service';
 
@@ -17,7 +19,7 @@ import { ArquivoService } from 'src/app/services/arquivo.service';
   styleUrls: ['./listaFiles.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ListaFilesComponent implements OnInit {
+export class ListaFilesComponent implements OnInit, AfterViewInit {
   @Input() files: Array<IArquivo> = [];
 
   @Input() compact: boolean = false;
@@ -26,31 +28,43 @@ export class ListaFilesComponent implements OnInit {
 
   fileLoading: boolean = false;
 
+  filesLoading: boolean[] = []
+
   constructor(
     private messageService: MessageService,
-    private arquivoService: ArquivoService
+    private arquivoService: ArquivoService,
+    private changeDetectorRef: ChangeDetectorRef
   ) {}
 
   ngOnInit() {}
 
+  ngAfterViewInit(): void {
+    if (this.files && this.files.length > 0) {
+      this.filesLoading = this.files.map(() => false);
+    }
+  }
+
   removeArquivo(rowIndex: number) {
-    this.arquivoService
-      .deleteArquivo(this.files![rowIndex].id!)
-      .pipe(debounceTime(1000))
-      .subscribe({
-        error: (error) => {
-          console.error(error);
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Erro',
-            detail: `${error.status} - ${error.statusText} - ${error.error}`,
-          });
-        },
-        complete: () => {
-          this.files!.splice(rowIndex, 1);
-          this.emitFiles();
-        },
-      });
+    this.filesLoading[rowIndex] = true;
+    this.arquivoService.deleteArquivo(this.files![rowIndex].id!).subscribe({
+      next: () => {},
+      error: (error) => {
+        console.error(error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: `Erro ao remover o arquivo - ${error.error.message}`,
+        });
+        this.filesLoading[rowIndex] = false;
+        this.changeDetectorRef.detectChanges();
+      },
+      complete: () => {
+        this.files.splice(rowIndex, 1);
+        this.filesLoading.splice(rowIndex, 1);
+        this.emitFiles();
+        this.changeDetectorRef.detectChanges();
+      },
+    });
   }
 
   onFileSelected(event: Event) {
@@ -62,7 +76,13 @@ export class ListaFilesComponent implements OnInit {
         .pipe(debounceTime(1000))
         .subscribe({
           next: (arquivo: IArquivo) => {
-            this.files?.push(arquivo);
+            const find = this.files.find((item) => {
+              item.id === arquivo.id;
+            });
+            if (!find) {
+              this.files?.push(arquivo);
+              this.filesLoading.push(false);
+            }
           },
           error: (error) => {
             this.fileLoading = false;
@@ -70,24 +90,48 @@ export class ListaFilesComponent implements OnInit {
             this.messageService.add({
               severity: 'error',
               summary: 'Erro',
-              detail: `${error.status} - ${error.statusText} - ${error.error}`,
+              detail: `Erro no upload do arquivo - ${error.error.message}`,
             });
           },
           complete: () => {
             this.fileLoading = false;
             this.emitFiles();
+            this.changeDetectorRef.detectChanges();
           },
         });
     }
   }
 
-  goToUrl(id: number): void {
+  goToUrl(arquivo: IArquivo): void {
+    this.filesLoading[this.files.indexOf(arquivo)] = true;
     this.arquivoService
-      .getUrlArquivo(id)
+      .getUrlArquivo(arquivo.id)
       .pipe(debounceTime(1000))
       .subscribe({
-        next: (url: string) => {
-          document.location.href = url;
+        next: async (url: string) => {
+          const blob = await firstValueFrom(this.arquivoService.downloadArquivo(url));
+          const urlBlob = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = urlBlob;
+          a.download = arquivo.originalFilename!;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(urlBlob);
+        },
+        error: (error) => {
+          console.error(error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: `Erro ao obter URL do arquivo - ${error.error.message}`,
+          });
+          this.filesLoading[this.files.indexOf(arquivo)] = false;
+          this.changeDetectorRef.detectChanges();
+        },
+        complete: () => {
+          this.filesLoading[this.files.indexOf(arquivo)] = false;
+          this.changeDetectorRef.detectChanges();
         },
       });
   }

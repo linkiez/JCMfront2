@@ -21,6 +21,10 @@ import { DialogModule } from 'primeng/dialog';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { InputTextModule } from 'primeng/inputtext';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { InputGroupModule } from 'primeng/inputgroup';
+import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
+import { DialogService, DynamicDialogModule, DynamicDialogRef } from 'primeng/dynamicdialog';
+
 
 @NgModule({
   declarations: [OrcamentosComponent, OrcamentoComponent],
@@ -42,7 +46,10 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
     InputTextareaModule,
     InputTextModule,
     ProgressSpinnerModule,
+    InputGroupModule,
+    InputGroupAddonModule,
+    DynamicDialogModule
   ],
-  providers: [ConfirmationService],
+  providers: [ConfirmationService, DialogService, DynamicDialogRef],
 })
 export class OrcamentosModule {}

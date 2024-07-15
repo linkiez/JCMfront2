@@ -6,12 +6,9 @@ import { ListaGenericaRoutingModule } from './lista-generica-routing.module';
 import { ListaGenericaComponent } from './lista-generica.component';
 
 import { TableModule } from 'primeng/table';
-import {ButtonModule} from 'primeng/button';
-import {DropdownModule} from 'primeng/dropdown';
+import { ButtonModule } from 'primeng/button';
+import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
-
-
-
 
 @NgModule({
   declarations: [ListaGenericaComponent],
@@ -22,7 +19,7 @@ import { InputTextModule } from 'primeng/inputtext';
     FormsModule,
     ButtonModule,
     DropdownModule,
-    InputTextModule
-  ]
+    InputTextModule,
+  ],
 })
-export class ListaGenericaModule { }
+export class ListaGenericaModule {}

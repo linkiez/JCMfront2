@@ -117,6 +117,7 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
       createdAt: null,
       updatedAt: null,
       deletedAt: null,
+      observacao: null,
     },
     pedido_compra_items: {
       value: [
@@ -410,7 +411,7 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Erro ao carregar os fornecedores. - ' + error.error,
+            detail: 'Erro ao carregar os fornecedores. - ' + error.error.message,
           });
         },
       });
@@ -434,7 +435,7 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Erro ao carregar os produtos. - ' + error.error,
+            detail: 'Erro ao carregar os produtos. - ' + error.error.message,
           });
         },
       });
@@ -499,7 +500,7 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
       pedidoCompraItem.peso =
         (dimensao[0] || 1) *
         (pedidoCompraItem.produto?.peso || 0) *
-        (pedidoCompraItem.produto.espessura || 0) *
+        // (pedidoCompraItem.produto.espessura || 0) *
         (pedidoCompraItem.quantidade || 0);
     }
     if (pedidoCompraItem.produto?.categoria == 'Peça') {
@@ -553,6 +554,10 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
       consoleLogDev(this.dynamicFormService.getAllErrors(this.pedidoCompra));
       return;
     }
+
+    if (!this.files.value[0]?.id && this.files.controls[0])
+      this.files.controls[0].disable()
+
     if (Number(this.id.value) == 0) {
       this.createPedido();
     } else {
@@ -564,9 +569,11 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
       .addPedidoCompra(this.pedidoCompra.value)
       .subscribe({
         next: (response) => {
-          // this.dynamicFormService.resizeForm(this.pedidoCompra, response);
+          if(this.files.controls[0])this.files.controls[0].enable();
+          consoleLogDev(this.pedidoCompra.value);
           consoleLogDev(response);
-          this.pedidoCompra.setValue(response);
+          this.dynamicFormService.resizeForm(this.pedidoCompra, response);
+          this.pedidoCompra.patchValue(response);
         },
         error: (error) => {
           console.error(error);
@@ -592,8 +599,9 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
       .updatePedidoCompra(this.pedidoCompra.value)
       .subscribe({
         next: (response) => {
+          if(this.files.controls[0])this.files.controls[0].enable();
           this.dynamicFormService.resizeForm(this.pedidoCompra, response);
-          this.pedidoCompra.setValue(response);
+          this.pedidoCompra.patchValue(response);
         },
         error: (error) => {
           console.error(error);

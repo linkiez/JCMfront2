@@ -3,16 +3,15 @@ import { HttpClient, HttpXhrBackend } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { IPessoa } from '../models/pessoa';
 import { IValidação } from '../models/validacao';
+import { Injectable } from '@angular/core';
 
-const http = new HttpClient(
-  new HttpXhrBackend({
-    build: () => new XMLHttpRequest(),
-  })
-);
+@Injectable({
+  providedIn: 'root',
+})
+export class ValidadorService {
+  constructor(private pessoaService: PessoaService) {}
 
-const pessoaService = new PessoaService(http);
-
-export const validador: IValidação[] = [
+public validador: IValidação[] = [
   {
     campo: 'cnpj_cpf',
     nome: 'CPF tem 11 numeros',
@@ -163,7 +162,7 @@ export const validador: IValidação[] = [
         .replace(/\D/g, '')
         .split('').length;
       if (QuantosNumeros === 14 || QuantosNumeros === 11 ? true : false) {
-        const check = pessoaService.existeCnpjCpfPessoa(pessoa);
+        const check = this.pessoaService.existeCnpjCpfPessoa(pessoa);
         const resultado = await firstValueFrom(check);
         return resultado;
       }
@@ -182,3 +181,4 @@ export const validador: IValidação[] = [
     menssagem: 'Email não é valido.',
   },
 ];
+}
