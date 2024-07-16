@@ -14,6 +14,7 @@ const routes: Routes = [
     path: ':id',
     component: OrdemProducaoComponent,
     canActivate: [LoginGuard],
+    data: { title: 'Ordem de Produção'},
   },
 ];
 

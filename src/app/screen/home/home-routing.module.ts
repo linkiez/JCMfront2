@@ -14,10 +14,12 @@ const routes: Routes = [
       {
         path: '',
         component: DashboardComponent,
+        canActivate: [LoginGuard],
       },
       {
         path: 'dashboard',
         component: DashboardComponent,
+        canActivate: [LoginGuard],
       },
       {
         path: 'produtos',
@@ -26,6 +28,7 @@ const routes: Routes = [
             (module) => module.ProdutosModule
           ),
         canLoad: [LoginGuard],
+        data: { title: 'Produtos' },
       },
       {
         path: 'pessoas',
@@ -34,6 +37,7 @@ const routes: Routes = [
             (module) => module.PessoasModule
           ),
         canLoad: [LoginGuard],
+        data: { title: 'Pessoas' },
       },
       {
         path: 'contatos',
@@ -42,6 +46,7 @@ const routes: Routes = [
             (module) => module.ContatosModule
           ),
         canLoad: [LoginGuard],
+        data: { title: 'Contatos' },
       },
       {
         path: 'listagenerica',
@@ -50,6 +55,7 @@ const routes: Routes = [
             (module) => module.ListaGenericaModule
           ),
         canLoad: [LoginGuard],
+        data: { title: 'Configurações' },
       },
       {
         path: 'arquivos',
@@ -58,6 +64,7 @@ const routes: Routes = [
             (module) => module.ArquivosModule
           ),
         canLoad: [LoginGuard],
+        data: { title: 'Arquivos' },
       },
       {
         path: 'pedidoscompras',
@@ -66,6 +73,7 @@ const routes: Routes = [
             (module) => module.PedidosComprasModule
           ),
         canLoad: [LoginGuard],
+        data: { title: 'Pedidos de Compras' },
       },
       {
         path: 'orcamentos',
@@ -74,6 +82,7 @@ const routes: Routes = [
             (module) => module.OrcamentosModule
           ),
         canLoad: [LoginGuard],
+        data: { title: 'Orçamentos' },
       },
       {
         path: 'ordensproducao',
@@ -82,6 +91,7 @@ const routes: Routes = [
             (module) => module.OrdensProducaoModule
           ),
         canLoad: [LoginGuard],
+        data: { title: 'Ordens de Produção' },
       },
       {
         path: 'usuarios',
@@ -90,24 +100,28 @@ const routes: Routes = [
             (module) => module.UsuariosModule
           ),
         canLoad: [LoginGuard],
+        data: { title: 'Usuários' },
       },
       {
         path: 'rir',
         loadChildren: () =>
           import('./rir/rir.module').then((module) => module.RirModule),
         canLoad: [LoginGuard],
+        data: { title: 'RIR' },
       },
       {
         path: 'iqf',
         loadChildren: () =>
           import('./iqf/iqf.module').then((module) => module.IqfModule),
         canLoad: [LoginGuard],
+        data: { title: 'IQF' },
       },
       {
         path: 'rnc',
         loadChildren: () =>
           import('./rncs/rncs.module').then((module) => module.RNCsModule),
         canLoad: [LoginGuard],
+        data: { title: 'RNCs' },
       },
       {
         path: '*',

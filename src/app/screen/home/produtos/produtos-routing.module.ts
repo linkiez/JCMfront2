@@ -15,7 +15,8 @@ const routes: Routes = [
   {
     path: ':id',
     component: ProdutoComponent,
-    canActivate: [LoginGuard]
+    canActivate: [LoginGuard],
+    data: { title: 'Produto'}
   }
 ];
 

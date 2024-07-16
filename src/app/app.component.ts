@@ -27,8 +27,13 @@ export class AppComponent  {
       while (route.firstChild) {
         route = route.firstChild;
       }
-      // Retrieve the current route's title and set it
-      const pageTitle = `${route.snapshot.data['title']?route.snapshot.data['title'] + " | ":""}JCM Metais | Corte e Dobra de Chapas | Americana, SP`;
+
+      // Retrieve the current route's title and id parameter
+      const routeData = route.snapshot.data;
+      const id = route.snapshot.paramMap.get('id');
+      const baseTitle = routeData['title'] ? routeData['title'] : '';
+      const pageTitle = `${baseTitle}${id ? ` ${id}` : ''} | JCM Metais | Corte e Dobra de Chapas | Americana, SP`;
+
       this.titleService.setTitle(pageTitle);
     });
   }

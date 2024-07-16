@@ -14,7 +14,8 @@ const routes: Routes = [
   {
     path: ':id',
     component: RNCComponent,
-    canActivate: [LoginGuard]
+    canActivate: [LoginGuard],
+    data: { title: 'RNC' },
   }
 ];
 

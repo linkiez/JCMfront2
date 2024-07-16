@@ -14,6 +14,7 @@ const routes: Routes = [
     path: ':id',
     component: OrcamentoComponent,
     canActivate: [LoginGuard],
+    data: { title: 'Orçamento' },
   },
 ];
 

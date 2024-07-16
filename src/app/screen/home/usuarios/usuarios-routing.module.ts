@@ -15,6 +15,7 @@ const routes: Routes = [
     path: ':id',
     component: UsuarioComponent,
     canActivate: [LoginGuard],
+    data: { title: 'Usuário' },
   },
 ];
 
