@@ -3,18 +3,19 @@ import { RouterModule, Routes } from '@angular/router';
 import { RNCsComponent } from './rncs.component';
 import { LoginGuard } from 'src/app/authentication/login.guard';
 import { RNCComponent } from './rnc/rnc.component';
+import { AccessGuard } from 'src/app/authentication/access.guard';
 
 const routes: Routes = [
   {
     path: '',
     component: RNCsComponent,
-    canActivate: [LoginGuard]
+    canActivate: [LoginGuard, AccessGuard(['rnc', 'findAll'])],
   },
 
   {
     path: ':id',
     component: RNCComponent,
-    canActivate: [LoginGuard],
+    canActivate: [LoginGuard, AccessGuard(['rnc', 'findOne'])],
     data: { title: 'RNC' },
   }
 ];

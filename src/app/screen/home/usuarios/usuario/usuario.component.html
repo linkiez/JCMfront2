@@ -173,7 +173,7 @@
       <div class="col-10 row">
         <div
           class="col-2"
-          *ngFor="let acesso of getKeys(listaDeAcessos[acessos])"
+          *ngFor="let acesso of getKeysTyped(listaDeAcessos[acessos])"
         >
           <p-checkbox
             [name]="acessos + acesso"
@@ -186,8 +186,6 @@
       </div>
     </div>
   </form>
-</div>
-<br />
 <div>
   <button
     pButton

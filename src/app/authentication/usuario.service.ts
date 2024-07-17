@@ -34,7 +34,7 @@ export class UsuarioService implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.userSubscription.unsubscribe();
+    // this.userSubscription.unsubscribe();
   }
 
   private async decodificaJWT() {

@@ -5,7 +5,7 @@ import { HomeRoutingModule } from './home-routing.module';
 import { MenuModule } from 'primeng/menu';
 import { MenubarModule } from 'primeng/menubar';
 import { ButtonModule } from 'primeng/button';
-import { SharedModule } from 'primeng/api';
+import { MessageService, SharedModule } from 'primeng/api';
 import { HomeComponent } from './home.component';
 
 import { DashboardComponent } from './dashboard/dashboard.component';
@@ -33,6 +33,7 @@ import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
     ToastModule
   ],
   providers: [{ provide: LOCALE_ID, useValue: 'pt' },
+    MessageService
 ],
 })
 export class HomeModule {}
