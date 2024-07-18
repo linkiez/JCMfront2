@@ -22,7 +22,24 @@ import { consoleLogDev } from 'src/app/utils/consoleLogDev';
   styleUrls: ['./rir.component.css'],
 })
 export class RirComponent implements OnInit {
-  rir: IRIR = { cliente: false, recebido_data: new Date() };
+  rir: IRIR = {
+    cliente: false, recebido_data: new Date(),
+    descricao: '',
+    produto: undefined,
+    quantidade: 0,
+    nfe: '',
+    nfe_data: undefined,
+    pessoa: undefined,
+    operador: undefined,
+    conferido: false,
+    observacoes: '',
+    files: [],
+    pedido_compra_item: undefined,
+    ordem_producao_item: undefined,
+    updatedAt: undefined,
+    createdAt: undefined,
+    deletedAt: undefined
+  };
 
   produtos: IProduto[] = [];
 
@@ -184,7 +201,24 @@ export class RirComponent implements OnInit {
   }
 
   limpar() {
-    this.rir = { cliente: false, recebido_data: new Date() };
+    this.rir = {
+      cliente: false, recebido_data: new Date(),
+      descricao: '',
+      produto: undefined,
+      quantidade: 0,
+      nfe: '',
+      nfe_data: undefined,
+      pessoa: undefined,
+      operador: undefined,
+      conferido: false,
+      observacoes: '',
+      files: [],
+      pedido_compra_item: undefined,
+      ordem_producao_item: undefined,
+      updatedAt: undefined,
+      createdAt: undefined,
+      deletedAt: undefined
+    };;
   }
 
   searchPedidoCompraItem() {

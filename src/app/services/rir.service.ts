@@ -48,14 +48,14 @@ export class RIRService {
     });
   }
 
-  addRIR(rir: IRIR): Observable<Object> {
-    return this.http.post(environment.backendURL + 'rir', rir, {
+  addRIR(rir: IRIR): Observable<IRIR> {
+    return this.http.post<IRIR>(environment.backendURL + 'rir', rir, {
       responseType: 'json',
     });
   }
 
   updateRIR(rir: IRIR): Observable<IRIR> {
-    return this.http.put(environment.backendURL + 'rir/' + rir.id, rir, {
+    return this.http.put<IRIR>(environment.backendURL + 'rir/' + rir.id, rir, {
       responseType: 'json',
     });
   }

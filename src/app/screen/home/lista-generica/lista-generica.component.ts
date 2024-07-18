@@ -22,7 +22,14 @@ export class ListaGenericaComponent implements OnInit {
 
   novoValor: string = '';
 
-  selectedLista: IListaGenerica = { lista_generica_items: [] };
+  selectedLista: IListaGenerica = {
+    lista_generica_items: [],
+    id: undefined,
+    nome: '',
+    deletedAt: undefined,
+    updatedAt: undefined,
+    createdAt: undefined
+  };
 
   first = 0;
 
@@ -59,7 +66,14 @@ export class ListaGenericaComponent implements OnInit {
 
   createListaGenerica() {
     this.listaGenericaService
-      .addListaGenerica({ nome: this.novaLista, lista_generica_items: [] })
+      .addListaGenerica({
+        lista_generica_items: [],
+        id: undefined,
+        nome: '',
+        deletedAt: undefined,
+        updatedAt: undefined,
+        createdAt: undefined
+      })
       .subscribe({
         complete: () => this.getListas(),
         error: (error) => {

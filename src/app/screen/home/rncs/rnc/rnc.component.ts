@@ -38,6 +38,16 @@ export class RNCComponent implements OnInit {
     reclamacao_cliente: false,
     responsavel_analise: undefined,
     custo: 0,
+    classificacao: '',
+    createdAt: undefined,
+    updatedAt: undefined,
+    deletedAt: undefined,
+    data_fechamento: undefined,
+    eficacia: 'Sim',
+    eficacia_motivo: '',
+    eficacia_descricao: '',
+    eficacia_observacao: '',
+    risco: ''
   };
 
   ordensProducao: IOrdemProducao[] = [];

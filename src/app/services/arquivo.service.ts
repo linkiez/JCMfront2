@@ -27,7 +27,7 @@ export class ArquivoService {
   }
 
   addArquivo(arquivo: IArquivo): Observable<IArquivo> {
-    return this.http.post(environment.backendURL + 'file', arquivo, {
+    return this.http.post<IArquivo>(environment.backendURL + 'file', arquivo, {
       responseType: 'json',
     });
   }
@@ -38,7 +38,7 @@ export class ArquivoService {
     formData.append('filetoupload', file);
     const mimeType = file.type;
 
-    return this.http.post(environment.backendURL + 'file', formData, {
+    return this.http.post<IArquivo>(environment.backendURL + 'file', formData, {
       responseType: 'json',
       headers: {
         'Content-Type': mimeType

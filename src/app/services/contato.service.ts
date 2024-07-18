@@ -33,7 +33,7 @@ export class ContatoService {
   }
 
   addContato(contato: IContato): Observable<IContato> {
-    return this.http.post(environment.backendURL + 'contato', contato, {
+    return this.http.post<IContato>(environment.backendURL + 'contato', contato, {
       responseType: 'json',
     });
   }

@@ -63,7 +63,20 @@ export class OrcamentoComponent implements OnInit {
     orcamento_items: [
       {
         uuid: uuidv4(),
-        produto: { categoria: '', nome: '' },
+        produto: {
+          categoria: '',
+          nome: '',
+          pedido_compra_items: [],
+          id: undefined,
+          espessura: 0,
+          peso: 0,
+          updatedAt: undefined,
+          createdAt: undefined,
+          deletedAt: undefined,
+          files: [],
+          preco: 0,
+          id_tiny: undefined,
+        },
         peso: 0,
         total: 0,
         total_hora: 0,
@@ -77,9 +90,29 @@ export class OrcamentoComponent implements OnInit {
         largura: 0,
         altura: 0,
         files: [],
+        id: undefined,
+        id_orcamento: undefined,
+        descricao: '',
+        id_produto: undefined,
+        material_incluido: false,
+        processo: [],
+        deletedAt: undefined,
+        updatedAt: undefined,
+        createdAt: undefined,
+        custo: 0,
+        orcamento: undefined,
+        registro_inspecao_recebimento: undefined,
+        id_rir: undefined
       },
     ],
-    contato: { nome: '', valor: '' },
+    contato: {
+      nome: '',
+      valor: '',
+      tipo: '',
+      updatedAt: undefined,
+      createdAt: undefined,
+      deletedAt: undefined,
+    },
     frete: 0,
     total: 0,
     desconto: 0,
@@ -87,8 +120,37 @@ export class OrcamentoComponent implements OnInit {
     transporte: 'FOB - Por Conta do Cliente',
     cond_pag: undefined,
     prazo_emdias: 0,
-    empresa: {},
+    empresa: {
+      id: undefined,
+      senha: '',
+      deletedAt: undefined,
+      updatedAt: undefined,
+      createdAt: undefined,
+      id_pessoa: 0,
+      pessoa: undefined,
+      token_tiny: '',
+      logoColor: undefined,
+      logoBlack: undefined,
+      id_file_logoBlack: undefined,
+      id_file_logoColor: undefined,
+    },
     vendastinies: [],
+    response: undefined,
+    id: undefined,
+    id_contato: undefined,
+    pessoa: undefined,
+    id_pessoa: undefined,
+    vendedor: undefined,
+    id_vendedor: undefined,
+    prazo_data: undefined,
+    aprovacao: '',
+    pc_cliente: '',
+    imposto: 0,
+    observacao: '',
+    deletedAt: undefined,
+    updatedAt: undefined,
+    createdAt: undefined,
+    id_empresa: undefined
   };
 
   fileLoading: boolean = false;
@@ -469,7 +531,20 @@ export class OrcamentoComponent implements OnInit {
   newItem() {
     this.orcamento.orcamento_items.push({
       uuid: uuidv4(),
-      produto: { categoria: '', nome: '' },
+      produto: {
+        categoria: '',
+        nome: '',
+        pedido_compra_items: [],
+        id: undefined,
+        espessura: 0,
+        peso: 0,
+        updatedAt: undefined,
+        createdAt: undefined,
+        deletedAt: undefined,
+        files: [],
+        preco: 0,
+        id_tiny: undefined,
+      },
       material_incluido: false,
       peso: 0,
       total: 0,
@@ -484,6 +559,18 @@ export class OrcamentoComponent implements OnInit {
       largura: 0,
       altura: 0,
       files: [],
+      id: undefined,
+      id_orcamento: undefined,
+      descricao: '',
+      id_produto: undefined,
+      processo: [],
+      deletedAt: undefined,
+      updatedAt: undefined,
+      createdAt: undefined,
+      custo: 0,
+      orcamento: undefined,
+      registro_inspecao_recebimento: undefined,
+      id_rir: undefined
     });
   }
 
@@ -683,11 +770,11 @@ export class OrcamentoComponent implements OnInit {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     if (id != 0) {
       this.orcamentoService.getOrcamento(id).subscribe({
-        next: (response: IOrcamento) => {
-          if (response.contato === null) response.contato = {};
-          if (response.pessoa === null) response.pessoa = {};
-          if (response.vendedor === null) response.vendedor = {};
-          if (response.empresa === null) response.empresa = {};
+        next: (response) => {
+          if (response.contato === null) response.contato = undefined;
+          if (response.pessoa === null) response.pessoa = undefined;
+          if (response.vendedor === null) response.vendedor = undefined;
+          if (response.empresa === null) response.empresa = undefined;
           response.orcamento_items.forEach((item: IOrcamentoItem) => {
             item.uuid = uuidv4();
           });
@@ -739,7 +826,7 @@ export class OrcamentoComponent implements OnInit {
         },
         complete: () => {
           this.changeDetectorRef.detectChanges();
-        }
+        },
       });
   }
 
@@ -1188,6 +1275,21 @@ export class OrcamentoComponent implements OnInit {
                 tempo: item.tempo,
                 preco_hora: +item.preco_hora,
                 total_manual: +item.total_manual,
+                id: undefined,
+                id_orcamento: undefined,
+                id_produto: undefined,
+                deletedAt: undefined,
+                updatedAt: undefined,
+                createdAt: undefined,
+                files: [],
+                peso: 0,
+                total: 0,
+                total_peso: 0,
+                total_hora: 0,
+                custo: 0,
+                orcamento: undefined,
+                registro_inspecao_recebimento: undefined,
+                id_rir: undefined,
               };
               this.orcamento.orcamento_items.push(orcamento_item);
             }

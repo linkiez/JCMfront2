@@ -1,4 +1,3 @@
-import { IPessoa } from './pessoa';
 import { IVendedor } from './vendedor';
 
 export interface IQuery {
@@ -9,7 +8,7 @@ export interface IQuery {
   operador?: boolean;
   vendedor?: boolean | IVendedor;
   id_vendedor?: number;
-  deleted?: boolean;
+  deleted: boolean;
   status?: string;
   produto?: number;
   data_prazo?: Date;

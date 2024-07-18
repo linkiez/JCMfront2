@@ -23,6 +23,7 @@ export class ContatoComponent {
     email: '',
     tel: '',
     message: '',
+    token: ''
   };
 
   constructor(

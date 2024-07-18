@@ -1,5 +1,8 @@
 import { QueryService } from 'src/app/services/query.service';
-import { IOrdemProducao } from './../../../models/ordem-producao';
+import {
+  IOrdemProducao,
+  IOrdemProducaoHistorico,
+} from './../../../models/ordem-producao';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { OrdemProducaoService } from 'src/app/services/ordem-producao.service';
 import {
@@ -164,10 +167,12 @@ export class OrdensProducaoComponent implements OnInit {
   }
 
   async addHistorico(index: number) {
-    const historico = {
+    const historico: IOrdemProducaoHistorico = {
       texto: this.ordemProducao[index].new?.newItem,
       usuario: await firstValueFrom(this.usuarioService.getUsuario$()),
-      updatedAt: new Date(),
+      updatedAt: undefined,
+      createdAt: undefined,
+      deletedAt: undefined,
     };
     this.ordemProducao[index].new?.ordem_producao_historicos?.push(historico);
     console.log(this.ordemProducao[index]);
