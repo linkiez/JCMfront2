@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { DEFAULT_CURRENCY_CODE, LOCALE_ID, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -23,8 +23,11 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
-import { DialogService, DynamicDialogModule, DynamicDialogRef } from 'primeng/dynamicdialog';
-
+import {
+  DialogService,
+  DynamicDialogModule,
+  DynamicDialogRef,
+} from 'primeng/dynamicdialog';
 
 @NgModule({
   declarations: [OrcamentosComponent, OrcamentoComponent],
@@ -48,8 +51,14 @@ import { DialogService, DynamicDialogModule, DynamicDialogRef } from 'primeng/dy
     ProgressSpinnerModule,
     InputGroupModule,
     InputGroupAddonModule,
-    DynamicDialogModule
+    DynamicDialogModule,
   ],
-  providers: [ConfirmationService, DialogService, DynamicDialogRef],
+  providers: [
+    ConfirmationService,
+    DialogService,
+    DynamicDialogRef,
+    { provide: LOCALE_ID, useValue: 'pt-BR' },
+    { provide: DEFAULT_CURRENCY_CODE, useValue: 'BRL' },
+  ],
 })
 export class OrcamentosModule {}

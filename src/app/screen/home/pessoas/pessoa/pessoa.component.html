@@ -67,7 +67,7 @@
               [ngClass]="{ cnpjLoading: cnpjLoading }"
               maxlength="18"
             />
-            <p-inputGroupAddon class="p-0">
+            <p-inputGroupAddon class="p-0" *ngIf="pessoa.pessoa_juridica">
               <button
                 *ngIf="!cnpjLoading"
                 type="button"

@@ -1,4 +1,4 @@
-import { LOCALE_ID, NgModule } from '@angular/core';
+import { DEFAULT_CURRENCY_CODE, LOCALE_ID, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { CadastroProdutosRoutingModule } from './produtos-routing.module';
@@ -32,7 +32,8 @@ import { ListaFilesModule } from 'src/app/components/listaFiles/listaFiles.modul
     ListaFilesModule
   ],
   providers: [
-    {provide: LOCALE_ID, useValue: 'pt' }
+    { provide: LOCALE_ID, useValue: 'pt-BR' },
+    { provide: DEFAULT_CURRENCY_CODE, useValue: 'BRL' },
   ],
 })
 export class ProdutosModule { }
