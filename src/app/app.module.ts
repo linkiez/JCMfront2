@@ -1,4 +1,4 @@
-import { DEFAULT_CURRENCY_CODE, LOCALE_ID, NgModule } from '@angular/core';
+import { DEFAULT_CURRENCY_CODE, inject, LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -22,6 +22,7 @@ import { MessageService } from 'primeng/api';
 import { HeaderModule } from './screen/site/components/header/header.module';
 import { FooterModule } from './screen/site/components/footer/footer.module';
 import { ButtonModule } from 'primeng/button';
+import { UsuarioService } from './authentication/usuario.service';
 
 @NgModule({
   declarations: [AppComponent, LoginComponent],
@@ -46,7 +47,7 @@ import { ButtonModule } from 'primeng/button';
       provide: HTTP_INTERCEPTORS,
       useClass: AuthenticationInterceptor,
       multi: true,
-    }
+    },
   ],
   bootstrap: [AppComponent],
 })
