@@ -7,13 +7,6 @@ pipeline {
         CHROME_BIN = '/usr/bin/google-chrome'
     }
     stages {
-        stage('Install Chrome') {
-            steps {
-                script {
-                    installChrome()
-                }
-            }
-        }
         stage('Preparation') {
             steps {
                 script {
@@ -50,16 +43,6 @@ pipeline {
             }
         }
     }
-}
-
-void installChrome() {
-    sh '''
-        if ! [ -x "$(command -v google-chrome)" ]; then
-            wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-            sudo apt-get install -y ./google-chrome-stable_current_amd64.deb
-            rm google-chrome-stable_current_amd64.deb
-        fi
-    '''
 }
 
 void prepareWorkspace() {
