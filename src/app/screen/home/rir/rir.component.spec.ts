@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { RirComponent } from './rir.component';
+import { MessageService } from 'primeng/api';
 
 describe('RirComponent', () => {
   let component: RirComponent;
@@ -8,7 +10,9 @@ describe('RirComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ RirComponent ]
+      declarations: [ RirComponent ],
+      imports: [HttpClientTestingModule],
+      providers: [MessageService]
     })
     .compileComponents();
 

@@ -12,7 +12,6 @@ import {
 } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import {
-  Observable,
   catchError,
   debounceTime,
   distinctUntilChanged,
@@ -102,7 +101,7 @@ export class OrcamentoComponent implements OnInit {
         custo: 0,
         orcamento: undefined,
         registro_inspecao_recebimento: undefined,
-        id_rir: undefined
+        id_rir: undefined,
       },
     ],
     contato: {
@@ -150,7 +149,7 @@ export class OrcamentoComponent implements OnInit {
     deletedAt: undefined,
     updatedAt: undefined,
     createdAt: undefined,
-    id_empresa: undefined
+    id_empresa: undefined,
   };
 
   fileLoading: boolean = false;
@@ -570,7 +569,7 @@ export class OrcamentoComponent implements OnInit {
       custo: 0,
       orcamento: undefined,
       registro_inspecao_recebimento: undefined,
-      id_rir: undefined
+      id_rir: undefined,
     });
   }
 
@@ -723,14 +722,14 @@ export class OrcamentoComponent implements OnInit {
       Number((item.total_peso || 0) + Number(item.total_hora || 0)) /
       (1 - Number(item.imposto || 0));
 
-    // if(total <= 0){
-    //   this.messageService.add({
-    //     severity: 'error',
-    //     summary: 'Erro',
-    //     detail: 'Total do item inválido',
-    //   });
-    //   throw new Error('Total do item inválido');
-    // }
+    if(total <= 0){
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erro',
+        detail: 'Total do item inválido',
+      });
+      throw new Error('Total do item inválido');
+    }
 
     if ((item.total_manual || 0) > 0) {
       item.total = Number(item.total_manual);

@@ -1,6 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideRouter, Routes } from '@angular/router';
 
 import { RNCComponent } from './rnc.component';
+import { MessageService } from 'primeng/api';
 
 describe('RNCComponent', () => {
   let component: RNCComponent;
@@ -8,7 +11,9 @@ describe('RNCComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [RNCComponent]
+      declarations: [RNCComponent],
+      imports: [HttpClientTestingModule,],
+      providers: [MessageService, provideRouter([])],
     });
     fixture = TestBed.createComponent(RNCComponent);
     component = fixture.componentInstance;

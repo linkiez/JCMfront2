@@ -22,7 +22,6 @@ import { MessageService } from 'primeng/api';
 import { HeaderModule } from './screen/site/components/header/header.module';
 import { FooterModule } from './screen/site/components/footer/footer.module';
 import { ButtonModule } from 'primeng/button';
-import { UsuarioService } from './authentication/usuario.service';
 
 @NgModule({
   declarations: [AppComponent, LoginComponent],
