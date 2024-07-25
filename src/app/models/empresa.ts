@@ -3,15 +3,15 @@ import { IPessoa } from './pessoa';
 
 export interface IEmpresa {
   id?: number;
-  senha?: string;
-  deletedAt?: Date;
-  updatedAt?: Date;
-  createdAt?: Date;
+  senha: string;
+  deletedAt: Date;
+  updatedAt: Date;
+  createdAt: Date;
   id_pessoa?: number;
-  pessoa?: IPessoa;
-  token_tiny?: string;
-  logoColor?: IArquivo;
-  logoBlack?: IArquivo;
+  pessoa: IPessoa;
+  token_tiny: string;
+  logoColor: IArquivo;
+  logoBlack: IArquivo;
   id_file_logoBlack?: number;
   id_file_logoColor?: number;
 }

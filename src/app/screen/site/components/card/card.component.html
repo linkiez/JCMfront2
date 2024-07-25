@@ -7,9 +7,9 @@
   <div>
     <div class="m-auto sm:w-auto">
       <img
-        *ngIf="data.img"
-        [src]="data.img"
-        [alt]="data.textLink"
+        *ngIf="data?.img"
+        [src]="data?.img"
+        [alt]="data?.textLink"
         class="rounded-xl"
       />
       <iframe

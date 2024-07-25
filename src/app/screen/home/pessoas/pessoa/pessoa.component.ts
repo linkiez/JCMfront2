@@ -44,8 +44,63 @@ export class PessoaComponent implements OnInit {
     private ref: DynamicDialogRef,
     private config: DynamicDialogConfig
   ) {}
-  pessoa: IPessoa = { pessoa_juridica: false, data_nasc: null };
-  pessoaOld: IPessoa = {};
+  pessoa: IPessoa = {
+    pessoa_juridica: false, data_nasc: null,
+    nome: '',
+    razao_social: '',
+    telefone: '',
+    email: '',
+    email_nfe: '',
+    endereco: '',
+    numero: 0,
+    complemento: '',
+    bairro: '',
+    municipio: '',
+    uf: '',
+    cep: '',
+    ie_rg: '',
+    cnpj_cpf: '',
+    descricao: '',
+    deletedAt: undefined,
+    updatedAt: undefined,
+    createdAt: undefined,
+    contatos: [],
+    files: [],
+    fornecedor: undefined,
+    operador: undefined,
+    usuario: undefined,
+    vendedor: undefined,
+    empresa: undefined
+  };
+  pessoaOld: IPessoa = {
+    nome: '',
+    razao_social: '',
+    pessoa_juridica: false,
+    telefone: '',
+    email: '',
+    email_nfe: '',
+    endereco: '',
+    numero: 0,
+    complemento: '',
+    bairro: '',
+    municipio: '',
+    uf: '',
+    cep: '',
+    ie_rg: '',
+    cnpj_cpf: '',
+    data_nasc: undefined,
+    descricao: '',
+    deletedAt: undefined,
+    updatedAt: undefined,
+    createdAt: undefined,
+    contatos: [],
+    files: [],
+    fornecedor: undefined,
+    operador: undefined,
+    usuario: undefined,
+    vendedor: undefined,
+    empresa: undefined
+  };
 
   cnpj_cpfInvalido: IValidação[] = [];
 
@@ -220,7 +275,7 @@ export class PessoaComponent implements OnInit {
 
   cleanPessoa(pessoa: IPessoa) {
     if (pessoa.telefone)
-      pessoa.telefone = Number(pessoa.telefone.toString().replace(/\D/g, ''));
+      pessoa.telefone = pessoa.telefone.toString().replace(/\D/g, '');
     if (pessoa.cnpj_cpf)
       pessoa.cnpj_cpf = pessoa.cnpj_cpf.toString().replace(/\D/g, '');
     if (pessoa.ie_rg) pessoa.ie_rg = pessoa.ie_rg.toString().replace(/\D/g, '');
@@ -475,25 +530,62 @@ export class PessoaComponent implements OnInit {
   }
 
   newFornecedor() {
-    this.pessoa.fornecedor = {};
+    this.pessoa.fornecedor = {
+      data_aprov: undefined,
+      data_venc: undefined,
+      observacao: '',
+      deletedAt: null,
+      createdAt: undefined,
+      updatedAt: undefined,
+      id: undefined,
+      pessoa: this.pessoa
+    };
   }
 
   newOperador() {
-    this.pessoa.operador = {};
+    this.pessoa.operador = {
+      senha: '',
+      deletedAt: null,
+      updatedAt: undefined,
+      createdAt: undefined,
+      pessoa: this.pessoa
+    };
   }
 
   newEmpresa() {
-    this.pessoa.empresa = {};
+    this.pessoa.empresa = {
+      senha: '',
+      deletedAt: null,
+      updatedAt: undefined,
+      createdAt: undefined,
+      id: undefined,
+      pessoa: this.pessoa,
+      token_tiny: '',
+      logoColor: undefined,
+      logoBlack: undefined,
+    };
   }
 
   newVendedor() {
-    this.pessoa.vendedor = {};
+    this.pessoa.vendedor = {
+      deletedAt: null,
+      updatedAt: undefined,
+      createdAt: undefined,
+      pessoa: this.pessoa
+    };
   }
 
   newContato() {
     const contatos: IContato[] = [];
     if (!this.pessoa.contatos) this.pessoa.contatos = contatos;
-    this.pessoa.contatos.push({});
+    this.pessoa.contatos.push({
+      nome: '',
+      tipo: '',
+      valor: '',
+      updatedAt: undefined,
+      createdAt: undefined,
+      deletedAt: undefined
+    });
   }
 
   removeContato(rowIndex: number) {
@@ -560,11 +652,11 @@ export class PessoaComponent implements OnInit {
               this.pessoa.complemento = consultaPJ.estabelecimento.complemento;
               this.pessoa.numero = consultaPJ.estabelecimento.numero;
               this.pessoa.bairro = consultaPJ.estabelecimento.bairro;
-              this.pessoa.cep = Number(consultaPJ.estabelecimento.cep);
-              this.pessoa.telefone = Number(
+              this.pessoa.cep = consultaPJ.estabelecimento.cep;
+              this.pessoa.telefone = 
                 consultaPJ.estabelecimento.ddd1 +
                   consultaPJ.estabelecimento.telefone1
-              );
+              ;
               this.pessoa.email = consultaPJ.estabelecimento.email;
               this.pessoa.municipio = consultaPJ.estabelecimento.cidade.nome;
               this.pessoa.uf = consultaPJ.estabelecimento.estado.sigla;

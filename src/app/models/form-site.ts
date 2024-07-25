@@ -3,5 +3,5 @@ export interface IFormSite {
   email: string;
   tel: string;
   message: string;
-  token?: string;
+  token: string;
 }

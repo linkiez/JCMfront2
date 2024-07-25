@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { ContatoComponent } from './contato.component';
 import { AppModule } from 'src/app/app.module';
@@ -10,7 +11,7 @@ describe('ContatoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AppModule, ContatosModule],
+      imports: [AppModule, ContatosModule, HttpClientTestingModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ContatoComponent);

@@ -56,7 +56,23 @@ export class OrdemProducaoComponent
     ElementRef<HTMLDivElement>
   >;
 
-  ordemProducao: IOrdemProducao = {};
+  ordemProducao: IOrdemProducao = {
+    data_prazo: undefined,
+    data_finalizacao: undefined,
+    data_entregue: undefined,
+    data_negociado: undefined,
+    dias_de_producao: 0,
+    venda: 0,
+    status: '',
+    createdAt: undefined,
+    updatedAt: undefined,
+    deletedAt: undefined,
+    orcamento: undefined,
+    vendedor: undefined,
+    ordem_producao_items: [],
+    ordem_producao_historicos: [],
+    files: []
+  };
 
   etiquetas: boolean = false;
 
@@ -86,6 +102,10 @@ export class OrdemProducaoComponent
       },
       fontSize: 10,
     },
+    id: undefined,
+    deletedAt: undefined,
+    updatedAt: undefined,
+    createdAt: undefined
   };
 
   impressoraIdListaGenerica?: number;
@@ -342,6 +362,10 @@ export class OrdemProducaoComponent
         },
         fontSize: 10,
       },
+      id: undefined,
+      createdAt: undefined,
+      updatedAt: undefined,
+      deletedAt: undefined,
     };
     this.toggleImpressoraDetalhes();
   }

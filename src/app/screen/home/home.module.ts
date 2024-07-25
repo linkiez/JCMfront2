@@ -1,11 +1,11 @@
-import { LOCALE_ID, NgModule } from '@angular/core';
+import { DEFAULT_CURRENCY_CODE, LOCALE_ID, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { HomeRoutingModule } from './home-routing.module';
 import { MenuModule } from 'primeng/menu';
 import { MenubarModule } from 'primeng/menubar';
 import { ButtonModule } from 'primeng/button';
-import { SharedModule } from 'primeng/api';
+import { MessageService, SharedModule } from 'primeng/api';
 import { HomeComponent } from './home.component';
 
 import { DashboardComponent } from './dashboard/dashboard.component';
@@ -32,7 +32,10 @@ import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
     MessageModule,
     ToastModule
   ],
-  providers: [{ provide: LOCALE_ID, useValue: 'pt' },
+  providers: [
+    MessageService,
+    { provide: LOCALE_ID, useValue: 'pt-BR' },
+    { provide: DEFAULT_CURRENCY_CODE, useValue: 'BRL' },
 ],
 })
 export class HomeModule {}

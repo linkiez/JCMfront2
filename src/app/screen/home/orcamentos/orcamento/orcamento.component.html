@@ -111,43 +111,43 @@
           <label for="ContatoNome">Nome: </label>
           <p-inputGroup>
             <p-autoComplete
-            name="ContatoNome"
-            id="ContatoNome"
-            [(ngModel)]="orcamento.contato!.nome"
-            [contentEditable]="true"
-            (onSelect)="selectContato($event)"
-            [suggestions]="contatos"
-            (completeMethod)="searchContato($event)"
-            [style]="{ width: '100%' }"
-            [inputStyle]="{ width: '100%' }"
-            appendTo="body"
-            [disabled]="orcamento.status !== 'Orçamento'"
-            class="noprint"
-            ><ng-template let-contatoOption pTemplate="item">
-              <div>
-                <span>{{ contatoOption.nome }} - </span>
-                <span
-                  *ngIf="
-                    contatoOption.tipo === 'Telefone' ||
-                    contatoOption.tipo === 'WhatsApp'
-                  "
-                  >{{ contatoOption.valor | telefone }}</span
-                >
-                <span
-                  *ngIf="
-                    contatoOption.tipo !== 'Telefone' &&
-                    contatoOption.tipo !== 'WhatsApp'
-                  "
-                  >{{ contatoOption.valor }}</span
-                >
-              </div>
-            </ng-template>
-            <ng-template let-contatoSelected pTemplate="selectedItem">
-              <div>
-                {{ contatoSelected.nome }}
-              </div>
-            </ng-template></p-autoComplete
-          >
+              name="ContatoNome"
+              id="ContatoNome"
+              [(ngModel)]="orcamento.contato!.nome"
+              [contentEditable]="true"
+              (onSelect)="selectContato($event)"
+              [suggestions]="contatos"
+              (completeMethod)="searchContato($event)"
+              [style]="{ width: '100%' }"
+              [inputStyle]="{ width: '100%' }"
+              appendTo="body"
+              [disabled]="orcamento.status !== 'Orçamento'"
+              class="noprint"
+              ><ng-template let-contatoOption pTemplate="item">
+                <div>
+                  <span>{{ contatoOption.nome }} - </span>
+                  <span
+                    *ngIf="
+                      contatoOption.tipo === 'Telefone' ||
+                      contatoOption.tipo === 'WhatsApp'
+                    "
+                    >{{ contatoOption.valor | telefone }}</span
+                  >
+                  <span
+                    *ngIf="
+                      contatoOption.tipo !== 'Telefone' &&
+                      contatoOption.tipo !== 'WhatsApp'
+                    "
+                    >{{ contatoOption.valor }}</span
+                  >
+                </div>
+              </ng-template>
+              <ng-template let-contatoSelected pTemplate="selectedItem">
+                <div>
+                  {{ contatoSelected.nome }}
+                </div>
+              </ng-template></p-autoComplete
+            >
             <p-inputGroupAddon class="p-0 noprint">
               <button
                 type="button"
@@ -532,16 +532,13 @@
                           >
                           <span
                             ><strong>Tamanho</strong>:
-                            {{
-                              (item.largura | number : "1.0-2" : "pt-BR") + "x"
+                            {{ (item.largura | number : "1.0-2") + "x"
                             }}{{
                               item.altura
-                                ? (item.altura | number : "1.0-2" : "pt-BR") +
-                                  "x"
+                                ? (item.altura | number : "1.0-2") + "x"
                                 : ""
                             }}{{
-                              item.produto.espessura
-                                | number : "1.0-2" : "pt-BR"
+                              item.produto.espessura | number : "1.0-2"
                             }}mm</span
                           >
                           <span>
@@ -667,7 +664,7 @@
                     />
                   </ng-template>
                   <ng-template pTemplate="output">
-                    {{ item.largura | number : "1.0-2" : "pt-BR" }}
+                    {{ item.largura | number : "1.0-2" }}
                   </ng-template>
                 </p-cellEditor>
               </td>
@@ -688,7 +685,7 @@
                     />
                   </ng-template>
                   <ng-template pTemplate="output">
-                    {{ item.altura | number : "1.0-2" : "pt-BR" }}
+                    {{ item.altura | number : "1.0-2" }}
                   </ng-template>
                 </p-cellEditor>
               </td>
@@ -709,7 +706,7 @@
                     />
                   </ng-template>
                   <ng-template pTemplate="output">
-                    {{ item.quantidade | number : "1.0-2" : "pt-BR" || "-" }}
+                    {{ item.quantidade | number : "1.0-2" || "-" }}
                   </ng-template>
                 </p-cellEditor>
               </td>
@@ -729,7 +726,7 @@
                     />
                   </ng-template>
                   <ng-template pTemplate="output">
-                    {{ item.imposto | percent : "1.2-2" : "PT-BR" }}
+                    {{ item.imposto | percent : "1.2-2" }}
                   </ng-template>
                 </p-cellEditor>
               </td>
@@ -851,7 +848,7 @@
                 {{ item.total | currency : "BRL" }}
               </td>
               <td class="noprint">
-                {{ item.peso | number : "1.0-2" : "pt-BR" }}
+                {{ item.peso | number : "1.0-2" }}
               </td>
               <td class="noprint">
                 {{ item.total_peso | currency : "BRL" }}

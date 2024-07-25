@@ -1,5 +1,5 @@
 export interface ILogin {
-  auth?: boolean;
+  auth: boolean;
   accessToken: string;
   refreshToken: string;
 }

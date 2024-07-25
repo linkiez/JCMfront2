@@ -23,7 +23,18 @@ export class ProdutoComponent implements OnInit {
     private listaGenericaService: ListaGenericaService
   ) {}
 
-  produto: IProduto = { files: [] };
+  produto: IProduto = {
+    files: [],
+    pedido_compra_items: [],
+    nome: '',
+    categoria: '',
+    espessura: 0,
+    peso: 0,
+    updatedAt: undefined,
+    createdAt: undefined,
+    deletedAt: undefined,
+    preco: 0
+  };
 
   categorias$ = this.listaGenericaService
     .getByNameListaGenerica('categoriaProduto')

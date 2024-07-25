@@ -1,29 +1,26 @@
-import { ExtendedTemplateDiagnosticName } from '@angular/compiler-cli/src/ngtsc/diagnostics';
-import e from 'express';
-
 export interface IListaGenerica {
-  id?: number;
-  nome?: string;
-  lista_generica_items: Array<IListaGenericaItem>;
-  deletedAt?: Date;
-  updateAt?: Date;
-  createAt?: Date;
+  id: number;
+  nome: string;
+  lista_generica_items: Partial<IListaGenericaItem>[];
+  deletedAt: Date;
+  updatedAt: Date;
+  createdAt: Date;
 }
 
 export interface IListaGenericaItem {
-  id?: number;
-  valor?: string;
-  valor2?: string;
+  id: number;
+  valor: string;
+  valor2: string;
 
-  deletedAt?: Date;
-  updateAt?: Date;
-  createAt?: Date;
-  id_lista?: number;
+  deletedAt: Date;
+  updatedAt: Date;
+  createdAt: Date;
+  id_lista: number;
 }
 
 export interface IPrinterSettings {
-  id?: number;
-  id_lista?: number;
+  id: number;
+  id_lista: number;
   valor: string;
   valor2: {
         width: number;
@@ -31,7 +28,7 @@ export interface IPrinterSettings {
         margin: { left: number; right: number; top: number; bottom: number };
         fontSize: number;
       };
-  deletedAt?: Date;
-  updateAt?: Date;
-  createAt?: Date;
+  deletedAt: Date;
+  updatedAt: Date;
+  createdAt: Date;
 }

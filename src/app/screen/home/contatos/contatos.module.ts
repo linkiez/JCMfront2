@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { DEFAULT_CURRENCY_CODE, LOCALE_ID, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { ContatosRoutingModule } from './contatos-routing.module';
@@ -30,6 +30,8 @@ import { DialogService, DynamicDialogRef, DynamicDialogConfig } from 'primeng/dy
     DialogService,
     DynamicDialogRef,
     DynamicDialogConfig,
+    { provide: LOCALE_ID, useValue: 'pt-BR' },
+    { provide: DEFAULT_CURRENCY_CODE, useValue: 'BRL' },
   ],
 })
 export class ContatosModule {}

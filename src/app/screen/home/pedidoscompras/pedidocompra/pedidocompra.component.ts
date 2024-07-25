@@ -92,7 +92,7 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
         nome: '',
         razao_social: '',
         pessoa_juridica: false,
-        telefone: 0,
+        telefone: '',
         email: '',
         email_nfe: '',
         endereco: '',
@@ -101,7 +101,7 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
         bairro: '',
         municipio: '',
         uf: '',
-        cep: 0,
+        cep: '',
         ie_rg: '',
         cnpj_cpf: '',
         data_nasc: null,
@@ -111,6 +111,11 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
         createdAt: null,
         contatos: [],
         files: [],
+        fornecedor: undefined,
+        operador: undefined,
+        usuario: undefined,
+        vendedor: undefined,
+        empresa: undefined
       },
       data_aprov: null,
       data_venc: null,
@@ -146,6 +151,7 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
               },
             ],
             preco: 0,
+            pedido_compra_items: []
           },
           prazo: {
             value: new Date(),
@@ -213,6 +219,9 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
           createdAt: null,
           id_pedido: null,
           id_produto: null,
+          precoComIpi: 0,
+          pedido_compra: undefined,
+          registro_inspecao_recebimentos: []
         },
       ],
       validators: [
@@ -649,6 +658,7 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
             },
           ],
           preco: 0,
+          pedido_compra_items: []
         },
         prazo: {
           value: new Date(),
@@ -716,6 +726,9 @@ export class PedidoCompraComponent implements OnInit, OnDestroy, AfterViewInit {
         createdAt: null,
         id_pedido: null,
         id_produto: null,
+        precoComIpi: 0,
+        pedido_compra: undefined,
+        registro_inspecao_recebimentos: []
       },)
     );
   }

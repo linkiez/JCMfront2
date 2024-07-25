@@ -43,14 +43,14 @@ export class ProdutoService {
     );
   }
 
-  addProduto(produto: IProduto): Observable<Object> {
-    return this.http.post(environment.backendURL + 'produto', produto, {
+  addProduto(produto: IProduto): Observable<IProduto> {
+    return this.http.post<IProduto>(environment.backendURL + 'produto', produto, {
       responseType: 'json',
     });
   }
 
-  updateProduto(produto: IProduto): Observable<Object> {
-    return this.http.put(
+  updateProduto(produto: IProduto): Observable<IProduto> {
+    return this.http.put<IProduto>(
       environment.backendURL + 'produto/' + produto.id,
       produto,
       { responseType: 'json' }

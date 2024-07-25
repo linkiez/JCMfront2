@@ -1,5 +1,5 @@
 import { FormsModule } from '@angular/forms';
-import { Input, NgModule } from '@angular/core';
+import { DEFAULT_CURRENCY_CODE, Input, LOCALE_ID, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { RNCsRoutingModule } from './rncs-routing.module';
@@ -44,6 +44,10 @@ import {ConfirmDialogModule} from 'primeng/confirmdialog';
     CheckboxModule,
     ConfirmDialogModule
 
-  ]
+  ],
+  providers: [
+    { provide: LOCALE_ID, useValue: 'pt-BR' },
+    { provide: DEFAULT_CURRENCY_CODE, useValue: 'BRL' },
+  ],
 })
 export class RNCsModule { }

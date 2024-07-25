@@ -34,7 +34,14 @@ export class ContatoComponent implements OnInit, OnDestroy {
     private config: DynamicDialogConfig
   ) {}
 
-  contato: IContato = {};
+  contato: IContato = {
+    nome: '',
+    tipo: '',
+    valor: '',
+    updatedAt: undefined,
+    createdAt: undefined,
+    deletedAt: undefined
+  };
 
   private subscription: Subscription = new Subscription();
 

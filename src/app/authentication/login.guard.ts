@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {
   CanActivate,
   CanLoad,
+  CanMatchFn,
   Route,
   Router,
   UrlSegment,
@@ -17,8 +18,10 @@ import { ILogin } from '../models/login';
 @Injectable({
   providedIn: 'root',
 })
-export class LoginGuard implements CanLoad, CanActivate {
+
+export class LoginGuard implements CanActivate, CanLoad {
   constructor(private authenticationService: AuthenticationService) {}
+
   canLoad(
     route: Route,
     segments: UrlSegment[]
@@ -31,6 +34,10 @@ export class LoginGuard implements CanLoad, CanActivate {
   }
 
   canActivate(): Promise<boolean> {
+    return this.authenticationService.verificaTokens();
+  }
+
+  canMatch(route: Route, segments: UrlSegment[]): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     return this.authenticationService.verificaTokens();
   }
 }

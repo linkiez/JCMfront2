@@ -1,13 +1,16 @@
+import { Obj } from '@popperjs/core';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { IPessoa } from 'src/app/models/pessoa';
 import { IQuery } from 'src/app/models/query';
-import { IUsuario } from 'src/app/models/usuario';
+import { IUsuario, IUsuarioAcesso } from 'src/app/models/usuario';
 import { PessoaService } from 'src/app/services/pessoa.service';
 import { UsuarioServiceDB } from 'src/app/services/usuarioDB.service';
 import passwordValidator from 'password-validator';
+import { NestedAccess, NestedAccessKey } from 'src/app/authentication/access.guard';
+import lodash from 'lodash';
 
 @Component({
   selector: 'app-usuario',
@@ -15,7 +18,7 @@ import passwordValidator from 'password-validator';
   styleUrls: ['./usuario.component.css'],
 })
 export class UsuarioComponent implements OnInit {
-  listaDeAcessos: { [key: string]: AcessoLista | boolean } = {
+  listaDeAcessos: IUsuarioAcesso = {
     admin: false,
     contato: {
       findAll: false,
@@ -145,12 +148,28 @@ export class UsuarioComponent implements OnInit {
       destroy: false,
       restore: false,
     },
+    rnc: {
+      findAll: false,
+      findAllDeleted: false,
+      findOne: false,
+      create: false,
+      update: false,
+      destroy: false,
+      restore: false
+    }
   };
 
   usuario: IUsuario = {
     email: '',
     senha: '',
     acesso: this.listaDeAcessos,
+    id: undefined,
+    confirmarSenha: '',
+    deletedAt: undefined,
+    updatedAt: undefined,
+    createdAt: undefined,
+    id_pessoa: undefined,
+    pessoa: undefined,
   };
 
   pessoas: IPessoa[] = [];
@@ -175,7 +194,7 @@ export class UsuarioComponent implements OnInit {
     if (id != 0 && isFinite(id))
       this.usuarioServiceDB.getUsuario(id).subscribe({
         next: (usuario) => {
-          this.usuario = usuario;
+          this.usuario = lodash.merge(this.usuario, usuario);
         },
         error: (error) => {
           console.error(error);
@@ -196,7 +215,7 @@ export class UsuarioComponent implements OnInit {
   createUsuario() {
     this.usuarioServiceDB.addUsuario(this.usuario).subscribe({
       next: (usuario) => {
-        this.usuario = usuario;
+        this.usuario = usuario as IUsuario;
       },
       error: (error) => {
         console.error(error);
@@ -220,7 +239,7 @@ export class UsuarioComponent implements OnInit {
   updateUsuario() {
     this.usuarioServiceDB.updateUsuario(this.usuario).subscribe({
       next: (usuario) => {
-        this.usuario = usuario;
+        this.usuario = usuario as IUsuario;
       },
       error: (error) => {
         console.error(error);
@@ -307,30 +326,51 @@ export class UsuarioComponent implements OnInit {
       });
   }
 
-  getKeys(obj: any) {
+  getKeys(obj: IUsuarioAcesso) {
     const keys = Object.keys(obj);
     keys.splice(keys.indexOf('admin'), 1);
-    return keys;
+    return keys as (keyof IUsuarioAcesso)[];
+  }
+
+  getKeysTyped(obj: NestedAccess) {
+    const keys = Object.keys(obj);
+    keys.splice(keys.indexOf('admin'), 1);
+    return keys as (keyof NestedAccess)[];
+  }
+
+
+
+  verifyUserAccess(
+    value: boolean,
+    acesso: IUsuarioAcesso | NestedAccess
+  ): IUsuarioAcesso | NestedAccess {
+    const currentAccess = acesso as { [key: string]: NestedAccess };
+
+    for (const key of Object.keys(currentAccess)) {
+      if (typeof currentAccess[key] === 'boolean') {
+        currentAccess[key] = value;
+      } else if (typeof currentAccess[key] === 'object') {
+        this.verifyUserAccess(value, currentAccess[key]);
+      } else {
+        console.error('Erro ao verificar acesso');
+      }
+    }
+
+    return currentAccess as IUsuarioAcesso | NestedAccess;
   }
 
   selecionarTodosAcessos() {
-    const acessos = this.getKeys(this.usuario.acesso);
-    acessos.forEach((acesso) => {
-      const acessos2 = this.getKeys(this.usuario.acesso[acesso]);
-      acessos2.forEach((acesso2) => {
-        this.usuario.acesso[acesso][acesso2] = true;
-      });
-    });
+    this.usuario.acesso = this.verifyUserAccess(
+      true,
+      this.usuario.acesso
+    ) as IUsuarioAcesso;
   }
 
   limparTodosAcessos() {
-    const acessos = this.getKeys(this.usuario.acesso);
-    acessos.forEach((acesso) => {
-      const acessos2 = this.getKeys(this.usuario.acesso[acesso]);
-      acessos2.forEach((acesso2) => {
-        this.usuario.acesso[acesso][acesso2] = false;
-      });
-    });
+    this.usuario.acesso = this.verifyUserAccess(
+      false,
+      this.usuario.acesso
+    ) as IUsuarioAcesso;
   }
 
   validaSenha(event: any) {
@@ -366,6 +406,3 @@ export class UsuarioComponent implements OnInit {
   }
 }
 
-interface AcessoLista {
-  [key: string]: boolean;
-}
