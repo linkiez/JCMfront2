@@ -344,9 +344,9 @@ export class UsuarioComponent implements OnInit {
     value: boolean,
     acesso: IUsuarioAcesso | NestedAccess
   ): IUsuarioAcesso | NestedAccess {
-    let currentAccess = acesso as { [key: string]: NestedAccess };
+    const currentAccess = acesso as { [key: string]: NestedAccess };
 
-    for (let key of Object.keys(currentAccess)) {
+    for (const key of Object.keys(currentAccess)) {
       if (typeof currentAccess[key] === 'boolean') {
         currentAccess[key] = value;
       } else if (typeof currentAccess[key] === 'object') {

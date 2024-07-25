@@ -218,7 +218,7 @@ export class RirComponent implements OnInit {
       updatedAt: undefined,
       createdAt: undefined,
       deletedAt: undefined
-    };;
+    };
   }
 
   searchPedidoCompraItem() {
