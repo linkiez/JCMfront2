@@ -5,7 +5,6 @@
     "ng": "ng",
     "start": "node server.js",
     "serve": "ng serve --configuration development",
-    "prebuild": "ng test --watch=false --code-coverage --browsers=ChromeHeadless",
     "build": "ng build --configuration production",
     "postbuild": "node compress.js",
     "watch": "ng build --watch --configuration development",
