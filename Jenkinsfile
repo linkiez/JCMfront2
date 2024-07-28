@@ -4,7 +4,6 @@ pipeline {
         REV_LIST = ''
         LATEST_TAG = ''
         BASE_IMAGE = 'linkiez/jcmfrontend'
-        CHROME_BIN = '/usr/bin/google-chrome'
     }
     stages {
         stage('Preparation') {
