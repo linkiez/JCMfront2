@@ -654,8 +654,8 @@ export class OrcamentoComponent implements OnInit {
       switch (item.produto.categoria) {
         case 'Chapa':
           item.peso =
-            (((item.largura || 0) + addEspessura(item)) / 1000) *
-            (((item.altura || 0) + addEspessura(item)) / 1000) *
+            (((+item.largura || 0) + addEspessura(item)) / 1000) *
+            (((+item.altura || 0) + addEspessura(item)) / 1000) *
             (item.produto.espessura || 0) *
             (item.produto.peso || 0) *
             (item.quantidade || 0);
@@ -721,15 +721,6 @@ export class OrcamentoComponent implements OnInit {
     const total =
       Number((item.total_peso || 0) + Number(item.total_hora || 0)) /
       (1 - Number(item.imposto || 0));
-
-    if(total <= 0){
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Erro',
-        detail: 'Total do item inválido',
-      });
-      throw new Error('Total do item inválido');
-    }
 
     if ((item.total_manual || 0) > 0) {
       item.total = Number(item.total_manual);
