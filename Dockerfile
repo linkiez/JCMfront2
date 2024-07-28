@@ -18,9 +18,6 @@ COPY ./src/ ./src/
 # Install dependencies
 RUN npm install && npm install -g @angular/cli
 
-# Modify Karma configuration to use ChromeHeadless with --no-sandbox
-#RUN sed -i 's|ChromeHeadless|ChromeHeadless --no-sandbox|' karma.conf.js
-
 # Run tests
 RUN ng test --watch=false
 
