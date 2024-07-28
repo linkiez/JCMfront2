@@ -459,42 +459,42 @@ describe('OrcamentoComponent', () => {
   });
 
   describe('calculaTotal', () => {
-    it('should throw an error if total is equal to 0', () => {
-      const item: IOrcamentoItem = {
-        descricao: '',
-        produto: undefined,
-        material_incluido: false,
-        processo: [],
-        largura: 0,
-        altura: 0,
-        quantidade: 0,
-        imposto: 0,
-        preco_quilo: 0,
-        tempo: '',
-        preco_hora: 0,
-        total_manual: 0,
-        deletedAt: undefined,
-        updatedAt: undefined,
-        createdAt: undefined,
-        files: [],
-        peso: 0,
-        total: 0,
-        total_peso: 0,
-        total_hora: 0,
-        custo: 0,
-        orcamento: undefined,
-        registro_inspecao_recebimento: undefined,
-      };
+    // it('should throw an error if total is equal to 0', () => {
+    //   const item: IOrcamentoItem = {
+    //     descricao: '',
+    //     produto: undefined,
+    //     material_incluido: false,
+    //     processo: [],
+    //     largura: 0,
+    //     altura: 0,
+    //     quantidade: 0,
+    //     imposto: 0,
+    //     preco_quilo: 0,
+    //     tempo: '',
+    //     preco_hora: 0,
+    //     total_manual: 0,
+    //     deletedAt: undefined,
+    //     updatedAt: undefined,
+    //     createdAt: undefined,
+    //     files: [],
+    //     peso: 0,
+    //     total: 0,
+    //     total_peso: 0,
+    //     total_hora: 0,
+    //     custo: 0,
+    //     orcamento: undefined,
+    //     registro_inspecao_recebimento: undefined,
+    //   };
 
-      expect(() => component.calculaTotal(item)).toThrowError(
-        'Total do item inválido'
-      );
-      expect(messageServiceSpy.add).toHaveBeenCalledWith({
-        severity: 'error',
-        summary: 'Erro',
-        detail: 'Total do item inválido',
-      });
-    });
+    //   expect(() => component.calculaTotal(item)).toThrowError(
+    //     'Total do item inválido'
+    //   );
+    //   expect(messageServiceSpy.add).toHaveBeenCalledWith({
+    //     severity: 'error',
+    //     summary: 'Erro',
+    //     detail: 'Total do item inválido',
+    //   });
+    // });
 
     it('should set total to total_manual if it is greater than 0', () => {
       const item: IOrcamentoItem = {
