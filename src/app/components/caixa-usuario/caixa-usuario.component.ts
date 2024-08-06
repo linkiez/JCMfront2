@@ -28,7 +28,7 @@ export class CaixaUsuarioComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.usuario$ = this.usuarioService.getUsuario$();
+    this.usuario$ = this.usuarioService.usuario$;
     this.usuarioSubscription = this.usuario$.subscribe((usuario) => {
       this.usuario = usuario;
       this.changeDetectorRef.detectChanges();

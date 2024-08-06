@@ -169,7 +169,7 @@ export class OrdensProducaoComponent implements OnInit {
   async addHistorico(index: number) {
     const historico: IOrdemProducaoHistorico = {
       texto: this.ordemProducao[index].new?.newItem,
-      usuario: await firstValueFrom(this.usuarioService.getUsuario$()),
+      usuario: await firstValueFrom(this.usuarioService.usuario$),
       updatedAt: undefined,
       createdAt: undefined,
       deletedAt: undefined,

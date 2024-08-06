@@ -1,6 +1,8 @@
+import { UsuarioService } from 'src/app/authentication/usuario.service';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { MenuItem } from 'primeng/api/menuitem';
 import { MessageService } from 'primeng/api';
+import { consoleLogDev } from 'src/app/utils/consoleLogDev';
 
 @Component({
   selector: 'app-home',
@@ -10,82 +12,103 @@ import { MessageService } from 'primeng/api';
   encapsulation: ViewEncapsulation.None,
 })
 export class HomeComponent implements OnInit {
-  public menuItems: MenuItem[] = [
-    {
-      icon: 'favicon-icon',
-      routerLink: 'dashboard',
-    },
-    {
-      label: 'Cadastro',
-      items: [
-        {
-          label: 'Contatos',
-          routerLink: 'contatos',
-        },
-        {
-          label: 'Orcamentos',
-          routerLink: 'orcamentos',
-        },
-        {
-          label: 'Ordens de Produção',
-          routerLink: 'ordensproducao',
-        },
-        {
-          label: 'Pedidos de Compra',
-          routerLink: 'pedidoscompras',
-        },
-        {
-          label: 'Pessoas',
-          routerLink: 'pessoas',
-        },
-        {
-          label: 'Produtos',
-          routerLink: 'produtos',
-        },
-        {
-          label: 'Registro de Inspeção e Recebimento',
-          routerLink: 'rir',
-        },
-      ],
-    },
-    {
-      label: 'Indicadores',
-      items: [
-        {
-          label: 'Indice Qualidade Fornecedor',
-          routerLink: 'iqf',
-        },
-      ],
-    },
-    {
-      label: 'Relatórios',
-      items: [
-        {
-          label: 'Relatório de não conformidade',
-          routerLink: 'rnc',
-        },
-      ],
-    },
-    {
-      label: 'Configurações',
-      items: [
-        {
-          label: 'Listas Genericas',
-          routerLink: 'listagenerica',
-        },
-        {
-          label: 'Arquivos',
-          routerLink: 'arquivos',
-        },
-        {
-          label: 'Usuarios',
-          routerLink: 'usuarios',
-        },
-      ],
-    },
-  ];
+  public menuItems: MenuItem[] = [];
 
-  constructor() {}
+  constructor(private usuarioService: UsuarioService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.usuarioService.usuario$.subscribe((usuario) => {
+      this.buildMenu();
+    });
+
+  }
+
+  async buildMenu(){
+    this.menuItems = [
+      {
+        icon: 'favicon-icon',
+        routerLink: 'dashboard',
+      },
+      {
+        label: 'Cadastro',
+        items: [
+          {
+            label: 'Contatos',
+            routerLink: 'contatos',
+            visible: await this.usuarioService.verifyAccess(['contato', 'findAll']),
+          },
+          {
+            label: 'Orcamentos',
+            routerLink: 'orcamentos',
+            visible: await this.usuarioService.verifyAccess(['orcamento', 'findAll'])
+          },
+          {
+            label: 'Ordens de Produção',
+            routerLink: 'ordensproducao',
+            visible: await this.usuarioService.verifyAccess(['ordemProducao', 'findAll'])
+          },
+          {
+            label: 'Pedidos de Compra',
+            routerLink: 'pedidoscompras',
+            visible: await this.usuarioService.verifyAccess(['pedidoCompra', 'findAll'])
+          },
+          {
+            label: 'Pessoas',
+            routerLink: 'pessoas',
+            visible: await this.usuarioService.verifyAccess(['pessoa', 'findAll'])
+          },
+          {
+            label: 'Produtos',
+            routerLink: 'produtos',
+            visible: await this.usuarioService.verifyAccess(['produto', 'findAll'])
+          },
+          {
+            label: 'Registro de Inspeção e Recebimento',
+            routerLink: 'rir',
+            visible: await this.usuarioService.verifyAccess(['rir', 'findAll'])
+          },
+        ],
+      },
+      {
+        label: 'Indicadores',
+        items: [
+          {
+            label: 'Indice Qualidade Fornecedor',
+            routerLink: 'iqf',
+            visible: true
+          },
+        ],
+      },
+      {
+        label: 'Relatórios',
+        items: [
+          {
+            label: 'Relatório de não conformidade',
+            routerLink: 'rnc',
+            visible: true
+          },
+        ],
+      },
+      {
+        label: 'Configurações',
+        items: [
+          {
+            label: 'Configurações',
+            routerLink: 'listagenerica',
+            visible: true
+          },
+          {
+            label: 'Arquivos',
+            routerLink: 'arquivos',
+            visible: true
+          },
+          {
+            label: 'Usuarios',
+            routerLink: 'usuarios',
+            visible: true
+          },
+        ],
+      },
+    ];
+  }
 }
