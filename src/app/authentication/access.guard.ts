@@ -19,7 +19,7 @@ export type NestedAccessKey<T> = {
 export function AccessGuard(
   path: NestedAccessKey<IUsuarioAcesso>[]
 ): CanActivateFn | CanMatchFn {
-  return async (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
+  return async (route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> => {
     const usuarioService = inject(UsuarioService);
     const globalErrorHandler = inject(GlobalMessageHandler);
 
@@ -46,7 +46,7 @@ export function AccessGuard(
   };
 }
 
-function verifyUserAccess(
+export function verifyUserAccess(
   path: string[],
   acesso: IUsuarioAcesso | NestedAccess
 ): boolean {
